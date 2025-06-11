@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
@@ -27,20 +26,26 @@ public class SceneTeleporter : MonoBehaviour
     {
         if (other.CompareTag("Player") && !string.IsNullOrEmpty(sceneName))
         {
-            StartCoroutine(SwitchScene());
+            StartCoroutine(SwitchSceneAdditive());
         }
     }
 
-    private System.Collections.IEnumerator SwitchScene()
+    private System.Collections.IEnumerator SwitchSceneAdditive()
     {
-        string currentScene = gameObject.scene.name;
+        Scene currentScene = gameObject.scene;
 
-        AsyncOperation unload = SceneManager.UnloadSceneAsync(currentScene);
-        while (!unload.isDone)
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        while (!loadOp.isDone)
             yield return null;
 
-        AsyncOperation load = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-        while (!load.isDone)
+        // Optionnel : définir la scène cible comme active
+        Scene newScene = SceneManager.GetSceneByName(sceneName);
+        if (newScene.IsValid())
+            SceneManager.SetActiveScene(newScene);
+
+        // Décharge uniquement la scène du téléporteur (pas les autres !)
+        AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+        while (!unloadOp.isDone)
             yield return null;
     }
 }
