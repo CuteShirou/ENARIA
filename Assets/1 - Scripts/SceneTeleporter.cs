@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
@@ -10,6 +11,11 @@ public class SceneTeleporter : MonoBehaviour
     [Header("Drag & Drop ici ta scène cible")]
     [SerializeField] private SceneAsset sceneToLoad;
 #endif
+
+    [Header("Transform cible dans la scène à charger (destination du joueur)")]
+    [SerializeField] private Transform destinationTransform;
+
+    [SerializeField] private string playerTag = "Player";
 
     [HideInInspector]
     public string sceneName;
@@ -24,13 +30,13 @@ public class SceneTeleporter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !string.IsNullOrEmpty(sceneName))
+        if (other.CompareTag(playerTag) && !string.IsNullOrEmpty(sceneName))
         {
-            StartCoroutine(SwitchSceneAdditive());
+            StartCoroutine(SwitchSceneAdditive(other.gameObject));
         }
     }
 
-    private System.Collections.IEnumerator SwitchSceneAdditive()
+    private System.Collections.IEnumerator SwitchSceneAdditive(GameObject player)
     {
         Scene currentScene = gameObject.scene;
 
@@ -38,12 +44,17 @@ public class SceneTeleporter : MonoBehaviour
         while (!loadOp.isDone)
             yield return null;
 
-        // Optionnel : définir la scène cible comme active
         Scene newScene = SceneManager.GetSceneByName(sceneName);
         if (newScene.IsValid())
             SceneManager.SetActiveScene(newScene);
 
-        // Décharge uniquement la scène du téléporteur (pas les autres !)
+        // Déplacement du joueur si une destination est spécifiée
+        if (destinationTransform != null)
+        {
+            player.transform.position = destinationTransform.position;
+            player.transform.rotation = destinationTransform.rotation;
+        }
+
         AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
         while (!unloadOp.isDone)
             yield return null;
