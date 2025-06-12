@@ -73,7 +73,8 @@ namespace StarterAssets
         private bool _hasAnimator;
 
         private Vector3 _clickTarget;
-        private bool _isClickMoving = false;
+        public bool _isClickMoving = false;
+        public bool _isInCombat = false;
 
         private bool IsCurrentDeviceMouse
         {
@@ -117,7 +118,10 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
-            ClickToMoveUpdate();
+            if (_isInCombat == false)
+            {
+                ClickToMoveUpdate();
+            }
         }
 
         private void LateUpdate()
@@ -184,7 +188,7 @@ namespace StarterAssets
                 Vector3 direction = (flatTarget - transform.position).normalized;
                 float distance = Vector3.Distance(transform.position, flatTarget);
 
-                if (distance > 0.1f)
+                if (distance > 0.1f & _isInCombat == false)
                 {
                     _controller.Move(direction * ClickMoveSpeed * Time.deltaTime);
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
@@ -194,6 +198,17 @@ namespace StarterAssets
                     {
                         _animator.SetFloat(_animIDSpeed, ClickMoveSpeed);
                         _animator.SetFloat(_animIDMotionSpeed, 1f);
+                    }
+                }
+                else if (distance <= 0.1f || _isInCombat)
+                {
+                    _clickTarget = Vector3.zero; // Réinitialise la cible de clic
+                    _isClickMoving = false;
+                    // Met à jour les paramètres d'animation pour arrêter le mouvement
+                    if (_hasAnimator)
+                    {
+                        _animator.SetFloat(_animIDSpeed, 0f);
+                        _animator.SetFloat(_animIDMotionSpeed, 0f);
                     }
                 }
                 else
