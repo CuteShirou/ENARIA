@@ -725,6 +725,7 @@ GameObject:
   - component: {fileID: 34996674}
   - component: {fileID: 34996676}
   - component: {fileID: 34996675}
+  - component: {fileID: 34996677}
   m_Layer: 0
   m_Name: ClifGg2 (1)
   m_TagString: Untagged
@@ -799,6 +800,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 34996673}
   m_Mesh: {fileID: 179168557778552209, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &34996677
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34996673}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.04688121, y: 0.08728987, z: 0.068965144}
+  m_Center: {x: -0.0006408305, y: -0.0017729152, z: 0.034478556}
 --- !u!1 &35946984
 GameObject:
   m_ObjectHideFlags: 0
@@ -4516,6 +4538,7 @@ GameObject:
   - component: {fileID: 323059500}
   - component: {fileID: 323059502}
   - component: {fileID: 323059501}
+  - component: {fileID: 323059503}
   m_Layer: 0
   m_Name: ClifGg2 (5)
   m_TagString: Untagged
@@ -4590,6 +4613,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 323059499}
   m_Mesh: {fileID: 179168557778552209, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &323059503
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 323059499}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046881225, y: 0.087289855, z: 0.06896514}
+  m_Center: {x: -0.0006408461, y: -0.0017728996, z: 0.034478553}
 --- !u!1 &324455577
 GameObject:
   m_ObjectHideFlags: 0
@@ -5026,6 +5070,7 @@ GameObject:
   - component: {fileID: 347296029}
   - component: {fileID: 347296031}
   - component: {fileID: 347296030}
+  - component: {fileID: 347296032}
   m_Layer: 0
   m_Name: ClifGg2 (4)
   m_TagString: Untagged
@@ -5100,6 +5145,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347296028}
   m_Mesh: {fileID: 179168557778552209, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &347296032
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 347296028}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046881214, y: 0.08728985, z: 0.06896514}
+  m_Center: {x: -0.00064084673, y: -0.0017729304, z: 0.034478545}
 --- !u!1 &351481314
 GameObject:
   m_ObjectHideFlags: 0
@@ -7626,6 +7692,7 @@ GameObject:
   - component: {fileID: 474379809}
   - component: {fileID: 474379811}
   - component: {fileID: 474379810}
+  - component: {fileID: 474379812}
   m_Layer: 0
   m_Name: ClifGg3 (1)
   m_TagString: Untagged
@@ -7700,6 +7767,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 474379808}
   m_Mesh: {fileID: 6355454509784169319, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &474379812
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474379808}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046148624, y: 0.091475286, z: 0.06498723}
+  m_Center: {x: 0.00056520046, y: -0.004471582, z: 0.03263216}
 --- !u!1 &486451985
 GameObject:
   m_ObjectHideFlags: 0
@@ -10405,6 +10493,7 @@ GameObject:
   - component: {fileID: 626918598}
   - component: {fileID: 626918600}
   - component: {fileID: 626918599}
+  - component: {fileID: 626918601}
   m_Layer: 0
   m_Name: ClifGg3 (4)
   m_TagString: Untagged
@@ -10479,6 +10568,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 626918597}
   m_Mesh: {fileID: 6355454509784169319, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &626918601
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626918597}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046148647, y: 0.0914753, z: 0.06498723}
+  m_Center: {x: 0.0005652128, y: -0.0044715814, z: 0.03263216}
 --- !u!1 &641154670
 GameObject:
   m_ObjectHideFlags: 0
@@ -13778,6 +13888,7 @@ GameObject:
   - component: {fileID: 783665334}
   - component: {fileID: 783665336}
   - component: {fileID: 783665335}
+  - component: {fileID: 783665337}
   m_Layer: 0
   m_Name: RBg3
   m_TagString: Untagged
@@ -13851,6 +13962,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 783665333}
+  m_Mesh: {fileID: -5098004367568910228, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!64 &783665337
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783665333}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: -5098004367568910228, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
 --- !u!1 &784562732
 GameObject:
@@ -14798,6 +14931,7 @@ GameObject:
   - component: {fileID: 835539032}
   - component: {fileID: 835539034}
   - component: {fileID: 835539033}
+  - component: {fileID: 835539035}
   m_Layer: 0
   m_Name: ClifGg2
   m_TagString: Untagged
@@ -14872,6 +15006,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 835539031}
   m_Mesh: {fileID: 179168557778552209, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &835539035
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835539031}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046881214, y: 0.08728984, z: 0.06896514}
+  m_Center: {x: -0.0006408309, y: -0.0017729062, z: 0.034478553}
 --- !u!1 &838913551
 GameObject:
   m_ObjectHideFlags: 0
@@ -17161,6 +17316,7 @@ GameObject:
   - component: {fileID: 996687894}
   - component: {fileID: 996687896}
   - component: {fileID: 996687895}
+  - component: {fileID: 996687897}
   m_Layer: 0
   m_Name: ClifGg3 (3)
   m_TagString: Untagged
@@ -17235,6 +17391,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 996687893}
   m_Mesh: {fileID: 6355454509784169319, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &996687897
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996687893}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046148624, y: 0.0914753, z: 0.06498723}
+  m_Center: {x: 0.00056520995, y: -0.0044715824, z: 0.03263216}
 --- !u!1 &996922076
 GameObject:
   m_ObjectHideFlags: 0
@@ -17246,6 +17423,7 @@ GameObject:
   - component: {fileID: 996922077}
   - component: {fileID: 996922079}
   - component: {fileID: 996922078}
+  - component: {fileID: 996922080}
   m_Layer: 0
   m_Name: ClifGg2 (3)
   m_TagString: Untagged
@@ -17320,6 +17498,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 996922076}
   m_Mesh: {fileID: 179168557778552209, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &996922080
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996922076}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.04688123, y: 0.08728986, z: 0.06896515}
+  m_Center: {x: -0.0006408612, y: -0.0017728882, z: 0.034478556}
 --- !u!1 &999745808
 GameObject:
   m_ObjectHideFlags: 0
@@ -19116,6 +19315,7 @@ GameObject:
   - component: {fileID: 1086772020}
   - component: {fileID: 1086772022}
   - component: {fileID: 1086772021}
+  - component: {fileID: 1086772023}
   m_Layer: 0
   m_Name: ClifGg3 (5)
   m_TagString: Untagged
@@ -19190,6 +19390,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1086772019}
   m_Mesh: {fileID: 6355454509784169319, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &1086772023
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086772019}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046148647, y: 0.0914753, z: 0.06498723}
+  m_Center: {x: 0.0005652128, y: -0.0044715516, z: 0.03263216}
 --- !u!1 &1091268013
 GameObject:
   m_ObjectHideFlags: 0
@@ -21156,6 +21377,7 @@ GameObject:
   - component: {fileID: 1197755588}
   - component: {fileID: 1197755590}
   - component: {fileID: 1197755589}
+  - component: {fileID: 1197755591}
   m_Layer: 0
   m_Name: ClifGg2 (2)
   m_TagString: Untagged
@@ -21230,6 +21452,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1197755587}
   m_Mesh: {fileID: 179168557778552209, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &1197755591
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1197755587}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046881225, y: 0.087289855, z: 0.06896514}
+  m_Center: {x: -0.0006408312, y: -0.0017728996, z: 0.034478553}
 --- !u!1 &1197844011
 GameObject:
   m_ObjectHideFlags: 0
@@ -23247,6 +23490,7 @@ GameObject:
   - component: {fileID: 1316180049}
   - component: {fileID: 1316180051}
   - component: {fileID: 1316180050}
+  - component: {fileID: 1316180052}
   m_Layer: 0
   m_Name: ClifGg3 (7)
   m_TagString: Untagged
@@ -23321,6 +23565,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316180048}
   m_Mesh: {fileID: 6355454509784169319, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &1316180052
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316180048}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046148647, y: 0.0914753, z: 0.06498723}
+  m_Center: {x: 0.0005652128, y: -0.0044715516, z: 0.03263216}
 --- !u!1 &1316968995
 GameObject:
   m_ObjectHideFlags: 0
@@ -25414,6 +25679,7 @@ GameObject:
   - component: {fileID: 1453851517}
   - component: {fileID: 1453851519}
   - component: {fileID: 1453851518}
+  - component: {fileID: 1453851520}
   m_Layer: 0
   m_Name: ClifGg3 (2)
   m_TagString: Untagged
@@ -25488,6 +25754,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453851516}
   m_Mesh: {fileID: 6355454509784169319, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &1453851520
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453851516}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046148624, y: 0.091475286, z: 0.06498723}
+  m_Center: {x: 0.00056520046, y: -0.004471582, z: 0.03263216}
 --- !u!1 &1454473112
 GameObject:
   m_ObjectHideFlags: 0
@@ -26815,6 +27102,7 @@ GameObject:
   - component: {fileID: 1509016802}
   - component: {fileID: 1509016804}
   - component: {fileID: 1509016803}
+  - component: {fileID: 1509016805}
   m_Layer: 0
   m_Name: RBg1
   m_TagString: Untagged
@@ -26888,6 +27176,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1509016801}
+  m_Mesh: {fileID: 3351086177526168337, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!64 &1509016805
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509016801}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 3351086177526168337, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
 --- !u!1 &1518471281
 GameObject:
@@ -37756,6 +38066,7 @@ GameObject:
   - component: {fileID: 2072485453}
   - component: {fileID: 2072485455}
   - component: {fileID: 2072485454}
+  - component: {fileID: 2072485456}
   m_Layer: 0
   m_Name: ClifGg2 (6)
   m_TagString: Untagged
@@ -37830,6 +38141,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2072485452}
   m_Mesh: {fileID: 179168557778552209, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &2072485456
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072485452}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.04688121, y: 0.08728987, z: 0.068965144}
+  m_Center: {x: -0.0006407709, y: -0.0017729003, z: 0.034478556}
 --- !u!1 &2078857081
 GameObject:
   m_ObjectHideFlags: 0
@@ -38317,6 +38649,7 @@ GameObject:
   - component: {fileID: 2094620164}
   - component: {fileID: 2094620166}
   - component: {fileID: 2094620165}
+  - component: {fileID: 2094620167}
   m_Layer: 0
   m_Name: ClifGg3 (6)
   m_TagString: Untagged
@@ -38391,6 +38724,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2094620163}
   m_Mesh: {fileID: 6355454509784169319, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+--- !u!65 &2094620167
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094620163}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046148647, y: 0.0914753, z: 0.06498723}
+  m_Center: {x: 0.0005652128, y: -0.0044715516, z: 0.03263216}
 --- !u!1 &2094835944
 GameObject:
   m_ObjectHideFlags: 0
