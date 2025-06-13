@@ -10572,8 +10572,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 600555382293865579}
-  - {fileID: 2066194887}
   - {fileID: 2117887451}
+  - {fileID: 2066194887}
   - {fileID: 1093404118}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10623,7 +10623,7 @@ GameObject:
   - component: {fileID: 2117887447}
   - component: {fileID: 2117887446}
   m_Layer: 0
-  m_Name: Rune TP Prefab
+  m_Name: Teleport W4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10686,6 +10686,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneToLoad: {fileID: 102900000, guid: 2dc200b4163e128499f521fa0fa4d280, type: 3}
   destinationTransform: {fileID: 1093404118}
+  cameraParentTargetName: World 4 - Desert Camera Position
   playerTag: Player
   sceneName: World 4 - Desert
 --- !u!23 &2117887449
@@ -15454,6 +15455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneToLoad: {fileID: 102900000, guid: ebadfc00e06bda744941d0ec10b15309, type: 3}
   destinationTransform: {fileID: 2066194887}
+  cameraParentTargetName: World 2 - Plaine Camera Position
   playerTag: Player
   sceneName: World 2 - Plaine
 --- !u!65 &3130320984417683562
@@ -15500,7 +15502,7 @@ GameObject:
   - component: {fileID: 3130320984417683562}
   - component: {fileID: 96304930766838514}
   m_Layer: 0
-  m_Name: Rune TP Prefab
+  m_Name: Teleport W2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

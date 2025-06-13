@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 1450906840}
   - component: {fileID: 1450906839}
   m_Layer: 0
-  m_Name: Rune TP Prefab
+  m_Name: Teleport W5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -366,6 +366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneToLoad: {fileID: 102900000, guid: 5dc3aeec67da80e4a9829604c058b2cf, type: 3}
   destinationTransform: {fileID: 999950156}
+  cameraParentTargetName: World 5 - Forest Camera Position
   playerTag: Player
   sceneName: World 5 - Forest
 --- !u!23 &1450906842

@@ -660,8 +660,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 135116454702630752}
-  - {fileID: 1795934026}
   - {fileID: 600555382293865579}
+  - {fileID: 1795934026}
   - {fileID: 2066194887}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -919,6 +919,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneToLoad: {fileID: 102900000, guid: ebadfc00e06bda744941d0ec10b15309, type: 3}
   destinationTransform: {fileID: 1795934026}
+  cameraParentTargetName: World 2 - Plaine Camera Position
   playerTag: Player
   sceneName: World 2 - Plaine
 --- !u!114 &1409625701531894471
@@ -981,6 +982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneToLoad: {fileID: 102900000, guid: 5dc3aeec67da80e4a9829604c058b2cf, type: 3}
   destinationTransform: {fileID: 2066194887}
+  cameraParentTargetName: World 5 - Forest Camera Position
   playerTag: Player
   sceneName: World 5 - Forest
 --- !u!65 &2505334114952260449
@@ -1056,7 +1058,7 @@ GameObject:
   - component: {fileID: 3130320984417683562}
   - component: {fileID: 96304930766838514}
   m_Layer: 0
-  m_Name: Rune TP Prefab
+  m_Name: Teleport World 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
