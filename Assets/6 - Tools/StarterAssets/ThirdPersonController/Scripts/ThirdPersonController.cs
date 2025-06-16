@@ -75,7 +75,7 @@ namespace StarterAssets
         private Vector3 _clickTarget;
         public bool _isClickMoving = false;
         public bool _isInCombat = false;
-
+        [SerializeField] public int _turnOrder;
         private bool IsCurrentDeviceMouse
         {
             get
@@ -115,12 +115,20 @@ namespace StarterAssets
         private void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);
-            JumpAndGravity();
             GroundedCheck();
-            Move();
             if (_isInCombat == false)
             {
-                ClickToMoveUpdate();
+                ClickToMoveExploration();
+            }
+            else 
+            {
+                _isClickMoving = false;
+                _clickTarget = Vector3.zero;
+                if (_hasAnimator)
+                {
+                    _animator.SetFloat(_animIDSpeed, 0f);
+                    _animator.SetFloat(_animIDMotionSpeed, 0f);
+                }
             }
         }
 
@@ -169,7 +177,7 @@ namespace StarterAssets
             // Désactivation complète du mouvement ZQSD
         }
 
-        private void ClickToMoveUpdate()
+        private void ClickToMoveExploration()
         {
             if (_input.click)
             {
@@ -225,55 +233,6 @@ namespace StarterAssets
             }
         }
 
-        private void JumpAndGravity()
-        {
-            if (Grounded)
-            {
-                _fallTimeoutDelta = FallTimeout;
-                if (_hasAnimator)
-                {
-                    _animator.SetBool(_animIDJump, false);
-                    _animator.SetBool(_animIDFreeFall, false);
-                }
-                if (_verticalVelocity < 0.0f)
-                {
-                    _verticalVelocity = -2f;
-                }
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
-                {
-                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-                    if (_hasAnimator)
-                    {
-                        _animator.SetBool(_animIDJump, true);
-                    }
-                }
-                if (_jumpTimeoutDelta >= 0.0f)
-                {
-                    _jumpTimeoutDelta -= Time.deltaTime;
-                }
-            }
-            else
-            {
-                _jumpTimeoutDelta = JumpTimeout;
-                if (_fallTimeoutDelta >= 0.0f)
-                {
-                    _fallTimeoutDelta -= Time.deltaTime;
-                }
-                else
-                {
-                    if (_hasAnimator)
-                    {
-                        _animator.SetBool(_animIDFreeFall, true);
-                    }
-                }
-                _input.jump = false;
-            }
-
-            if (_verticalVelocity < _terminalVelocity)
-            {
-                _verticalVelocity += Gravity * Time.deltaTime;
-            }
-        }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
