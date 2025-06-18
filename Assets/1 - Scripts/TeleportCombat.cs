@@ -1,4 +1,5 @@
-
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using StarterAssets;
@@ -14,13 +15,17 @@ public class TeleportCombat : MonoBehaviour
     [SerializeField] private SceneAsset sceneToLoad;
 #endif
 
-    [Header("Transform cible dans la scène à charger (destination du joueur)")]
-    [SerializeField] private Transform destinationTransform;
+    [Header("Transform cible en fallback si pas de grille trouvée")]
+    [SerializeField] private Transform fallbackTransform;
 
     [SerializeField] private string playerTag = "Player";
 
     [HideInInspector]
     public string sceneName;
+
+    [Header("Combat")]
+    [SerializeField] private GameObject monsterPrefab;
+    [SerializeField] private int numberOfMonsters = 1;
 
     private void OnValidate()
     {
@@ -34,12 +39,12 @@ public class TeleportCombat : MonoBehaviour
     {
         if (other.CompareTag(playerTag) && !string.IsNullOrEmpty(sceneName))
         {
-            StartCoroutine(SwitchSceneAdditive(other.gameObject));
+            StartCoroutine(SwitchSceneAndPlaceOnGrid(other.gameObject));
             other.GetComponent<ThirdPersonController>()._isInCombat = true;
         }
     }
 
-    private System.Collections.IEnumerator SwitchSceneAdditive(GameObject player)
+    private IEnumerator SwitchSceneAndPlaceOnGrid(GameObject player)
     {
         Scene currentScene = gameObject.scene;
 
@@ -51,15 +56,60 @@ public class TeleportCombat : MonoBehaviour
         if (newScene.IsValid())
             SceneManager.SetActiveScene(newScene);
 
-        // Déplacement du joueur si une destination est spécifiée
-        if (destinationTransform != null)
+        yield return null;
+
+        Grid gridManager = null;
+        foreach (GameObject root in newScene.GetRootGameObjects())
         {
-            player.transform.position = destinationTransform.position;
-            player.transform.rotation = destinationTransform.rotation;
+            gridManager = root.GetComponentInChildren<Grid>();
+            if (gridManager != null) break;
+        }
+
+        if (gridManager != null && gridManager.TileMap.Count > 0)
+        {
+            List<Vector2Int> availableTiles = new List<Vector2Int>(gridManager.TileMap.Keys);
+
+            // 1. Positionner le joueur
+            Vector2Int playerCoord = GetAndRemoveRandomCoord(ref availableTiles);
+            GameObject playerTile = gridManager.TileMap[playerCoord];
+            player.transform.position = playerTile.transform.position + new Vector3(0, 0.5f, 0);
+            player.transform.rotation = Quaternion.identity;
+
+            // 2. Instancier les monstres
+            List<GameObject> spawnedMonsters = new List<GameObject>();
+            for (int i = 0; i < numberOfMonsters; i++)
+            {
+                Vector2Int monsterCoord = GetAndRemoveRandomCoord(ref availableTiles);
+                GameObject tile = gridManager.TileMap[monsterCoord];
+
+                GameObject monster = Instantiate(monsterPrefab, tile.transform.position + new Vector3(0, 0.5f, 0), Quaternion.identity);
+                monster.tag = "Monster"; // Assure que le tag est correct
+                spawnedMonsters.Add(monster);
+            }
+
+            // 3. Enregistrement dans le CombatManager
+            CombatManager cm = FindAnyObjectByType<CombatManager>();
+            if (cm != null)
+            {
+                cm.RegisterFighter(player);
+                foreach (var monster in spawnedMonsters)
+                    cm.RegisterFighter(monster);
+
+                cm.InitCombat(); // Lance le tour par tour
+            }
         }
 
         AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
         while (!unloadOp.isDone)
             yield return null;
+    }
+
+    // Méthode utilitaire
+    private Vector2Int GetAndRemoveRandomCoord(ref List<Vector2Int> coords)
+    {
+        int index = Random.Range(0, coords.Count);
+        Vector2Int coord = coords[index];
+        coords.RemoveAt(index);
+        return coord;
     }
 }

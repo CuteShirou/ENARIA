@@ -399,7 +399,7 @@ Transform:
   m_GameObject: {fileID: 980594293}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 22.08}
+  m_LocalPosition: {x: -10.14, y: 0, z: 18.22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -550,9 +550,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneToLoad: {fileID: 102900000, guid: 4e1c836d57e93d844b66f80027887d1e, type: 3}
-  destinationTransform: {fileID: 980594294}
+  fallbackTransform: {fileID: 980594294}
   playerTag: Player
   sceneName: CombatScene
+  monsterPrefab: {fileID: 5209355076112397699, guid: a2d26afb1578ab64699708b00e622a50, type: 3}
+  numberOfMonsters: 1
 --- !u!1 &2066194886
 GameObject:
   m_ObjectHideFlags: 0

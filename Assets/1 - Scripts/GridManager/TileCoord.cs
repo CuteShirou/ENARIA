@@ -8,11 +8,12 @@ public class TileCoord : MonoBehaviour
     [SerializeField] Material normal;
     public int X { get; private set; }
     public int Y { get; private set; }
-
+    public Vector2Int Coord;
     public void SetCoord(int x, int y)
     {
         X = x;
         Y = y;
+        Coord = new Vector2Int(X, Y);
     }
     private void OnMouseEnter()
     {
