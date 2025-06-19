@@ -125,7 +125,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   gridManager: {fileID: 0}
-  highlighter: {fileID: 0}
 --- !u!114 &1560137724322944130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 200
   maxPA: 7
-  maxPM: 2
+  maxPM: 10
   currentHP: 0
   currentPA: 0
   currentPM: 0

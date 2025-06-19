@@ -12,8 +12,8 @@ public class CombatController : MonoBehaviour
     private Vector3 currentTarget;
 
     private bool isMoving = false;
-    public ReachableTilesHighlighter highlighter;
     private CombatStats stats;
+    private TileCoord currentTile;
 
     void Start()
     {
@@ -22,6 +22,10 @@ public class CombatController : MonoBehaviour
 
         if (stats == null)
             Debug.LogError($"{name} n'a pas de CombatStats attaché !");
+
+        currentTile = FindClosestTile();
+        if (currentTile != null)
+            currentTile.SetOccupant(gameObject);
     }
 
     void Update()
@@ -58,47 +62,105 @@ public class CombatController : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hit, 100f))
             {
-                TileCoord tile = hit.collider.GetComponent<TileCoord>();
-                if (tile != null)
+                TileCoord targetTile = hit.collider.GetComponent<TileCoord>();
+                if (targetTile == null) return;
+
+                Vector2Int fromCoord = GetCurrentCoord();
+                Vector2Int toCoord = targetTile.Coord;
+
+                List<Vector2Int> path = AStarPathfinder.FindPath(fromCoord, toCoord, gridManager, stats.currentPM);
+                TileCoord destinationTile = gridManager.TileMap[toCoord].GetComponent<TileCoord>();
+                if (destinationTile != null && destinationTile.occupant == gameObject)
                 {
-                    if (!gridManager.TileMap.ContainsKey(tile.Coord))
-                    {
-                        Debug.LogWarning($"Coordonnée {tile.Coord} introuvable dans la TileMap !");
-                        return;
-                    }
-
-                    Vector3 destination = gridManager.TileMap[tile.Coord].transform.position + new Vector3(0, 0.5f, 0);
-
-                    // Calcule de la distance en cases
-                    Vector2Int fromCoord = GetCurrentCoord();
-                    Vector2Int toCoord = tile.Coord;
-                    int distance = Mathf.Abs(fromCoord.x - toCoord.x) + Mathf.Abs(fromCoord.y - toCoord.y);
-
-                    if (distance <= stats.currentPM)
-                    {
-                        stats.currentPM -= distance;
-
-                        // Créer le chemin en L
-                        Vector3 intermediate1 = new Vector3(destination.x, transform.position.y, transform.position.z);
-                        Vector3 intermediate2 = new Vector3(destination.x, transform.position.y, destination.z);
-
-                        movementQueue.Clear();
-                        movementQueue.Enqueue(intermediate1);
-                        movementQueue.Enqueue(intermediate2);
-                        isMoving = true;
-                    }
-                    else
-                    {
-                        Debug.Log("Pas assez de PM !");
-                    }
+                    Debug.Log("Tu es déjà sur cette case.");
+                    return;
                 }
+                else if (destinationTile != null && destinationTile.IsOccupied)
+                {
+                    Debug.Log("La case est déjà occupée !");
+                    return;
+                }
+                else if (path == null)
+                {
+                    Debug.Log("Aucun chemin trouvé ou trop loin !");
+                    return;
+                }
+                
+
+                // Libère la case actuelle
+                if (currentTile != null)
+                    currentTile.ClearOccupant();
+
+                currentTile = gridManager.TileMap[toCoord].GetComponent<TileCoord>();
+                currentTile.SetOccupant(gameObject);
+
+                stats.currentPM -= path.Count;
+
+                movementQueue.Clear();
+                foreach (Vector2Int step in path)
+                {
+                    Vector3 worldPos = gridManager.TileMap[step].transform.position + new Vector3(0, 0.5f, 0);
+                    movementQueue.Enqueue(worldPos);
+                }
+
+                isMoving = true;
             }
         }
     }
 
+
+    private List<TileCoord> GetValidLPath(Vector2Int from, Vector2Int to)
+    {
+        List<TileCoord> path = new List<TileCoord>();
+
+        // Cas 1 : Horizontal puis Vertical
+        Vector2Int inter1 = new Vector2Int(to.x, from.y);
+        if (IsTileFree(inter1) && IsTileFree(to))
+        {
+            path.Add(gridManager.TileMap[inter1].GetComponent<TileCoord>());
+            path.Add(gridManager.TileMap[to].GetComponent<TileCoord>());
+            return path;
+        }
+
+        // Cas 2 : Vertical puis Horizontal
+        Vector2Int inter2 = new Vector2Int(from.x, to.y);
+        if (IsTileFree(inter2) && IsTileFree(to))
+        {
+            path.Add(gridManager.TileMap[inter2].GetComponent<TileCoord>());
+            path.Add(gridManager.TileMap[to].GetComponent<TileCoord>());
+            return path;
+        }
+
+        return null;
+    }
+
+    private bool IsTileFree(Vector2Int coord)
+    {
+        if (!gridManager.TileMap.ContainsKey(coord)) return false;
+        TileCoord tile = gridManager.TileMap[coord].GetComponent<TileCoord>();
+        return tile != null && !tile.IsOccupied;
+    }
+
+    private TileCoord FindClosestTile()
+    {
+        float minDist = float.MaxValue;
+        TileCoord closest = null;
+
+        foreach (var tileGO in gridManager.TileMap.Values)
+        {
+            float d = Vector3.Distance(transform.position, tileGO.transform.position);
+            if (d < minDist)
+            {
+                minDist = d;
+                closest = tileGO.GetComponent<TileCoord>();
+            }
+        }
+
+        return closest;
+    }
+
     private Vector2Int GetCurrentCoord()
     {
-        // Recherche la case la plus proche
         Vector3 pos = transform.position;
         float minDist = float.MaxValue;
         Vector2Int closest = Vector2Int.zero;
@@ -112,6 +174,7 @@ public class CombatController : MonoBehaviour
                 closest = kvp.Key;
             }
         }
+
         return closest;
     }
 }

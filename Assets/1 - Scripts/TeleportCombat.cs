@@ -69,11 +69,15 @@ public class TeleportCombat : MonoBehaviour
         {
             List<Vector2Int> availableTiles = new List<Vector2Int>(gridManager.TileMap.Keys);
 
-            // 1. Positionner le joueur
+            // 1. Positionner le joueur 
             Vector2Int playerCoord = GetAndRemoveRandomCoord(ref availableTiles);
             GameObject playerTile = gridManager.TileMap[playerCoord];
             player.transform.position = playerTile.transform.position + new Vector3(0, 0.5f, 0);
             player.transform.rotation = Quaternion.identity;
+            TileCoord tileCoord = playerTile.GetComponent<TileCoord>();
+                //définis que la case est occupée par le joueur
+            if (tileCoord != null)
+                tileCoord.SetOccupant(player);
 
             // 2. Instancier les monstres
             List<GameObject> spawnedMonsters = new List<GameObject>();
@@ -83,7 +87,13 @@ public class TeleportCombat : MonoBehaviour
                 GameObject tile = gridManager.TileMap[monsterCoord];
 
                 GameObject monster = Instantiate(monsterPrefab, tile.transform.position + new Vector3(0, 0.5f, 0), Quaternion.identity);
+                TileCoord monsterTileCoord = tile.GetComponent<TileCoord>();
+                    //définis que la case est occupée par le monstre
+                if (monsterTileCoord != null)
+                    monsterTileCoord.SetOccupant(monster);
+
                 monster.tag = "Monster"; // Assure que le tag est correct
+                monster.name = $"Monster {i + 1}";
                 spawnedMonsters.Add(monster);
             }
 
@@ -97,6 +107,8 @@ public class TeleportCombat : MonoBehaviour
 
                 cm.InitCombat(); // Lance le tour par tour
             }
+
+
         }
 
         AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
