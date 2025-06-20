@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using StarterAssets;
+using UnityEngine.Animations;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,6 +20,8 @@ public class TeleportCombat : MonoBehaviour
     [Header("Transform cible en fallback si pas de grille trouvée")]
     [SerializeField] private Transform fallbackTransform;
 
+    [Header("Nom du parent de caméra à activer (ParentConstraint)")]
+    [SerializeField] private string cameraParentTargetName;
     [SerializeField] private string playerTag = "Player";
 
     [HideInInspector]
@@ -64,6 +68,8 @@ public class TeleportCombat : MonoBehaviour
             gridManager = root.GetComponentInChildren<Grid>();
             if (gridManager != null) break;
         }
+
+        SetCameraParentByName(cameraParentTargetName);
 
         if (gridManager != null && gridManager.TileMap.Count > 0)
         {
@@ -123,5 +129,31 @@ public class TeleportCombat : MonoBehaviour
         Vector2Int coord = coords[index];
         coords.RemoveAt(index);
         return coord;
+    }
+
+    private void SetCameraParentByName(string targetName)
+    {
+        if (string.IsNullOrEmpty(targetName)) return;
+
+        Camera mainCam = Camera.main;
+        if (mainCam == null)
+        {
+            Debug.LogWarning("SceneTeleporter: MainCamera not found.");
+            return;
+        }
+
+        ParentConstraint constraint = mainCam.GetComponent<ParentConstraint>();
+        if (constraint == null)
+        {
+            Debug.LogWarning("SceneTeleporter: ParentConstraint not found on MainCamera.");
+            return;
+        }
+
+        for (int i = 0; i < constraint.sourceCount; i++)
+        {
+            ConstraintSource src = constraint.GetSource(i);
+            src.weight = (src.sourceTransform.name == targetName) ? 1f : 0f;
+            constraint.SetSource(i, src);
+        }
     }
 }

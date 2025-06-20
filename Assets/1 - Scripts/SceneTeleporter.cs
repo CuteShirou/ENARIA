@@ -1,6 +1,8 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Animations;
+using StarterAssets;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -15,6 +17,8 @@ public class SceneTeleporter : MonoBehaviour
     [Header("Transform cible dans la scène à charger (destination du joueur)")]
     [SerializeField] private Transform destinationTransform;
 
+    [Header("Nom du parent de caméra à activer (ParentConstraint)")]
+    [SerializeField] private string cameraParentTargetName;
     [SerializeField] private string playerTag = "Player";
 
     [HideInInspector]
@@ -33,6 +37,16 @@ public class SceneTeleporter : MonoBehaviour
         if (other.CompareTag(playerTag) && !string.IsNullOrEmpty(sceneName))
         {
             StartCoroutine(SwitchSceneAdditive(other.gameObject));
+        }
+        
+        var TPC = other.GetComponent<ThirdPersonController>();
+        TPC._isClickMoving = false;
+        TPC._clickTarget = Vector3.zero;
+        
+        if (TPC._hasAnimator)
+        {
+            TPC._animator.SetFloat(TPC._animIDSpeed, 0f);
+            TPC._animator.SetFloat(TPC._animIDMotionSpeed, 0f);
         }
     }
 
@@ -54,9 +68,38 @@ public class SceneTeleporter : MonoBehaviour
             player.transform.position = destinationTransform.position;
             player.transform.rotation = destinationTransform.rotation;
         }
+        
+        // 2. Activation dynamique du bon parent caméra
+        SetCameraParentByName(cameraParentTargetName);
 
+        // 3. Déchargement de la scène actuelle
         AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
         while (!unloadOp.isDone)
             yield return null;
+    }
+    private void SetCameraParentByName(string targetName)
+    {
+        if (string.IsNullOrEmpty(targetName)) return;
+
+        Camera mainCam = Camera.main;
+        if (mainCam == null)
+        {
+            Debug.LogWarning("SceneTeleporter: MainCamera not found.");
+            return;
+        }
+
+        ParentConstraint constraint = mainCam.GetComponent<ParentConstraint>();
+        if (constraint == null)
+        {
+            Debug.LogWarning("SceneTeleporter: ParentConstraint not found on MainCamera.");
+            return;
+        }
+
+        for (int i = 0; i < constraint.sourceCount; i++)
+        {
+            ConstraintSource src = constraint.GetSource(i);
+            src.weight = (src.sourceTransform.name == targetName) ? 1f : 0f;
+            constraint.SetSource(i, src);
+        }
     }
 }

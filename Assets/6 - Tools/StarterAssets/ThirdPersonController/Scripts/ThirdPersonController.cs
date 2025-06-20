@@ -55,24 +55,24 @@ namespace StarterAssets
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
 
-        private int _animIDSpeed;
+        public int _animIDSpeed;
         private int _animIDGrounded;
         private int _animIDJump;
         private int _animIDFreeFall;
-        private int _animIDMotionSpeed;
+        public int _animIDMotionSpeed;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
 #endif
-        private Animator _animator;
+        public Animator _animator;
         private CharacterController _controller;
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
 
         private const float _threshold = 0.01f;
-        private bool _hasAnimator;
+        public bool _hasAnimator;
 
-        private Vector3 _clickTarget;
+        public Vector3 _clickTarget;
         public bool _isClickMoving = false;
         public bool _isInCombat = false;
         [SerializeField] public int _turnOrder;
