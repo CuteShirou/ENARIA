@@ -31,6 +31,12 @@ public class CombatManager : MonoBehaviour
                 gcc.enabled = false;
                 gcc.gridManager = FindAnyObjectByType<Grid>();
             }
+            var sc = fighters[i].GetComponent<SkillCaster>();
+            if (sc != null)
+            {
+                sc.enabled = false;
+                sc.gridManager = FindAnyObjectByType<Grid>();
+            }
         }
 
         currentTurnIndex = 0;
@@ -56,12 +62,19 @@ public class CombatManager : MonoBehaviour
             var controller = fighters[i].GetComponent<CombatController>();
             if (controller != null)
                 controller.enabled = (i == currentTurnIndex);
+            var sc = fighters[i].GetComponent<SkillCaster>();
+            if (sc != null)
+                sc.enabled = (i == currentTurnIndex);
         }
 
         // Réinitialise les PM / PA
         var stats = fighter.GetComponent<CombatStats>();
         if (stats != null)
             stats.ResetTurnStats();
+
+        SkillCaster caster = fighters[currentTurnIndex].GetComponent<SkillCaster>();
+        if (caster != null)
+            caster.ResetSkillTurnUsage();
 
         Debug.Log("Tour de : " + fighter.name);
         turnStarted = true;

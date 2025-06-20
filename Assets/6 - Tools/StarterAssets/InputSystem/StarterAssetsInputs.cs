@@ -13,8 +13,10 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool click;
+        public bool castSpell;
 
-		[Header("Movement Settings")]
+
+        [Header("Movement Settings")]
 		public bool analogMovement;
 
 		[Header("Mouse Cursor Settings")]
@@ -50,6 +52,10 @@ namespace StarterAssets
 		{
 			ClickInput(value.isPressed);
         }
+        public void OnCastSpell(InputValue value)
+        {
+            CastSpellInput(value.isPressed);
+        }
 #endif
 
 
@@ -76,6 +82,11 @@ namespace StarterAssets
 		public void ClickInput(bool newClickState)
 		{
 			click = newClickState;
+        }
+
+        public void CastSpellInput(bool newCastSpellState)
+        {
+            castSpell = newCastSpellState;
         }
 
         private void OnApplicationFocus(bool hasFocus)
