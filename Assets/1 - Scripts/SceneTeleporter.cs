@@ -1,6 +1,8 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Animations;
+using StarterAssets;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -17,7 +19,6 @@ public class SceneTeleporter : MonoBehaviour
 
     [Header("Nom du parent de caméra à activer (ParentConstraint)")]
     [SerializeField] private string cameraParentTargetName;
-
     [SerializeField] private string playerTag = "Player";
 
     [HideInInspector]
@@ -37,6 +38,16 @@ public class SceneTeleporter : MonoBehaviour
         {
             StartCoroutine(SwitchSceneAdditive(other.gameObject));
         }
+        
+        var TPC = other.GetComponent<ThirdPersonController>();
+        TPC._isClickMoving = false;
+        TPC._clickTarget = Vector3.zero;
+        
+        if (TPC._hasAnimator)
+        {
+            TPC._animator.SetFloat(TPC._animIDSpeed, 0f);
+            TPC._animator.SetFloat(TPC._animIDMotionSpeed, 0f);
+        }
     }
 
     private System.Collections.IEnumerator SwitchSceneAdditive(GameObject player)
@@ -51,13 +62,13 @@ public class SceneTeleporter : MonoBehaviour
         if (newScene.IsValid())
             SceneManager.SetActiveScene(newScene);
 
-        // 1. Téléportation du joueur
+        // Déplacement du joueur si une destination est spécifiée
         if (destinationTransform != null)
         {
             player.transform.position = destinationTransform.position;
             player.transform.rotation = destinationTransform.rotation;
         }
-
+        
         // 2. Activation dynamique du bon parent caméra
         SetCameraParentByName(cameraParentTargetName);
 
@@ -66,7 +77,6 @@ public class SceneTeleporter : MonoBehaviour
         while (!unloadOp.isDone)
             yield return null;
     }
-
     private void SetCameraParentByName(string targetName)
     {
         if (string.IsNullOrEmpty(targetName)) return;
