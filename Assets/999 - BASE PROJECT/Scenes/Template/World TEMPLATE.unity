@@ -119,6 +119,123 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &31402373
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 31402374}
+  - component: {fileID: 31402376}
+  - component: {fileID: 31402375}
+  m_Layer: 0
+  m_Name: Point Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &31402374
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31402373}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0025, y: 0.0297, z: 0.0057}
+  m_LocalScale: {x: 0.35205296, y: 0.35205296, z: 0.35205296}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1886062926}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &31402375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31402373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+--- !u!108 &31402376
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31402373}
+  m_Enabled: 1
+  serializedVersion: 11
+  m_Type: 2
+  m_Color: {r: 0.28627452, g: 0.854902, b: 0.9725491, a: 1}
+  m_Intensity: 1.5
+  m_Range: 1.8
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 1
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 0.68
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1 &397663021
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +248,11 @@ GameObject:
   - component: {fileID: 397663024}
   - component: {fileID: 397663023}
   - component: {fileID: 397663026}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_Layer: 0
+========
+  m_Layer: 6
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_Name: Sol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,7 +378,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
 --- !u!1 &2066194886
+========
+--- !u!1 &980594293
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -265,37 +390,84 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   - component: {fileID: 2066194887}
   m_Layer: 0
   m_Name: Return From W3
+========
+  - component: {fileID: 980594294}
+  m_Layer: 0
+  m_Name: Goto Combat
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
 --- !u!4 &2066194887
+========
+--- !u!4 &980594294
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_GameObject: {fileID: 2066194886}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000006258487}
   m_LocalPosition: {x: 28.570002, y: 0, z: 3.510003}
+========
+  m_GameObject: {fileID: 980594293}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -10.14, y: 0, z: 18.22}
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!95 &96304930766838514
+========
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!1 &1886062920
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1886062926}
+  - component: {fileID: 1886062925}
+  - component: {fileID: 1886062924}
+  - component: {fileID: 1886062922}
+  - component: {fileID: 1886062921}
+  - component: {fileID: 1886062927}
+  m_Layer: 0
+  m_Name: Teleport combat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!95 &1886062921
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_GameObject: {fileID: 5024996328576813760}
+========
+  m_GameObject: {fileID: 1886062920}
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 64bf1374f9e232547bb749ad66a49273, type: 2}
@@ -310,12 +482,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
 --- !u!1 &106274898877456649
 GameObject:
+========
+--- !u!65 &1886062922
+BoxCollider:
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   serializedVersion: 6
   m_Component:
   - component: {fileID: 837860131391051828}
@@ -330,10 +508,30 @@ GameObject:
   m_IsActive: 1
 --- !u!4 &600555382293865579
 Transform:
+========
+  m_GameObject: {fileID: 1886062920}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.031302456, y: 0.026658088, z: 0.08742236}
+  m_Center: {x: -0.00023458667, y: -0.0014646058, z: -0.0019286126}
+--- !u!23 &1886062924
+MeshRenderer:
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_GameObject: {fileID: 5024996328576813760}
   serializedVersion: 2
   m_LocalRotation: {x: 0.00000019371507, y: 0.7071067, z: 0.7071069, w: 0.00000013411044}
@@ -345,11 +543,61 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 180}
 --- !u!4 &837860131391051828
+========
+  m_GameObject: {fileID: 1886062920}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 4296d316f295be34593960af5476f8bc, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1886062925
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886062920}
+  m_Mesh: {fileID: -4653777546457479158, guid: 5e97e3d7de158374584d23672c3e30f1, type: 3}
+--- !u!4 &1886062926
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_GameObject: {fileID: 106274898877456649}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -360,12 +608,165 @@ Transform:
   m_Father: {fileID: 600555382293865579}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1409625701531894471
+========
+  m_GameObject: {fileID: 1886062920}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.707042, y: -0.009546014, z: -0.009545718, w: -0.70704275}
+  m_LocalPosition: {x: 0.15789536, y: 2.79, z: 5.4526625}
+  m_LocalScale: {x: 52.27, y: 52.27, z: 52.27}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 31402374}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 361.547}
+--- !u!114 &1886062927
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_GameObject: {fileID: 106274898877456649}
+========
+  m_GameObject: {fileID: 1886062920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be96129db2cb0c4b87f441c573a1eff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneToLoad: {fileID: 102900000, guid: 4e1c836d57e93d844b66f80027887d1e, type: 3}
+  fallbackTransform: {fileID: 980594294}
+  playerTag: Player
+  sceneName: CombatScene
+  monsterPrefab: {fileID: 5209355076112397699, guid: a2d26afb1578ab64699708b00e622a50, type: 3}
+  numberOfMonsters: 5
+--- !u!1 &2066194886
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2066194887}
+  m_Layer: 0
+  m_Name: Goto W2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2066194887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066194886}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 25, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!4 &135116454702630752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5479123497722177995}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.5000003, y: 0.4999999, z: 0.49999967, w: 0.5000002}
+  m_LocalPosition: {x: 13.78, y: 2.79, z: -0.11}
+  m_LocalScale: {x: 52.27, y: 52.27, z: 52.27}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 150082351618718527}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
+--- !u!4 &150082351618718527
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633897273523094018}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0025, y: 0.0297, z: 0.0057}
+  m_LocalScale: {x: 0.35205296, y: 0.35205296, z: 0.35205296}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 135116454702630752}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &633897273523094018
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 150082351618718527}
+  - component: {fileID: 5495819128403261398}
+  - component: {fileID: 1889930025535185356}
+  m_Layer: 0
+  m_Name: Point Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!95 &640560700396583417
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5479123497722177995}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 64bf1374f9e232547bb749ad66a49273, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1307886542261967625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5479123497722177995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aacd54820737c4244aa2654327d41d5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneToLoad: {fileID: 102900000, guid: ebadfc00e06bda744941d0ec10b15309, type: 3}
+  destinationTransform: {fileID: 2066194887}
+  playerTag: Player
+  sceneName: World 2
+--- !u!114 &1889930025535185356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633897273523094018}
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
@@ -382,6 +783,7 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
 --- !u!114 &1986955647711098882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,12 +801,19 @@ MonoBehaviour:
   playerTag: Player
   sceneName: World 2
 --- !u!65 &3130320984417683562
+========
+--- !u!65 &2505334114952260449
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_GameObject: {fileID: 5024996328576813760}
+========
+  m_GameObject: {fileID: 5479123497722177995}
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -419,15 +828,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.031302456, y: 0.026658088, z: 0.08742236}
   m_Center: {x: -0.00023458667, y: -0.0014646058, z: -0.0019286126}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
 --- !u!33 &3870200652091742881
+========
+--- !u!33 &4323500446521407914
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_GameObject: {fileID: 5024996328576813760}
   m_Mesh: {fileID: -4653777546457479158, guid: 5e97e3d7de158374584d23672c3e30f1, type: 3}
 --- !u!1 &5024996328576813760
+========
+  m_GameObject: {fileID: 5479123497722177995}
+  m_Mesh: {fileID: -4653777546457479158, guid: 5e97e3d7de158374584d23672c3e30f1, type: 3}
+--- !u!1 &5479123497722177995
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -435,6 +854,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   - component: {fileID: 600555382293865579}
   - component: {fileID: 3870200652091742881}
   - component: {fileID: 7356214780258453034}
@@ -443,18 +863,36 @@ GameObject:
   - component: {fileID: 96304930766838514}
   m_Layer: 0
   m_Name: Rune TP Prefab
+========
+  - component: {fileID: 135116454702630752}
+  - component: {fileID: 4323500446521407914}
+  - component: {fileID: 8044299872457188641}
+  - component: {fileID: 1307886542261967625}
+  - component: {fileID: 2505334114952260449}
+  - component: {fileID: 640560700396583417}
+  m_Layer: 0
+  m_Name: Teleport W2
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
 --- !u!108 &5039682061658133725
+========
+--- !u!108 &5495819128403261398
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 Light:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_GameObject: {fileID: 106274898877456649}
+========
+  m_GameObject: {fileID: 633897273523094018}
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 2
@@ -509,13 +947,21 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
 --- !u!23 &7356214780258453034
+========
+--- !u!23 &8044299872457188641
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   m_GameObject: {fileID: 5024996328576813760}
+========
+  m_GameObject: {fileID: 5479123497722177995}
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -559,5 +1005,12 @@ SceneRoots:
   m_Roots:
   - {fileID: 652565988}
   - {fileID: 397663025}
+<<<<<<<< HEAD:Assets/999 - BASE PROJECT/Scenes/Template/World TEMPLATE.unity
   - {fileID: 600555382293865579}
   - {fileID: 2066194887}
+========
+  - {fileID: 135116454702630752}
+  - {fileID: 1886062926}
+  - {fileID: 2066194887}
+  - {fileID: 980594294}
+>>>>>>>> origin/Bastien:Assets/999 - BASE PROJECT/Scenes/World 1.unity
