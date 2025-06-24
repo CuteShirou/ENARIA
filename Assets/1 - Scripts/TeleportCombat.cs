@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,39 +6,21 @@ using UnityEngine.SceneManagement;
 using StarterAssets;
 using UnityEngine.Animations;
 
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 public class TeleportCombat : MonoBehaviour
 {
-#if UNITY_EDITOR
-    [Header("Drag & Drop ici ta scène cible")]
-    [SerializeField] private SceneAsset sceneToLoad;
-#endif
+    [Header("Nom EXACT de la scÃ¨ne de combat (sans .unity)")]
+    [SerializeField] private string sceneName;
 
-    [Header("Transform cible en fallback si pas de grille trouvée")]
+    [Header("Transform cible en fallback si pas de grille trouvÃ©e")]
     [SerializeField] private Transform fallbackTransform;
 
-    [Header("Nom du parent de caméra à activer (ParentConstraint)")]
+    [Header("Nom du parent de camÃ©ra Ã  activer (ParentConstraint)")]
     [SerializeField] private string cameraParentTargetName;
     [SerializeField] private string playerTag = "Player";
-
-    [HideInInspector]
-    public string sceneName;
 
     [Header("Combat")]
     [SerializeField] private GameObject monsterPrefab;
     [SerializeField] private int numberOfMonsters = 1;
-
-    private void OnValidate()
-    {
-#if UNITY_EDITOR
-        if (sceneToLoad != null)
-            sceneName = sceneToLoad.name;
-#endif
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -51,6 +34,7 @@ public class TeleportCombat : MonoBehaviour
     private IEnumerator SwitchSceneAndPlaceOnGrid(GameObject player)
     {
         Scene currentScene = gameObject.scene;
+        Debug.Log($"[TeleportCombat] Loading combat scene: {sceneName}");
 
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while (!loadOp.isDone)
@@ -75,17 +59,14 @@ public class TeleportCombat : MonoBehaviour
         {
             List<Vector2Int> availableTiles = new List<Vector2Int>(gridManager.TileMap.Keys);
 
-            // 1. Positionner le joueur 
             Vector2Int playerCoord = GetAndRemoveRandomCoord(ref availableTiles);
             GameObject playerTile = gridManager.TileMap[playerCoord];
             player.transform.position = playerTile.transform.position + new Vector3(0, 0.5f, 0);
             player.transform.rotation = Quaternion.identity;
             TileCoord tileCoord = playerTile.GetComponent<TileCoord>();
-                //définis que la case est occupée par le joueur
             if (tileCoord != null)
                 tileCoord.SetOccupant(player);
 
-            // 2. Instancier les monstres
             List<GameObject> spawnedMonsters = new List<GameObject>();
             for (int i = 0; i < numberOfMonsters; i++)
             {
@@ -94,27 +75,22 @@ public class TeleportCombat : MonoBehaviour
 
                 GameObject monster = Instantiate(monsterPrefab, tile.transform.position + new Vector3(0, 0.5f, 0), Quaternion.identity);
                 TileCoord monsterTileCoord = tile.GetComponent<TileCoord>();
-                    //définis que la case est occupée par le monstre
                 if (monsterTileCoord != null)
                     monsterTileCoord.SetOccupant(monster);
 
-                monster.tag = "Monster"; // Assure que le tag est correct
+                monster.tag = "Monster";
                 monster.name = $"Monster {i + 1}";
                 spawnedMonsters.Add(monster);
             }
 
-            // 3. Enregistrement dans le CombatManager
             CombatManager cm = FindAnyObjectByType<CombatManager>();
             if (cm != null)
             {
                 cm.RegisterFighter(player);
                 foreach (var monster in spawnedMonsters)
                     cm.RegisterFighter(monster);
-
-                cm.InitCombat(); // Lance le tour par tour
+                cm.InitCombat();
             }
-
-
         }
 
         AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
@@ -122,7 +98,6 @@ public class TeleportCombat : MonoBehaviour
             yield return null;
     }
 
-    // Méthode utilitaire
     private Vector2Int GetAndRemoveRandomCoord(ref List<Vector2Int> coords)
     {
         int index = Random.Range(0, coords.Count);
@@ -138,14 +113,14 @@ public class TeleportCombat : MonoBehaviour
         Camera mainCam = Camera.main;
         if (mainCam == null)
         {
-            Debug.LogWarning("SceneTeleporter: MainCamera not found.");
+            Debug.LogWarning("TeleportCombat: MainCamera not found.");
             return;
         }
 
         ParentConstraint constraint = mainCam.GetComponent<ParentConstraint>();
         if (constraint == null)
         {
-            Debug.LogWarning("SceneTeleporter: ParentConstraint not found on MainCamera.");
+            Debug.LogWarning("TeleportCombat: ParentConstraint not found on MainCamera.");
             return;
         }
 

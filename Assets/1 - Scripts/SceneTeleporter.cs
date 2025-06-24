@@ -3,16 +3,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Animations;
 using StarterAssets;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using System.Collections;
 
 public class SceneTeleporter : MonoBehaviour
 {
-#if UNITY_EDITOR
-    [Header("Drag & Drop ici ta scène cible")]
-    [SerializeField] private SceneAsset sceneToLoad;
-#endif
+    [Header("Nom EXACT de la scène à charger (sans .unity)")]
+    [SerializeField] private string sceneName;
 
     [Header("Transform cible dans la scène à charger (destination du joueur)")]
     [SerializeField] private Transform destinationTransform;
@@ -21,85 +17,105 @@ public class SceneTeleporter : MonoBehaviour
     [SerializeField] private string cameraParentTargetName;
     [SerializeField] private string playerTag = "Player";
 
-    [HideInInspector]
-    public string sceneName;
-
-    private void OnValidate()
-    {
-#if UNITY_EDITOR
-        if (sceneToLoad != null)
-            sceneName = sceneToLoad.name;
-#endif
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(playerTag) && !string.IsNullOrEmpty(sceneName))
         {
+            DontDestroyOnLoad(other.transform.root.gameObject);
             StartCoroutine(SwitchSceneAdditive(other.gameObject));
-        }
-        
-        var TPC = other.GetComponent<ThirdPersonController>();
-        TPC._isClickMoving = false;
-        TPC._clickTarget = Vector3.zero;
-        
-        if (TPC._hasAnimator)
-        {
-            TPC._animator.SetFloat(TPC._animIDSpeed, 0f);
-            TPC._animator.SetFloat(TPC._animIDMotionSpeed, 0f);
+
+            var TPC = other.GetComponent<ThirdPersonController>();
+            TPC._isClickMoving = false;
+            TPC._clickTarget = Vector3.zero;
+
+            if (TPC._hasAnimator)
+            {
+                TPC._animator.SetFloat(TPC._animIDSpeed, 0f);
+                TPC._animator.SetFloat(TPC._animIDMotionSpeed, 0f);
+            }
         }
     }
 
-    private System.Collections.IEnumerator SwitchSceneAdditive(GameObject player)
+    private IEnumerator SwitchSceneAdditive(GameObject player)
     {
-        Scene currentScene = gameObject.scene;
+        string sceneToUnload = gameObject.scene.name;
 
+        Debug.Log("[SceneTeleporter] Active scene BEFORE load: " + SceneManager.GetActiveScene().name);
+        Debug.Log("[SceneTeleporter] Loading scene: " + sceneName);
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while (!loadOp.isDone)
             yield return null;
 
         Scene newScene = SceneManager.GetSceneByName(sceneName);
         if (newScene.IsValid())
+        {
             SceneManager.SetActiveScene(newScene);
+            Debug.Log("[SceneTeleporter] New scene set active: " + newScene.name);
+        }
+        else
+        {
+            Debug.LogError("[SceneTeleporter] Failed to load new scene: " + sceneName);
+        }
 
-        // Déplacement du joueur si une destination est spécifiée
+        yield return null;
+
         if (destinationTransform != null)
         {
             player.transform.position = destinationTransform.position;
             player.transform.rotation = destinationTransform.rotation;
         }
-        
-        // 2. Activation dynamique du bon parent caméra
+
+        yield return null;
         SetCameraParentByName(cameraParentTargetName);
 
-        // 3. Déchargement de la scène actuelle
-        AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+        yield return null;
+        Debug.Log("[SceneTeleporter] Unloading scene: " + sceneToUnload);
+        AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(sceneToUnload);
         while (!unloadOp.isDone)
             yield return null;
     }
+
     private void SetCameraParentByName(string targetName)
     {
-        if (string.IsNullOrEmpty(targetName)) return;
+        if (string.IsNullOrEmpty(targetName))
+        {
+            Debug.LogWarning("[SceneTeleporter] Camera parent target name is empty.");
+            return;
+        }
 
         Camera mainCam = Camera.main;
         if (mainCam == null)
         {
-            Debug.LogWarning("SceneTeleporter: MainCamera not found.");
+            Debug.LogError("[SceneTeleporter] MainCamera not found.");
             return;
         }
+
+        Debug.Log("[SceneTeleporter] MainCamera found: " + mainCam.name);
 
         ParentConstraint constraint = mainCam.GetComponent<ParentConstraint>();
         if (constraint == null)
         {
-            Debug.LogWarning("SceneTeleporter: ParentConstraint not found on MainCamera.");
+            Debug.LogWarning("[SceneTeleporter] No ParentConstraint found on MainCamera. Skipping camera reassignment.");
             return;
         }
 
+        bool found = false;
         for (int i = 0; i < constraint.sourceCount; i++)
         {
             ConstraintSource src = constraint.GetSource(i);
-            src.weight = (src.sourceTransform.name == targetName) ? 1f : 0f;
+            bool match = (src.sourceTransform != null && src.sourceTransform.name == targetName);
+            src.weight = match ? 1f : 0f;
             constraint.SetSource(i, src);
+            if (match) found = true;
+        }
+
+        if (found)
+        {
+            Debug.Log("[SceneTeleporter] Camera parent switched to: " + targetName);
+        }
+        else
+        {
+            Debug.LogWarning("[SceneTeleporter] Target camera parent " + targetName + " not found among constraint sources.");
         }
     }
 }
