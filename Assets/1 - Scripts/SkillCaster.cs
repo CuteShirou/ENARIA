@@ -35,7 +35,7 @@ public class SkillCaster : MonoBehaviour
                 Vector2Int to = tile.Coord;
 
                 int distance = Mathf.Abs(from.x - to.x) + Mathf.Abs(from.y - to.y);
-                if (distance < equippedSkill.rangeMin || distance > equippedSkill.rangeMax + stats.PO)
+                if (distance < equippedSkill.rangeMin || distance > equippedSkill.rangeMax + stats.currentPO)
                 {
                     Debug.Log("Hors de portée !");
                     return;
@@ -89,11 +89,11 @@ public class SkillCaster : MonoBehaviour
         CombatStats targetStats = target.GetComponent<CombatStats>();
         if (targetStats == null) return;
 
-        float critChance = stats.critChance + equippedSkill.critChance;
+        float critChance = stats.currentCritChance + equippedSkill.critChance;
         bool isCrit;
         if (critChance < 100)
         {
-            isCrit = Random.value < (stats.critChance / 100f);
+            isCrit = Random.value < (stats.currentCritChance / 100f);
         }
         else
         {
@@ -121,33 +121,116 @@ public class SkillCaster : MonoBehaviour
         if (isCrit) log += " CRITIQUE !";
         Debug.Log(log);
 
-        // Application d’un effet de critique (bonus/malus)
-        if (isCrit && equippedSkill.critEffect != null && equippedSkill.critEffect.effectType != EffectType.Aucun)
+        // Application d’un effet (bonus/malus)
+        foreach (SkillEffect effect in equippedSkill.effects)
         {
-            ApplySkillCritEffect(equippedSkill.critEffect, targetStats);
+            CombatStats targetToAffect = effect.applyToSelf ? stats : target.GetComponent<CombatStats>();
+            if (targetToAffect == null) continue;
+
+            if (effect.duration > 0)
+            {
+                targetToAffect.activeEffects.Add(new ActiveEffect(effect));
+                Debug.Log($" Effet temporaire {effect.effectType} ({effect.value}) pour {effect.duration} tour(s) sur {targetToAffect.name}");
+            }
+            else
+            {
+                // Appliquer effet simple, immédiat et sans suivi
+                targetToAffect.ApplyInstantEffect(effect);
+                Debug.Log($" Effet instantané {effect.effectType} ({effect.value}) appliqué sur {targetToAffect.name}");
+            }
         }
+
+        // Application d’un effet de critique (bonus/malus)
+        if (isCrit && equippedSkill.critEffects != null)
+        {
+            foreach (var effect in equippedSkill.critEffects)
+            {
+                if (effect.applyToSelf)
+                {
+                    ApplySkillCritEffect(effect, stats);
+                }
+                else
+                {
+                    ApplySkillCritEffect(effect, targetStats);
+                }
+            }
+        }
+
+
     }
 
     private void ApplySkillCritEffect(SkillEffect effect, CombatStats targetStats)
     {
+        int val = Mathf.RoundToInt(effect.value);
+
         switch (effect.effectType)
         {
-            case EffectType.BonusPA:
-                targetStats.currentPA += Mathf.RoundToInt(effect.value);
-                Debug.Log($" Effet critique : +{effect.value} PA à {targetStats.name}");
-                break;
+            case EffectType.BonusPV: targetStats.currentHP += val; break;
+            case EffectType.BonusPA: targetStats.currentPA += val; break;
+            case EffectType.MalusPA: targetStats.currentPA -= val; break;
+            case EffectType.BonusPM: targetStats.currentPM += val; break;
+            case EffectType.MalusPM: targetStats.currentPM -= val; break;
+            case EffectType.BonusPO: targetStats.currentPO += val; break;
+            case EffectType.MalusPO: targetStats.currentPO -= val; break;
 
-            case EffectType.MalusPM:
-                targetStats.currentPM -= Mathf.RoundToInt(effect.value);
-                Debug.Log($" Effet critique : -{effect.value} PM à {targetStats.name}");
-                break;
+            case EffectType.BonusFor: targetStats.currentForce += val; break;
+            case EffectType.MalusFor: targetStats.currentForce -= val; break;
+            case EffectType.BonusDex: targetStats.currentDexterite += val; break;
+            case EffectType.MalusDex: targetStats.currentDexterite -= val; break;
+            case EffectType.BonusMag: targetStats.currentMagie += val; break;
+            case EffectType.MalusMag: targetStats.currentMagie -= val; break;
+            case EffectType.BonusFoi: targetStats.currentFoi += val; break;
+            case EffectType.MalusFoi: targetStats.currentFoi -= val; break;
 
-            // Ajoute d'autres effets si tu veux
+            case EffectType.BonusResFor: targetStats.currentResistanceForce += val; break;
+            case EffectType.MalusResFor: targetStats.currentResistanceForce -= val; break;
+            case EffectType.BonusResDex: targetStats.currentResistanceDexterite += val; break;
+            case EffectType.MalusResDex: targetStats.currentResistanceDexterite -= val; break;
+            case EffectType.BonusResMag: targetStats.currentResistanceMagie += val; break;
+            case EffectType.MalusResMag: targetStats.currentResistanceMagie -= val; break;
+            case EffectType.BonusResFoi: targetStats.currentResistanceFoi += val; break;
+            case EffectType.MalusResFoi: targetStats.currentResistanceFoi -= val; break;
 
             default:
                 Debug.Log("Effet critique inconnu ou non géré.");
                 break;
         }
+    }
+    private void ApplySkillEffect(SkillEffect effect, CombatStats targetStats)
+    {
+        int val = Mathf.RoundToInt(effect.value);
+
+        switch (effect.effectType)
+        {
+            case EffectType.BonusPA: targetStats.currentPA += val; break;
+            case EffectType.MalusPA: targetStats.currentPA -= val; break;
+            case EffectType.BonusPM: targetStats.currentPM += val; break;
+            case EffectType.MalusPM: targetStats.currentPM -= val; break;
+
+            case EffectType.BonusFor: targetStats.currentForce += val; break;
+            case EffectType.MalusFor: targetStats.currentForce -= val; break;
+            case EffectType.BonusDex: targetStats.currentDexterite += val; break;
+            case EffectType.MalusDex: targetStats.currentDexterite -= val; break;
+            case EffectType.BonusMag: targetStats.currentMagie += val; break;
+            case EffectType.MalusMag: targetStats.currentMagie -= val; break;
+            case EffectType.BonusFoi: targetStats.currentFoi += val; break;
+            case EffectType.MalusFoi: targetStats.currentFoi -= val; break;
+
+            case EffectType.BonusResFor: targetStats.currentResistanceForce += val; break;
+            case EffectType.MalusResFor: targetStats.currentResistanceForce -= val; break;
+            case EffectType.BonusResDex: targetStats.currentResistanceDexterite += val; break;
+            case EffectType.MalusResDex: targetStats.currentResistanceDexterite -= val; break;
+            case EffectType.BonusResMag: targetStats.currentResistanceMagie += val; break;
+            case EffectType.MalusResMag: targetStats.currentResistanceMagie -= val; break;
+            case EffectType.BonusResFoi: targetStats.currentResistanceFoi += val; break;
+            case EffectType.MalusResFoi: targetStats.currentResistanceFoi -= val; break;
+
+            default:
+                Debug.LogWarning("Effet non pris en charge : " + effect.effectType);
+                break;
+        }
+
+        Debug.Log($" Effet {effect.effectType} de {val} appliqué à {targetStats.name}");
     }
 
     public void ResetSkillTurnUsage()

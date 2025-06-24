@@ -78,7 +78,7 @@ public class TeleportCombat : MonoBehaviour
             // 1. Positionner le joueur 
             Vector2Int playerCoord = GetAndRemoveRandomCoord(ref availableTiles);
             GameObject playerTile = gridManager.TileMap[playerCoord];
-            player.transform.position = playerTile.transform.position + new Vector3(0, 0.5f, 0);
+            player.transform.position = playerTile.transform.position + new Vector3(0, 0.1f, 0);
             player.transform.rotation = Quaternion.identity;
             TileCoord tileCoord = playerTile.GetComponent<TileCoord>();
                 //définis que la case est occupée par le joueur
@@ -92,7 +92,7 @@ public class TeleportCombat : MonoBehaviour
                 Vector2Int monsterCoord = GetAndRemoveRandomCoord(ref availableTiles);
                 GameObject tile = gridManager.TileMap[monsterCoord];
 
-                GameObject monster = Instantiate(monsterPrefab, tile.transform.position + new Vector3(0, 0.5f, 0), Quaternion.identity);
+                GameObject monster = Instantiate(monsterPrefab, tile.transform.position + new Vector3(0, 0.1f, 0), Quaternion.identity);
                 TileCoord monsterTileCoord = tile.GetComponent<TileCoord>();
                     //définis que la case est occupée par le monstre
                 if (monsterTileCoord != null)

@@ -99,7 +99,7 @@ public class CombatController : MonoBehaviour
                 movementQueue.Clear();
                 foreach (Vector2Int step in path)
                 {
-                    Vector3 worldPos = gridManager.TileMap[step].transform.position + new Vector3(0, 0.5f, 0);
+                    Vector3 worldPos = gridManager.TileMap[step].transform.position + new Vector3(0, 0.1f, 0);
                     movementQueue.Enqueue(worldPos);
                 }
 

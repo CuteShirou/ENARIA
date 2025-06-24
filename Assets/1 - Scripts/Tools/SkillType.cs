@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum SkillType
@@ -12,14 +13,29 @@ public enum SkillType
 public enum EffectType
 {
     Aucun,
+    BonusPV,
     BonusPA,
     BonusPM,
     BonusPO,
     MalusPA,
     MalusPM,
     MalusPO,
-    BonusStats,
-    MalusStats,
+    BonusFor,
+    MalusFor,
+    BonusDex,
+    MalusDex,
+    BonusMag,
+    MalusMag,
+    BonusFoi,
+    MalusFoi,
+    BonusResFor,
+    MalusResFor,
+    BonusResDex,
+    MalusResDex,
+    BonusResMag,
+    MalusResMag,
+    BonusResFoi,
+    MalusResFoi,
 }
 
 [System.Serializable]
@@ -27,6 +43,8 @@ public class SkillEffect
 {
     public EffectType effectType;
     public float value;
+    public int duration;
+    public bool applyToSelf;
 }
 
 [System.Serializable]
@@ -59,15 +77,14 @@ public class SkillData : ScriptableObject
     public ImpactZone impactZone;
 
     [Header("Effets Basique")]
-    public SkillEffect basicEffect;
+    public List<SkillEffect> effects = new List<SkillEffect>();
 
     [Header("Critique")]
     [Range(0, 100)]
     public float critChance;
 
     [Header("Effets bonus si Critique")]
-    public SkillEffect critEffect;
-
+    public List<SkillEffect> critEffects = new List<SkillEffect>();
     public Sprite icon;
 }
 

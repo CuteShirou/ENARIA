@@ -1,50 +1,94 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+
+[System.Serializable]
+public class ActiveEffect
+{
+    public SkillEffect effect;
+    public int turnsRemaining;
+    public bool applied; // Pour éviter double application dans le même tour
+
+    public ActiveEffect(SkillEffect effect)
+    {
+        this.effect = effect;
+        this.turnsRemaining = effect.duration;
+        this.applied = false;
+    }
+}
 
 public class CombatStats : MonoBehaviour
 {
+
     [Header("Base Stats")]
-    public int maxHP = 200;
-    public int maxPA = 7;
-    public int maxPM = 4;
+    public int baseHP = 200;
+    public int basePA = 7;
+    public int basePM = 4;
+    public int basePO = 0;
+    public int baseInitiative;
+    [Range(0, 100)]
+    public float baseCritChance;
+    public int baseForce;
+    public int baseDexterite;
+    public int baseMagie;
+    public int baseFoi;
+
+    [Header("Résistances (en %) de base")]
+    [Range(0, 100)]
+    public float baseResistanceForce;
+    [Range(0, 100)]
+    public float baseResistanceDexterite;
+    [Range(0, 100)]
+    public float baseResistanceMagie;
+    [Range(0, 100)]
+    public float baseResistanceFoi;
+
 
     [Header("Current Stats")]
     public int currentHP;
     public int currentPA;
     public int currentPM;
-
-    [Header("Caractéristiques")]
-    public int force;
-    public int dexterite;
-    public int magie;
-    public int foi;
-
-    [Header("Combat Utility")]
-    public int initiative;
-    public int PO;
-    [Range(0, 100)]
-    public float critChance;
+    public int currentPO;
+    public float currentCritChance;
+    public int currentForce;
+    public int currentDexterite;
+    public int currentMagie;
+    public int currentFoi;
 
     [Header("Résistances (en %)")]
     [Range(0, 100)]
-    public float resistanceForce;
+    public float currentResistanceForce;
     [Range(0, 100)]
-    public float resistanceDexterite;
+    public float currentResistanceDexterite;
     [Range(0, 100)]
-    public float resistanceMagie;
+    public float currentResistanceMagie;
     [Range(0, 100)]
-    public float resistanceFoi;
+    public float currentResistanceFoi;
+
+    [Header("Effet en cours ")]
+    public List<ActiveEffect> activeEffects = new List<ActiveEffect>();
 
     private void Awake()
     {
-        currentHP = maxHP;
-        currentPA = maxPA;
-        currentPM = maxPM;
+        currentHP = baseHP;
+        currentPA = basePA;
+        currentPM = basePM;
+        currentPO = basePO;
+        currentCritChance = baseCritChance;
+        currentForce = baseForce;
+        currentDexterite = baseDexterite;
+        currentMagie = baseMagie;
+        currentFoi = baseFoi;
+        currentResistanceForce = baseResistanceForce;
+        currentResistanceDexterite = baseResistanceDexterite;
+        currentResistanceMagie = baseResistanceMagie;
+        currentResistanceFoi = baseResistanceFoi;
     }
 
     public void ResetTurnStats()
     {
-        currentPA = maxPA;
-        currentPM = maxPM;
+        currentPA = basePA;
+        currentPM = basePM;
     }
 
     // Renvoie la résistance à appliquer selon le type du skill
@@ -52,10 +96,10 @@ public class CombatStats : MonoBehaviour
     {
         return type switch
         {
-            SkillType.Force => resistanceForce,
-            SkillType.Dexterité => resistanceDexterite,
-            SkillType.Magie => resistanceMagie,
-            SkillType.Foi => resistanceFoi,
+            SkillType.Force => currentResistanceForce,
+            SkillType.Dexterité => currentResistanceDexterite,
+            SkillType.Magie => currentResistanceMagie,
+            SkillType.Foi => currentResistanceFoi,
             _ => 0f,
         };
     }
@@ -65,11 +109,92 @@ public class CombatStats : MonoBehaviour
     {
         return type switch
         {
-            SkillType.Force => force,
-            SkillType.Dexterité => dexterite,
-            SkillType.Magie => magie,
-            SkillType.Foi => foi,
+            SkillType.Force => currentForce,
+            SkillType.Dexterité => currentDexterite,
+            SkillType.Magie => currentMagie,
+            SkillType.Foi => currentFoi,
             _ => 0,
         };
+    }
+    public void ApplyInstantEffect(SkillEffect effect)
+    {
+        int val = Mathf.RoundToInt(effect.value);
+        switch (effect.effectType)
+        {
+            case EffectType.BonusPV: currentHP += val; break;
+            case EffectType.BonusPA: currentPA += val; break;
+            case EffectType.MalusPA: currentPA -= val; break;
+            case EffectType.BonusPM: currentPM += val; break;
+            case EffectType.MalusPM: currentPM -= val; break;
+            case EffectType.BonusPO: currentPO += val; break;
+            case EffectType.MalusPO: currentPO -= val; break;
+
+            case EffectType.BonusFor: currentForce += val; break;
+            case EffectType.MalusFor: currentForce -= val; break;
+            case EffectType.BonusDex: currentDexterite += val; break;
+            case EffectType.MalusDex: currentDexterite -= val; break;
+            case EffectType.BonusMag: currentMagie += val; break;
+            case EffectType.MalusMag: currentMagie -= val; break;
+            case EffectType.BonusFoi: currentFoi += val; break;
+            case EffectType.MalusFoi: currentFoi -= val; break;
+
+            case EffectType.BonusResFor: currentResistanceForce += val; break;
+            case EffectType.MalusResFor: currentResistanceForce -= val; break;
+            case EffectType.BonusResDex: currentResistanceDexterite += val; break;
+            case EffectType.MalusResDex: currentResistanceDexterite -= val; break;
+            case EffectType.BonusResMag: currentResistanceMagie += val; break;
+            case EffectType.MalusResMag: currentResistanceMagie -= val; break;
+            case EffectType.BonusResFoi: currentResistanceFoi += val; break;
+            case EffectType.MalusResFoi: currentResistanceFoi -= val; break;
+        }
+    }
+
+    public void RemoveEffect(SkillEffect effect)
+    {
+        // Même logique que ApplyInstantEffect, mais en sens inverse
+        int val = Mathf.RoundToInt(effect.value);
+        switch (effect.effectType)
+        {
+            case EffectType.BonusPA: currentPA -= val; break;
+            case EffectType.MalusPA: currentPA += val; break;
+            case EffectType.BonusPM: currentPM -= val; break;
+            case EffectType.MalusPM: currentPM += val; break;
+
+            case EffectType.BonusFor: currentForce -= val; break;
+            case EffectType.MalusFor: currentForce += val; break;
+            case EffectType.BonusDex: currentDexterite -= val; break;
+            case EffectType.MalusDex: currentDexterite += val; break;
+            case EffectType.BonusMag: currentMagie -= val; break;
+            case EffectType.MalusMag: currentMagie += val; break;
+            case EffectType.BonusFoi: currentFoi -= val; break;
+            case EffectType.MalusFoi: currentFoi += val; break;
+
+            case EffectType.BonusResFor: currentResistanceForce -= val; break;
+            case EffectType.MalusResFor: currentResistanceForce += val; break;
+            case EffectType.BonusResDex: currentResistanceDexterite -= val; break;
+            case EffectType.MalusResDex: currentResistanceDexterite += val; break;
+            case EffectType.BonusResMag: currentResistanceMagie -= val; break;
+            case EffectType.MalusResMag: currentResistanceMagie += val; break;
+            case EffectType.BonusResFoi: currentResistanceFoi -= val; break;
+            case EffectType.MalusResFoi: currentResistanceFoi += val; break;
+        }
+    }
+    public void UpdateActiveEffects()
+    {
+        List<ActiveEffect> toRemove = new List<ActiveEffect>();
+
+        foreach (var effect in activeEffects)
+        {
+            effect.turnsRemaining--;
+            ApplyInstantEffect(effect.effect);
+            if (effect.turnsRemaining <= 0)
+            {
+                RemoveEffect(effect.effect);
+                toRemove.Add(effect);
+            }
+        }
+
+        foreach (var effect in toRemove)
+            activeEffects.Remove(effect);
     }
 }

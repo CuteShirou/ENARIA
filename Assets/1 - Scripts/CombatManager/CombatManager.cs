@@ -67,6 +67,19 @@ public class CombatManager : MonoBehaviour
                 sc.enabled = (i == currentTurnIndex);
         }
 
+        Debug.Log("Tour de : " + fighter.name);
+
+        CombatStats stats = fighters[currentTurnIndex].GetComponent<CombatStats>();
+        if (stats != null)
+            stats.UpdateActiveEffects();
+
+        turnStarted = true;
+    }
+
+    void EndTurn()
+    {
+        GameObject fighter = fighters[currentTurnIndex];
+
         // Réinitialise les PM / PA
         var stats = fighter.GetComponent<CombatStats>();
         if (stats != null)
@@ -76,12 +89,6 @@ public class CombatManager : MonoBehaviour
         if (caster != null)
             caster.ResetSkillTurnUsage();
 
-        Debug.Log("Tour de : " + fighter.name);
-        turnStarted = true;
-    }
-
-    void EndTurn()
-    {
         currentTurnIndex = (currentTurnIndex + 1) % fighters.Count;
         StartTurn();
     }
