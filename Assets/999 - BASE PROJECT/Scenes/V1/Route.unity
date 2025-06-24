@@ -431,7 +431,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Range
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
@@ -2403,6 +2403,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Range
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
@@ -3859,7 +3863,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Range
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
@@ -4104,6 +4108,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Range
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
@@ -4745,7 +4753,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Range
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
@@ -5324,7 +5332,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Range
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
@@ -5497,7 +5505,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Range
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
@@ -6592,7 +6600,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Range
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
@@ -6715,8 +6723,8 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.28627452, g: 0.854902, b: 0.9725491, a: 1}
-  m_Intensity: 1.5
-  m_Range: 2
+  m_Intensity: 3
+  m_Range: 3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -6754,7 +6762,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -8093,8 +8101,8 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.28627452, g: 0.854902, b: 0.9725491, a: 1}
-  m_Intensity: 1.5
-  m_Range: 2
+  m_Intensity: 3
+  m_Range: 3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -8132,7 +8140,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
