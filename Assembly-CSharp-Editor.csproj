@@ -46,7 +46,26 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.20f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\Helper.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\OrificeSetup.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ModuleInstaller\Editor\ModuleInstaller.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\AbiAutoAnchor.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiProTranslation.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiToonTranslation.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\GeneralSetup.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\Components\RendererShapekeyBlendtreeContainer.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\PenetratorSetup.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\TPS_SetupWizard.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\AnimatorHelper.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiTranslation_Menus.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\VRCAutoAnchor.cs" />
+    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\AbiAutoLock.cs" />
+    <None Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\Components\RendererShapekeyBlendtreeContainer.uxml" />
+    <None Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\Components\ShapekeyConfigListItem.uxml" />
+    <None Include="Assets\7 - Shader\_PoiyomiShaders\ModularShader\Editor\Poi_Passes_And_Programs\TODO.txt" />
+    <None Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\TPS_Editor_Orifice.uxml" />
+    <None Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\TPS_Editor.uss" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2023.2.20f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
@@ -973,6 +992,22 @@
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{b15cbb5b-4857-3505-785d-3c65e2f13dc6}</Project>
       <Name>Assembly-CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="Poiyomi.ModularShaderSystem.csproj">
+      <Project>{575ecfbf-1d4e-a903-46f3-45bbdd51bbfa}</Project>
+      <Name>Poiyomi.ModularShaderSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="Poi.Tools.csproj">
+      <Project>{7373b30d-8241-76aa-d9e4-635be451f0a2}</Project>
+      <Name>Poi.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="ThryAssemblyDefinition.csproj">
+      <Project>{8e5a5590-6870-a741-a359-c707fbfcb144}</Project>
+      <Name>ThryAssemblyDefinition</Name>
+    </ProjectReference>
+    <ProjectReference Include="Runtime.csproj">
+      <Project>{4867d45d-7f22-9ba2-d1b2-c8deb330f2c4}</Project>
+      <Name>Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="Naelstrof.JigglePhysics.csproj">
       <Project>{69eafbe7-1613-6340-7edb-526b2af169cf}</Project>

@@ -329,11 +329,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aacd54820737c4244aa2654327d41d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: {fileID: 102900000, guid: cd3fbdc681c5def4c9bca45f30d0470d, type: 3}
+  sceneName: Zone Apparition
   destinationTransform: {fileID: 712882291}
   cameraParentTargetName: HUB Camera Position
   playerTag: Player
-  sceneName: Zone Apparition
 --- !u!95 &67032666
 Animator:
   serializedVersion: 7
@@ -1273,7 +1272,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -2009,7 +2008,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -2312,7 +2311,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -2429,7 +2428,7 @@ Light:
   m_Type: 2
   m_Color: {r: 0.28627452, g: 0.854902, b: 0.9725491, a: 1}
   m_Intensity: 1.5
-  m_Range: 1.8
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -3095,7 +3094,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -3964,7 +3963,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -6193,7 +6192,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -7652,7 +7651,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -10534,7 +10533,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -11088,7 +11087,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -12345,7 +12344,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -13323,7 +13322,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.77412665, b: 0, a: 1}
   m_Intensity: 3.5
-  m_Range: 10
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
