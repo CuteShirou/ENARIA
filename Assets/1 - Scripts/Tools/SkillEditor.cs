@@ -1,3 +1,5 @@
+
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -31,11 +33,11 @@ public class SkillEditor : Editor
         base.OnInspectorGUI();
 
         EditorGUILayout.Space(10);
-        EditorGUILayout.LabelField("Zone d'Impact (relative à la cible)", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Zone d'Impact (relative Ã  la cible)", EditorStyles.boldLabel);
 
         DrawGrid();
 
-        if (GUILayout.Button("Appliquer la zone à la compétence"))
+        if (GUILayout.Button("Appliquer la zone Ã  la compÃ©tence"))
         {
             ApplyGridToSkill();
         }
@@ -100,3 +102,4 @@ public class SkillEditor : Editor
         return pos.x >= 0 && pos.x < gridSize && pos.y >= 0 && pos.y < gridSize;
     }
 }
+#endif
