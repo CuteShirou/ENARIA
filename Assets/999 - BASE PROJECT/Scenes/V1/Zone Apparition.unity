@@ -1583,11 +1583,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aacd54820737c4244aa2654327d41d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: {fileID: 102900000, guid: 95a154dd6206dd242940a9cbae4c3f37, type: 3}
+  sceneName: ZDC
   destinationTransform: {fileID: 1462874943}
   cameraParentTargetName: ZDC Camera Position
   playerTag: Player
-  sceneName: ZDC
 --- !u!95 &356381723
 Animator:
   serializedVersion: 7
@@ -5557,11 +5556,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7be96129db2cb0c4b87f441c573a1eff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: {fileID: 102900000, guid: 4e1c836d57e93d844b66f80027887d1e, type: 3}
+  sceneName: CombatScene
   fallbackTransform: {fileID: 1931507237}
   cameraParentTargetName: COMBAT Camera Position
   playerTag: Player
-  sceneName: CombatScene
   monsterPrefab: {fileID: 5209355076112397699, guid: a2d26afb1578ab64699708b00e622a50, type: 3}
   numberOfMonsters: 10
 --- !u!1 &1248900013
@@ -6760,11 +6758,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aacd54820737c4244aa2654327d41d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: {fileID: 102900000, guid: f50a6a02ded883e4287547e8151d28ec, type: 3}
+  sceneName: Forge
   destinationTransform: {fileID: 237968230}
   cameraParentTargetName: FORGE Camera Position
   playerTag: Player
-  sceneName: Forge
 --- !u!95 &1401780724
 Animator:
   serializedVersion: 7
@@ -11172,11 +11169,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aacd54820737c4244aa2654327d41d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: {fileID: 102900000, guid: 7ffc49f607e09fb4da2cd2cb7a644d1a, type: 3}
+  sceneName: Route
   destinationTransform: {fileID: 1795934026}
   cameraParentTargetName: ROUTE Camera Position
   playerTag: Player
-  sceneName: Route
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
