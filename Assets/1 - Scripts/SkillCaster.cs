@@ -115,6 +115,21 @@ public class SkillCaster : MonoBehaviour
         damage *= (100f - resistance) / 100f;
 
         int finalDamage = Mathf.RoundToInt(damage);
+
+        if (targetStats.currentShield > 0)
+        {
+            // Si la cible a un bouclier, on applique les dégâts au bouclier d'abord
+            if (finalDamage >= targetStats.currentShield)
+            {
+                finalDamage -= targetStats.currentShield;
+                targetStats.currentShield = 0;
+            }
+            else
+            {
+                targetStats.currentShield -= finalDamage;
+                finalDamage = 0; // Pas de dégâts restants à appliquer aux PV
+            }
+        }
         targetStats.currentHP -= finalDamage;
 
         string log = $"{name} lance {equippedSkill.skillName} sur {target.name} pour {finalDamage} dégâts";

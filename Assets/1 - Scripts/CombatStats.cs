@@ -68,6 +68,9 @@ public class CombatStats : MonoBehaviour
     [Header("Effet en cours ")]
     public List<ActiveEffect> activeEffects = new List<ActiveEffect>();
 
+    [Header("Shield")]
+    public int currentShield;
+
     private void Awake()
     {
         currentHP = baseHP;
@@ -122,6 +125,7 @@ public class CombatStats : MonoBehaviour
         switch (effect.effectType)
         {
             case EffectType.BonusPV: currentHP += val; break;
+            case EffectType.BonusShield: currentShield += val; break;
             case EffectType.BonusPA: currentPA += val; break;
             case EffectType.MalusPA: currentPA -= val; break;
             case EffectType.BonusPM: currentPM += val; break;
@@ -155,6 +159,7 @@ public class CombatStats : MonoBehaviour
         int val = Mathf.RoundToInt(effect.value);
         switch (effect.effectType)
         {
+            case EffectType.BonusShield: currentShield = 0; break;
             case EffectType.BonusPA: currentPA -= val; break;
             case EffectType.MalusPA: currentPA += val; break;
             case EffectType.BonusPM: currentPM -= val; break;

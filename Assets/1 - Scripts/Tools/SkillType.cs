@@ -14,6 +14,7 @@ public enum EffectType
 {
     Aucun,
     BonusPV,
+    BonusShield,
     BonusPA,
     BonusPM,
     BonusPO,

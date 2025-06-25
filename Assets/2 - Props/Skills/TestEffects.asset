@@ -26,14 +26,14 @@ MonoBehaviour:
   impactZone:
     zone: []
   effects:
-  - effectType: 6
-    value: 2
-    duration: 4
-    applyToSelf: 0
-  - effectType: 5
+  - effectType: 3
     value: 2
     duration: 0
-    applyToSelf: 0
+    applyToSelf: 1
+  - effectType: 3
+    value: 2
+    duration: 2
+    applyToSelf: 1
   critChance: 0
   critEffects: []
   icon: {fileID: 0}

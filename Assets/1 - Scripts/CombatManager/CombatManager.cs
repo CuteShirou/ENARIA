@@ -71,7 +71,9 @@ public class CombatManager : MonoBehaviour
 
         CombatStats stats = fighters[currentTurnIndex].GetComponent<CombatStats>();
         if (stats != null)
+        {         
             stats.UpdateActiveEffects();
+        }
 
         turnStarted = true;
     }
