@@ -4408,7 +4408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec3323cea86ef0d48b5ee6e037a929ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equippedSkill: {fileID: 11400000, guid: d8211428d3bcd604fa03c323b9382dbe, type: 2}
+  equippedSkill: {fileID: 11400000, guid: bf9e9f2e27e950a4e92c7915720acac8, type: 2}
   gridManager: {fileID: 0}
 --- !u!114 &6982812147933622149
 MonoBehaviour:
@@ -4436,23 +4436,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfb1bd4f67c47740acba11b2be037f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 200
-  maxPA: 7
-  maxPM: 10
+  baseHP: 200
+  basePA: 7
+  basePM: 4
+  basePO: 0
+  baseInitiative: 0
+  baseCritChance: 0
+  baseForce: 0
+  baseDexterite: 0
+  baseMagie: 0
+  baseFoi: 0
+  baseResistanceForce: 0
+  baseResistanceDexterite: 0
+  baseResistanceMagie: 0
+  baseResistanceFoi: 0
   currentHP: 0
   currentPA: 0
   currentPM: 0
-  force: 10
-  dexterite: 0
-  magie: 0
-  foi: 0
-  initiative: 0
-  PO: 0
-  critChance: 0
-  resistanceForce: 0
-  resistanceDexterite: 0
-  resistanceMagie: 0
-  resistanceFoi: 0
+  currentPO: 0
+  currentCritChance: 0
+  currentForce: 0
+  currentDexterite: 0
+  currentMagie: 0
+  currentFoi: 0
+  currentResistanceForce: 0
+  currentResistanceDexterite: 0
+  currentResistanceMagie: 0
+  currentResistanceFoi: 0
+  activeEffects: []
+  currentShield: 0
 --- !u!4 &6983258930626336602
 Transform:
   m_ObjectHideFlags: 0

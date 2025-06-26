@@ -86,6 +86,8 @@ public class SkillData : ScriptableObject
 
     [Header("Effets bonus si Critique")]
     public List<SkillEffect> critEffects = new List<SkillEffect>();
+
+    [Header("Icône de la compétence")]
     public Sprite icon;
 }
 

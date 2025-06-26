@@ -41,26 +41,47 @@ public class SkillCaster : MonoBehaviour
                     return;
                 }
 
-                if (tile.occupant == null)
+                if (equippedSkill.impactZone.zone.Length == 1)
                 {
-                    Debug.Log("Aucune cible !");
-                    return;
-                }
-
-                if (equippedSkill.maxPerTargetPerTurn > 0)
-                {
-                    if (!perTargetCastCount.ContainsKey(tile.occupant))
-                        perTargetCastCount[tile.occupant] = 0;
-
-                    if (perTargetCastCount[tile.occupant] >= equippedSkill.maxPerTargetPerTurn)
+                    if (tile.occupant == null)
                     {
-                        Debug.LogWarning($" Tu as déjà lancé {equippedSkill.skillName} {perTargetCastCount[tile.occupant]}x sur {tile.occupant.name} ce tour !");
+                        Debug.Log("Aucune cible !");
                         return;
                     }
+
+                    if (equippedSkill.maxPerTargetPerTurn > 0)
+                    {
+                        if (!perTargetCastCount.ContainsKey(tile.occupant))
+                            perTargetCastCount[tile.occupant] = 0;
+
+                        if (perTargetCastCount[tile.occupant] >= equippedSkill.maxPerTargetPerTurn)
+                        {
+                            Debug.LogWarning($" Tu as déjà lancé {equippedSkill.skillName} {perTargetCastCount[tile.occupant]}x sur {tile.occupant.name} ce tour !");
+                            return;
+                        }
+                    }
+                    ApplySkill(tile.occupant);
+                    perTargetCastCount[tile.occupant]++;
+                    stats.currentPA -= equippedSkill.costPA;
                 }
-                ApplySkill(tile.occupant);
-                perTargetCastCount[tile.occupant]++;
-                stats.currentPA -= equippedSkill.costPA;
+                else if (equippedSkill.impactZone.zone.Length > 1)
+                {
+                    List<GameObject> targets = GetTargetsInImpactZone(tile.Coord);
+                    if (targets.Count == 0)
+                    {
+                        Debug.Log("Aucune cible dans la zone d'impact !");
+                        return;
+                    }
+                    else
+                    {
+                        Debug.Log($"Cible(s) trouvée(s) : {targets.Count} dans la zone d'impact.");
+                        foreach (GameObject target in targets)
+                        {
+                            ApplySkill(target);
+                        }
+                    }
+                    stats.currentPA -= equippedSkill.costPA;
+                }
             }
         }
     }
@@ -170,8 +191,6 @@ public class SkillCaster : MonoBehaviour
                 }
             }
         }
-
-
     }
 
     private void ApplySkillCritEffect(SkillEffect effect, CombatStats targetStats)
@@ -251,6 +270,29 @@ public class SkillCaster : MonoBehaviour
     public void ResetSkillTurnUsage()
     {
         perTargetCastCount.Clear();
+    }
+    private List<GameObject> GetTargetsInImpactZone(Vector2Int centerCoord)
+    {
+        List<GameObject> targets = new List<GameObject>();
+
+        if (equippedSkill.impactZone == null || equippedSkill.impactZone.zone == null)
+            return targets;
+
+        foreach (Vector2Int offset in equippedSkill.impactZone.zone)
+        {
+            Vector2Int targetCoord = centerCoord + offset;
+
+            if (gridManager.TileMap.TryGetValue(targetCoord, out GameObject tile))
+            {
+                TileCoord tileData = tile.GetComponent<TileCoord>();
+                if (tileData != null && tileData.occupant != null)
+                {
+                    targets.Add(tileData.occupant);
+                }
+            }
+        }
+
+        return targets;
     }
 
 }
