@@ -1,9 +1,7 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using StarterAssets;
 using UnityEngine.Animations;
 
 public class TeleportCombat : MonoBehaviour
@@ -27,7 +25,12 @@ public class TeleportCombat : MonoBehaviour
         if (other.CompareTag(playerTag) && !string.IsNullOrEmpty(sceneName))
         {
             StartCoroutine(SwitchSceneAndPlaceOnGrid(other.gameObject));
-            other.GetComponent<ThirdPersonController>()._isInCombat = true;
+
+            var TPC = other.GetComponent<ThirdPersonController>();
+            if (TPC != null)
+            {
+                TPC.IsInCombat = true;
+            }
         }
     }
 

@@ -1,129 +1,116 @@
 ﻿using UnityEngine;
-#if ENABLE_INPUT_SYSTEM 
+using Mirror;
 using UnityEngine.InputSystem;
-#endif
 
-namespace StarterAssets
+[RequireComponent(typeof(CharacterController))]
+public class ThirdPersonController : NetworkBehaviour
 {
-    [RequireComponent(typeof(CharacterController))]
-#if ENABLE_INPUT_SYSTEM 
-    [RequireComponent(typeof(PlayerInput))]
-#endif
-    public class ThirdPersonController : MonoBehaviour
+    public float ClickMoveSpeed = 5f;
+    public LayerMask ClickableLayers;
+    public GameObject CinemachineCameraTarget;
+
+    private CharacterController _controller;
+    private Animator _animator;
+    private GameObject _mainCamera;
+
+    private Vector3 _clickTarget;
+    private bool _isClickMoving = false;
+    private bool _hasAnimator;
+    private int _animIDSpeed;
+    private int _animIDMotionSpeed;
+
+    private bool _clickDetected = false;
+
+    // Accesseurs publics pour compatibilité avec d'autres scripts
+    public bool IsInCombat { get; set; } = false;
+    public bool IsClickMoving => _isClickMoving;
+    public Vector3 ClickTarget => _clickTarget;
+    public bool HasAnimator => _hasAnimator;
+    public Animator Animator => _animator;
+    public int AnimIDSpeed => _animIDSpeed;
+    public int AnimIDMotionSpeed => _animIDMotionSpeed;
+
+    public override void OnStartLocalPlayer()
     {
-        [Header("Player")]
-        public float MoveSpeed = 2.0f;
-        public float SprintSpeed = 5.335f;
-        public float RotationSmoothTime = 0.12f;
-        public float SpeedChangeRate = 10.0f;
-
-        public AudioClip LandingAudioClip;
-        public AudioClip[] FootstepAudioClips;
-        [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
-
-        [Space(10)]
-        public float JumpHeight = 1.2f;
-        public float Gravity = -15.0f;
-
-        [Space(10)]
-        public float JumpTimeout = 0.50f;
-        public float FallTimeout = 0.15f;
-
-        [Header("Player Grounded")]
-        public bool Grounded = true;
-        public float GroundedOffset = -0.14f;
-        public float GroundedRadius = 0.28f;
-        public LayerMask GroundLayers;
-
-        [Header("Cinemachine")]
-        public GameObject CinemachineCameraTarget;
-        public float TopClamp = 70.0f;
-        public float BottomClamp = -30.0f;
-        public float CameraAngleOverride = 0.0f;
-        public bool LockCameraPosition = false;
-
-        [Header("Click-To-Move Settings")]
-        public LayerMask ClickableLayers;
-        public float ClickMoveSpeed = 5f;
-
-        private float _cinemachineTargetYaw;
-        private float _cinemachineTargetPitch;
-
-        private float _verticalVelocity;
-        private float _terminalVelocity = 53.0f;
-
-        private float _jumpTimeoutDelta;
-        private float _fallTimeoutDelta;
-
-        public int _animIDSpeed;
-        private int _animIDGrounded;
-        private int _animIDJump;
-        private int _animIDFreeFall;
-        public int _animIDMotionSpeed;
-
-#if ENABLE_INPUT_SYSTEM 
-        private PlayerInput _playerInput;
-#endif
-        public Animator _animator;
-        private CharacterController _controller;
-        private StarterAssetsInputs _input;
-        private GameObject _mainCamera;
-
-        private const float _threshold = 0.01f;
-        public bool _hasAnimator;
-
-        public Vector3 _clickTarget;
-        public bool _isClickMoving = false;
-        public bool _isInCombat = false;
-        [SerializeField] public int _turnOrder;
-        private bool IsCurrentDeviceMouse
+        Transform camTransform = transform.Find("PlayerCamera");
+        if (camTransform != null)
         {
-            get
+            Camera cam = camTransform.GetComponent<Camera>();
+            if (cam != null)
             {
-#if ENABLE_INPUT_SYSTEM
-                return _playerInput.currentControlScheme == "KeyboardMouse";
-#else
-                return false;
-#endif
+                cam.enabled = true;
+                cam.tag = "MainCamera";
+                _mainCamera = cam.gameObject;
+                Debug.Log("📸 Caméra locale activée pour : " + gameObject.name);
             }
         }
 
-        private void Awake()
+        _controller = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
+        _hasAnimator = _animator != null;
+
+        AssignAnimationIDs();
+    }
+
+    private void Update()
+    {
+        if (!isLocalPlayer) return;
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
+            _clickDetected = true;
+            Debug.Log("🖱 Clic détecté sur : " + gameObject.name);
+        }
+
+        if (_hasAnimator)
+            _animator.SetBool("Grounded", true);
+
+        ClickToMove();
+    }
+
+    private void ClickToMove()
+    {
+        if (_clickDetected)
+        {
+            _clickDetected = false;
+
             if (_mainCamera == null)
             {
-                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+                Debug.LogWarning("❌ Caméra non définie !");
+                return;
+            }
+
+            Ray ray = _mainCamera.GetComponent<Camera>().ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, ClickableLayers))
+            {
+                Debug.Log("🎯 Raycast hit: " + hit.point);
+                _clickTarget = hit.point;
+                _isClickMoving = true;
             }
         }
 
-        private void Start()
+        if (_isClickMoving)
         {
-            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            _hasAnimator = TryGetComponent(out _animator);
-            _controller = GetComponent<CharacterController>();
-            _input = GetComponent<StarterAssetsInputs>();
-#if ENABLE_INPUT_SYSTEM 
-            _playerInput = GetComponent<PlayerInput>();
-#else
-            Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
-#endif
-            AssignAnimationIDs();
-            _jumpTimeoutDelta = JumpTimeout;
-            _fallTimeoutDelta = FallTimeout;
-        }
+            Vector3 flatTarget = new Vector3(_clickTarget.x, transform.position.y, _clickTarget.z);
+            Vector3 direction = (flatTarget - transform.position).normalized;
+            float distance = Vector3.Distance(transform.position, flatTarget);
 
-        private void Update()
-        {
-            _hasAnimator = TryGetComponent(out _animator);
-            GroundedCheck();
-            if (_isInCombat == false)
+            if (distance > 0.1f)
             {
-                ClickToMoveExploration();
+                _controller.Move(direction * ClickMoveSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
+
+                if (_hasAnimator)
+                {
+                    _animator.SetFloat(_animIDSpeed, ClickMoveSpeed);
+                    _animator.SetFloat(_animIDMotionSpeed, 1f);
+                }
             }
-            else 
+            else
             {
-                _isClickMoving = false;
                 _clickTarget = Vector3.zero;
+                _isClickMoving = false;
+
                 if (_hasAnimator)
                 {
                     _animator.SetFloat(_animIDSpeed, 0f);
@@ -131,116 +118,11 @@ namespace StarterAssets
                 }
             }
         }
+    }
 
-        private void AssignAnimationIDs()
-        {
-            _animIDSpeed = Animator.StringToHash("Speed");
-            _animIDGrounded = Animator.StringToHash("Grounded");
-            _animIDJump = Animator.StringToHash("Jump");
-            _animIDFreeFall = Animator.StringToHash("FreeFall");
-            _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-        }
-
-        private void GroundedCheck()
-        {
-            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-            Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-
-            if (_hasAnimator)
-            {
-                _animator.SetBool(_animIDGrounded, Grounded);
-            }
-        }
-
-
-        private void ClickToMoveExploration()
-        {
-            if (_input.click)
-            {
-                _input.click = false;
-                Ray ray = _mainCamera.GetComponent<Camera>().ScreenPointToRay(Mouse.current.position.ReadValue());
-                if (Physics.Raycast(ray, out RaycastHit hit, 100f, ClickableLayers))
-                {
-                    _clickTarget = hit.point;
-                    _isClickMoving = true;
-                }
-            }
-
-            if (_isClickMoving)
-            {
-                Vector3 flatTarget = new Vector3(_clickTarget.x, transform.position.y, _clickTarget.z);
-                Vector3 direction = (flatTarget - transform.position).normalized;
-                float distance = Vector3.Distance(transform.position, flatTarget);
-
-                if (distance > 0.1f & _isInCombat == false)
-                {
-                    _controller.Move(direction * ClickMoveSpeed * Time.deltaTime);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
-
-                    // Met à jour les paramètres d'animation
-                    if (_hasAnimator)
-                    {
-                        _animator.SetFloat(_animIDSpeed, ClickMoveSpeed);
-                        _animator.SetFloat(_animIDMotionSpeed, 1f);
-                    }
-                }
-                else if (distance <= 0.1f || _isInCombat)
-                {
-                    _clickTarget = Vector3.zero; // Réinitialise la cible de clic
-                    _isClickMoving = false;
-                    // Met à jour les paramètres d'animation pour arrêter le mouvement
-                    if (_hasAnimator)
-                    {
-                        _animator.SetFloat(_animIDSpeed, 0f);
-                        _animator.SetFloat(_animIDMotionSpeed, 0f);
-                    }
-                }
-                else
-                {
-                    _isClickMoving = false;
-
-                    // Stoppe l’animation de mouvement
-                    if (_hasAnimator)
-                    {
-                        _animator.SetFloat(_animIDSpeed, 0f);
-                        _animator.SetFloat(_animIDMotionSpeed, 0f);
-                    }
-                }
-            }
-        }
-
-
-        private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
-        {
-            if (lfAngle < -360f) lfAngle += 360f;
-            if (lfAngle > 360f) lfAngle -= 360f;
-            return Mathf.Clamp(lfAngle, lfMin, lfMax);
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
-            Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
-
-            Gizmos.color = Grounded ? transparentGreen : transparentRed;
-            Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
-        }
-
-        private void OnFootstep(AnimationEvent animationEvent)
-        {
-            if (animationEvent.animatorClipInfo.weight > 0.5f && FootstepAudioClips.Length > 0)
-            {
-                var index = Random.Range(0, FootstepAudioClips.Length);
-                AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
-            }
-        }
-
-        private void OnLand(AnimationEvent animationEvent)
-        {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
-            {
-                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
-            }
-        }
+    private void AssignAnimationIDs()
+    {
+        _animIDSpeed = Animator.StringToHash("Speed");
+        _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
     }
 }

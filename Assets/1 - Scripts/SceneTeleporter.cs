@@ -1,8 +1,6 @@
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Animations;
-using StarterAssets;
 using System.Collections;
 
 public class SceneTeleporter : MonoBehaviour
@@ -25,13 +23,17 @@ public class SceneTeleporter : MonoBehaviour
             StartCoroutine(SwitchSceneAdditive(other.gameObject));
 
             var TPC = other.GetComponent<ThirdPersonController>();
-            TPC._isClickMoving = false;
-            TPC._clickTarget = Vector3.zero;
-
-            if (TPC._hasAnimator)
+            if (TPC != null)
             {
-                TPC._animator.SetFloat(TPC._animIDSpeed, 0f);
-                TPC._animator.SetFloat(TPC._animIDMotionSpeed, 0f);
+                TPC.IsInCombat = false;
+
+                typeof(ThirdPersonController).GetField("_clickTarget", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(TPC, Vector3.zero);
+
+                if (TPC.HasAnimator)
+                {
+                    TPC.Animator.SetFloat(TPC.AnimIDSpeed, 0f);
+                    TPC.Animator.SetFloat(TPC.AnimIDMotionSpeed, 0f);
+                }
             }
         }
     }
