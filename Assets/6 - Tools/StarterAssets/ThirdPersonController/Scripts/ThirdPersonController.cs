@@ -3,6 +3,7 @@ using Mirror;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
+
 public class ThirdPersonController : NetworkBehaviour
 {
     public float ClickMoveSpeed = 5f;
@@ -20,7 +21,9 @@ public class ThirdPersonController : NetworkBehaviour
     private int _animIDMotionSpeed;
 
     private bool _clickDetected = false;
-
+    public GameObject uiPrefab;
+    private GameObject _uiInstance;
+    
     // Accesseurs publics pour compatibilité avec d'autres scripts
     public bool IsInCombat { get; set; } = false;
     public bool IsClickMoving => _isClickMoving;
@@ -45,6 +48,33 @@ public class ThirdPersonController : NetworkBehaviour
             }
         }
 
+        Transform uiTransform = transform.Find("UI");
+        if (_uiInstance == null)
+        {
+            GameObject prefab = Resources.Load<GameObject>("UI/PlayerUI");
+
+            if (prefab != null)
+            {
+                _uiInstance = Instantiate(prefab);
+                _uiInstance.name = "UI_" + gameObject.name;
+
+                // Force l’activation du Canvas
+                Canvas canvas = _uiInstance.GetComponent<Canvas>();
+                if (canvas != null)
+                {
+                    canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                    canvas.enabled = true;
+                }
+
+                DontDestroyOnLoad(_uiInstance);
+            }
+            else
+            {
+                Debug.LogWarning("❌ UI prefab introuvable dans Resources/UI/PlayerUI");
+            }
+        }
+
+        
         _controller = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         _hasAnimator = _animator != null;
@@ -124,5 +154,19 @@ public class ThirdPersonController : NetworkBehaviour
     {
         _animIDSpeed = Animator.StringToHash("Speed");
         _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+    }
+    
+    public void ForceStopMovement()
+    {
+        _clickTarget = Vector3.zero;
+        _isClickMoving = false;
+
+        if (_hasAnimator)
+        {
+            _animator.SetFloat(_animIDSpeed, 0f);
+            _animator.SetFloat(_animIDMotionSpeed, 0f);
+        }
+
+        Debug.Log("🛑 Mouvement stoppé manuellement.");
     }
 }
