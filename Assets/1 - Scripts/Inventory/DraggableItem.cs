@@ -3,11 +3,13 @@ using UnityEngine.EventSystems;
 
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public InventorySlot parentSlot;
     public Transform parentAfterDrag;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Canvas canvas;
+    
 
     private void Awake()
     {
@@ -18,8 +20,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        parentSlot = GetComponentInParent<InventorySlot>();
         parentAfterDrag = transform.parent;
-        transform.SetParent(canvas.transform); // ← met l'objet au niveau du canvas
+        transform.SetParent(canvas.transform);
         canvasGroup.blocksRaycasts = false;
     }
 
@@ -32,7 +35,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnEndDrag(PointerEventData eventData)
     {
         transform.SetParent(parentAfterDrag);
-        rectTransform.anchoredPosition = Vector2.zero; // ← repositionne au centre
+        GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         canvasGroup.blocksRaycasts = true;
     }
 }

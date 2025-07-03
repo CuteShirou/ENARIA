@@ -64,11 +64,9 @@
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\PoiData.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\MochieShaderMaterialAutoUpgrade.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\StandardEditor.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\Helper.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Data\ChangeShaderUpgradeInfo.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\UnderwaterEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Common\Tips.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\OrificeSetup.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Upgrades\MochieMaterialUpgrade_V0_To_V1.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\Base\IPropertyAction.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\UberEditor.cs" />
@@ -87,6 +85,7 @@
     <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiProTranslation.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Common\Foldouts.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Data\SerializedMaterialPropertyType.cs" />
+    <Compile Include="Assets\1 - Scripts\Inventory\Editor\ItemDatabaseEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\GlobalStandardSettings.cs" />
     <Compile Include="Assets\ScriptTemplates\Editor\MoveToAssetsFolder.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyFloatPropertyValueAction.cs" />
@@ -96,17 +95,12 @@
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\WaterEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Data\TextureContainer.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\GifConverter.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\GeneralSetup.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\SetPropertyValueAction.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\Base\CopyPropertyValueActionBase.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\PoiHelpers.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyIntPropertyValueAction.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\Components\RendererShapekeyBlendtreeContainer.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\IPostMaterialUpgradeCallback.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\PenetratorSetup.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\TPS_SetupWizard.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MaterialCreator.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Scripts\Editor\AnimatorHelper.cs" />
     <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiTranslation_Menus.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\Base\UpgradeActionBase.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyVectorPropertyValueAction.cs" />
@@ -116,11 +110,7 @@
     <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\AbiAutoLock.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\Components\RendererShapekeyBlendtreeContainer.uxml" />
-    <None Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\Components\ShapekeyConfigListItem.uxml" />
     <None Include="Assets\7 - Shader\_PoiyomiShaders\ModularShader\Editor\Poi_Passes_And_Programs\TODO.txt" />
-    <None Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\TPS_Editor_Orifice.uxml" />
-    <None Include="Assets\7 - Shader\_PoiyomiShaders\TPS\Editor\Resources\TPS\TPS_Editor.uss" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1432,10 +1422,6 @@
     <ProjectReference Include="Mirror.Transports.csproj">
       <Project>{EF481176-EFE2-6A27-8C1F-A93ABF5BF0B3}</Project>
       <Name>Mirror.Transports</Name>
-    </ProjectReference>
-    <ProjectReference Include="Runtime.csproj">
-      <Project>{5DD46748-227F-A29B-D1B2-C8DEB330F2C4}</Project>
-      <Name>Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="Naelstrof.JigglePhysics.csproj">
       <Project>{E7FBEA69-1316-4063-7EDB-526B2AF169CF}</Project>
