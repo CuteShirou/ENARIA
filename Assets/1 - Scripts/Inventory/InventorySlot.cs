@@ -14,15 +14,27 @@ public class InventorySlot : MonoBehaviour, IDropHandler
     {
         currentItem = item;
 
-        if (item != null)
+        if (itemImage == null || quantityText == null)
+        {
+            Debug.LogWarning("InventorySlot mal configuré !");
+            return;
+        }
+
+        if (item != null && item.icon != null)
         {
             itemImage.sprite = item.icon;
             itemImage.enabled = true;
+
+            // 🔥 FORCE LE PARENT VISUEL
+            itemImage.transform.SetParent(this.transform); 
+            itemImage.rectTransform.anchoredPosition = Vector2.zero;
+
             quantityText.text = item.quantity > 1 ? item.quantity.ToString() : "";
             quantityText.enabled = item.quantity > 1;
         }
         else
         {
+            itemImage.sprite = null;
             itemImage.enabled = false;
             quantityText.text = "";
             quantityText.enabled = false;
@@ -39,9 +51,9 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {   
-        var dragged = eventData.pointerDrag.GetComponent<DraggableItem>();
+        var dragged = eventData.pointerDrag?.GetComponent<DraggableItem>();
         if (dragged == null) return;
-        
+
         var sourceSlot = dragged.parentSlot;
         var draggedItem = sourceSlot.currentItem;
 

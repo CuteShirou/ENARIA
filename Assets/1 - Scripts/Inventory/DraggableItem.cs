@@ -21,9 +21,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnBeginDrag(PointerEventData eventData)
     {
         parentSlot = GetComponentInParent<InventorySlot>();
-        parentAfterDrag = transform.parent;
-
-        transform.SetParent(canvas.transform, false); // <- important : false ici
+        parentAfterDrag = transform.parent; // ← garde ItemIcon comme référence
+        transform.SetParent(canvas.transform, false);
         canvasGroup.blocksRaycasts = false;
     }
 
@@ -31,11 +30,18 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         rectTransform.position = Input.mousePosition;
     }
-
+    
     public void OnEndDrag(PointerEventData eventData)
     {
+        var dropTarget = eventData.pointerEnter?.GetComponentInParent<InventorySlot>();
+        if (dropTarget != null)
+        {
+            parentAfterDrag = dropTarget.transform;
+        }
+
         transform.SetParent(parentAfterDrag, false);
         rectTransform.anchoredPosition = Vector2.zero;
         canvasGroup.blocksRaycasts = true;
     }
+
 }
