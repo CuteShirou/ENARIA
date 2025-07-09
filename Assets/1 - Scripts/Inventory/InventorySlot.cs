@@ -23,24 +23,34 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             return;
         }
 
-        // Supprime tous les enfants "Inventory Image" sauf le bon
-        foreach (Transform child in transform)
+        Transform iconContainer = transform.Find("ItemIcon");
+        if (iconContainer == null)
         {
-            if (child != itemImage.transform && child.name.Contains("Inventory Image"))
+            Debug.LogWarning("ItemIcon non trouvé dans ce slot !");
+            return;
+        }
+
+        // Supprimer les anciens visuels (sauf celui assigné au script)
+        foreach (Transform child in iconContainer)
+        {
+            if (child.GetComponent<Image>() != itemImage &&
+                child.gameObject.name.Contains("Inventory Image"))
             {
                 Destroy(child.gameObject);
             }
         }
-        
+
         if (item != null && item.icon != null)
         {
             itemImage.sprite = item.icon;
             itemImage.enabled = true;
             quantityText.text = item.quantity > 1 ? item.quantity.ToString() : "";
             quantityText.enabled = item.quantity > 1;
-            
-            itemImage.transform.SetParent(this.transform);
+
+            // Replace visuellement dans ItemIcon
+            itemImage.transform.SetParent(iconContainer, false);
             itemImage.rectTransform.anchoredPosition = Vector2.zero;
+            itemImage.transform.localScale = Vector3.one;
         }
         else
         {
