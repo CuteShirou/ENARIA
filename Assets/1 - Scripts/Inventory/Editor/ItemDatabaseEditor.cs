@@ -8,6 +8,7 @@ public class ItemDatabaseEditor : Editor
     Sprite newIcon;
     int newQuantity = 1;
     int newMaxStack = 99;
+    ItemType newItemType = ItemType.None;
 
     public override void OnInspectorGUI()
     {
@@ -20,6 +21,7 @@ public class ItemDatabaseEditor : Editor
         newIcon = (Sprite)EditorGUILayout.ObjectField("Icône", newIcon, typeof(Sprite), false);
         newQuantity = EditorGUILayout.IntField("Quantité", newQuantity);
         newMaxStack = EditorGUILayout.IntField("Stack Max", newMaxStack);
+        newItemType = (ItemType)EditorGUILayout.EnumPopup("Type de l'item", newItemType);
 
         if (GUILayout.Button("Ajouter à la base de données"))
         {
@@ -30,7 +32,8 @@ public class ItemDatabaseEditor : Editor
                 itemID = newItemID,
                 icon = newIcon,
                 quantity = newQuantity,
-                maxStack = newMaxStack
+                maxStack = newMaxStack,
+                type = newItemType
             };
 
             db.items.Add(newItem);
