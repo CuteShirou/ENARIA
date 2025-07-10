@@ -85,7 +85,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
         if (slotCategory == SlotCategory.Equipment)
         {
-            InventorySlot[] allSlots = FindObjectsOfType<InventorySlot>();
+            InventorySlot[] allSlots = Object.FindObjectsByType<InventorySlot>(FindObjectsSortMode.None);
             foreach (var slot in allSlots)
             {
                 if (slot == this || slot == sourceSlot) continue;
