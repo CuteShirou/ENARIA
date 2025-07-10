@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4051aeb963871e440b662d8ecaf65c60, type: 3}
+  m_Name: "C\xE9p\xE9e"
+  m_EditorClassIdentifier: 
+  requiredProfessionLevel: 0
+  recipeName: "\xC9p\xE9e"
+  craftType: 2
+  ingredients:
+  - ingredientType: 0
+    resource: {fileID: 11400000, guid: 53ec76cd2dcbe574894aa176d90e5a74, type: 2}
+    equipment: {fileID: 0}
+    quantity: 5
+  result:
+    resultType: 1
+    resource: {fileID: 0}
+    equipment: {fileID: 11400000, guid: 714de340bedb62e488ee74dc8465d9ef, type: 2}
+    quantity: 1
+  description: 
