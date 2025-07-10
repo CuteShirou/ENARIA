@@ -1,13 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SkillType
+public enum SkillElement
 {
     None,
     Force,
     Dexterité,
     Magie,
     Foi,
+}
+
+public enum SkillType
+{
+    None,
+    Attack,
+    Boost,
+    Heal,
 }
 
 public enum EffectType
@@ -67,7 +75,7 @@ public class SkillData : ScriptableObject
     [Header("Stats")]
     public int damageMin;
     public int damageMax;
-    public SkillType skillType;
+    public SkillElement skillElement;
     public int costPA;
     public int rangeMin;
     public int rangeMax;

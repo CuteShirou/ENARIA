@@ -123,8 +123,8 @@ public class SkillCaster : MonoBehaviour
 
         int jet = Random.Range(equippedSkill.damageMin, equippedSkill.damageMax + 1);
 
-        float statMultiplier = (stats.GetStatForType(equippedSkill.skillType) + 100f) / 100f;
-        float resistance = targetStats.GetResistance(equippedSkill.skillType);
+        float statMultiplier = (stats.GetStatForType(equippedSkill.skillElement) + 100f) / 100f;
+        float resistance = targetStats.GetResistance(equippedSkill.skillElement);
 
         float damage = jet * statMultiplier;
 
@@ -152,6 +152,12 @@ public class SkillCaster : MonoBehaviour
             }
         }
         targetStats.currentHP -= finalDamage;
+
+        //Vérification si l'entité qui a subit des dégats est morte
+        target.GetComponent<CombatStats>().VerifDead();
+
+        CombatManager CM = FindAnyObjectByType<CombatManager>();
+        CM.VerifTeamDead();
 
         string log = $"{name} lance {equippedSkill.skillName} sur {target.name} pour {finalDamage} dégâts";
         if (isCrit) log += " CRITIQUE !";
@@ -294,5 +300,12 @@ public class SkillCaster : MonoBehaviour
 
         return targets;
     }
+
+    public void SelectSkill(SkillData newSkill)
+    {
+        equippedSkill = newSkill;
+    }
+
+
 
 }

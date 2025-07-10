@@ -19,6 +19,13 @@ public class ActiveEffect
 
 public class CombatStats : MonoBehaviour
 {
+    public bool isDead = false;
+
+    [Header("Team")]
+    public int team;
+
+    // 0 = Equipe Verte
+    // 1 = Equipe Rouge
 
     [Header("Base Stats")]
     public int baseHP = 200;
@@ -95,27 +102,27 @@ public class CombatStats : MonoBehaviour
     }
 
     // Renvoie la résistance à appliquer selon le type du skill
-    public float GetResistance(SkillType type)
+    public float GetResistance(SkillElement element)
     {
-        return type switch
+        return element switch
         {
-            SkillType.Force => currentResistanceForce,
-            SkillType.Dexterité => currentResistanceDexterite,
-            SkillType.Magie => currentResistanceMagie,
-            SkillType.Foi => currentResistanceFoi,
+            SkillElement.Force => currentResistanceForce,
+            SkillElement.Dexterité => currentResistanceDexterite,
+            SkillElement.Magie => currentResistanceMagie,
+            SkillElement.Foi => currentResistanceFoi,
             _ => 0f,
         };
     }
 
     // Renvoie la stat offensive à appliquer selon le type du skill
-    public int GetStatForType(SkillType type)
+    public int GetStatForType(SkillElement element)
     {
-        return type switch
+        return element switch
         {
-            SkillType.Force => currentForce,
-            SkillType.Dexterité => currentDexterite,
-            SkillType.Magie => currentMagie,
-            SkillType.Foi => currentFoi,
+            SkillElement.Force => currentForce,
+            SkillElement.Dexterité => currentDexterite,
+            SkillElement.Magie => currentMagie,
+            SkillElement.Foi => currentFoi,
             _ => 0,
         };
     }
@@ -200,6 +207,22 @@ public class CombatStats : MonoBehaviour
         }
 
         foreach (var effect in toRemove)
+        {
             activeEffects.Remove(effect);
+        }
+
+        //Verif des morts (entité et équipe)
+        VerifDead();
+        CombatManager CM = FindAnyObjectByType<CombatManager>();
+        CM.VerifTeamDead();
     }
+
+    public void VerifDead()
+    {
+        if (currentHP <= 0)
+        {
+            isDead = true;
+        }
+    }
+
 }

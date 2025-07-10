@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba8e47f9a86c15b4cac90f1adc622bc6, type: 3}
+  m_Name: Map 10x10 - Opp
+  m_EditorClassIdentifier: 
+  mapName: Map 10x10 - Opp
+  width: 10
+  height: 10
+  greenTeamPositions:
+  - {x: 7, y: 18}
+  - {x: 8, y: 18}
+  - {x: 9, y: 18}
+  - {x: 10, y: 18}
+  - {x: 12, y: 18}
+  - {x: 14, y: 18}
+  - {x: 15, y: 18}
+  - {x: 16, y: 18}
+  - {x: 17, y: 18}
+  - {x: 18, y: 18}
+  - {x: 19, y: 18}
+  - {x: 1, y: 8}
+  - {x: 2, y: 7}
+  - {x: 3, y: 8}
+  - {x: 4, y: 7}
+  - {x: 5, y: 8}
+  - {x: 6, y: 7}
+  - {x: 7, y: 8}
+  - {x: 8, y: 7}
+  redTeamPositions:
+  - {x: 6, y: 2}
+  - {x: 8, y: 2}
+  - {x: 10, y: 2}
+  - {x: 11, y: 2}
+  - {x: 14, y: 2}
+  - {x: 16, y: 2}
+  - {x: 20, y: 2}
+  - {x: 21, y: 1}
+  - {x: 1, y: 1}
+  - {x: 2, y: 2}
+  - {x: 3, y: 1}
+  - {x: 4, y: 2}
+  - {x: 5, y: 1}
+  - {x: 7, y: 1}
+  interactiveObjectPositions: []

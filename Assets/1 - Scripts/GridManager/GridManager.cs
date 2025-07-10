@@ -1,21 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 public class Grid : MonoBehaviour
 {
-    [SerializeField] GameObject BasicTile;
-    [SerializeField] int GridHeight = 20;
-    [SerializeField] int GridWidth = 20;
-    [SerializeField] float TileSize = 1f;
-    [SerializeField] float TileSpacing = 0.1f;
+    [SerializeField] private GameObject BasicTile;
+    [SerializeField] private int GridHeight = 10;
+    [SerializeField] private int GridWidth = 10;
+    [SerializeField] private float TileSize = 1f;
+    [SerializeField] private float TileSpacing = 0.05f;
+
+    // Accesseurs publics en lecture seule
+    public float TileSizeValue => TileSize;
+    public float TileSpacingValue => TileSpacing;
+    public int GridWidthValue => GridWidth;
+    public int GridHeightValue => GridHeight;
+
 
     public Dictionary<Vector2Int, GameObject> TileMap = new Dictionary<Vector2Int, GameObject>();
 
 
     void Start()
     {
-        GenerateGrid();
+        //GenerateGrid();
+        this.transform.Rotate(0, 45, 0);
+    }
+
+    public void ClearGrid()
+    { 
+        foreach (var tile in TileMap)
+        {
+            tile.Value.gameObject.GetComponent<Renderer>().sharedMaterial = BasicTile.GetComponent<TileCoord>().normal;
+        }
+    }
+
+    public void ClearOccupant()
+    {
+        foreach (var tile in TileMap)
+        {
+            tile.Value.GetComponent<TileCoord>().ClearOccupant();
+        }
     }
 
     private void GenerateGrid()

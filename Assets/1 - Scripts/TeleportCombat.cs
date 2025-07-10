@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using StarterAssets;
 using UnityEngine.Animations;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -52,16 +51,19 @@ public class TeleportCombat : MonoBehaviour
     {
         Scene currentScene = gameObject.scene;
 
+        // Charger la scène de combat
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while (!loadOp.isDone)
             yield return null;
 
+        // Activer la nouvelle scène
         Scene newScene = SceneManager.GetSceneByName(sceneName);
         if (newScene.IsValid())
             SceneManager.SetActiveScene(newScene);
 
         yield return null;
 
+        // Récupérer le GridManager dans la scène cible
         Grid gridManager = null;
         foreach (GameObject root in newScene.GetRootGameObjects())
         {
@@ -73,56 +75,39 @@ public class TeleportCombat : MonoBehaviour
 
         if (gridManager != null && gridManager.TileMap.Count > 0)
         {
-            List<Vector2Int> availableTiles = new List<Vector2Int>(gridManager.TileMap.Keys);
-
-            // 1. Positionner le joueur 
-            Vector2Int playerCoord = GetAndRemoveRandomCoord(ref availableTiles);
-            GameObject playerTile = gridManager.TileMap[playerCoord];
-            player.transform.position = playerTile.transform.position + new Vector3(0, 0.1f, 0);
-            player.transform.rotation = Quaternion.identity;
-            TileCoord tileCoord = playerTile.GetComponent<TileCoord>();
-                //définis que la case est occupée par le joueur
-            if (tileCoord != null)
-                tileCoord.SetOccupant(player);
-
-            // 2. Instancier les monstres
-            List<GameObject> spawnedMonsters = new List<GameObject>();
+            // 1. Instancier les monstres dans la bonne scène
             for (int i = 0; i < numberOfMonsters; i++)
             {
-                Vector2Int monsterCoord = GetAndRemoveRandomCoord(ref availableTiles);
-                GameObject tile = gridManager.TileMap[monsterCoord];
-
-                GameObject monster = Instantiate(monsterPrefab, tile.transform.position + new Vector3(0, 0.1f, 0), Quaternion.identity);
-                TileCoord monsterTileCoord = tile.GetComponent<TileCoord>();
-                    //définis que la case est occupée par le monstre
-                if (monsterTileCoord != null)
-                    monsterTileCoord.SetOccupant(monster);
-
-                monster.tag = "Monster"; // Assure que le tag est correct
+                GameObject monster = Instantiate(monsterPrefab, gridManager.transform);
+                monster.tag = "Monster";
                 monster.name = $"Monster {i + 1}";
-                spawnedMonsters.Add(monster);
             }
 
-            // 3. Enregistrement dans le CombatManager
+            // 2. Enregistrer les entités dans le CombatManager
             CombatManager cm = FindAnyObjectByType<CombatManager>();
             if (cm != null)
             {
                 cm.RegisterFighter(player);
-                foreach (var monster in spawnedMonsters)
-                    cm.RegisterFighter(monster);
 
-                cm.InitCombat(); // Lance le tour par tour
+                foreach (var monster in GameObject.FindGameObjectsWithTag("Monster"))
+                    cm.RegisterFighter(monster);
             }
 
-
+            // 3. Lancer la phase de préparation
+            CombatPreparationManager prep = FindAnyObjectByType<CombatPreparationManager>();
+            if (prep != null)
+            {
+                prep.ForceSetup(); // C'est ici que les monstres sont placés sur les cases rouges
+            }
         }
 
+        // Décharger la scène précédente
         AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
         while (!unloadOp.isDone)
             yield return null;
     }
 
-    // Méthode utilitaire
+    // Méthode utilitaire : récupère une coordonnée aléatoire
     private Vector2Int GetAndRemoveRandomCoord(ref List<Vector2Int> coords)
     {
         int index = Random.Range(0, coords.Count);
@@ -131,6 +116,7 @@ public class TeleportCombat : MonoBehaviour
         return coord;
     }
 
+    // Méthode utilitaire : change le parent de la caméra
     private void SetCameraParentByName(string targetName)
     {
         if (string.IsNullOrEmpty(targetName)) return;
