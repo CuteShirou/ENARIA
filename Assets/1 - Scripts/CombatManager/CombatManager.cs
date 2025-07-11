@@ -102,7 +102,18 @@ public class CombatManager : MonoBehaviour
         //    EndTurn();
         //}
 
-        if ((TeamGreenDead == true) || (TeamRedDead == true))
+
+        // 11/07
+        for (int i = 0; i < fighters.Count; i++)
+        {
+            if (fighters[i].GetComponent <CombatStats>().isDead == true)
+            {
+                fighters.Remove(fighters[i]);
+            }
+        }
+        //-------------
+
+            if ((TeamGreenDead == true) || (TeamRedDead == true))
         {
 
             Debug.Log("UNE DES EQUIPES MORTE");

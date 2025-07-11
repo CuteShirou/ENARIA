@@ -222,6 +222,11 @@ public class CombatStats : MonoBehaviour
         if (currentHP <= 0)
         {
             isDead = true;
+            gameObject.SetActive(false);
+
+            //Désactiver le gameobject
+            //Libérer la case occupé
+            //l'enlever de la liste des figthers (ne peut plus jouer son tour car MORT)
         }
     }
 

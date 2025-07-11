@@ -86,11 +86,24 @@ public class TileCoord : MonoBehaviour
 
     private void Update()
     {
-        if (occupant != null && occupant.GetComponent<CombatController>()?.enabled == true)
+        if (occupant != null)
         {
-            GetComponent<Renderer>().sharedMaterial = activeFighter;
+            CombatController ctrl = occupant.GetComponent<CombatController>();
+            if (ctrl != null && ctrl.enabled)
+            {
+                GetComponent<Renderer>().sharedMaterial = activeFighter;
+            }
+
+
+            // 11/07/2025
+            CombatStats stats = occupant.GetComponent<CombatStats>();
+            if (stats != null && stats.isDead)
+            {
+                ClearOccupant();
+            }
         }
     }
+
 
     private void OnMouseEnter()
     {
