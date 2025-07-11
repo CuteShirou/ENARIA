@@ -12,21 +12,21 @@ public class ActiveEffect
     public ActiveEffect(SkillEffect effect)
     {
         this.effect = effect;
-        //this.turnsRemaining = effect.duration;
+        this.turnsRemaining = effect.duration;
         this.applied = false;
     }
 }
 
-public enum SkillElement
-{
-    Force,
-    Dexterite,
-    Magie,
-    Foi
-}
-
 public class CombatStats : MonoBehaviour
 {
+    public bool isDead = false;
+
+    [Header("Team")]
+    public int team;
+
+    // 0 = Equipe Verte
+    // 1 = Equipe Rouge
+
     [Header("Base Stats")]
     public int baseHP = 200;
     public int basePA = 7;
@@ -126,87 +126,108 @@ public class CombatStats : MonoBehaviour
             _ => 0,
         };
     }
-    //public void ApplyInstantEffect(SkillEffect effect)
-    //{
-    //    int val = Mathf.RoundToInt(effect.value);
-    //    switch (effect.effectType)
-    //    {
-    //        case EffectType.BonusPV: currentHP += val; break;
-    //        case EffectType.BonusShield: currentShield += val; break;
-    //        case EffectType.BonusPA: currentPA += val; break;
-    //        case EffectType.MalusPA: currentPA -= val; break;
-    //        case EffectType.BonusPM: currentPM += val; break;
-    //        case EffectType.MalusPM: currentPM -= val; break;
-    //        case EffectType.BonusPO: currentPO += val; break;
-    //        case EffectType.MalusPO: currentPO -= val; break;
+    public void ApplyInstantEffect(SkillEffect effect)
+    {
+        int val = Mathf.RoundToInt(effect.value);
+        switch (effect.effectType)
+        {
+            case EffectType.BonusPV: currentHP += val; break;
+            case EffectType.BonusShield: currentShield += val; break;
+            case EffectType.BonusPA: currentPA += val; break;
+            case EffectType.MalusPA: currentPA -= val; break;
+            case EffectType.BonusPM: currentPM += val; break;
+            case EffectType.MalusPM: currentPM -= val; break;
+            case EffectType.BonusPO: currentPO += val; break;
+            case EffectType.MalusPO: currentPO -= val; break;
 
-    //        case EffectType.BonusFor: currentForce += val; break;
-    //        case EffectType.MalusFor: currentForce -= val; break;
-    //        case EffectType.BonusDex: currentDexterite += val; break;
-    //        case EffectType.MalusDex: currentDexterite -= val; break;
-    //        case EffectType.BonusMag: currentMagie += val; break;
-    //        case EffectType.MalusMag: currentMagie -= val; break;
-    //        case EffectType.BonusFoi: currentFoi += val; break;
-    //        case EffectType.MalusFoi: currentFoi -= val; break;
+            case EffectType.BonusFor: currentForce += val; break;
+            case EffectType.MalusFor: currentForce -= val; break;
+            case EffectType.BonusDex: currentDexterite += val; break;
+            case EffectType.MalusDex: currentDexterite -= val; break;
+            case EffectType.BonusMag: currentMagie += val; break;
+            case EffectType.MalusMag: currentMagie -= val; break;
+            case EffectType.BonusFoi: currentFoi += val; break;
+            case EffectType.MalusFoi: currentFoi -= val; break;
 
-    //        case EffectType.BonusResFor: currentResistanceForce += val; break;
-    //        case EffectType.MalusResFor: currentResistanceForce -= val; break;
-    //        case EffectType.BonusResDex: currentResistanceDexterite += val; break;
-    //        case EffectType.MalusResDex: currentResistanceDexterite -= val; break;
-    //        case EffectType.BonusResMag: currentResistanceMagie += val; break;
-    //        case EffectType.MalusResMag: currentResistanceMagie -= val; break;
-    //        case EffectType.BonusResFoi: currentResistanceFoi += val; break;
-    //        case EffectType.MalusResFoi: currentResistanceFoi -= val; break;
-    //    }
-    //}
+            case EffectType.BonusResFor: currentResistanceForce += val; break;
+            case EffectType.MalusResFor: currentResistanceForce -= val; break;
+            case EffectType.BonusResDex: currentResistanceDexterite += val; break;
+            case EffectType.MalusResDex: currentResistanceDexterite -= val; break;
+            case EffectType.BonusResMag: currentResistanceMagie += val; break;
+            case EffectType.MalusResMag: currentResistanceMagie -= val; break;
+            case EffectType.BonusResFoi: currentResistanceFoi += val; break;
+            case EffectType.MalusResFoi: currentResistanceFoi -= val; break;
+        }
+    }
 
-    //public void RemoveEffect(SkillEffect effect)
-    //{
-    //    // M�me logique que ApplyInstantEffect, mais en sens inverse
-    //    int val = Mathf.RoundToInt(effect.value);
-    //    switch (effect.effectType)
-    //    {
-    //        case EffectType.BonusShield: currentShield = 0; break;
-    //        case EffectType.BonusPA: currentPA -= val; break;
-    //        case EffectType.MalusPA: currentPA += val; break;
-    //        case EffectType.BonusPM: currentPM -= val; break;
-    //        case EffectType.MalusPM: currentPM += val; break;
+    public void RemoveEffect(SkillEffect effect)
+    {
+        // M�me logique que ApplyInstantEffect, mais en sens inverse
+        int val = Mathf.RoundToInt(effect.value);
+        switch (effect.effectType)
+        {
+            case EffectType.BonusShield: currentShield = 0; break;
+            case EffectType.BonusPA: currentPA -= val; break;
+            case EffectType.MalusPA: currentPA += val; break;
+            case EffectType.BonusPM: currentPM -= val; break;
+            case EffectType.MalusPM: currentPM += val; break;
 
-    //        case EffectType.BonusFor: currentForce -= val; break;
-    //        case EffectType.MalusFor: currentForce += val; break;
-    //        case EffectType.BonusDex: currentDexterite -= val; break;
-    //        case EffectType.MalusDex: currentDexterite += val; break;
-    //        case EffectType.BonusMag: currentMagie -= val; break;
-    //        case EffectType.MalusMag: currentMagie += val; break;
-    //        case EffectType.BonusFoi: currentFoi -= val; break;
-    //        case EffectType.MalusFoi: currentFoi += val; break;
+            case EffectType.BonusFor: currentForce -= val; break;
+            case EffectType.MalusFor: currentForce += val; break;
+            case EffectType.BonusDex: currentDexterite -= val; break;
+            case EffectType.MalusDex: currentDexterite += val; break;
+            case EffectType.BonusMag: currentMagie -= val; break;
+            case EffectType.MalusMag: currentMagie += val; break;
+            case EffectType.BonusFoi: currentFoi -= val; break;
+            case EffectType.MalusFoi: currentFoi += val; break;
 
-    //        case EffectType.BonusResFor: currentResistanceForce -= val; break;
-    //        case EffectType.MalusResFor: currentResistanceForce += val; break;
-    //        case EffectType.BonusResDex: currentResistanceDexterite -= val; break;
-    //        case EffectType.MalusResDex: currentResistanceDexterite += val; break;
-    //        case EffectType.BonusResMag: currentResistanceMagie -= val; break;
-    //        case EffectType.MalusResMag: currentResistanceMagie += val; break;
-    //        case EffectType.BonusResFoi: currentResistanceFoi -= val; break;
-    //        case EffectType.MalusResFoi: currentResistanceFoi += val; break;
-    //    }
-    //}
-    //public void UpdateActiveEffects()
-    //{
-    //    List<ActiveEffect> toRemove = new List<ActiveEffect>();
+            case EffectType.BonusResFor: currentResistanceForce -= val; break;
+            case EffectType.MalusResFor: currentResistanceForce += val; break;
+            case EffectType.BonusResDex: currentResistanceDexterite -= val; break;
+            case EffectType.MalusResDex: currentResistanceDexterite += val; break;
+            case EffectType.BonusResMag: currentResistanceMagie -= val; break;
+            case EffectType.MalusResMag: currentResistanceMagie += val; break;
+            case EffectType.BonusResFoi: currentResistanceFoi -= val; break;
+            case EffectType.MalusResFoi: currentResistanceFoi += val; break;
+        }
+    }
+    public void UpdateActiveEffects()
+    {
+        List<ActiveEffect> toRemove = new List<ActiveEffect>();
 
-    //    foreach (var effect in activeEffects)
-    //    {
-    //        effect.turnsRemaining--;
-    //        ApplyInstantEffect(effect.effect);
-    //        if (effect.turnsRemaining <= 0)
-    //        {
-    //            RemoveEffect(effect.effect);
-    //            toRemove.Add(effect);
-    //        }
-    //    }
+        foreach (var effect in activeEffects)
+        {
+            effect.turnsRemaining--;
+            ApplyInstantEffect(effect.effect);
+            if (effect.turnsRemaining <= 0)
+            {
+                RemoveEffect(effect.effect);
+                toRemove.Add(effect);
+            }
+        }
 
-    //    foreach (var effect in toRemove)
-    //        activeEffects.Remove(effect);
-    //}
+        foreach (var effect in toRemove)
+        {
+            activeEffects.Remove(effect);
+        }
+
+        //Verif des morts (entit� et �quipe)
+        VerifDead();
+        CombatManager CM = FindAnyObjectByType<CombatManager>();
+        CM.VerifTeamDead();
+    }
+
+    public void VerifDead()
+    {
+        if (currentHP <= 0)
+        {
+            isDead = true;
+            gameObject.SetActive(false);
+
+            //D�sactiver le gameobject
+            //Lib�rer la case occup�
+            //l'enlever de la liste des figthers (ne peut plus jouer son tour car MORT)
+        }
+    }
+
 }

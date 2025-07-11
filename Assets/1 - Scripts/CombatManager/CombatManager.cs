@@ -79,7 +79,7 @@ public class CombatManager : MonoBehaviour
         }
         currentTurnIndex = 0;
 
-        // Réinitialise tous les matériaux des cases à "normal"
+        // Rï¿½initialise tous les matï¿½riaux des cases ï¿½ "normal"
         Grid grid = FindAnyObjectByType<Grid>();
         foreach (var tileGO in grid.TileMap.Values)
         {
@@ -153,7 +153,7 @@ public class CombatManager : MonoBehaviour
 
             ThirdPersonController TPC = player.GetComponent<ThirdPersonController>();
             TPC.enabled = true;
-            TPC._isInCombat = false;
+            TPC.IsInCombat = false;
 
             CombatStats CB = player.GetComponent<CombatStats>();
             CB.currentHP = CB.baseHP;
@@ -176,7 +176,7 @@ public class CombatManager : MonoBehaviour
 
         GameObject fighter = fighters[currentTurnIndex];
 
-        // Réinitialise toutes les cases à normal
+        // Rï¿½initialise toutes les cases ï¿½ normal
         foreach (var tileGO in grid.TileMap.Values)
         {
             tileGO.GetComponent<Renderer>().sharedMaterial = tileGO.GetComponent<TileCoord>().normal;
@@ -190,7 +190,7 @@ public class CombatManager : MonoBehaviour
         }
 
 
-        // Active le contrôleur de combat uniquement pour ce combattant
+        // Active le contrï¿½leur de combat uniquement pour ce combattant
         for (int i = 0; i < fighters.Count; i++)
         {
             var controller = fighters[i].GetComponent<CombatController>();
@@ -222,7 +222,7 @@ public class CombatManager : MonoBehaviour
         }
         else
         {
-            // Réinitialise les PM / PA
+            // Rï¿½initialise les PM / PA
             var stats = fighter.GetComponent<CombatStats>();
             if (stats != null)
                 stats.ResetTurnStats();
@@ -238,7 +238,7 @@ public class CombatManager : MonoBehaviour
 
     public void VerifTeamDead()
     {
-        // Vérifie si tous les alliés sont morts
+        // Vï¿½rifie si tous les alliï¿½s sont morts
         bool allAlliesDead = true;
         for (int i = 0; i < allies.Count; i++)
         {
@@ -250,7 +250,7 @@ public class CombatManager : MonoBehaviour
         }
         TeamGreenDead = allAlliesDead;
 
-        // Vérifie si tous les ennemis sont morts
+        // Vï¿½rifie si tous les ennemis sont morts
         bool allEnemiesDead = true;
         for (int i = 0; i < ennemies.Count; i++)
         {

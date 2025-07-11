@@ -15,7 +15,7 @@ public class InfoBubbleUI : MonoBehaviour
     public TMP_Text hpCurrentText;
     public TMP_Text hpMaxText;
 
-    [Header("Résistances")]
+    [Header("Rï¿½sistances")]
     public TMP_Text resForText;
     public TMP_Text resDexText;
     public TMP_Text resMagText;
@@ -36,7 +36,7 @@ public class InfoBubbleUI : MonoBehaviour
         hpMaxText.text = stats.baseHP.ToString();
 
         resForText.text = stats.GetResistance(SkillElement.Force).ToString();
-        resDexText.text = stats.GetResistance(SkillElement.Dexterité).ToString();
+        resDexText.text = stats.GetResistance(SkillElement.Dexterite).ToString();
         resMagText.text = stats.GetResistance(SkillElement.Magie).ToString();
         resFoiText.text = stats.GetResistance(SkillElement.Foi).ToString();
 

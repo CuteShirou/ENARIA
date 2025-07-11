@@ -61,9 +61,12 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.20f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiToonTranslation.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\PoiData.cs" />
+    <Compile Include="Assets\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiTranslation_Menus.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\MochieShaderMaterialAutoUpgrade.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\StandardEditor.cs" />
+    <Compile Include="Assets\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\AbiAutoLock.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Data\ChangeShaderUpgradeInfo.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\UnderwaterEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Common\Tips.cs" />
@@ -75,44 +78,42 @@
     <Compile Include="Assets\6 - Tools\Timers\TimersMadeEasyLite\Editor\TimerEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Common\MGUI.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ModuleInstaller\Editor\ModuleInstaller.cs" />
+    <Compile Include="Assets\_PoiyomiShaders\Scripts\ModuleInstaller\Editor\ModuleInstaller.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\MochieMaterialImporter.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\AbiAutoAnchor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Data\ShaderUpgradeInfo.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\MochieMaterialUpgradeBase.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\GlassEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\ScreenFXEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\Base\PropertyActionBase.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiProTranslation.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Common\Foldouts.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Data\SerializedMaterialPropertyType.cs" />
+    <Compile Include="Assets\1 - Scripts\CombatManager\Map\Editor\CombatMapEditorWindow.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\Editor\ItemDatabaseEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\GlobalStandardSettings.cs" />
     <Compile Include="Assets\ScriptTemplates\Editor\MoveToAssetsFolder.cs" />
-    <Compile Include="Assets\2 - Props\CombatMaps\Editor\CombatMapEditorWindow.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyFloatPropertyValueAction.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Data\MaterialContext.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiToonTranslation.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Common\Toggles.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\WaterEditor.cs" />
+    <Compile Include="Assets\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\AbiAutoAnchor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Data\TextureContainer.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\GifConverter.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\SetPropertyValueAction.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\Base\CopyPropertyValueActionBase.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\PoiHelpers.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyIntPropertyValueAction.cs" />
+    <Compile Include="Assets\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiProTranslation.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\IPostMaterialUpgradeCallback.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MaterialCreator.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiTranslation_Menus.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\Base\UpgradeActionBase.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyVectorPropertyValueAction.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\ParticleEditor.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\VRCAutoAnchor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\TextureChannelPackerEditor.cs" />
-    <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\AbiAutoLock.cs" />
+    <Compile Include="Assets\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\VRCAutoAnchor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\7 - Shader\_PoiyomiShaders\ModularShader\Editor\Poi_Passes_And_Programs\TODO.txt" />
+    <None Include="Assets\_PoiyomiShaders\ModularShader\Editor\Poi_Passes_And_Programs\TODO.txt" />
+    <None Include="Assets\_PoiyomiShaders\ModularShader\Editor\Poi_HelperLibraries\RemovedHelpers.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1381,21 +1382,17 @@
       <Project>{147A39AB-CFF7-FFEC-4D37-5A6590D8FF9B}</Project>
       <Name>Mirror</Name>
     </ProjectReference>
-    <ProjectReference Include="Poiyomi.ModularShaderSystem.csproj">
-      <Project>{BFCF5E57-4E1D-03A9-46F3-45BBDD51BBFA}</Project>
-      <Name>Poiyomi.ModularShaderSystem</Name>
-    </ProjectReference>
     <ProjectReference Include="SimpleWebTransport.csproj">
       <Project>{BD3BF026-52D2-6EA4-BF34-274AF1638FC6}</Project>
       <Name>SimpleWebTransport</Name>
     </ProjectReference>
-    <ProjectReference Include="Poi.Tools.csproj">
-      <Project>{0DB37373-4182-AA76-D9E4-635BE451F0A2}</Project>
-      <Name>Poi.Tools</Name>
-    </ProjectReference>
     <ProjectReference Include="Mirror.CompilerSymbols.csproj">
       <Project>{AD327320-0AB5-BEFB-3C28-FC131553B823}</Project>
       <Name>Mirror.CompilerSymbols</Name>
+    </ProjectReference>
+    <ProjectReference Include="Poi.Tools.csproj">
+      <Project>{0DB37373-4182-AA76-D9E4-635BE451F0A2}</Project>
+      <Name>Poi.Tools</Name>
     </ProjectReference>
     <ProjectReference Include="Edgegap.csproj">
       <Project>{04534005-51F0-640E-1C77-E0C6B43C136C}</Project>
@@ -1409,10 +1406,6 @@
       <Project>{36549DA2-7D20-39D5-3D9B-83B43CEC4754}</Project>
       <Name>kcp2k</Name>
     </ProjectReference>
-    <ProjectReference Include="ThryAssemblyDefinition.csproj">
-      <Project>{90555A8E-7068-41A7-A359-C707FBFCB144}</Project>
-      <Name>ThryAssemblyDefinition</Name>
-    </ProjectReference>
     <ProjectReference Include="Mirror.Components.csproj">
       <Project>{5D4309E8-A6EF-260E-DB96-C9E1D862ABE4}</Project>
       <Name>Mirror.Components</Name>
@@ -1421,9 +1414,17 @@
       <Project>{C4533136-2B6D-B74B-2725-5E358DD90131}</Project>
       <Name>EncryptionTransportEditor</Name>
     </ProjectReference>
+    <ProjectReference Include="Poiyomi.ModularShaderSystem.csproj">
+      <Project>{BFCF5E57-4E1D-03A9-46F3-45BBDD51BBFA}</Project>
+      <Name>Poiyomi.ModularShaderSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="Mirror.Transports.csproj">
       <Project>{EF481176-EFE2-6A27-8C1F-A93ABF5BF0B3}</Project>
       <Name>Mirror.Transports</Name>
+    </ProjectReference>
+    <ProjectReference Include="ThryAssemblyDefinition.csproj">
+      <Project>{90555A8E-7068-41A7-A359-C707FBFCB144}</Project>
+      <Name>ThryAssemblyDefinition</Name>
     </ProjectReference>
     <ProjectReference Include="Naelstrof.JigglePhysics.csproj">
       <Project>{E7FBEA69-1316-4063-7EDB-526B2AF169CF}</Project>
