@@ -732,7 +732,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &235550949
 Transform:
   m_ObjectHideFlags: 0
@@ -5646,7 +5646,7 @@ MonoBehaviour:
   cameraParentTargetName: COMBAT Camera Position
   playerTag: Player
   monsterPrefab: {fileID: 5209355076112397699, guid: a2d26afb1578ab64699708b00e622a50, type: 3}
-  numberOfMonsters: 20
+  numberOfMonsters: 4
 --- !u!1 &1248900013
 GameObject:
   m_ObjectHideFlags: 0

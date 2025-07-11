@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using UnityEditor;
 
 public class CombatController : MonoBehaviour
 {
@@ -11,9 +12,20 @@ public class CombatController : MonoBehaviour
     private Queue<Vector3> movementQueue = new Queue<Vector3>();
     private Vector3 currentTarget;
 
-    private bool isMoving = false;
+    public bool isMoving = false;
     private CombatStats stats;
     private TileCoord currentTile;
+
+
+    public void AssignToTile(TileCoord newTile)
+    {
+        if (currentTile != null)
+            currentTile.ClearOccupant();
+
+        currentTile = newTile;
+        currentTile.SetOccupant(gameObject);
+    }
+
 
     void Start()
     {
@@ -33,6 +45,16 @@ public class CombatController : MonoBehaviour
         HandleMovement();
         HandleClick();
     }
+
+    //private void OnEnable()
+    //{
+    //    Vector2Int fromCoord = GetCurrentCoord();
+
+    //    if (gridManager.TileMap.TryGetValue(fromCoord,out GameObject Tile))
+    //    {
+    //        Tile.GetComponent<Renderer>().sharedMaterial = currentTile.highlight;
+    //    }
+    //}
 
     private void HandleMovement()
     {
@@ -159,7 +181,9 @@ public class CombatController : MonoBehaviour
         return closest;
     }
 
-    private Vector2Int GetCurrentCoord()
+
+    //De base, en private
+    public Vector2Int GetCurrentCoord()
     {
         Vector3 pos = transform.position;
         float minDist = float.MaxValue;
@@ -177,4 +201,10 @@ public class CombatController : MonoBehaviour
 
         return closest;
     }
+
+    public TileCoord GetCurrentTile()
+    {
+        return currentTile;
+    }
+
 }

@@ -22,13 +22,20 @@ public class SkillEditor : Editor
 
         ResetGrid();
 
-        if (skill.impactZone != null && skill.impactZone.zone != null)
+        if (skill.impactZone != null && skill.impactZone.zone != null && skill.impactZone.zone.Length > 0)
         {
             foreach (var pos in skill.impactZone.zone)
             {
                 Vector2Int gridPos = pos + center;
+
                 if (IsInGrid(gridPos))
+                {
                     gridSelection[gridPos.x, gridPos.y] = true;
+                }
+                else
+                {
+                    Debug.LogWarning($"[SkillEditor] Position hors grille ignorée : {gridPos}");
+                }
             }
         }
     }
@@ -67,6 +74,7 @@ public class SkillEditor : Editor
 
                 bool selected = gridSelection[x, y];
                 bool newSelected = GUILayout.Toggle(selected, "", "Button", GUILayout.Width(cellSize), GUILayout.Height(cellSize));
+
                 if (newSelected != selected)
                     gridSelection[x, y] = newSelected;
 
@@ -93,6 +101,7 @@ public class SkillEditor : Editor
             }
         }
 
+        // Sécurité : on initialise l'objet impactZone s'il est null
         if (skill.impactZone == null)
             skill.impactZone = new ImpactZone();
 

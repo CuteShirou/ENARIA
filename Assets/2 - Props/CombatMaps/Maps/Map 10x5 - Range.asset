@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba8e47f9a86c15b4cac90f1adc622bc6, type: 3}
+  m_Name: Map 10x5 - Range
+  m_EditorClassIdentifier: 
+  mapName: Map 10x5 - Range
+  width: 10
+  height: 5
+  greenTeamPositions:
+  - {x: 0, y: 0}
+  - {x: 2, y: 0}
+  - {x: 1, y: 1}
+  - {x: 0, y: 2}
+  - {x: 1, y: 2}
+  - {x: 2, y: 2}
+  - {x: 1, y: 3}
+  - {x: 0, y: 4}
+  - {x: 2, y: 4}
+  redTeamPositions:
+  - {x: 7, y: 0}
+  - {x: 9, y: 0}
+  - {x: 8, y: 1}
+  - {x: 7, y: 2}
+  - {x: 8, y: 2}
+  - {x: 9, y: 2}
+  - {x: 8, y: 3}
+  - {x: 7, y: 4}
+  - {x: 9, y: 4}
+  interactiveObjectPositions: []

@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 
   damageMin: 10
   damageMax: 20
-  skillType: 1
+  skillElement: 1
   costPA: 1
   rangeMin: 1
   rangeMax: 10
@@ -38,11 +38,7 @@ MonoBehaviour:
     - {x: 1, y: 0}
     - {x: 1, y: 1}
     - {x: 2, y: 0}
-  effects:
-  - effectType: 6
-    value: 2
-    duration: 0
-    applyToSelf: 0
+  effects: []
   critChance: 50
   critEffects: []
   icon: {fileID: 0}
