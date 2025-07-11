@@ -1337,7 +1337,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 203676659}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ef2d830e53584541b27e232eb858493, type: 3}
+  m_Script: {fileID: 11500000, guid: fc0ba33dfe21fe442bf39f4554f11824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   statType: 0
@@ -3559,7 +3559,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 506140001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eea17336c2aa0cf478c4c94718ff1cf6, type: 3}
+  m_Script: {fileID: 11500000, guid: 65bf97c21f9bfa0459c26be52d1d6282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   baseHP: 200
@@ -3615,7 +3615,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 506140001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e86a732a09dd7dc43a87e1bcf2373ad4, type: 3}
+  m_Script: {fileID: 11500000, guid: 008b65620804b2e4986c5f130ed10089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pseudo: Issou
@@ -3772,7 +3772,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 516783042}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StatAllocationButton, Assembly-CSharp
         m_MethodName: OnClick
         m_Mode: 1
@@ -3831,7 +3831,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 516783037}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ef2d830e53584541b27e232eb858493, type: 3}
+  m_Script: {fileID: 11500000, guid: fc0ba33dfe21fe442bf39f4554f11824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   statType: 1
@@ -8662,7 +8662,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1343986104}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StatAllocationButton, Assembly-CSharp
         m_MethodName: OnClick
         m_Mode: 1
@@ -8721,7 +8721,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1343986099}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ef2d830e53584541b27e232eb858493, type: 3}
+  m_Script: {fileID: 11500000, guid: fc0ba33dfe21fe442bf39f4554f11824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   statType: 3
@@ -9557,7 +9557,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1574177965}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c7ebedfae121cd428f1a274f0fe0682, type: 3}
+  m_Script: {fileID: 11500000, guid: 966fec2bac4c3ab4b808fba246bd404a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   combatStats: {fileID: 506140002}
@@ -11388,7 +11388,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1820653828}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StatAllocationButton, Assembly-CSharp
         m_MethodName: OnClick
         m_Mode: 1
@@ -11447,7 +11447,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1820653823}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ef2d830e53584541b27e232eb858493, type: 3}
+  m_Script: {fileID: 11500000, guid: fc0ba33dfe21fe442bf39f4554f11824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   statType: 2
@@ -13663,73 +13663,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 2123972506}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c051b9046bf55944acf596a656307d8, type: 3}
+  m_Script: {fileID: 11500000, guid: 711c5123c2c61b34db4138c5f973f339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStats: {fileID: 506140004}
-  combatStats: {fileID: 506140002}
-  equipmentManager: {fileID: 1574177966}
-  detailedStatsPanel: {fileID: 1937795085}
-  pseudoText: {fileID: 914648657}
-  specieText: {fileID: 2115468930}
-  levelText: {fileID: 789259807}
-  remainingPoints: {fileID: 863909333}
-  experienceText: {fileID: 1112500522}
-  pointInputField: {fileID: 370113226}
-  allocationButtons:
-  - {fileID: 203676659}
-  - {fileID: 516783037}
-  - {fileID: 1820653823}
-  - {fileID: 1343986099}
-  - {fileID: 2138451146}
-  equipmentColumn:
-  - {fileID: 1630701561}
-  - {fileID: 551937704}
-  - {fileID: 1811121143}
-  - {fileID: 718596340}
-  - {fileID: 1693840666}
-  - {fileID: 1147187399}
-  - {fileID: 482110607}
-  - {fileID: 49702949}
-  levelUpColumn:
-  - {fileID: 534309783}
-  - {fileID: 1877578135}
-  - {fileID: 472141402}
-  - {fileID: 1580873619}
-  - {fileID: 175061549}
-  - {fileID: 187252402}
-  - {fileID: 1007333379}
-  - {fileID: 18318232}
-  totalColumn:
-  - {fileID: 2084136384}
-  - {fileID: 1865112565}
-  - {fileID: 765241211}
-  - {fileID: 1904977018}
-  - {fileID: 1129325751}
-  - {fileID: 469300856}
-  - {fileID: 67632932}
-  - {fileID: 1546299302}
-  detailedEquipColumn:
-  - {fileID: 1486947278}
-  - {fileID: 1043105442}
-  - {fileID: 483853999}
-  - {fileID: 1302686146}
-  - {fileID: 1968080849}
-  - {fileID: 1966785152}
-  detailedBaseColumn:
-  - {fileID: 1808627499}
-  - {fileID: 718992075}
-  - {fileID: 1976255691}
-  - {fileID: 1822801519}
-  - {fileID: 941923261}
-  - {fileID: 862853943}
-  detailedTotalColumn:
-  - {fileID: 1282991910}
-  - {fileID: 235312137}
-  - {fileID: 1806869255}
-  - {fileID: 260683455}
-  - {fileID: 898782775}
-  - {fileID: 1370650657}
+  playerStats: {fileID: 0}
+  combatStats: {fileID: 0}
+  equipmentManager: {fileID: 0}
+  detailedStatsPanel: {fileID: 0}
+  pseudoText: {fileID: 0}
+  specieText: {fileID: 0}
+  levelText: {fileID: 0}
+  remainingPoints: {fileID: 0}
+  experienceText: {fileID: 0}
+  pointInputField: {fileID: 0}
+  allocationButtons: []
+  equipmentColumn: []
+  levelUpColumn: []
+  totalColumn: []
+  detailedEquipColumn: []
+  detailedBaseColumn: []
+  detailedTotalColumn: []
 --- !u!1 &2138451146
 GameObject:
   m_ObjectHideFlags: 0
@@ -13813,7 +13766,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2138451151}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StatAllocationButton, Assembly-CSharp
         m_MethodName: OnClick
         m_Mode: 1
@@ -13872,7 +13825,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2138451146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ef2d830e53584541b27e232eb858493, type: 3}
+  m_Script: {fileID: 11500000, guid: fc0ba33dfe21fe442bf39f4554f11824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   statType: 4

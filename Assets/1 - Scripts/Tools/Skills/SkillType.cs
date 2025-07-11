@@ -4,7 +4,7 @@ public enum SkillType
 {
     None,
     Force,
-    Dexterité,
+    Dexterite,
     Magie,
     Foi,
 }
@@ -32,7 +32,7 @@ public class SkillEffect
 [System.Serializable]
 public class ImpactZone
 {
-    [Tooltip("Coordonnées relatives autour de la case ciblée (0,0).")]
+    [Tooltip("Coordonnï¿½es relatives autour de la case ciblï¿½e (0,0).")]
     public Vector2Int[] zone;
 }
 
@@ -55,7 +55,7 @@ public class SkillData : ScriptableObject
     public int cooldown;
     public int maxPerTargetPerTurn;
 
-    [Header("Zone d’impact personnalisée")]
+    [Header("Zone dï¿½impact personnalisï¿½e")]
     public ImpactZone impactZone;
 
     [Header("Effets Basique")]

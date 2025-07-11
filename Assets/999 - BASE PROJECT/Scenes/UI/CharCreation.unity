@@ -1729,11 +1729,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1778491409}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a089dafe2ad05424d92884f0ad1efc35, type: 3}
+  m_Script: {fileID: 11500000, guid: e08a427035538584b96b624a82a07823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usernameField: {fileID: 147984905}
+  usernameField: {fileID: 0}
   passwordField: {fileID: 0}
+  registerUsernameField: {fileID: 0}
+  registerPasswordField: {fileID: 0}
+  registerPasswordConfirmField: {fileID: 0}
+  registerEmailField: {fileID: 0}
   characterButtonContainer: {fileID: 0}
 --- !u!114 &1778491414
 MonoBehaviour:

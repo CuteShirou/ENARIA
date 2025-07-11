@@ -1,5 +1,3 @@
-
-#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -14,7 +12,14 @@ public class SkillEditor : Editor
 
     void OnEnable()
     {
-        SkillData skill = (SkillData)target;
+        Debug.Log("SkillEditor: trying to edit => " + target.name, target);
+
+        if (!(target is SkillData skill))
+        {
+            Debug.LogError("SkillEditor: target is not a SkillData! " + target.GetType().Name, target);
+            return;
+        }
+
         ResetGrid();
 
         if (skill.impactZone != null && skill.impactZone.zone != null)
@@ -28,16 +33,18 @@ public class SkillEditor : Editor
         }
     }
 
+
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
         EditorGUILayout.Space(10);
-        EditorGUILayout.LabelField("Zone d'Impact (relative à la cible)", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Zone d'Impact (relative � la cible)", EditorStyles.boldLabel);
 
         DrawGrid();
 
-        if (GUILayout.Button("Appliquer la zone à la compétence"))
+        if (GUILayout.Button("Appliquer la zone � la comp�tence"))
         {
             ApplyGridToSkill();
         }
@@ -102,4 +109,3 @@ public class SkillEditor : Editor
         return pos.x >= 0 && pos.x < gridSize && pos.y >= 0 && pos.y < gridSize;
     }
 }
-#endif
