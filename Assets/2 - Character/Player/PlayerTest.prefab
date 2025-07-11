@@ -718,7 +718,6 @@ GameObject:
   - component: {fileID: 6523512061427059107}
   - component: {fileID: 2723251056582461666}
   - component: {fileID: 6402001533476676321}
-  - component: {fileID: 5976810011818010527}
   - component: {fileID: 81444366895763430}
   - component: {fileID: 1593128579795726258}
   - component: {fileID: 3856363265037637101}
@@ -956,35 +955,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &5976810011818010527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2909982024890745271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cfb1bd4f67c47740acba11b2be037f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 200
-  maxPA: 7
-  maxPM: 10
-  currentHP: 0
-  currentPA: 0
-  currentPM: 0
-  force: 10
-  dexterite: 0
-  magie: 0
-  foi: 0
-  initiative: 0
-  PO: 0
-  critChance: 0
-  resistanceForce: 0
-  resistanceDexterite: 0
-  resistanceMagie: 0
-  resistanceFoi: 0
 --- !u!114 &81444366895763430
 MonoBehaviour:
   m_ObjectHideFlags: 0
