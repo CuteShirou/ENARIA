@@ -2,13 +2,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     public Transform parentAfterDrag;
     public InventorySlot parentSlot;
 
     private RectTransform rectTransform;
-    private CanvasGroup canvasGroup;
+    public CanvasGroup canvasGroup;
     private Canvas canvas;
 
     void Awake()
@@ -24,9 +24,11 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             if (parentSlot.currentItem != null && parentSlot.currentItem.quantity > 1)
             {
+                // Réduit la pile actuelle
                 parentSlot.currentItem.quantity -= 1;
                 parentSlot.SetItem(parentSlot.currentItem);
 
+                // Crée un nouvel item de quantité 1
                 InventoryItem splitItem = new InventoryItem
                 {
                     itemID = parentSlot.currentItem.itemID,
@@ -36,27 +38,43 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                     type = parentSlot.currentItem.type
                 };
 
+                // Crée un clone du visuel
                 GameObject clone = Instantiate(gameObject, canvas.transform);
                 DraggableItem dragScript = clone.GetComponent<DraggableItem>();
+                Image img = clone.GetComponent<Image>();
+                if (img != null) img.sprite = splitItem.icon;
 
-                dragScript.parentSlot = parentSlot;
-                dragScript.parentAfterDrag = parentSlot.transform;
-                dragScript.canvasGroup.blocksRaycasts = false;
+                // Associe un slot temporaire à ce visuel
+                InventorySlot tempSlot = clone.AddComponent<InventorySlot>();
+                tempSlot.currentItem = splitItem;
+                tempSlot.itemImage = img;
+                tempSlot.quantityText = new GameObject("Qty").AddComponent<Text>();
+                tempSlot.quantityText.transform.SetParent(clone.transform);
+                tempSlot.SetItem(splitItem);
 
-                clone.GetComponent<RectTransform>().position = Input.mousePosition;
-                dragScript.OnBeginDrag(eventData);
+                dragScript.parentSlot = tempSlot;
+                dragScript.parentAfterDrag = tempSlot.transform;
+                dragScript.canvasGroup = clone.GetComponent<CanvasGroup>();
 
-                InventorySlot cloneSlot = clone.GetComponentInParent<InventorySlot>();
-                if (cloneSlot != null) cloneSlot.SetItem(splitItem);
+                // Positionne le visuel sous la souris
+                RectTransform rt = clone.GetComponent<RectTransform>();
+                rt.position = Input.mousePosition;
+
+                // Lance le drag manuellement
+                ExecuteEvents.Execute<IBeginDragHandler>(
+                    clone,
+                    new PointerEventData(EventSystem.current),
+                    ExecuteEvents.beginDragHandler
+                );
             }
         }
     }
-    
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         parentSlot = GetComponentInParent<InventorySlot>();
         parentAfterDrag = transform.parent;
-        transform.SetParent(canvas.transform, false);
+        transform.SetParent(canvas.transform, true);
         canvasGroup.blocksRaycasts = false;
     }
 
@@ -64,28 +82,23 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         rectTransform.position = Input.mousePosition;
     }
-    
+
     public void OnEndDrag(PointerEventData eventData)
     {
-        InventorySlot targetSlot = eventData.pointerEnter?.GetComponentInParent<InventorySlot>();
+        GameObject target = eventData.pointerEnter;
+        InventorySlot targetSlot = target != null ? target.GetComponentInParent<InventorySlot>() : null;
 
         if (targetSlot != null)
-        {
             parentAfterDrag = targetSlot.transform;
-        }
         else
-        {
             parentAfterDrag = parentSlot.transform;
-        }
 
-        transform.SetParent(parentAfterDrag, true);
+        transform.SetParent(parentAfterDrag, false);
         rectTransform.anchoredPosition = Vector2.zero;
+        transform.localScale = Vector3.one;
         canvasGroup.blocksRaycasts = true;
 
-        // IMPORTANT : replace le visuel dans le bon slot
         if (parentSlot != null)
-        {
             parentSlot.SetItem(parentSlot.currentItem);
-        }
     }
 }

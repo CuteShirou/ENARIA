@@ -4,6 +4,7 @@ public class InventoryManager : MonoBehaviour
 {
     public ItemDatabase itemDatabase;
     public InventorySlot[] inventorySlots;
+    public GameObject draggableItemPrefab;
 
     void Start()
     {

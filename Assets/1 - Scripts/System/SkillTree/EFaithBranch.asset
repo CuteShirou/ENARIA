@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e734b846e2090f7498272070c4c7dd99, type: 3}
+  m_Name: EFaithBranch
+  m_EditorClassIdentifier: 
+  branchName: Foi
+  nodes:
+  - skillData: {fileID: 0}
+    manualIcon: {fileID: 0}
+    manualName: 
+    manualDescription: 
+    cost: 1
+    isUnlocked: 1
+    onUnlock:
+      m_PersistentCalls:
+        m_Calls: []
+  - skillData: {fileID: 0}
+    manualIcon: {fileID: 21300000, guid: e7b680f832fad2a439bd0bed9df620db, type: 3}
+    manualName: Soins de l'Arbre Monde 2
+    manualDescription: 'Zone : 1case -> cercle 1'
+    cost: 1
+    isUnlocked: 0
+    onUnlock:
+      m_PersistentCalls:
+        m_Calls: []
+  - skillData: {fileID: 0}
+    manualIcon: {fileID: 0}
+    manualName: 
+    manualDescription: 
+    cost: 1
+    isUnlocked: 0
+    onUnlock:
+      m_PersistentCalls:
+        m_Calls: []
+  - skillData: {fileID: 0}
+    manualIcon: {fileID: 21300000, guid: 4e83602b2f2e9af4b830b2f7ac06da50, type: 3}
+    manualName: "Enfant de la for\xEAt"
+    manualDescription: Soins de l'Arbre Monde 5% -> 10%. Cooldown de Benediction
+      de l'Arbre Monde 4->3
+    cost: 1
+    isUnlocked: 0
+    onUnlock:
+      m_PersistentCalls:
+        m_Calls: []
+  - skillData: {fileID: 0}
+    manualIcon: {fileID: 0}
+    manualName: 
+    manualDescription: 
+    cost: 1
+    isUnlocked: 0
+    onUnlock:
+      m_PersistentCalls:
+        m_Calls: []
