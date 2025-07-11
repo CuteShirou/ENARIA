@@ -127,6 +127,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (1)
@@ -243,6 +251,115 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 84ac6c50c4d44d64ba8f4aae455ab2a0, type: 3}
   m_PrefabInstance: {fileID: 63568883}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &127277404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 127277408}
+  - component: {fileID: 127277407}
+  - component: {fileID: 127277406}
+  - component: {fileID: 127277405}
+  m_Layer: 0
+  m_Name: Capsule
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!136 &127277405
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127277404}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &127277406
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127277404}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &127277407
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127277404}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &127277408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127277404}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 4.587, y: 1.337, z: -25.837}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &170746671
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +511,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (3)
@@ -881,6 +1006,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (9)
@@ -1011,6 +1144,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (6)
@@ -1422,6 +1563,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (7)
@@ -2785,6 +2934,68 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &947023599
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 947023601}
+  - component: {fileID: 947023600}
+  m_Layer: 0
+  m_Name: DEW Sample
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &947023600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 947023599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aa237ed02183d743b53ad7f40d77d14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dew: {fileID: 11400000, guid: 39e432e67e9acb64885fb2c5a306106c, type: 2}
+  m_eventArray:
+  - m_key: NoQuestion
+    m_event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 947023600}
+          m_TargetAssemblyTypeName: 
+          m_MethodName: NoQuestionEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!4 &947023601
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 947023599}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &981843776
 Mesh:
   m_ObjectHideFlags: 0
@@ -3038,7 +3249,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: fcbfc9c4ca064b043acc8608b445f1d2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3313,6 +3524,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (8)
@@ -3555,11 +3774,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aacd54820737c4244aa2654327d41d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: {fileID: 102900000, guid: cd3fbdc681c5def4c9bca45f30d0470d, type: 3}
+  sceneName: Zone Apparition
   destinationTransform: {fileID: 1613639141}
   cameraParentTargetName: HUB Camera Position
   playerTag: Player
-  sceneName: Zone Apparition
 --- !u!95 &1118362903
 Animator:
   serializedVersion: 7
@@ -5446,7 +5664,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: fcbfc9c4ca064b043acc8608b445f1d2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6332,6 +6550,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (5)
@@ -6394,6 +6620,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (10)
@@ -6680,8 +6914,8 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.28627452, g: 0.854902, b: 0.9725491, a: 1}
-  m_Intensity: 1.5
-  m_Range: 1.8
+  m_Intensity: 3
+  m_Range: 3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -6719,7 +6953,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -7052,7 +7286,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7222,6 +7456,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (4)
@@ -7292,6 +7534,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp (12)
@@ -7354,6 +7604,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 825235017}
     m_Modifications:
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179380101063567453, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8311368669040969451, guid: c79125be5e94e3e499f9ec966dddc32f, type: 3}
       propertyPath: m_Name
       value: Lamp
@@ -7587,6 +7845,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 652565988}
   - {fileID: 498192150}
+  - {fileID: 127277408}
+  - {fileID: 947023601}
   - {fileID: 1540262117}
   - {fileID: 1180080131}
   - {fileID: 1759128337}

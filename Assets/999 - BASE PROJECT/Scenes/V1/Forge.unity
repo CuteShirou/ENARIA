@@ -329,11 +329,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aacd54820737c4244aa2654327d41d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: {fileID: 102900000, guid: cd3fbdc681c5def4c9bca45f30d0470d, type: 3}
+  sceneName: Zone Apparition
   destinationTransform: {fileID: 712882291}
   cameraParentTargetName: HUB Camera Position
   playerTag: Player
-  sceneName: Zone Apparition
 --- !u!95 &67032666
 Animator:
   serializedVersion: 7
@@ -1311,7 +1310,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -2047,7 +2046,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -2350,7 +2349,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -2429,7 +2428,7 @@ Light:
   m_Type: 2
   m_Color: {r: 0.28627452, g: 0.854902, b: 0.9725491, a: 1}
   m_Intensity: 1.5
-  m_Range: 1.8
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -2982,7 +2981,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3133,7 +3132,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -3391,7 +3390,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3498,7 +3497,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3605,7 +3604,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4002,7 +4001,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -4156,7 +4155,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4341,7 +4340,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4720,7 +4719,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5944,7 +5943,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6231,7 +6230,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -6304,7 +6303,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6411,7 +6410,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6955,7 +6954,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7690,7 +7689,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -9569,7 +9568,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9738,7 +9737,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3376118817733088111, guid: be4fb7f6c954d7d4abf8ede4b3bc7920, type: 3}
+  - {fileID: 2100000, guid: 769f4e1df530ff84f9080ecee7a2e012, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10572,7 +10571,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -11126,7 +11125,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -12383,7 +12382,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -13361,7 +13360,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
