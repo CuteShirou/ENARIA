@@ -125,6 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   gridManager: {fileID: 0}
+  isMoving: 0
 --- !u!114 &1560137724322944130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,23 +135,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 5209355076112397699}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cfb1bd4f67c47740acba11b2be037f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 879891e7dfc7aac479eed3aff27dabdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 200
-  maxPA: 7
-  maxPM: 10
+  isDead: 0
+  team: 0
+  baseHP: 200
+  basePA: 7
+  basePM: 4
+  basePO: 0
+  baseInitiative: 0
+  baseCritChance: 0
+  baseForce: 0
+  baseDexterite: 0
+  baseMagie: 0
+  baseFoi: 0
+  baseResistanceForce: 0
+  baseResistanceDexterite: 0
+  baseResistanceMagie: 0
+  baseResistanceFoi: 0
   currentHP: 0
   currentPA: 0
   currentPM: 0
-  force: 0
-  dexterite: 0
-  magie: 0
-  foi: 0
-  initiative: 0
-  PO: 0
-  critChance: 0
-  resistanceForce: 0
-  resistanceDexterite: 0
-  resistanceMagie: 0
-  resistanceFoi: 0
+  currentPO: 0
+  currentCritChance: 0
+  currentForce: 0
+  currentDexterite: 0
+  currentMagie: 0
+  currentFoi: 0
+  currentResistanceForce: 0
+  currentResistanceDexterite: 0
+  currentResistanceMagie: 0
+  currentResistanceFoi: 0
+  activeEffects: []
+  currentShield: 0
