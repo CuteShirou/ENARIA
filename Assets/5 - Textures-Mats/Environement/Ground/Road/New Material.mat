@@ -24,6 +24,7 @@ Material:
     RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
+  - ALWAYS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -2248,7 +2249,7 @@ Material:
     - _MatcapUVMode: 1
     - _MatcapUVToBlend: 1
     - _MaterialDebugMode: 0
-    - _MaterialResetCheck: 0
+    - _MaterialResetCheck: 1
     - _Metallic: 0
     - _MetallicChannel: 2
     - _MetallicStrength: 0

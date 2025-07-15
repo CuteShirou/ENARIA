@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using StarterAssets;
-using UnityEditor.EditorTools;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.Tilemaps;
+
+#if UNITY_EDITOR
+using UnityEditor.EditorTools;
+#endif
+
 
 public class CombatManager : MonoBehaviour
 {

@@ -1,8 +1,9 @@
 using UnityEditor;
 using UnityEngine;
 
+
 [CustomPropertyDrawer(typeof(SkillNode))]
-public class SkillNodeDrawer : PropertyDrawer
+public class SkillNodeDrawer : UnityEditor.PropertyDrawer
 {
     private readonly float lineHeight = EditorGUIUtility.singleLineHeight;
     private readonly float spacing = 2f;
