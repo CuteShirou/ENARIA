@@ -63,6 +63,7 @@
     <Compile Include="Assets\1 - Scripts\Network\MyNetworkManager.cs" />
     <Compile Include="Assets\1 - Scripts\CombatManager\SkillCaster.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\CanvasInputs\UICanvasControllerInput.cs" />
+    <Compile Include="Assets\1 - Scripts\Inventory\UIPageManager.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Craft\CraftingPropertyDrawer.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\RecipeItemUI.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\MonsterData.cs" />
@@ -954,6 +955,9 @@
     <Reference Include="Mono.CecilX.Mdb">
       <HintPath>C:\Users\adoga\Documents\Unity Projects\ENARIA\Assets\6 - Tools\Mirror\Plugins\Mono.Cecil\Mono.CecilX.Mdb.dll</HintPath>
     </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>C:\Users\adoga\Documents\Unity Projects\ENARIA\Assets\1 - Scripts\System\RATS Plugins\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
       <HintPath>C:\Users\adoga\Documents\Unity Projects\ENARIA\Library\PackageCache\com.unity.collections@1.4.0\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
     </Reference>
@@ -977,9 +981,6 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>C:\Users\adoga\Documents\Unity Projects\ENARIA\Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="0Harmony">
-      <HintPath>C:\Users\adoga\Documents\Unity Projects\ENARIA\Assets\1 - Scripts\System\RATS Plugins\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2023.2.20f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
