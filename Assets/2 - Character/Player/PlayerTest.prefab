@@ -720,6 +720,8 @@ GameObject:
   - component: {fileID: 6402001533476676321}
   - component: {fileID: 81444366895763430}
   - component: {fileID: 1593128579795726258}
+  - component: {fileID: 5433487903656362249}
+  - component: {fileID: -5166693200051915444}
   - component: {fileID: 3856363265037637101}
   - component: {fileID: 8544828018083952929}
   - component: {fileID: 7497975834264957676}
@@ -967,6 +969,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a72b7bdf29e4034caf18153d86dd4bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   moveSpeed: 5
   gridManager: {fileID: 0}
   isMoving: 0
@@ -982,8 +987,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec3323cea86ef0d48b5ee6e037a929ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   equippedSkill: {fileID: 11400000, guid: bf9e9f2e27e950a4e92c7915720acac8, type: 2}
   gridManager: {fileID: 0}
+--- !u!114 &5433487903656362249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2909982024890745271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 008b65620804b2e4986c5f130ed10089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pseudo: 
+  specie: 0
+  level: 1
+  experience: 0
+  remainingPoints: 0
+  baseXPToLevelUp: 100
+  xpGrowthFactor: 1.5
+--- !u!114 &-5166693200051915444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2909982024890745271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 879891e7dfc7aac479eed3aff27dabdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDead: 0
+  team: 0
+  baseHP: 200
+  basePA: 7
+  basePM: 4
+  basePO: 0
+  baseInitiative: 0
+  baseCritChance: 0
+  baseForce: 0
+  baseDexterite: 0
+  baseMagie: 0
+  baseFoi: 0
+  baseResistanceForce: 0
+  baseResistanceDexterite: 0
+  baseResistanceMagie: 0
+  baseResistanceFoi: 0
+  currentHP: 0
+  currentPA: 0
+  currentPM: 0
+  currentPO: 0
+  currentCritChance: 0
+  currentForce: 0
+  currentDexterite: 0
+  currentMagie: 0
+  currentFoi: 0
+  currentResistanceForce: 0
+  currentResistanceDexterite: 0
+  currentResistanceMagie: 0
+  currentResistanceFoi: 0
+  activeEffects: []
+  currentShield: 0
 --- !u!114 &3856363265037637101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1032,7 +1102,7 @@ MonoBehaviour:
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   onlySyncOnChangeCorrectionMultiplier: 2
   useFixedUpdate: 0
-  rotationSensitivity: 0.01
+  rotationSensitivity: 0.1
   positionPrecision: 0.01
   scalePrecision: 0.01
 --- !u!114 &7497975834264957676
@@ -1050,7 +1120,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  clientAuthority: 0
+  clientAuthority: 1
   animator: {fileID: 3109033236702595994}
 --- !u!114 &2620340701141665295
 MonoBehaviour:

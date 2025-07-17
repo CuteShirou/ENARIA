@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Mirror;
 
-public class CombatMapLoader : MonoBehaviour
+public class CombatMapLoader : NetworkBehaviour
 {
     [Header("Carte à utiliser")]
     public CombatMapData mapData;
@@ -14,8 +15,10 @@ public class CombatMapLoader : MonoBehaviour
     public Material matRed;
     public Material matBlue;
 
-    private void Awake()
+    public override void OnStartServer()
     {
+        base.OnStartServer();
+
         if (mapData != null && grid != null)
         {
             GenerateGridFromMap();
@@ -26,6 +29,7 @@ public class CombatMapLoader : MonoBehaviour
         }
     }
 
+    [Server]
     public void GenerateGridFromMap()
     {
         float spacing = grid.TileSizeValue + grid.TileSpacingValue;
@@ -43,7 +47,7 @@ public class CombatMapLoader : MonoBehaviour
                 Vector2Int coord = new Vector2Int(x, y);
                 Vector3 pos = gridOrigin + new Vector3(x * spacing, 0.1f, y * spacing);
 
-                GameObject tile = Instantiate(tilePrefab, pos, Quaternion.identity, grid.transform);
+                GameObject tile = Instantiate(tilePrefab, pos, Quaternion.identity);
                 tile.name = $"Tile ({x},{y})";
 
                 TileCoord tc = tile.GetComponent<TileCoord>();
@@ -51,13 +55,11 @@ public class CombatMapLoader : MonoBehaviour
                 {
                     tc.SetCoord(x, y);
 
-                    // On transmet les matériaux à la tuile
                     tc.normal = matNormal;
                     tc.green = matGreen;
                     tc.red = matRed;
                     tc.blue = matBlue;
 
-                    // Choix du matériel et enregistrement de la couleur d'origine
                     if (mapData.greenTeamPositions.Contains(coord))
                         tc.SetTeamColor("green");
                     else if (mapData.redTeamPositions.Contains(coord))
@@ -67,6 +69,9 @@ public class CombatMapLoader : MonoBehaviour
                     else
                         tc.SetTeamColor("normal");
                 }
+
+                NetworkServer.Spawn(tile);
+                tile.transform.SetParent(grid.transform);
 
                 grid.TileMap[coord] = tile;
             }

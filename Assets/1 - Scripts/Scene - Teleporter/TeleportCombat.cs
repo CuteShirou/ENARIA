@@ -2,12 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using StarterAssets;
 using UnityEngine.Animations;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class TeleportCombat : MonoBehaviour
 {
-    [Header("Nom EXACT de la scène de combat (sans .unity)")]
-    [SerializeField] private string sceneName;
+#if UNITY_EDITOR
+    [Header("Drag & Drop ici ta scène cible")]
+    [SerializeField] private SceneAsset sceneToLoad;
+#endif
 
     [Header("Transform cible en fallback si pas de grille trouvée")]
     [SerializeField] private Transform fallbackTransform;
@@ -16,39 +23,47 @@ public class TeleportCombat : MonoBehaviour
     [SerializeField] private string cameraParentTargetName;
     [SerializeField] private string playerTag = "Player";
 
+    [HideInInspector]
+    public string sceneName;
+
     [Header("Combat")]
     [SerializeField] private GameObject monsterPrefab;
     [SerializeField] private int numberOfMonsters = 1;
+
+    private void OnValidate()
+    {
+#if UNITY_EDITOR
+        if (sceneToLoad != null)
+            sceneName = sceneToLoad.name;
+#endif
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(playerTag) && !string.IsNullOrEmpty(sceneName))
         {
             StartCoroutine(SwitchSceneAndPlaceOnGrid(other.gameObject));
-
-            var TPC = other.GetComponent<ThirdPersonController>();
-            if (TPC != null)
-            {
-                TPC.IsInCombat = true;
-            }
+            other.GetComponent<ThirdPersonController>().IsInCombat = true;
         }
     }
 
     private IEnumerator SwitchSceneAndPlaceOnGrid(GameObject player)
     {
         Scene currentScene = gameObject.scene;
-        Debug.Log($"[TeleportCombat] Loading combat scene: {sceneName}");
 
+        // Charger la scène de combat
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while (!loadOp.isDone)
             yield return null;
 
+        // Activer la nouvelle scène
         Scene newScene = SceneManager.GetSceneByName(sceneName);
         if (newScene.IsValid())
             SceneManager.SetActiveScene(newScene);
 
         yield return null;
 
+        // Récupérer le GridManager dans la scène cible
         Grid gridManager = null;
         foreach (GameObject root in newScene.GetRootGameObjects())
         {
@@ -60,47 +75,39 @@ public class TeleportCombat : MonoBehaviour
 
         if (gridManager != null && gridManager.TileMap.Count > 0)
         {
-            List<Vector2Int> availableTiles = new List<Vector2Int>(gridManager.TileMap.Keys);
-
-            Vector2Int playerCoord = GetAndRemoveRandomCoord(ref availableTiles);
-            GameObject playerTile = gridManager.TileMap[playerCoord];
-            player.transform.position = playerTile.transform.position + new Vector3(0, 0.1f, 0);
-            player.transform.rotation = Quaternion.identity;
-            TileCoord tileCoord = playerTile.GetComponent<TileCoord>();
-            if (tileCoord != null)
-                tileCoord.SetOccupant(player);
-
-            List<GameObject> spawnedMonsters = new List<GameObject>();
+            // 1. Instancier les monstres dans la bonne scène
             for (int i = 0; i < numberOfMonsters; i++)
             {
-                Vector2Int monsterCoord = GetAndRemoveRandomCoord(ref availableTiles);
-                GameObject tile = gridManager.TileMap[monsterCoord];
-
-                GameObject monster = Instantiate(monsterPrefab, tile.transform.position + new Vector3(0, 0.1f, 0), Quaternion.identity);
-                TileCoord monsterTileCoord = tile.GetComponent<TileCoord>();
-                if (monsterTileCoord != null)
-                    monsterTileCoord.SetOccupant(monster);
-
+                GameObject monster = Instantiate(monsterPrefab, gridManager.transform);
                 monster.tag = "Monster";
                 monster.name = $"Monster {i + 1}";
-                spawnedMonsters.Add(monster);
             }
 
+            // 2. Enregistrer les entités dans le CombatManager
             CombatManager cm = FindAnyObjectByType<CombatManager>();
             if (cm != null)
             {
                 cm.RegisterFighter(player);
-                foreach (var monster in spawnedMonsters)
+
+                foreach (var monster in GameObject.FindGameObjectsWithTag("Monster"))
                     cm.RegisterFighter(monster);
-                cm.InitCombat();
+            }
+
+            // 3. Lancer la phase de préparation
+            CombatPreparationManager prep = FindAnyObjectByType<CombatPreparationManager>();
+            if (prep != null)
+            {
+                prep.ForceSetup(); // C'est ici que les monstres sont placés sur les cases rouges
             }
         }
 
+        // Décharger la scène précédente
         AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
         while (!unloadOp.isDone)
             yield return null;
     }
 
+    // Méthode utilitaire : récupère une coordonnée aléatoire
     private Vector2Int GetAndRemoveRandomCoord(ref List<Vector2Int> coords)
     {
         int index = Random.Range(0, coords.Count);
@@ -109,6 +116,7 @@ public class TeleportCombat : MonoBehaviour
         return coord;
     }
 
+    // Méthode utilitaire : change le parent de la caméra
     private void SetCameraParentByName(string targetName)
     {
         if (string.IsNullOrEmpty(targetName)) return;
@@ -116,14 +124,14 @@ public class TeleportCombat : MonoBehaviour
         Camera mainCam = Camera.main;
         if (mainCam == null)
         {
-            Debug.LogWarning("TeleportCombat: MainCamera not found.");
+            Debug.LogWarning("SceneTeleporter: MainCamera not found.");
             return;
         }
 
         ParentConstraint constraint = mainCam.GetComponent<ParentConstraint>();
         if (constraint == null)
         {
-            Debug.LogWarning("TeleportCombat: ParentConstraint not found on MainCamera.");
+            Debug.LogWarning("SceneTeleporter: ParentConstraint not found on MainCamera.");
             return;
         }
 

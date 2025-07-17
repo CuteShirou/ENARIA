@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
-using UnityEditor;
+using Mirror;
 
-public class CombatController : MonoBehaviour
+public class CombatController : NetworkBehaviour
 {
     public float moveSpeed = 5f;
     public Grid gridManager;
@@ -16,18 +16,7 @@ public class CombatController : MonoBehaviour
     private CombatStats stats;
     private TileCoord currentTile;
 
-
-    public void AssignToTile(TileCoord newTile)
-    {
-        if (currentTile != null)
-            currentTile.ClearOccupant();
-
-        currentTile = newTile;
-        currentTile.SetOccupant(gameObject);
-    }
-
-
-    void Start()
+    private void Start()
     {
         mainCamera = Camera.main;
         stats = GetComponent<CombatStats>();
@@ -40,21 +29,21 @@ public class CombatController : MonoBehaviour
             currentTile.SetOccupant(gameObject);
     }
 
-    void Update()
+    private void Update()
     {
+        if (!isServer)
+            return;
+
         HandleMovement();
-        HandleClick();
     }
 
-    //private void OnEnable()
-    //{
-    //    Vector2Int fromCoord = GetCurrentCoord();
+    private void LateUpdate()
+    {
+        if (!isLocalPlayer)
+            return;
 
-    //    if (gridManager.TileMap.TryGetValue(fromCoord,out GameObject Tile))
-    //    {
-    //        Tile.GetComponent<Renderer>().sharedMaterial = currentTile.highlight;
-    //    }
-    //}
+        HandleClick();
+    }
 
     private void HandleMovement()
     {
@@ -87,80 +76,53 @@ public class CombatController : MonoBehaviour
                 TileCoord targetTile = hit.collider.GetComponent<TileCoord>();
                 if (targetTile == null) return;
 
-                Vector2Int fromCoord = GetCurrentCoord();
-                Vector2Int toCoord = targetTile.Coord;
-
-                List<Vector2Int> path = AStarPathfinder.FindPath(fromCoord, toCoord, gridManager, stats.currentPM);
-                TileCoord destinationTile = gridManager.TileMap[toCoord].GetComponent<TileCoord>();
-                if (destinationTile != null && destinationTile.occupant == gameObject)
-                {
-                    Debug.Log("Tu es déjà sur cette case.");
-                    return;
-                }
-                else if (destinationTile != null && destinationTile.IsOccupied)
-                {
-                    Debug.Log("La case est déjà occupée !");
-                    return;
-                }
-                else if (path == null)
-                {
-                    Debug.Log("Aucun chemin trouvé ou trop loin !");
-                    return;
-                }
-                
-
-                // Libère la case actuelle
-                if (currentTile != null)
-                    currentTile.ClearOccupant();
-
-                currentTile = gridManager.TileMap[toCoord].GetComponent<TileCoord>();
-                currentTile.SetOccupant(gameObject);
-
-                stats.currentPM -= path.Count;
-
-                movementQueue.Clear();
-                foreach (Vector2Int step in path)
-                {
-                    Vector3 worldPos = gridManager.TileMap[step].transform.position + new Vector3(0, 0.1f, 0);
-                    movementQueue.Enqueue(worldPos);
-                }
-
-                isMoving = true;
+                CmdRequestMove(targetTile.Coord);
             }
         }
     }
 
-
-    private List<TileCoord> GetValidLPath(Vector2Int from, Vector2Int to)
+    [Command]
+    private void CmdRequestMove(Vector2Int targetCoord)
     {
-        List<TileCoord> path = new List<TileCoord>();
+        if (isMoving || stats == null || stats.currentPM <= 0)
+            return;
 
-        // Cas 1 : Horizontal puis Vertical
-        Vector2Int inter1 = new Vector2Int(to.x, from.y);
-        if (IsTileFree(inter1) && IsTileFree(to))
+        if (!gridManager.TileMap.ContainsKey(targetCoord))
+            return;
+
+        TileCoord destinationTile = gridManager.TileMap[targetCoord].GetComponent<TileCoord>();
+        if (destinationTile == null || destinationTile.IsOccupied)
+            return;
+
+        List<Vector2Int> path = AStarPathfinder.FindPath(GetCurrentCoord(), targetCoord, gridManager, stats.currentPM);
+        if (path == null)
+            return;
+
+        if (currentTile != null)
+            currentTile.ClearOccupant();
+
+        currentTile = destinationTile;
+        destinationTile.SetOccupant(gameObject);
+
+        stats.currentPM -= path.Count;
+
+        movementQueue.Clear();
+        foreach (Vector2Int step in path)
         {
-            path.Add(gridManager.TileMap[inter1].GetComponent<TileCoord>());
-            path.Add(gridManager.TileMap[to].GetComponent<TileCoord>());
-            return path;
+            Vector3 worldPos = gridManager.TileMap[step].transform.position + new Vector3(0, 0.1f, 0);
+            movementQueue.Enqueue(worldPos);
         }
 
-        // Cas 2 : Vertical puis Horizontal
-        Vector2Int inter2 = new Vector2Int(from.x, to.y);
-        if (IsTileFree(inter2) && IsTileFree(to))
-        {
-            path.Add(gridManager.TileMap[inter2].GetComponent<TileCoord>());
-            path.Add(gridManager.TileMap[to].GetComponent<TileCoord>());
-            return path;
-        }
-
-        return null;
+        isMoving = true;
     }
 
-    private bool IsTileFree(Vector2Int coord)
+    public void AssignToTile(TileCoord newTile)
     {
-        if (!gridManager.TileMap.ContainsKey(coord)) return false;
-        TileCoord tile = gridManager.TileMap[coord].GetComponent<TileCoord>();
-        return tile != null && !tile.IsOccupied;
+        if (currentTile != null)
+            currentTile.ClearOccupant();
+
+        currentTile = newTile;
+        currentTile.SetOccupant(gameObject);
     }
 
     private TileCoord FindClosestTile()
@@ -181,8 +143,6 @@ public class CombatController : MonoBehaviour
         return closest;
     }
 
-
-    //De base, en private
     public Vector2Int GetCurrentCoord()
     {
         Vector3 pos = transform.position;
@@ -205,6 +165,27 @@ public class CombatController : MonoBehaviour
     public TileCoord GetCurrentTile()
     {
         return currentTile;
+    }
+
+    [Command]
+    public void CmdRequestTileChange(NetworkIdentity tileNetId)
+    {
+        if (!isServer) return;
+        if (isMoving) return;
+        if (stats == null) return;
+        if (stats.currentPM <= 0) return;
+
+        TileCoord newTile = tileNetId.GetComponent<TileCoord>();
+        if (newTile == null) return;
+        if (newTile == currentTile) return;
+        if (!FindAnyObjectByType<CombatPreparationManager>().mapData.greenTeamPositions.Contains(newTile.Coord))
+            return;
+
+        CombatPreparationManager prep = FindAnyObjectByType<CombatPreparationManager>();
+        if (prep != null)
+        {
+            prep.TryMovePlayerTo(newTile);
+        }
     }
 
 }

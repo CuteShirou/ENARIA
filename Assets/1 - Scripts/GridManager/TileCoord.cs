@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class TileCoord : MonoBehaviour
+public class TileCoord : NetworkBehaviour
 {
     [Header("Materials")]
     [SerializeField] public Material highlight;
@@ -12,10 +13,11 @@ public class TileCoord : MonoBehaviour
     [SerializeField] public Material blue;
     [SerializeField] public Material green;
 
-    public Material currentMaterial;  // Le matériau de base (vert, rouge, bleu ou normal)
+    public Material currentMaterial;
     public int X { get; private set; }
     public int Y { get; private set; }
     public Vector2Int Coord;
+
     public GameObject occupant;
     public bool IsOccupied => occupant != null;
 
@@ -60,16 +62,18 @@ public class TileCoord : MonoBehaviour
 
     private void OnMouseDown()
     {
-        CombatPreparationManager prep = FindAnyObjectByType<CombatPreparationManager>();
-        if (prep != null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null && player.GetComponent<CombatController>()?.enabled == false)
-            {
-                prep.TryMovePlayerTo(this);
-            }
+        if (!Application.isPlaying) return;
 
-            return;
+        // Détection du joueur local
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null && player.GetComponent<CombatController>()?.enabled == false)
+        {
+            var ctrl = player.GetComponent<CombatController>();
+            if (ctrl != null && ctrl.isLocalPlayer)
+            {
+                // Demande au serveur de tenter le déplacement
+                ctrl.CmdRequestTileChange(GetComponent<NetworkIdentity>());
+            }
         }
     }
 
@@ -86,6 +90,8 @@ public class TileCoord : MonoBehaviour
 
     private void Update()
     {
+        if (!Application.isPlaying) return;
+
         if (occupant != null)
         {
             CombatController ctrl = occupant.GetComponent<CombatController>();
@@ -94,16 +100,14 @@ public class TileCoord : MonoBehaviour
                 GetComponent<Renderer>().sharedMaterial = activeFighter;
             }
 
-
-            // 11/07/2025
             CombatStats stats = occupant.GetComponent<CombatStats>();
             if (stats != null && stats.isDead)
             {
-                ClearOccupant();
+                if (NetworkServer.active) // Seulement côté serveur
+                    ClearOccupant();
             }
         }
     }
-
 
     private void OnMouseEnter()
     {
@@ -120,6 +124,4 @@ public class TileCoord : MonoBehaviour
             GetComponent<Renderer>().sharedMaterial = currentMaterial;
         }
     }
-
-
 }

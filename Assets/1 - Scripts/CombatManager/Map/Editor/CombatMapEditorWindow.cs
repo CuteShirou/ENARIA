@@ -106,7 +106,7 @@ public class CombatMapEditorWindow : EditorWindow
             }
         }
 
-        string folderPath = "Assets/2 - Props/CombatMaps/Maps";
+        string folderPath = "Assets/1 - Scripts/CombatManager/Map";
         if (!System.IO.Directory.Exists(folderPath))
             System.IO.Directory.CreateDirectory(folderPath);
 

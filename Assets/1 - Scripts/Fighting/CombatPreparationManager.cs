@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Mirror;
 
-public class CombatPreparationManager : MonoBehaviour
+public class CombatPreparationManager : NetworkBehaviour
 {
     [Header("Références")]
     public Grid grid;
@@ -52,11 +53,12 @@ public class CombatPreparationManager : MonoBehaviour
         PlacePlayerRandomly();
         PlaceEnemiesRandomly();
 
-        readyButton.onClick.AddListener(OnPlayerReady);
+        readyButton.onClick.AddListener(SendReadyToServer);
     }
 
     void Update()
     {
+        if (!isServer) return;
         if (isReady) return;
 
         countdown -= Time.deltaTime;
@@ -99,7 +101,8 @@ public class CombatPreparationManager : MonoBehaviour
         }
     }
 
-    void OnPlayerReady()
+    [Command]
+    void SendReadyToServer()
     {
         isReady = true;
         StartCombat();
@@ -110,7 +113,6 @@ public class CombatPreparationManager : MonoBehaviour
         readyButton.gameObject.SetActive(false);
         timerText.gameObject.SetActive(false);
 
-        // Réactiver les CombatController
         foreach (var enemy in enemies)
         {
             CombatController cc = enemy.GetComponent<CombatController>();
@@ -122,6 +124,16 @@ public class CombatPreparationManager : MonoBehaviour
         enabled = false;
     }
 
+    [Command]
+    public void CmdTryMovePlayerTo(NetworkIdentity tileNetId)
+    {
+        if (isReady) return;
+
+        TileCoord newTile = tileNetId.GetComponent<TileCoord>();
+        if (newTile == null) return;
+
+        TryMovePlayerTo(newTile);
+    }
 
     public void TryMovePlayerTo(TileCoord newTile)
     {

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3776005961664583373}
   - component: {fileID: 5973212240558610957}
   - component: {fileID: 2496985778496037840}
+  - component: {fileID: 6093789153877823068}
   m_Layer: 0
   m_Name: Basic Tile
   m_TagString: Untagged
@@ -121,6 +122,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 373b25fb8beddb045af5047bb597fd73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   highlight: {fileID: 2100000, guid: e4601db8e2c061541ad53ba6b5a136c2, type: 2}
   normal: {fileID: 2100000, guid: dd665a5cb9d2d4a4198e1ee7154ebbb1, type: 2}
   activeFighter: {fileID: 2100000, guid: 9c91a9bc10e299a4ea78dd9ff52b78d0, type: 2}
@@ -130,3 +134,20 @@ MonoBehaviour:
   currentMaterial: {fileID: 2100000, guid: dd665a5cb9d2d4a4198e1ee7154ebbb1, type: 2}
   Coord: {x: 0, y: 0}
   occupant: {fileID: 0}
+--- !u!114 &6093789153877823068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7801586329105320042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 3950560206
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
