@@ -7,7 +7,5 @@ public class SceneLoader : MonoBehaviour
     {
         // Charge les scènes supplémentaires de manière additive
         SceneManager.LoadSceneAsync("Camera", LoadSceneMode.Additive);
-        // SceneManager.LoadSceneAsync("Player", LoadSceneMode.Additive);
-        SceneManager.LoadSceneAsync("Zone Apparition", LoadSceneMode.Additive);
     }
 }
