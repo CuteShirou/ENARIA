@@ -52,6 +52,7 @@
     <Compile Include="Assets\1 - Scripts\GridManager\GridManager.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftIngredient.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Menu\MainMenu.cs" />
+    <Compile Include="Assets\1 - Scripts\System\Jobs\Peche\peche ammeçon.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\InventoryManager.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\CraftDetailUI.cs" />
     <Compile Include="Assets\1 - Scripts\PathFinding\PathFindingNode.cs" />
@@ -76,9 +77,9 @@
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillTreeManager.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\InventoryItem.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\InputSystem\StarterAssetsInputs.cs" />
+    <Compile Include="Assets\1 - Scripts\System\Jobs\Peche\peche poisson.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftManager.cs" />
     <Compile Include="Assets\1 - Scripts\CombatManager\CombatManager.cs" />
-    <Compile Include="Assets\999 - BASE PROJECT\Scenes\peche poisson.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\CraftRecipeData.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualButton.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\Utilities\MobileDisableAutoSwitchControls.cs" />
@@ -96,7 +97,7 @@
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillNodeDrawer.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\ThirdPersonController\Scripts\ThirdPersonController.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\CraftUIManager.cs" />
-    <Compile Include="Assets\999 - BASE PROJECT\Scenes\peche ammeçon.cs" />
+    <Compile Include="Assets\1 - Scripts\System\Jobs\Peche\peche progress.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\StatsUIManager.cs" />
     <Compile Include="Assets\1 - Scripts\Scene - Teleporter\ScenePlayCleaner.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftResult.cs" />

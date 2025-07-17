@@ -15,8 +15,8 @@ public class pechepoisson : MonoBehaviour
     public int uord;
     
     
-    private int frameCounter = 0;
-    public int updateRate = 30; // Nombre de frames entre chaque update
+    public int _frameCounter = 0;
+    public int updateRate ; // Nombre de frames entre chaque update
     void Start()
     {
         float a = Random.Range(50f, 300f);
@@ -25,6 +25,7 @@ public class pechepoisson : MonoBehaviour
         x = rt.anchoredPosition.x;
         y = rt.anchoredPosition.y;
         height = a;
+        updateRate = 60;
         
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,height);
     }
@@ -32,7 +33,7 @@ public class pechepoisson : MonoBehaviour
     
     void UpdateEvery10Frames()
     {
-        b = Random.Range(1f, 6f);
+        b = Random.Range(2f, 4f);
         c = Random.Range(1, 3);
         
        
@@ -41,11 +42,11 @@ public class pechepoisson : MonoBehaviour
     void Update()
     {
         
-        frameCounter++;
+        _frameCounter++;
 
-        if (frameCounter >= updateRate)
+        if (_frameCounter >= updateRate)
         {
-            frameCounter = 0;
+            _frameCounter = 0;
             UpdateEvery10Frames();
         }
         
@@ -53,15 +54,15 @@ public class pechepoisson : MonoBehaviour
                 
         speed = b; // Speed of movement*
         uord = c;
-        if (uord == 1 && y >= -297+height/2)
+        if (uord == 1 && y >= -300+height/2)
         {
             y += speed;
-            if (y > 303-height/2) y = 303-height/2;
+            if (y > 300-height/2) y = 300-height/2;
         }
-        if (uord == 2 && y <= 303-height/2)
+        if (uord == 2 && y <= 300-height/2)
         {
             y -= speed;
-            if (y < -297+height/2) y = -297+height/2;
+            if (y < -300+height/2) y = -300+height/2;
         }
         rt.anchoredPosition = new Vector2(x, y);
         
