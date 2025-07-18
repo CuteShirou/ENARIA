@@ -25,9 +25,11 @@ public class pechepoisson : MonoBehaviour
         x = rt.anchoredPosition.x;
         y = rt.anchoredPosition.y;
         height = a;
-        updateRate = 60;
+        updateRate = 30;
         
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,height);
+        Vector3 scale = transform.localScale;
+        scale.y = height;
+        transform.localScale = scale;
     }
 
     

@@ -24,12 +24,7 @@ public class pecheprogress : MonoBehaviour
     void Start()
     {
         RectTransform rt = gameObject.GetComponent<RectTransform>();
-        amecon_y = amecon.transform.position.y;
-         amecon_height = amecon.transform.localScale.y;
-         amecon_height = amecon.transform.localScale.y;
-
-         poisson_y = poisson.transform.position.y;
-         poisson_height = poisson.transform.localScale.y;
+        
          
          
          y = rt.anchoredPosition.y;
@@ -39,9 +34,14 @@ public class pecheprogress : MonoBehaviour
 
     void Update()
     {
-        RectTransform rt = gameObject.GetComponent<RectTransform>();
+        /*RectTransform rt = gameObject.GetComponent<RectTransform>();
+        amecon_y = amecon.transform.position.y;
+         amecon_height = amecon.transform.localScale.y;
+
+         poisson_y = poisson.transform.position.y;
+         poisson_height = poisson.transform.localScale.y;
         
-        if(amecon_y> poisson_y- poisson_height/2 && amecon_y < poisson_y + poisson_height/2)
+        if(amecon_y> poisson_y - (poisson_height/2) && amecon_y < poisson_y + (poisson_height/2))
         {
             height += 10f;
         }
@@ -49,7 +49,16 @@ public class pecheprogress : MonoBehaviour
         
         
         rt.anchoredPosition = new Vector2(x, y);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,height);
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,height);*/
+    }
+
+    public void AugmenterHauteur(float valeur)
+    {
+        RectTransform rt = gameObject.GetComponent<RectTransform>();
+        height += valeur;
+        if (height>= 600) height = 600; 
+        rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, -300 + height / 2);
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
     }
 
 }
