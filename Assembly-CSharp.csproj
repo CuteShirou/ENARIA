@@ -61,7 +61,6 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.20f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\1 - Scripts\Scene - Teleporter\SceneCleanerSettings.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Skills\SkillType.cs" />
     <Compile Include="Assets\1 - Scripts\CombatManager\CombatController.cs" />
     <Compile Include="Assets\1 - Scripts\GridManager\GridManager.cs" />
@@ -112,7 +111,6 @@
     <Compile Include="Assets\6 - Tools\StarterAssets\ThirdPersonController\Scripts\ThirdPersonController.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\CraftUIManager.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\StatsUIManager.cs" />
-    <Compile Include="Assets\1 - Scripts\Scene - Teleporter\ScenePlayCleaner.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftResult.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\SkillButtonUI.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\SkillTooltipUI.cs" />
@@ -122,7 +120,6 @@
     <Compile Include="Assets\1 - Scripts\BDD - DATA\BDD\LoginManager.cs" />
     <Compile Include="Assets\1 - Scripts\System\Player\Stats\StatAllocationInput.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualTouchZone.cs" />
-    <Compile Include="Assets\SceneLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\7 - Shader\Mochie\Glass Shader\Glass Two Pass.shader" />

@@ -2,28 +2,27 @@ using UnityEngine;
 
 public class UIToggle : MonoBehaviour
 {
-    [Tooltip("UI à activer/désactiver")]
-    public GameObject targetUI;
+    [Tooltip("Prefab de l'UI à instancier")]
+    public GameObject uiPrefab;
 
-    [Tooltip("Si activé, désactive les autres UIToggle sur la scène")]
-    public bool uniqueToggle = false;
+    [Tooltip("Parent sous lequel sera instanciée l'UI")]
+    public Transform uiParent;
 
-    void Start()
-    {
-        if (targetUI == null)
-            Debug.LogWarning("UIToggle : Aucun targetUI assigné sur " + gameObject.name);
-    }
+    private GameObject instantiatedUI;
 
     public void Toggle()
     {
-        if (targetUI == null)
+        if (instantiatedUI == null)
         {
-            Debug.LogWarning("Target UI non assigné !");
-            return;
+            instantiatedUI = Instantiate(uiPrefab, uiParent ?? transform.parent);
+            instantiatedUI.name = uiPrefab.name; // Pour éviter "(Clone)"
+            Debug.Log("UI instanciée : " + instantiatedUI.name);
         }
-
-        bool isActive = targetUI.activeSelf;
-        targetUI.SetActive(!isActive);
-        Debug.Log("Toggle: " + targetUI.name + " → " + !isActive);
+        else
+        {
+            Destroy(instantiatedUI);
+            instantiatedUI = null;
+            Debug.Log("UI détruite.");
+        }
     }
 }
