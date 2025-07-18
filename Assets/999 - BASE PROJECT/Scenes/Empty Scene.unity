@@ -811,9 +811,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae720218ceee314f9a5707624e393a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  progressBar: {fileID: 96073575}
   x: 453
   y: 229
   speed: 0
+  poissonRect: {fileID: 1968324556}
+  progressBarScript: {fileID: 96073577}
 --- !u!114 &2092666564
 MonoBehaviour:
   m_ObjectHideFlags: 0
