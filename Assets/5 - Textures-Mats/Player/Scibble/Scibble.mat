@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - _BICUBIC_SAMPLING_ON
   - _EMISSION_ON
+  - _NORMALMAP_ON
   - _REFLECTIONS_ON
   - _SPECULAR_HIGHLIGHTS_ON
   m_InvalidKeywords: []
@@ -218,7 +219,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 2800000, guid: 3832111a87301e440b8a71239da71185, type: 3}
+        m_Texture: {fileID: 2800000, guid: abcaf25617ecb204b9407457daf78afc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap1:
@@ -370,7 +371,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 0e04ca9e3c538944eb89bee9e80da048, type: 3}
+        m_Texture: {fileID: 2800000, guid: d2c464a81ec4b014e8cee4f76bbe52ad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Matcap:
@@ -426,7 +427,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: a674b41189e91654e9c4283abd2eb313, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MirrorTexture:
@@ -450,11 +451,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: ddcde13e14a43f344af56bdc56c2d688, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 2800000, guid: 5afd585b2e5360542b76ecd9cd04dd44, type: 3}
+        m_Texture: {fileID: 2800000, guid: a674b41189e91654e9c4283abd2eb313, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OutlineMask:
@@ -578,7 +579,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RoughnessMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: a674b41189e91654e9c4283abd2eb313, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SDFShadingTexture:
@@ -2686,9 +2687,9 @@ Material:
     - _SSSThicknessMapUV: 0
     - _SSSThicknessMod: -1
     - _SampleCustomLUT: 0
-    - _SampleMetallic: 0
+    - _SampleMetallic: 1
     - _SampleOcclusion: 1
-    - _SampleRoughness: 0
+    - _SampleRoughness: 1
     - _Saturation: 0
     - _SaturationDet: 1
     - _SaturationEmiss: 1
