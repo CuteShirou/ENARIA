@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Resource", menuName = "Game Creation Tool/Resource")]
-public class ResourceData : ScriptableObject
+public class ResourceData : CollectibleData
 {
     public int ID;
     public string resourceName;
