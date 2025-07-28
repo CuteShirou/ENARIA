@@ -56,6 +56,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="H:\- Other -\PC Tour\Documents\2 - Dev Projet Ecole\ENARIA\Assets\0 - Scripts\System\RATS Plugins\0Harmony.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.20f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.20f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.20f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
@@ -70,9 +71,10 @@
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Upgrades\MochieMaterialUpgrade_V0_To_V1.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\Base\IPropertyAction.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\UberEditor.cs" />
+    <Compile Include="Assets\0 - Scripts\Tools\Skills\Editor\SkillEditor.cs" />
+    <Compile Include="Assets\0 - Scripts\System\SkillTree\Editor\SkillNodeDrawer.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\LEDEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyTexturePropertyValueAction.cs" />
-    <Compile Include="Assets\1 - Scripts\System\SkillTree\Editor\SkillNodeDrawer.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Common\MGUI.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ModuleInstaller\Editor\ModuleInstaller.cs" />
@@ -86,7 +88,6 @@
     <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiProTranslation.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Common\Foldouts.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Data\SerializedMaterialPropertyType.cs" />
-    <Compile Include="Assets\1 - Scripts\Inventory\Editor\ItemDatabaseEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\GlobalStandardSettings.cs" />
     <Compile Include="Assets\ScriptTemplates\Editor\MoveToAssetsFolder.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyFloatPropertyValueAction.cs" />
@@ -102,12 +103,12 @@
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyIntPropertyValueAction.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\IPostMaterialUpgradeCallback.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MaterialCreator.cs" />
-    <Compile Include="Assets\1 - Scripts\Tools\Skills\Editor\SkillEditor.cs" />
     <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Translators\Editor\LiltoonToPoiyomiTranslation_Menus.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\Base\UpgradeActionBase.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\MochieShaderUpgrader\Moving Parts\Property Actions\CopyVectorPropertyValueAction.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\ParticleEditor.cs" />
     <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\VRCAutoAnchor.cs" />
+    <Compile Include="Assets\0 - Scripts\Inventory\Editor\ItemDatabaseEditor.cs" />
     <Compile Include="Assets\7 - Shader\Mochie\Unity\Editor\Tools\TextureChannelPackerEditor.cs" />
     <Compile Include="Assets\7 - Shader\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\AbiAutoLock.cs" />
   </ItemGroup>
@@ -576,7 +577,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="0Harmony">
-      <HintPath>Assets\1 - Scripts\System\RATS Plugins\0Harmony.dll</HintPath>
+      <HintPath>Assets\0 - Scripts\System\RATS Plugins\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
