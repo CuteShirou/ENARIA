@@ -1,4 +1,4 @@
-Shader "Hidden/Locked/.poiyomi/Poiyomi Toon/766fd3ff04aab4745a764d33daac86fa"
+Shader "Hidden/Locked/.poiyomi/Poiyomi Toon/8b25e99361ac31d4e9ae83c46aee69ea"
 {
 	Properties
 	{
