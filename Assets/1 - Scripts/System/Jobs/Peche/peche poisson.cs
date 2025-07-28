@@ -10,13 +10,16 @@ public class pechepoisson : MonoBehaviour
     public float a;
     public float b;
     public int c;
+	public float d;
     public float height;
     public float speed;
     public int uord;
     
     
-    public int _frameCounter = 0;
-    public int updateRate ; // Nombre de frames entre chaque update
+   	public float timer = 0f;
+    public float updateInterval; 
+
+
     void Start()
     {
         float a = Random.Range(50f, 300f);
@@ -25,7 +28,7 @@ public class pechepoisson : MonoBehaviour
         x = rt.anchoredPosition.x;
         y = rt.anchoredPosition.y;
         height = a;
-        updateRate = 30;
+        updateInterval = 0.5f;
         
         Vector3 scale = transform.localScale;
         scale.y = height;
@@ -33,10 +36,11 @@ public class pechepoisson : MonoBehaviour
     }
 
     
-    void UpdateEvery10Frames()
+    void UpdateEveryInterval()
     {
-        b = Random.Range(2f, 4f);
+        b = Random.Range(200f, 500f);
         c = Random.Range(1, 3);
+		d = Random.Range(0.3f,1.3f);
         
        
     }
@@ -44,26 +48,28 @@ public class pechepoisson : MonoBehaviour
     void Update()
     {
         
-        _frameCounter++;
-
-        if (_frameCounter >= updateRate)
+        timer += Time.deltaTime;
+        if (timer >= updateInterval)
         {
-            _frameCounter = 0;
-            UpdateEvery10Frames();
+            timer = 0f;
+            UpdateEveryInterval();
         }
+
         
         RectTransform rt = gameObject.GetComponent<RectTransform>();
                 
         speed = b; // Speed of movement*
         uord = c;
+		updateInterval = d;
+		float move = speed * Time.deltaTime;
         if (uord == 1 && y >= -300+height/2)
         {
-            y += speed;
+            y += move;
             if (y > 300-height/2) y = 300-height/2;
         }
         if (uord == 2 && y <= 300-height/2)
         {
-            y -= speed;
+            y -= move;
             if (y < -300+height/2) y = -300+height/2;
         }
         rt.anchoredPosition = new Vector2(x, y);

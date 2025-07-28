@@ -34,28 +34,13 @@ public class pecheprogress : MonoBehaviour
 
     void Update()
     {
-        /*RectTransform rt = gameObject.GetComponent<RectTransform>();
-        amecon_y = amecon.transform.position.y;
-         amecon_height = amecon.transform.localScale.y;
-
-         poisson_y = poisson.transform.position.y;
-         poisson_height = poisson.transform.localScale.y;
-        
-        if(amecon_y> poisson_y - (poisson_height/2) && amecon_y < poisson_y + (poisson_height/2))
-        {
-            height += 10f;
-        }
-        y = -300+height/2;
-        
-        
-        rt.anchoredPosition = new Vector2(x, y);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,height);*/
+       
     }
 
     public void AugmenterHauteur(float valeur)
     {
         RectTransform rt = gameObject.GetComponent<RectTransform>();
-        height += valeur;
+        height += valeur ;
         if (height>= 600) height = 600; 
         rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, -300 + height / 2);
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);

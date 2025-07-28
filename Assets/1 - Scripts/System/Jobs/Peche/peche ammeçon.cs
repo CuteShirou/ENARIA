@@ -9,15 +9,16 @@ public class peche : MonoBehaviour
     public GameObject progressBar; // Reference to the progress bar GameObject
     public float x ;
     public float y;
-    public float speed;
+    public float speed; 
     public RectTransform poissonRect; // Assigne le RectTransform du poisson dans l’inspecteur
     public pecheprogress progressBarScript;
+    public float gainParSeconde = 800f; // Ajuste cette valeur selon le gameplay
     void Start()
     {
         RectTransform rt = gameObject.GetComponent<RectTransform>();
         x = rt.anchoredPosition.x;
         y = rt.anchoredPosition.y;
-        speed = 3f; 
+        speed = 300f; 
         rt.anchoredPosition = new Vector2(x, y);
     }
 
@@ -26,23 +27,23 @@ public class peche : MonoBehaviour
     {
         RectTransform rt = gameObject.GetComponent<RectTransform>();
         
-        
+        float move = speed* Time.deltaTime;
         
         if (Input.GetMouseButton(0) && y <= 229)
         {
-            y -= speed;
+            y -= move;
             if (y < -227) y = -227; // Ne pas descendre sous 229
         }
         else if (!Input.GetMouseButton(0) && y  <= 229)
         {
-            y += speed;
+            y += move;
             if (y > 229) y = 229;
         }
         rt.anchoredPosition = new Vector2(x, y);
         
         if (RectsOverlap(rt, poissonRect))
         {
-            progressBarScript.AugmenterHauteur(1f);
+            progressBarScript.AugmenterHauteur(gainParSeconde * Time.deltaTime);
         }
     }
 
