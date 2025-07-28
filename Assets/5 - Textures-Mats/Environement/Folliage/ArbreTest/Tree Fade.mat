@@ -12,7 +12,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ALPHAPREMULTIPLY_ON
+  - _ALPHABLEND_ON
   - _BICUBIC_SAMPLING_ON
   - _SPECULAR_HIGHLIGHTS_ON
   m_InvalidKeywords: []
@@ -222,7 +222,7 @@ Material:
     - _BakeryLMSpecStrength: 1
     - _BakeryMode: 0
     - _BicubicSampling: 1
-    - _BlendMode: 3
+    - _BlendMode: 2
     - _Brightness: 1
     - _BrightnessDet: 1
     - _BrightnessEmiss: 1
@@ -386,7 +386,7 @@ Material:
     - _SpecularOcclusionHDR: 1
     - _SpecularOcclusionStrength: 1
     - _SpecularOcclusionToggle: 0
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _Subsurface: 0
     - _ThicknessMapPower: 1
     - _TriplanarCoordSpace: 0
