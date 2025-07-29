@@ -2,12 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class pecheprogress : MonoBehaviour
+public class boisprogress : MonoBehaviour
 {
-
-
-
-    
     public float x;
     public float y;
     public float height;
@@ -19,9 +15,9 @@ public class pecheprogress : MonoBehaviour
     {
         RectTransform rt = gameObject.GetComponent<RectTransform>();
       
-         y = rt.anchoredPosition.y;
-         x = rt.anchoredPosition.x;
-         height = 0;
+        y = rt.anchoredPosition.y;
+        x = rt.anchoredPosition.x;
+        height = 0;
         
     }
 
@@ -34,9 +30,8 @@ public class pecheprogress : MonoBehaviour
     {
         RectTransform rt = gameObject.GetComponent<RectTransform>();
         height += valeur ;
-        if (height>= 600) height = 600; 
+        if (height> 600) height = 600; 
         rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, -300 + height / 2);
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
     }
-
 }
