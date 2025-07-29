@@ -76,6 +76,7 @@
     <Compile Include="Assets\1 - Scripts\System\Equipments\EquipmentManager.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\ItemDatabase.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\EquipmentData.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Social\FriendListManager.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\QuestInfoUI.cs" />
     <Compile Include="Assets\999 - BASE PROJECT\InputSystem_Actions.cs" />
     <Compile Include="Assets\1 - Scripts\System\Player\Stats\DetailedStatsPanel.cs" />
@@ -84,12 +85,15 @@
     <Compile Include="Assets\1 - Scripts\CombatManager\SkillCaster.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\CanvasInputs\UICanvasControllerInput.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Options\QualitySettingsManager.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Social\ResponsiveGrid.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Social\BlockedListManager.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\CollectibleData.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Craft\CraftingPropertyDrawer.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\TooltipUI.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\RecipeItemUI.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\MonsterData.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\ThirdPersonController\Scripts\BasicRigidBodyPush.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Social\FriendData.cs" />
     <Compile Include="Assets\1 - Scripts\Scene - Teleporter\SceneTeleporter.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\BDD\RegisterManager.cs" />
@@ -101,6 +105,7 @@
     <Compile Include="Assets\6 - Tools\StarterAssets\InputSystem\StarterAssetsInputs.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftManager.cs" />
     <Compile Include="Assets\1 - Scripts\CombatManager\CombatManager.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\UI\FriendListItemUI.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Quest\QuestListItem.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\CraftRecipeData.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualButton.cs" />
@@ -116,6 +121,9 @@
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualJoystick.cs" />
     <Compile Include="Assets\1 - Scripts\System\Player\Stats\StatAllocationButton.cs" />
     <Compile Include="Assets\1 - Scripts\PathFinding\AStarPathFinder.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Social\FriendSearchUI.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Social\PlayerFriendSideViewItem.cs" />
+    <Compile Include="Assets\1 - Scripts\BDD - DATA\BDD\FriendsApi.cs" />
     <Compile Include="Assets\1 - Scripts\System\Quest\QuestInstance.cs" />
     <Compile Include="Assets\1 - Scripts\Network\DebugNetworkSpawn.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Quest\QuestTestButton.cs" />
@@ -124,10 +132,12 @@
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillNodeDrawer.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\ThirdPersonController\Scripts\ThirdPersonController.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\CraftUIManager.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Social\ReceivedDemandUI.cs" />
     <Compile Include="Assets\1 - Scripts\System\Quest\QuestManager.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\StatsUIManager.cs" />
     <Compile Include="Assets\1 - Scripts\Scene - Teleporter\ScenePlayCleaner.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftResult.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Social\BlockedUserItemUI.cs" />
     <Compile Include="Assets\1 - Scripts\System\Quest\QuestObjectiveType.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\SkillButtonUI.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\SkillTooltipUI.cs" />
@@ -136,6 +146,7 @@
     <Compile Include="Assets\1 - Scripts\Inventory\DraggableItem.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\IngredientSlotUI.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\BDD\LoginManager.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Social\AvatarSelectorUI.cs" />
     <Compile Include="Assets\1 - Scripts\System\Player\Stats\StatAllocationInput.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualTouchZone.cs" />
     <Compile Include="Assets\SceneLoader.cs" />
