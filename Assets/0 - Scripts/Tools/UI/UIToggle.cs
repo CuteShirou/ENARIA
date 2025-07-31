@@ -3,25 +3,35 @@ using UnityEngine;
 public class UIToggle : MonoBehaviour
 {
     [Tooltip("Référence à l'UI existante dans la scène (désactivée par défaut)")]
-    public GameObject uiObject;
-
+    public GameObject InventoryPage;
+    public GameObject ButtonInteraction;
+    
     private void Awake()
     {
-        if (uiObject != null)
-            uiObject.SetActive(false); // Assure que l'UI est cachée au démarrage
+        if (InventoryPage != null)
+            InventoryPage.SetActive(false); // Assure que l'UI est cachée au démarrage
+        
+        if (ButtonInteraction != null)
+            ButtonInteraction.SetActive(false); // Assure que l'UI est cachée au démarrage
     }
 
     public void Toggle()
     {
-        if (uiObject == null)
-        {
-            Debug.LogWarning("Aucun UI object n'est assigné.");
+        Debug.Log("Appel depuis : " + gameObject.name);
+
+        if (InventoryPage == null)
+            Debug.LogWarning("InventoryPage n'est pas assigné !");
+        if (ButtonInteraction == null)
+            Debug.LogWarning("ButtonInteraction n'est pas assigné !");
+
+        if (InventoryPage == null || ButtonInteraction == null)
             return;
-        }
 
-        bool isActive = uiObject.activeSelf;
-        uiObject.SetActive(!isActive);
+        bool isActive = InventoryPage.activeSelf;
 
-        Debug.Log("UI " + (isActive ? "désactivée." : "activée."));
+        InventoryPage.SetActive(!isActive);
+        ButtonInteraction.SetActive(!isActive);
+
+        Debug.Log("UI " + (!isActive ? "activée." : "désactivée."));
     }
 }

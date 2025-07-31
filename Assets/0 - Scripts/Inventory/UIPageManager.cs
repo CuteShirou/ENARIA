@@ -7,10 +7,7 @@ public class UIPageManager : MonoBehaviour
     public GameObject PageStats;
     public GameObject PageSkillTree;
     
-    void Start()
-    {
-        SetActivePage(PageInventory); // Default page
-    }
+    
     
     public void ShowInventory()
     {
