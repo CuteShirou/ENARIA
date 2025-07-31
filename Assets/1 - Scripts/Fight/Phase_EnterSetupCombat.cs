@@ -28,8 +28,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         Debug.Log($"[Phase_EnterSetupCombat] Monstres dans le groupe : {redTeam.Count}");
         Debug.Log($"[Phase_EnterSetupCombat] Carte utilisée : {(combatMap != null ? combatMap.name : "aucune")}");
 
-        // Ici tu pourrais ajouter des FX, UI "Préparation", etc.
-
         // Transition automatique vers la phase suivante
         Debug.Log("[Phase_EnterSetupCombat] Phase terminée. Passage à la phase de préparation.");
         manager.NextPhase();
