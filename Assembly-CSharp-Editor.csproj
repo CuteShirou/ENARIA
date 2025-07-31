@@ -112,7 +112,9 @@
     <Compile Include="Assets\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\VRCAutoAnchor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\5 - Textures-Mats\Editor\collider\OptimizedShaders\ColiderWorldborder\Poiyomi Toon.shader" />
     <None Include="Assets\_PoiyomiShaders\ModularShader\Editor\Poi_Passes_And_Programs\TODO.txt" />
+    <None Include="Assets\5 - Textures-Mats\Editor\collider\OptimizedShaders\ColiderTeleport\Poiyomi Toon.shader" />
     <None Include="Assets\_PoiyomiShaders\ModularShader\Editor\Poi_HelperLibraries\RemovedHelpers.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -1208,12 +1210,12 @@
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.PlasticSCM.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Splines">
@@ -1386,13 +1388,13 @@
       <Project>{147A39AB-CFF7-FFEC-4D37-5A6590D8FF9B}</Project>
       <Name>Mirror</Name>
     </ProjectReference>
-    <ProjectReference Include="SimpleWebTransport.csproj">
-      <Project>{BD3BF026-52D2-6EA4-BF34-274AF1638FC6}</Project>
-      <Name>SimpleWebTransport</Name>
-    </ProjectReference>
     <ProjectReference Include="one.razgriz.rats.csproj">
       <Project>{E3CFB991-EF43-B794-3E63-30370889976C}</Project>
       <Name>one.razgriz.rats</Name>
+    </ProjectReference>
+    <ProjectReference Include="SimpleWebTransport.csproj">
+      <Project>{BD3BF026-52D2-6EA4-BF34-274AF1638FC6}</Project>
+      <Name>SimpleWebTransport</Name>
     </ProjectReference>
     <ProjectReference Include="Mirror.CompilerSymbols.csproj">
       <Project>{AD327320-0AB5-BEFB-3C28-FC131553B823}</Project>
