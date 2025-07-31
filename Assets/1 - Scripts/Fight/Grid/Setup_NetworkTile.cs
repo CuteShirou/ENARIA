@@ -11,7 +11,7 @@ public enum TileState
 }
 
 //------------------------------------------------------------
-public class NetworkTile : NetworkBehaviour
+public class Setup_NetworkTile : NetworkBehaviour
 {
     [Header("Références")]
     public Renderer tileRenderer;
@@ -22,6 +22,10 @@ public class NetworkTile : NetworkBehaviour
     public Material matObstacle;
     public Material matFighterActif;
     public Material matCursorIndicator;
+
+    [Header("Position de la tuile dans la grille")]
+    [SyncVar] public int tileX;
+    [SyncVar] public int tileY;
 
     // État principal de la tuile (synchronisé sur tous les clients)
     [SyncVar(hook = nameof(OnTileStateChanged))]
@@ -119,5 +123,37 @@ public class NetworkTile : NetworkBehaviour
         }
 
         UpdateMaterial(); // Applique les bonnes couleurs
+    }
+
+    //------------------------------------------------------------
+    public void SetTileCoordinates(int x, int y)
+    {
+        tileX = x;
+        tileY = y;
+    }
+
+    //------------------------------------------------------------
+    private void OnMouseDown()
+    {
+        // S'assurer qu'on est sur le client local
+        if (!isClient || NetworkClient.connection == null) return;
+
+        // Chercher le joueur local (avec autorité)
+        var localPlayerObj = NetworkClient.connection.identity;
+        if (localPlayerObj == null)
+        {
+            Debug.LogWarning("[Tile] Aucun joueur local trouvé.");
+            return;
+        }
+
+        Player_ControllerPhasePreparation playerController = localPlayerObj.GetComponent<Player_ControllerPhasePreparation>();
+        if (playerController == null)
+        {
+            Debug.LogWarning("[Tile] Le joueur local n'a pas de script Player_ControllerPhasePreparation.");
+            return;
+        }
+
+        // Envoie au joueur local les coordonnées cliquées
+        playerController.RequestTileClick(tileX, tileY);
     }
 }

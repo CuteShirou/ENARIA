@@ -87,7 +87,7 @@
     <Compile Include="Assets\6 - Tools\StarterAssets\ThirdPersonController\Scripts\BasicRigidBodyPush.cs" />
     <Compile Include="Assets\1 - Scripts\Scene - Teleporter\SceneTeleporter.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\TutorialInfo\Scripts\Readme.cs" />
-    <Compile Include="Assets\1 - Scripts\Fight\Grid\NetworkTile.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Grid\Setup_NetworkTile.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\BDD\RegisterManager.cs" />
     <Compile Include="Assets\1 - Scripts\Scene - Teleporter\TeleportCombat.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\StatsUIBinder.cs" />
@@ -102,6 +102,7 @@
     <Compile Include="Assets\1 - Scripts\CombatManager\CombatManager.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\CraftRecipeData.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualButton.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Player_Combat\Player_ControllerPhasePreparation.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\Utilities\MobileDisableAutoSwitchControls.cs" />
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillNode.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\InventorySlot.cs" />

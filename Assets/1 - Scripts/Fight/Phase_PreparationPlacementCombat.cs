@@ -65,10 +65,13 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
                 tile.transform.localRotation = Quaternion.identity;
 
                 // Configuration de la tuile
-                NetworkTile tileNet = tile.GetComponent<NetworkTile>();
+                Setup_NetworkTile tileNet = tile.GetComponent<Setup_NetworkTile>();
 
                 if (tileNet != null)
                 {
+                    // --- AJOUT : on enregistre la position logique de la tuile ---
+                    tileNet.SetTileCoordinates(x, y);
+
                     // Définir le type de case selon la map
                     if (mapData.greenTeamPositions.Contains(pos))
                         tileNet.currentState = TileState.TeamGreen;
