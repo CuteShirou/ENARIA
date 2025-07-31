@@ -25,15 +25,15 @@ public class Combat_PhaseManager : MonoBehaviour
     // Phase en cours dans cette arène
     private CombatPhase currentPhase;
 
-    // Appelé automatiquement au démarrage de l'arène
-    private void Start()
+    //------------------------------------------------------------
+    // Appelée manuellement par un déclencheur (ex: un joueur qui attaque)
+    public void LaunchCombat()
     {
         Debug.Log($"[CombatManager][Arena {arenaIndex}] Initialisation. Démarrage du combat...");
-
-        // Lancement de la première phase : récupération des données
         StartPhase(CombatPhase.Enter);
     }
 
+    //------------------------------------------------------------
     // Lance une phase de combat en activant uniquement le script correspondant
     public void StartPhase(CombatPhase phase)
     {
@@ -51,27 +51,29 @@ public class Combat_PhaseManager : MonoBehaviour
         switch (phase)
         {
             case CombatPhase.Enter:
+                Debug.Log("--------------------------------------------------");
                 Debug.Log("[CombatManager] → Phase_EnterSetupCombat activée.");
-                phaseEnter.InitPhase(this); // À implémenter dans Phase_EnterSetupCombat
+                phaseEnter.InitPhase(this);
                 break;
 
-            //case CombatPhase.Preparation:
-            //    Debug.Log("[CombatManager] → Phase_PreparationPlacementCombat activée.");
-            //    phasePrepa.InitPhase(this); // À implémenter dans Phase_PreparationPlacementCombat
-            //    break;
+            case CombatPhase.Preparation:
+                Debug.Log("[CombatManager] → Phase_PreparationPlacementCombat activée.");
+                phasePrepa.InitPhase(this);
+                break;
 
             //case CombatPhase.TurnByTurn:
             //    Debug.Log("[CombatManager] → Phase_TurnByTurnCombat activée.");
-            //    phaseTurn.InitPhase(this); // À implémenter dans Phase_TurnByTurnCombat
+            //    phaseTurn.InitPhase(this);
             //    break;
 
             //case CombatPhase.End:
             //    Debug.Log("[CombatManager] → Phase_EndCombat activée.");
-            //    phaseEnd.InitPhase(this); // À implémenter dans Phase_EndCombat
+            //    phaseEnd.InitPhase(this);
             //    break;
         }
     }
 
+    //------------------------------------------------------------
     // Permet d'enchaîner automatiquement la phase suivante dans l'ordre logique
     public void NextPhase()
     {

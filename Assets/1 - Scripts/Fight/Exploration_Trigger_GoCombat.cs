@@ -35,6 +35,7 @@ public class Exploration_Trigger_GoCombat : MonoBehaviour
         var phaseEnter = phaseManager.phaseEnter;
 
         // Cas 1 : monstre libre
+        // Cas 1 : monstre libre
         if (info.IsState(MonsterState.InNature))
         {
             Debug.Log("[Combat Init] Monstre dans l'état InNature : lancement du combat.");
@@ -49,7 +50,11 @@ public class Exploration_Trigger_GoCombat : MonoBehaviour
             // Ajoute le joueur à l'équipe verte
             phaseEnter.AddPlayerToTeamVerte(other.gameObject);
             Debug.Log("[Combat Init] Premier joueur ajouté à l'équipe verte.");
+
+            // ⚠️ Lancement du système de phase uniquement maintenant
+            phaseManager.LaunchCombat();
         }
+
         // Cas 2 : déjà engagé, mais pas encore en combat
         else if (info.IsState(MonsterState.Attacked))
         {
