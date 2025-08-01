@@ -750,7 +750,6 @@ GameObject:
   - component: {fileID: 6523512061427059107}
   - component: {fileID: 2723251056582461666}
   - component: {fileID: 6402001533476676321}
-  - component: {fileID: 81444366895763430}
   - component: {fileID: 1593128579795726258}
   - component: {fileID: 3856363265037637101}
   - component: {fileID: 8544828018083952929}
@@ -758,6 +757,7 @@ GameObject:
   - component: {fileID: 2620340701141665295}
   - component: {fileID: 6991317729589476132}
   - component: {fileID: 7338895490237449841}
+  - component: {fileID: 8996100411993953075}
   m_Layer: 8
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -990,20 +990,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &81444366895763430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2909982024890745271}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a72b7bdf29e4034caf18153d86dd4bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
-  gridManager: {fileID: 0}
 --- !u!114 &1593128579795726258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1084,7 +1070,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  clientAuthority: 0
+  clientAuthority: 1
   animator: {fileID: 3109033236702595994}
 --- !u!114 &2620340701141665295
 MonoBehaviour:
@@ -1131,6 +1117,51 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+--- !u!114 &8996100411993953075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2909982024890745271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afabe8c67a4e5f642900355aee3b3e0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  isDead: 0
+  isReady: 0
+  team: 0
+  baseHP: 200
+  basePA: 7
+  basePM: 4
+  basePO: 0
+  baseInitiative: 0
+  baseCritChance: 0
+  baseForce: 0
+  baseDexterite: 0
+  baseMagie: 0
+  baseFoi: 0
+  baseResistanceForce: 0
+  baseResistanceDexterite: 0
+  baseResistanceMagie: 0
+  baseResistanceFoi: 0
+  currentHP: 0
+  currentPA: 0
+  currentPM: 0
+  currentPO: 0
+  currentCritChance: 0
+  currentForce: 0
+  currentDexterite: 0
+  currentMagie: 0
+  currentFoi: 0
+  currentResistanceForce: 0
+  currentResistanceDexterite: 0
+  currentResistanceMagie: 0
+  currentResistanceFoi: 0
 --- !u!1 &2961894558404731914
 GameObject:
   m_ObjectHideFlags: 0

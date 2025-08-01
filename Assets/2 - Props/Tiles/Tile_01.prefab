@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3216726090471712252}
   - component: {fileID: -2377626013172893827}
   - component: {fileID: 893521510509704706}
+  - component: {fileID: 7143258958822463769}
   m_Layer: 0
   m_Name: Tile_01
   m_TagString: Untagged
@@ -143,11 +144,14 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   tileRenderer: {fileID: 4301300255732018507}
+  matNone: {fileID: 2100000, guid: bdc6498ed390a25409fed8d365713ac6, type: 2}
   matTeamGreen: {fileID: 2100000, guid: 6bca38ca148a65d4ca34eaae75f6c821, type: 2}
   matTeamRed: {fileID: 2100000, guid: 47fcbe234415c0a438fb5d0b9accc0b0, type: 2}
   matObstacle: {fileID: 2100000, guid: 29e4af2db6981b646a9ed7109f1170a3, type: 2}
   matFighterActif: {fileID: 2100000, guid: d5480394691e08f44b571a5ce8a7fa1a, type: 2}
   matCursorIndicator: {fileID: 2100000, guid: d01f68d733a07c04a88abc4d3ccdf90c, type: 2}
+  tileX: 0
+  tileY: 0
   currentState: 0
   isFighterActif: 0
   parentNetId: 0
@@ -185,3 +189,19 @@ MonoBehaviour:
   rotationSensitivity: 0.01
   positionPrecision: 0.01
   scalePrecision: 0.01
+--- !u!114 &7143258958822463769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6022407305050635751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 355793a042c2e414e9f704781b4c9764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  occupationState: 0

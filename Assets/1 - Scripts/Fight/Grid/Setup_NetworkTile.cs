@@ -17,6 +17,7 @@ public class Setup_NetworkTile : NetworkBehaviour
     public Renderer tileRenderer;
 
     [Header("Matériaux assignés")]
+    public Material matNone;
     public Material matTeamGreen;
     public Material matTeamRed;
     public Material matObstacle;
@@ -87,7 +88,7 @@ public class Setup_NetworkTile : NetworkBehaviour
                 tileRenderer.material = matObstacle;
                 break;
             default:
-                tileRenderer.material = null;
+                tileRenderer.material = matNone;
                 break;
         }
     }

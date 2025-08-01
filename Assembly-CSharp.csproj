@@ -66,6 +66,7 @@
     <Compile Include="Assets\1 - Scripts\GridManager\GridManager.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftIngredient.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Menu\MainMenu.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Entity\Entity_StatistiqueCombat.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\InventoryManager.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\CraftDetailUI.cs" />
     <Compile Include="Assets\1 - Scripts\PathFinding\PathFindingNode.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillTreeBranch.cs" />
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillTreeManager.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\InventoryItem.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Entity\Monster\Monster_CombatController.cs" />
     <Compile Include="Assets\1 - Scripts\Fight\Phase_PreparationPlacementCombat.cs" />
     <Compile Include="Assets\1 - Scripts\A_DataEntity\Data_Information_Entity.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\InputSystem\StarterAssetsInputs.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\RessourceData.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\ThirdPersonController\Scripts\ThirdPersonController.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\CraftUIManager.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Grid\Material_NetworkTile.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\StatsUIManager.cs" />
     <Compile Include="Assets\1 - Scripts\Fight\Exploration_DisplayInfoGroupMonster.cs" />
     <Compile Include="Assets\1 - Scripts\Fight\Exploration_Trigger_GoCombat.cs" />
@@ -128,6 +131,7 @@
     <Compile Include="Assets\1 - Scripts\Tools\UI\SkillButtonUI.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\SkillTooltipUI.cs" />
     <Compile Include="Assets\1 - Scripts\GridManager\ReachableTilesHighlighter.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Grid\Info_NetworkTile.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\DraggableItem.cs" />
     <Compile Include="Assets\1 - Scripts\Fight\Phase_EndCombat.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\IngredientSlotUI.cs" />

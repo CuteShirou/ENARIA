@@ -485,7 +485,10 @@ PrefabInstance:
       addedObject: {fileID: -4496578388012475207}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e2a8b4a2fbf4a7347ac1a05188a43f95, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -5684041065028664727}
+      addedObject: {fileID: 7671530138054997802}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e2a8b4a2fbf4a7347ac1a05188a43f95, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -9211101341397400159}
   m_SourcePrefab: {fileID: 100100000, guid: e2a8b4a2fbf4a7347ac1a05188a43f95, type: 3}
 --- !u!1 &6811757141093611548 stripped
 GameObject:
@@ -504,9 +507,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b14dd62819850dd43be497d9f0abb696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterName: Scribble
-  monsterLevel: 5
---- !u!114 &-5684041065028664727
+  entity_Name: Scribble
+  entity_Level: 5
+--- !u!114 &7671530138054997802
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -515,12 +518,56 @@ MonoBehaviour:
   m_GameObject: {fileID: 6811757141093611548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d77ea2802848446429c5efffb5d90367, type: 3}
+  m_Script: {fileID: 11500000, guid: afabe8c67a4e5f642900355aee3b3e0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groupName: Groupe De Scribble
-  monstersInGroup:
-  - {fileID: 6811757141093611548}
-  - {fileID: 6811757141093611548}
-  - {fileID: 6811757141093611548}
-  combatMap: {fileID: 11400000, guid: 2b664b049f4b8ec46a658c69d2c140fe, type: 2}
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  isDead: 0
+  isReady: 0
+  team: 1
+  baseHP: 150
+  basePA: 6
+  basePM: 3
+  basePO: 0
+  baseInitiative: 0
+  baseCritChance: 0
+  baseForce: 0
+  baseDexterite: 0
+  baseMagie: 0
+  baseFoi: 0
+  baseResistanceForce: 0
+  baseResistanceDexterite: 0
+  baseResistanceMagie: 0
+  baseResistanceFoi: 0
+  currentHP: 0
+  currentPA: 0
+  currentPM: 0
+  currentPO: 0
+  currentCritChance: 0
+  currentForce: 0
+  currentDexterite: 0
+  currentMagie: 0
+  currentFoi: 0
+  currentResistanceForce: 0
+  currentResistanceDexterite: 0
+  currentResistanceMagie: 0
+  currentResistanceFoi: 0
+--- !u!114 &-9211101341397400159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6811757141093611548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 2104663669
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
