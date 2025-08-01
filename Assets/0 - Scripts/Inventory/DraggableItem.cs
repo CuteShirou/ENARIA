@@ -1,3 +1,4 @@
+using UnityEditor.EventSystems;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -41,31 +42,25 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 // Crée un clone du visuel
                 GameObject clone = Instantiate(gameObject, canvas.transform);
                 DraggableItem dragScript = clone.GetComponent<DraggableItem>();
-                Image img = clone.GetComponent<Image>();
-                if (img != null) img.sprite = splitItem.icon;
 
-                // Associe un slot temporaire à ce visuel
-                InventorySlot tempSlot = clone.AddComponent<InventorySlot>();
-                tempSlot.currentItem = splitItem;
-                tempSlot.itemImage = img;
-                tempSlot.quantityText = new GameObject("Qty").AddComponent<Text>();
-                tempSlot.quantityText.transform.SetParent(clone.transform);
-                tempSlot.SetItem(splitItem);
-
-                dragScript.parentSlot = tempSlot;
-                dragScript.parentAfterDrag = tempSlot.transform;
+                dragScript.parentSlot = null; // Keep it empty
+                dragScript.parentAfterDrag = null;
                 dragScript.canvasGroup = clone.GetComponent<CanvasGroup>();
 
-                // Positionne le visuel sous la souris
+                clone.GetComponent<Image>().sprite = splitItem.icon;
+                
+                // Initialize item under cursor
                 RectTransform rt = clone.GetComponent<RectTransform>();
                 rt.position = Input.mousePosition;
-
-                // Lance le drag manuellement
-                ExecuteEvents.Execute<IBeginDragHandler>(
-                    clone,
-                    new PointerEventData(EventSystem.current),
-                    ExecuteEvents.beginDragHandler
-                );
+                
+                // Temporary save item data
+                dragScript.GetComponent<DraggableItem>().parentSlot = null;
+                dragScript.GetComponent<DraggableItem>().canvasGroup.blocksRaycasts = false;
+                
+                // Manual drag
+                PointerEventData dragEventData = new PointerEventData(EventSystem.current);
+                dragEventData.position = Input.mousePosition;
+                ExecuteEvents.Execute<IBeginDragHandler>(clone, dragEventData, ExecuteEvents.beginDragHandler);
             }
         }
     }
@@ -88,10 +83,11 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         GameObject target = eventData.pointerEnter;
         InventorySlot targetSlot = target != null ? target.GetComponentInParent<InventorySlot>() : null;
 
-        if (targetSlot != null)
-            parentAfterDrag = targetSlot.transform;
-        else
-            parentAfterDrag = parentSlot.transform;
+        if (targetSlot == null && parentSlot == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         transform.SetParent(parentAfterDrag, false);
         rectTransform.anchoredPosition = Vector2.zero;
