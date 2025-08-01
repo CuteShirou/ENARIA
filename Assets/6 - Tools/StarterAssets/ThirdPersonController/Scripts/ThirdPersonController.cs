@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Mirror;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CharacterController))]
 
@@ -86,6 +87,12 @@ public class ThirdPersonController : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
+        if (UIToggle.IsInventoryOpen)
+            return;
+        
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+        
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             _clickDetected = true;

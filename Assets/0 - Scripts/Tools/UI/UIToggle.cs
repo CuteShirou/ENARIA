@@ -6,6 +6,8 @@ public class UIToggle : MonoBehaviour
     public GameObject InventoryPage;
     public GameObject ButtonInteraction;
     
+    public static bool IsInventoryOpen { get; private set; } = false;
+    
     private void Awake()
     {
         if (InventoryPage != null)
@@ -32,6 +34,8 @@ public class UIToggle : MonoBehaviour
         InventoryPage.SetActive(!isActive);
         ButtonInteraction.SetActive(!isActive);
 
-        Debug.Log("UI " + (!isActive ? "activée." : "désactivée."));
+        IsInventoryOpen = !isActive;
+        
+        Debug.Log("Inventaire " + (IsInventoryOpen ? "activée." : "désactivée."));
     }
 }
