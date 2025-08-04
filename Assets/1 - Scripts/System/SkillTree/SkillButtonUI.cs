@@ -58,3 +58,70 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         tooltip?.Hide();
     }
 }
+
+
+
+
+
+
+
+//using UnityEngine;
+//using UnityEngine.UI;
+//using UnityEngine.EventSystems;
+
+//public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+//{
+//    private SkillNode node;
+//    private SkillTreeManager manager;
+//    private int index;
+//    private Image iconImage;
+//    private SkillTooltipUI tooltip;
+//    private bool unlocked;
+
+//    public void Initialize(SkillNode node, SkillTreeManager manager, int index, bool isUnlocked)
+//    {
+//        this.node = node;
+//        this.manager = manager;
+//        this.index = index;
+//        unlocked = isUnlocked;
+
+//        iconImage = transform.Find("Icon").GetComponent<Image>();
+//        if (iconImage) iconImage.sprite = node.Icon;
+
+//        tooltip = FindFirstObjectByType<SkillTooltipUI>();
+
+//        var btn = GetComponent<Button>();
+//        btn.onClick.RemoveAllListeners();
+//        btn.onClick.AddListener(OnClick);
+
+//        UpdateVisual(manager.AvailablePoints, unlocked);
+//    }
+
+//    public void SetUnlocked(bool isUnlocked)
+//    {
+//        unlocked = isUnlocked;
+//        node.isUnlocked = isUnlocked;
+//    }
+
+//    public void UpdateVisual(int points, bool isUnlocked)
+//    {
+//        var btn = GetComponent<Button>();
+//        btn.interactable = !isUnlocked && points >= node.cost;
+//        if (iconImage) iconImage.color = isUnlocked ? Color.white : Color.gray;
+//    }
+
+//    private void OnClick()
+//    {
+//        manager.OnSkillButtonClicked(index);
+//    }
+
+//    public void OnPointerEnter(PointerEventData eventData)
+//    {
+//        tooltip?.Show(node.SkillName, node.Description, node.Specifications, Input.mousePosition);
+//    }
+
+//    public void OnPointerExit(PointerEventData eventData)
+//    {
+//        tooltip?.Hide();
+//    }
+//}
