@@ -18,53 +18,56 @@ public class InventorySlot : MonoBehaviour, IDropHandler
          return itemImage != null && quantityText != null;
      }
      
-    public void SetItem(InventoryItem item)
-    {
-        currentItem = item;
+     public void SetItem(InventoryItem item)
+     {
+         currentItem = item;
 
-        if (itemImage == null || quantityText == null)
-        {
-            Debug.LogWarning("InventorySlot mal configuré !");
-            return;
-        }
+         if (itemImage == null || quantityText == null)
+         {
+             Debug.LogWarning($"InventorySlot mal configuré : {gameObject.name}");
+             return;
+         }
 
-        Transform iconContainer = transform.Find("ItemIcon");
-        if (iconContainer == null)
-        {
-            Debug.LogWarning("ItemIcon non trouvé dans ce slot !");
-            return;
-        }
+         Transform iconContainer = transform.Find("ItemIcon");
+         if (iconContainer == null)
+         {
+             Debug.LogWarning("ItemIcon non trouvé dans ce slot !");
+             return;
+         }
 
-        // Supprimer les anciens visuels (sauf celui assigné au script)
-        foreach (Transform child in iconContainer)
-        {
-            if (child.GetComponent<Image>() != itemImage &&
-                child.gameObject.name.Contains("Inventory Image"))
-            {
-                Destroy(child.gameObject);
-            }
-        }
+         // 🔁 Vérifie si l'image est toujours présente dans le bon conteneur
+         if (itemImage.transform.parent != iconContainer)
+         {
+             itemImage.transform.SetParent(iconContainer, false);
+         }
 
-        if (item != null && item.icon != null)
-        {
-            itemImage.sprite = item.icon;
-            itemImage.enabled = true;
-            quantityText.text = item.quantity > 1 ? item.quantity.ToString() : "";
-            quantityText.enabled = item.quantity > 1;
+         // ✅ Nettoie tous les enfants sauf l'image d'origine et le texte
+         foreach (Transform child in iconContainer)
+         {
+             if (child != itemImage.transform && child != quantityText.transform)
+             {
+                 Destroy(child.gameObject);
+             }
+         }
 
-            // Replace visuellement dans ItemIcon
-            itemImage.transform.SetParent(iconContainer, false);
-            itemImage.rectTransform.anchoredPosition = Vector2.zero;
-            itemImage.transform.localScale = Vector3.one;
-        }
-        else
-        {
-            itemImage.sprite = null;
-            itemImage.enabled = false;
-            quantityText.text = "";
-            quantityText.enabled = false;
-        }
-    }
+         if (item != null && item.icon != null)
+         {
+             itemImage.sprite = item.icon;
+             itemImage.enabled = true;
+             quantityText.text = item.quantity > 1 ? item.quantity.ToString() : "";
+             quantityText.enabled = item.quantity > 1;
+
+             itemImage.rectTransform.anchoredPosition = Vector2.zero;
+             itemImage.transform.localScale = Vector3.one;
+         }
+         else
+         {
+             itemImage.sprite = null;
+             itemImage.enabled = false;
+             quantityText.text = "";
+             quantityText.enabled = false;
+         }
+     }
 
     public void ClearSlot()
     {
