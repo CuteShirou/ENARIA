@@ -116,11 +116,13 @@
     <Compile Include="Assets\1 - Scripts\System\Player\Stats\StatAllocationButton.cs" />
     <Compile Include="Assets\1 - Scripts\Exploration\BubbleInfoPseudo.cs" />
     <Compile Include="Assets\1 - Scripts\PathFinding\AStarPathFinder.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Grid\Tile_ClientVisual.cs" />
     <Compile Include="Assets\1 - Scripts\Network\DebugNetworkSpawn.cs" />
     <Compile Include="Assets\1 - Scripts\Fight\Phase_EnterSetupCombat.cs" />
     <Compile Include="Assets\1 - Scripts\Player\SetupPlayer.cs" />
     <Compile Include="Assets\1 - Scripts\GridManager\TileCoord.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\RessourceData.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Grid\TileGrid_Manager.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\ThirdPersonController\Scripts\ThirdPersonController.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\CraftUIManager.cs" />
     <Compile Include="Assets\1 - Scripts\Fight\Grid\Material_NetworkTile.cs" />

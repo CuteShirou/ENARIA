@@ -134,6 +134,12 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 Debug.LogWarning("[Phase_EnterSetupCombat] Le joueur n'a pas de Player_SetupNetworkCombat !");
             }
 
+            // ➕ Affecte le CombatManager au joueur
+            if (player.TryGetComponent(out Player_ControllerPhasePreparation controller))
+            {
+                controller.combatManager = manager;
+            }
+
             // ➕ Placement dynamique si la phase de prépa est active
             if (manager != null && manager.phasePrepa != null && manager.phasePrepa.isActiveAndEnabled)
             {

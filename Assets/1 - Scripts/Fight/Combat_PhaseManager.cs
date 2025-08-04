@@ -22,6 +22,9 @@ public class Combat_PhaseManager : MonoBehaviour
     public Phase_TurnByTurnCombat phaseTurn;
     public Phase_EndCombat phaseEnd;
 
+    [Header("Grille de l’arène")]
+    public TileGrid_Manager tileGrid;
+
     // Phase en cours dans cette arène
     private CombatPhase currentPhase;
 

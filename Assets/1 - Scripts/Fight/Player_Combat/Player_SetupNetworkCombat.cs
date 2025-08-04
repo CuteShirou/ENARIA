@@ -1,46 +1,33 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using Mirror;
 
 //------------------------------------------------------------
-// GËre le parentage, la position initiale et l'arËne du joueur
+// G√®re le parentage et la position initiale d'un joueur en combat
 public class Player_SetupNetworkCombat : NetworkBehaviour
 {
-    [Header("ID du parent dÈfini cÙtÈ serveur (TeamVerte)")]
-    [SyncVar]
+    [Header("ID du parent d√©fini c√¥t√© serveur (TeamVerte)")]
+    [SyncVar(hook = nameof(OnParentChanged))]
     public uint parentNetId;
 
-    [Header("Position initiale ‡ synchroniser")]
+    [Header("Position initiale √† synchroniser")]
     [SyncVar(hook = nameof(OnPositionUpdated))]
     private Vector3 syncedPosition;
-
-    [Header("Arena assignÈe pour ce joueur")]
-    [SyncVar]
-    public int arenaIndex;
 
     //------------------------------------------------------------
     public override void OnStartClient()
     {
         base.OnStartClient();
 
-        // Reparentage : TeamVerte
-        if (NetworkClient.spawned.TryGetValue(parentNetId, out NetworkIdentity parent))
-        {
-            transform.SetParent(parent.transform, true); // garde la position actuelle
-            Debug.Log($"[Player_SetupNetworkCombat] Parent trouvÈ : {parent.name}");
-        }
-        else
-        {
-            Debug.LogWarning($"[Player_SetupNetworkCombat] parentNetId {parentNetId} introuvable !");
-        }
+        // Applique imm√©diatement la position synchronis√©e
+        transform.position = syncedPosition;
+        Debug.Log($"[Player_SetupNetworkCombat] Position initiale re√ßue : {syncedPosition}");
 
-        // Appliquer la position si on est le client local
-        if (isLocalPlayer)
-        {
-            transform.position = syncedPosition;
-        }
+        // Applique le parent via le hook
+        OnParentChanged(0, parentNetId);
     }
 
     //------------------------------------------------------------
+    // Appel√©e par le serveur lors du placement
     [Server]
     public void SetInitialPosition(Vector3 position)
     {
@@ -48,12 +35,25 @@ public class Player_SetupNetworkCombat : NetworkBehaviour
     }
 
     //------------------------------------------------------------
+    // Hook appel√© c√¥t√© client quand la position change
     private void OnPositionUpdated(Vector3 oldPos, Vector3 newPos)
     {
-        if (isLocalPlayer)
+        transform.position = newPos;
+        Debug.Log($"[Player_SetupNetworkCombat] Position mise √† jour c√¥t√© client : {newPos}");
+    }
+
+    //------------------------------------------------------------
+    // Hook appel√© c√¥t√© client quand le parent change (reparentage hi√©rarchique)
+    private void OnParentChanged(uint oldId, uint newId)
+    {
+        if (NetworkClient.spawned.TryGetValue(newId, out NetworkIdentity parent))
         {
-            transform.position = newPos;
-            Debug.Log($"[Player_SetupNetworkCombat] Position mise ‡ jour cÙtÈ client : {newPos}");
+            transform.SetParent(parent.transform, true); // conserve la position monde
+            Debug.Log($"[Player_SetupNetworkCombat] Reparentage dynamique ‚Üí {parent.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"[Player_SetupNetworkCombat] Impossible de trouver le parent NetId: {newId}");
         }
     }
 }

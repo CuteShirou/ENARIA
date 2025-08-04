@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-
+//--------------------------------------------------------------
 //--------------------------------------------------------------
 public class Phase_PreparationPlacementCombat : NetworkBehaviour
 {
@@ -17,16 +17,14 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
 
     private Combat_PhaseManager manager;
     private Data_FightMap mapData;
-
-    private Dictionary<GameObject, GameObject> entityToTile = new();
-    private Dictionary<GameObject, GameObject> tileToEntity = new();
-    private List<GameObject> allTiles = new();
+    private TileGrid_Manager tileGrid;
 
     //--------------------------------------------------------------
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
         mapData = manager.phaseEnter.combatMap;
+        tileGrid = manager.tileGrid;
 
         Debug.Log($"[Phase_Preparation] Lancement sur l'arène {manager.arenaIndex}");
 
@@ -95,8 +93,7 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
                 }
 
                 NetworkServer.Spawn(tile);
-                allTiles.Add(tile);
-                tileToEntity[tile] = null;
+                tileGrid.RegisterTile(tile); // Nouveau : enregistre la tuile dans la grille
             }
         }
 
@@ -153,8 +150,7 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
             setup.SetInitialPosition(newPosition);
         }
 
-        entityToTile[entityObj] = tile;
-        tileToEntity[tile] = entityObj;
+        tileGrid.RegisterEntity(entityObj, tile); // Nouveau : enregistrement dans la grille
 
         Debug.Log($"[Phase_Preparation] Nouvelle entité placée : {entityObj.name} sur {tile.name}");
     }
@@ -163,9 +159,9 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
     [Server]
     private GameObject GetFreeTileForTeam(int team)
     {
-        foreach (GameObject tile in allTiles)
+        foreach (GameObject tile in tileGrid.GetAllTiles())
         {
-            if (!tileToEntity.ContainsKey(tile) || tileToEntity[tile] != null)
+            if (!tileGrid.IsTileFree(tile))
                 continue;
 
             if (tile.TryGetComponent(out Setup_NetworkTile setup))
@@ -185,54 +181,102 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
     public void Debug_ShowEntityTileLinks()
     {
         Debug.Log($"-------------------------------------------------------------------");
-        Debug.Log($"--- [DEBUG] Entités dans le dictionnaire ({entityToTile.Count}) ---");
+        Debug.Log($"--- [DEBUG] État des cases (via TileGrid_Manager) ---");
 
-        foreach (var pair in entityToTile)
+        foreach (GameObject tile in tileGrid.GetAllTiles())
         {
-            string entityName = pair.Key != null ? pair.Key.name : "NULL";
+            string tileName = tile.name;
 
-            string tileName = pair.Value != null
-                ? $"{pair.Value.name} ({pair.Value.GetComponent<Setup_NetworkTile>()?.tileX}, {pair.Value.GetComponent<Setup_NetworkTile>()?.tileY})"
-                : "NULL";
+            if (tile.TryGetComponent(out Setup_NetworkTile setup))
+            {
+                tileName += $" ({setup.tileX}, {setup.tileY})";
+            }
 
-            Debug.Log($" > {entityName} est sur {tileName}");
-        }
+            GameObject occupant = tileGrid.GetEntityOnTile(tile);
+            string occupantName = occupant != null ? occupant.name : "VIDE";
 
-        Debug.Log($"--- [DEBUG] Cases occupées ({tileToEntity.Count}) ---");
-
-        foreach (var pair in tileToEntity)
-        {
-            string tileName = pair.Key != null
-                ? $"{pair.Key.name} ({pair.Key.GetComponent<Setup_NetworkTile>()?.tileX}, {pair.Key.GetComponent<Setup_NetworkTile>()?.tileY})"
-                : "NULL";
-
-            string entityName = pair.Value != null ? pair.Value.name : "VIDE";
-            Debug.Log($" > {tileName} contient : {entityName}");
+            Debug.Log($" > {tileName} contient : {occupantName}");
         }
 
         Debug.Log($"-------------------------------------------------------------------");
     }
 
+    //--------------------------------------------------------------
     [Server]
     public GameObject GetTileAtCoordinates(int x, int y)
     {
-        foreach (GameObject tile in allTiles)
-        {
-            if (tile.TryGetComponent(out Setup_NetworkTile setup))
-            {
-                if (setup.tileX == x && setup.tileY == y)
-                    return tile;
-            }
-        }
-        return null;
+        return tileGrid.GetTileAtCoordinates(x, y);
     }
 
+    //--------------------------------------------------------------
     [Server]
     public bool IsTileFree(GameObject tile)
     {
-        return tileToEntity.ContainsKey(tile) && tileToEntity[tile] == null;
+        return tileGrid.IsTileFree(tile);
     }
 
-    
+    //--------------------------------------------------------------
+    // Appelée par un joueur pour demander à changer de tuile
+    [Server]
+    public void TryMoveEntityToTile(GameObject playerObj, int x, int y)
+    {
+        if (!isActiveAndEnabled)
+        {
+            Debug.LogWarning("[Phase_Preparation] Phase inactive, déplacement refusé.");
+            return;
+        }
 
+        GameObject tile = tileGrid.GetTileAtCoordinates(x, y);
+
+        if (tile == null)
+        {
+            Debug.LogError($"[TryMoveEntityToTile] Tile ({x},{y}) introuvable !");
+            return;
+        }
+
+        if (!tile.TryGetComponent(out Setup_NetworkTile setup))
+        {
+            Debug.LogError($"[TryMoveEntityToTile] La tuile ({x},{y}) n’a pas de Setup_NetworkTile !");
+            return;
+        }
+
+        if (setup.currentState != TileState.TeamGreen)
+        {
+            Debug.LogWarning($"[TryMoveEntityToTile] La case ({x},{y}) n’est pas de l’équipe verte.");
+            return;
+        }
+
+        if (!tileGrid.IsTileFree(tile))
+        {
+            Debug.LogWarning($"[TryMoveEntityToTile] La case ({x},{y}) est déjà occupée.");
+            return;
+        }
+
+        if (!playerObj.TryGetComponent(out Entity_StatistiqueCombat stats))
+        {
+            Debug.LogWarning("[TryMoveEntityToTile] Entité sans Entity_StatistiqueCombat.");
+            return;
+        }
+
+        if (stats.team != 0)
+        {
+            Debug.LogWarning("[TryMoveEntityToTile] Seul un joueur de l’équipe verte peut se déplacer.");
+            return;
+        }
+
+        Vector3 newPosition = tile.transform.position + Vector3.up * 0.5f;
+        Quaternion newRotation = Quaternion.Euler(rotationGreenTeamEuler);
+
+        playerObj.transform.position = newPosition;
+        playerObj.transform.rotation = newRotation;
+
+        if (playerObj.TryGetComponent(out Player_SetupNetworkCombat setupNet))
+        {
+            setupNet.SetInitialPosition(newPosition);
+        }
+
+        tileGrid.RegisterEntity(playerObj, tile);
+
+        Debug.Log($"[Phase_Preparation] {playerObj.name} s’est déplacé sur {tile.name}");
+    }
 }
