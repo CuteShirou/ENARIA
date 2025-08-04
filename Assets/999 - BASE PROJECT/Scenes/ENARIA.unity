@@ -8117,6 +8117,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 95bac3fcebe459847b89b5d72dbaef1b, type: 3}
   m_PrefabInstance: {fileID: 281749826}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &287323900
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 287323901}
+  - component: {fileID: 287323902}
+  m_Layer: 0
+  m_Name: TeamRed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &287323901
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 287323900}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 10, y: 1, z: -8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3977639282758544422}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &287323902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 287323900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 4068356944
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1001 &292594228
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8282,7 +8331,8 @@ PrefabInstance:
       value: FightZone_02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3753026177868763759, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
@@ -18727,7 +18777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4a01c77f31f03a4682ca4edb34ad2d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &702338028
+--- !u!114 &702338032
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -28576,10 +28626,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1847190275058887127, guid: 0fcb7fd2c426d8841bfb69ce753924a3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 702338023}
+      addedObject: {fileID: 702338032}
     - targetCorrespondingSourceObject: {fileID: 1847190275058887127, guid: 0fcb7fd2c426d8841bfb69ce753924a3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 702338028}
+      addedObject: {fileID: 702338023}
     - targetCorrespondingSourceObject: {fileID: 9139570686286825219, guid: 0fcb7fd2c426d8841bfb69ce753924a3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
@@ -33056,6 +33106,8 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 6022407305050635751, guid: 44d9008ec2bb13f4185640f7144560fb, type: 3}
+  - {fileID: 6811757141093611548, guid: 0fcb7fd2c426d8841bfb69ce753924a3, type: 3}
+  - {fileID: 6811757141093611548, guid: de061678b61e3034d8b75ec1cb891e52, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -37182,6 +37234,55 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &1463850730
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1463850731}
+  - component: {fileID: 1463850732}
+  m_Layer: 0
+  m_Name: TeamGreen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1463850731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463850730}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -10, y: 1, z: -8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3977639282758544422}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1463850732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463850730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 1183599493
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1001 &1465239459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43087,6 +43188,55 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1777118898}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1778224144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1778224145}
+  - component: {fileID: 1778224146}
+  m_Layer: 0
+  m_Name: Obstacle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1778224145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778224144}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3977639282758544422}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1778224146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778224144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 1268926249
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1001 &1786338130
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -51511,13 +51661,39 @@ PrefabInstance:
       propertyPath: sceneId
       value: 3188218731
       objectReference: {fileID: 0}
+    - target: {fileID: 5874176039126087829, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
+      propertyPath: teamRedParent
+      value: 
+      objectReference: {fileID: 287323901}
+    - target: {fileID: 5874176039126087829, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
+      propertyPath: teamGreenParent
+      value: 
+      objectReference: {fileID: 1463850731}
     - target: {fileID: 7904399378064867164, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
       propertyPath: m_Name
       value: FightZone_01
       objectReference: {fileID: 0}
+    - target: {fileID: 8424033046422878938, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
+      propertyPath: rotationRedTeamEuler.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424033046422878938, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
+      propertyPath: rotationGreenTeamEuler.y
+      value: 180
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3753026177868763759, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 406961478615302310, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1463850731}
+    - targetCorrespondingSourceObject: {fileID: 406961478615302310, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 287323901}
+    - targetCorrespondingSourceObject: {fileID: 406961478615302310, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1778224145}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9068ae89591c522429ee4b3718b7bd0c, type: 3}
 --- !u!1001 &7935491085861324452

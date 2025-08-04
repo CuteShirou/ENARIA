@@ -91,6 +91,7 @@
     <Compile Include="Assets\1 - Scripts\Fight\Grid\Setup_NetworkTile.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\BDD\RegisterManager.cs" />
     <Compile Include="Assets\1 - Scripts\Scene - Teleporter\TeleportCombat.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Player_Combat\Player_SetupNetworkCombat.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\StatsUIBinder.cs" />
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillTreeBranch.cs" />
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillTreeManager.cs" />
@@ -100,7 +101,6 @@
     <Compile Include="Assets\1 - Scripts\A_DataEntity\Data_Information_Entity.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\InputSystem\StarterAssetsInputs.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftManager.cs" />
-    <Compile Include="Assets\1 - Scripts\Fight\Combat_SetupGrid.cs" />
     <Compile Include="Assets\1 - Scripts\CombatManager\CombatManager.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\CraftRecipeData.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualButton.cs" />
@@ -128,6 +128,7 @@
     <Compile Include="Assets\1 - Scripts\Fight\Exploration_DisplayInfoGroupMonster.cs" />
     <Compile Include="Assets\1 - Scripts\Fight\Exploration_Trigger_GoCombat.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftResult.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Entity\Monster\Setup_NetworkMonster.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\SkillButtonUI.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\SkillTooltipUI.cs" />
     <Compile Include="Assets\1 - Scripts\GridManager\ReachableTilesHighlighter.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="Assets\1 - Scripts\System\Player\Stats\StatAllocationInput.cs" />
     <Compile Include="Assets\1 - Scripts\Fight\Exploration_InfoGroupMonster.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualTouchZone.cs" />
-    <Compile Include="Assets\1 - Scripts\Fight\Combat_SetupTeams.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\7 - Shader\Mochie\Glass Shader\Glass Two Pass.shader" />

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 //----------------------------------------------------------
 public class Exploration_Trigger_GoCombat : MonoBehaviour
@@ -52,7 +53,7 @@ public class Exploration_Trigger_GoCombat : MonoBehaviour
             Debug.Log("[Combat Init] Premier joueur ajouté à l'équipe verte.");
 
             // ⚠️ Lancement du système de phase uniquement maintenant
-            phaseManager.LaunchCombat();
+            StartCoroutine(DelayedLaunchCombat(phaseManager));
         }
 
         // Cas 2 : déjà engagé, mais pas encore en combat
@@ -86,5 +87,11 @@ public class Exploration_Trigger_GoCombat : MonoBehaviour
         }
 
         return null;
+    }
+
+    private IEnumerator DelayedLaunchCombat(Combat_PhaseManager manager)
+    {
+        yield return null; // attend une frame
+        manager.LaunchCombat();
     }
 }

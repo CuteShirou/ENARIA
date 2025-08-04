@@ -37,8 +37,11 @@ public class Setup_NetworkTile : NetworkBehaviour
     public bool isFighterActif = false;
 
     // ID réseau du parent (TileGridRoot) défini côté serveur
-    [SyncVar]
-    public uint parentNetId;
+    [SyncVar] public uint parentNetId;
+
+    // Nom de la tuile synchronisé (ex : Case_3_5)
+    [SyncVar(hook = nameof(OnTileNameChanged))]
+    public string syncedName;
 
     // État local du survol souris (non synchronisé)
     private bool isMouseOver = false;
@@ -61,6 +64,12 @@ public class Setup_NetworkTile : NetworkBehaviour
     {
         Debug.Log($"[Tile] isFighterActif modifié : {newValue}");
         UpdateMaterial();
+    }
+
+    //------------------------------------------------------------
+    private void OnTileNameChanged(string _, string newName)
+    {
+        name = newName;
     }
 
     //------------------------------------------------------------
@@ -115,7 +124,7 @@ public class Setup_NetworkTile : NetworkBehaviour
         // Reparentage côté client via parentNetId
         if (NetworkClient.spawned.TryGetValue(parentNetId, out NetworkIdentity parent))
         {
-            transform.SetParent(parent.transform, true); // true : conserve la position
+            transform.SetParent(parent.transform, true);
             Debug.Log($"[NetworkTile] Parent assigné via NetId → {parent.name}");
         }
         else
@@ -123,7 +132,10 @@ public class Setup_NetworkTile : NetworkBehaviour
             Debug.LogWarning($"[NetworkTile] Impossible de retrouver parentNetId: {parentNetId} côté client.");
         }
 
-        UpdateMaterial(); // Applique les bonnes couleurs
+        // Nom de tuile mis à jour via hook
+        name = syncedName;
+
+        UpdateMaterial();
     }
 
     //------------------------------------------------------------
@@ -136,10 +148,8 @@ public class Setup_NetworkTile : NetworkBehaviour
     //------------------------------------------------------------
     private void OnMouseDown()
     {
-        // S'assurer qu'on est sur le client local
         if (!isClient || NetworkClient.connection == null) return;
 
-        // Chercher le joueur local (avec autorité)
         var localPlayerObj = NetworkClient.connection.identity;
         if (localPlayerObj == null)
         {
@@ -154,7 +164,6 @@ public class Setup_NetworkTile : NetworkBehaviour
             return;
         }
 
-        // Envoie au joueur local les coordonnées cliquées
         playerController.RequestTileClick(tileX, tileY);
     }
 }

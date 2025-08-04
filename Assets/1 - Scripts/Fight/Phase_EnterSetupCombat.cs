@@ -1,39 +1,96 @@
-using System.Collections.Generic;
+Ôªøusing System.Collections.Generic;
 using UnityEngine;
+using Mirror; // Pour la synchronisation r√©seau
 
 //--------------------------------------------------
 public class Phase_EnterSetupCombat : MonoBehaviour
 {
-    [Header("Carte utilisÈe pour ce combat")]
+    [Header("Carte utilis√©e pour ce combat")]
     public Data_FightMap combatMap;
 
-    [Header("…quipes de combat")]
-    public List<GameObject> greenTeam = new();   // Joueurs (Èquipe verte)
-    public List<GameObject> redTeam = new();     // Monstres (Èquipe rouge)
+    [Header("√âquipes de combat")]
+    public List<GameObject> greenTeam = new();   // Joueurs (√©quipe verte)
+    public List<GameObject> redTeam = new();     // Monstres (√©quipe rouge)
     public List<GameObject> AllFighters = new(); // Ordre de tour (vert + rouge)
 
-    // Groupe de monstres dÈclencheur du combat
+    [Header("R√©f√©rences hi√©rarchie")]
+    public Transform teamRedParent;    // Objet parent pour l'√©quipe Rouge dans la hi√©rarchie
+    public Transform teamGreenParent;  // Objet parent pour l'√©quipe Verte dans la hi√©rarchie
+
+    // Groupe de monstres d√©clencheur du combat
     private Exploration_InfoGroupMonster currentGroup;
 
-    // RÈfÈrence vers le Combat_PhaseManager principal
+    // R√©f√©rence vers le Combat_PhaseManager principal
     private Combat_PhaseManager manager;
 
-    // AppelÈe par le Combat_PhaseManager lors de StartPhase(Enter)
+    //--------------------------------------------------
+    // Appel√©e par le Combat_PhaseManager lors de StartPhase(Enter)
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
 
-        Debug.Log($"[Phase_EnterSetupCombat][Arena {manager.arenaIndex}] Phase d'entrÈe activÈe.");
+        Debug.Log($"[Phase_EnterSetupCombat][Arena {manager.arenaIndex}] Phase d'entr√©e activ√©e.");
         Debug.Log($"[Phase_EnterSetupCombat] Joueurs en attente : {greenTeam.Count}");
         Debug.Log($"[Phase_EnterSetupCombat] Monstres dans le groupe : {redTeam.Count}");
-        Debug.Log($"[Phase_EnterSetupCombat] Carte utilisÈe : {(combatMap != null ? combatMap.name : "aucune")}");
+        Debug.Log($"[Phase_EnterSetupCombat] Carte utilis√©e : {(combatMap != null ? combatMap.name : "aucune")}");
+
+        // Spawn des monstres c√¥t√© serveur
+        SpawnMonstersInScene();
 
         // Transition automatique vers la phase suivante
-        Debug.Log("[Phase_EnterSetupCombat] Phase terminÈe. Passage ‡ la phase de prÈparation.");
+        Debug.Log("[Phase_EnterSetupCombat] Phase termin√©e. Passage √† la phase de pr√©paration.");
         manager.NextPhase();
     }
 
-    // Rempli les donnÈes de combat (appelÈ depuis Exploration_Trigger_GoCombat)
+    //--------------------------------------------------
+    // Instancie les monstres dans la sc√®ne et les synchronise avec tous les clients
+    private void SpawnMonstersInScene()
+    {
+        if (!NetworkServer.active)
+        {
+            Debug.LogWarning("[Phase_EnterSetupCombat] Tentative de spawn de monstres alors que ce n'est pas le serveur.");
+            return;
+        }
+
+        if (teamRedParent == null)
+        {
+            Debug.LogError("[Phase_EnterSetupCombat] Aucun parent 'TeamRed' d√©fini pour accueillir les monstres.");
+            return;
+        }
+
+        List<GameObject> monstersSpawned = new();
+
+        foreach (GameObject prefabMonster in redTeam)
+        {
+            Vector3 spawnPosition = teamRedParent.position;
+            Quaternion spawnRotation = Quaternion.identity;
+
+            GameObject monster = Instantiate(prefabMonster, spawnPosition, spawnRotation);
+            monster.transform.SetParent(teamRedParent); // Organisation hi√©rarchique serveur
+
+            // Renseigne le parent pour que le client le r√©cup√®re
+            if (monster.TryGetComponent(out Setup_NetworkMonster setup))
+            {
+                NetworkIdentity redNet = teamRedParent.GetComponent<NetworkIdentity>();
+                if (redNet != null)
+                    setup.parentNetId = redNet.netId;
+            }
+
+            NetworkServer.Spawn(monster);
+            monstersSpawned.Add(monster);
+        }
+
+        redTeam = monstersSpawned;
+
+        AllFighters.Clear();
+        AllFighters.AddRange(redTeam);
+        AllFighters.AddRange(greenTeam);
+
+        Debug.Log($"[Phase_EnterSetupCombat] {redTeam.Count} monstres instanci√©s et synchronis√©s.");
+    }
+
+    //--------------------------------------------------
+    // Rempli les donn√©es de combat (appel√© depuis Exploration_Trigger_GoCombat)
     public void SetCombatData(List<GameObject> newMonsters, Data_FightMap newMap, Exploration_InfoGroupMonster group)
     {
         redTeam = newMonsters;
@@ -42,37 +99,69 @@ public class Phase_EnterSetupCombat : MonoBehaviour
 
         AllFighters.AddRange(redTeam);
 
-        Debug.Log("[Phase_EnterSetupCombat] DonnÈes de combat reÁues.");
+        Debug.Log("[Phase_EnterSetupCombat] Donn√©es de combat re√ßues.");
         Debug.Log($" - Monstres : {redTeam.Count}");
         Debug.Log($" - Carte : {(combatMap != null ? combatMap.name : "null")}");
     }
 
-    // Ajoute un joueur dans l'Èquipe verte
+    //--------------------------------------------------
+    // Ajoute un joueur dans l'√©quipe verte (appel√© √† l'entr√©e dans le trigger)
     public void AddPlayerToTeamVerte(GameObject player)
     {
         if (!greenTeam.Contains(player))
         {
             greenTeam.Add(player);
             AllFighters.Add(player);
-            Debug.Log("[Phase_EnterSetupCombat] Joueur ajoutÈ ‡ l'Èquipe verte : " + player.name);
+            Debug.Log("[Phase_EnterSetupCombat] Joueur ajout√© √† l'√©quipe verte : " + player.name);
+
+            if (teamGreenParent == null)
+            {
+                Debug.LogError("[Phase_EnterSetupCombat] Aucun parent 'TeamVerte' d√©fini !");
+                return;
+            }
+
+            player.transform.SetParent(teamGreenParent); // Organisation hi√©rarchique serveur
+
+            // Renseigne le parent pour le client
+            if (player.TryGetComponent(out Player_SetupNetworkCombat setup))
+            {
+                NetworkIdentity greenNet = teamGreenParent.GetComponent<NetworkIdentity>();
+                if (greenNet != null)
+                    setup.parentNetId = greenNet.netId;
+            }
+            else
+            {
+                Debug.LogWarning("[Phase_EnterSetupCombat] Le joueur n'a pas de Player_SetupNetworkCombat !");
+            }
+
+            // ‚ûï Placement dynamique si la phase de pr√©pa est active
+            if (manager != null && manager.phasePrepa != null && manager.phasePrepa.isActiveAndEnabled)
+            {
+                manager.phasePrepa.PlaceEntity(player);
+            }
+            else
+            {
+                Debug.LogWarning("[Phase_EnterSetupCombat] Phase de pr√©paration non active : placement diff√©r√©.");
+            }
         }
         else
         {
-            Debug.Log("[Phase_EnterSetupCombat] Joueur dÈj‡ dans l'Èquipe verte : " + player.name);
+            Debug.Log("[Phase_EnterSetupCombat] Joueur d√©j√† dans l'√©quipe verte : " + player.name);
         }
     }
 
-    // Permet aux autres phases ou au manager de changer l'Ètat du groupe
+    //--------------------------------------------------
+    // Permet aux autres phases ou au manager de changer l'√©tat du groupe
     public void SetMonsterState(MonsterState newState)
     {
         if (currentGroup != null)
         {
             currentGroup.SetState(newState);
-            Debug.Log("[Phase_EnterSetupCombat] …tat du groupe mis ‡ jour : " + newState);
+            Debug.Log("[Phase_EnterSetupCombat] √âtat du groupe mis √† jour : " + newState);
         }
         else
         {
-            Debug.LogWarning("[Phase_EnterSetupCombat] Aucun groupe de monstres rÈfÈrencÈ.");
+            Debug.LogWarning("[Phase_EnterSetupCombat] Aucun groupe de monstres r√©f√©renc√©.");
         }
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 //------------------------------------------------------------
 public class Entity_StatistiqueCombat : NetworkBehaviour
 {
+    [Header("État de l'entité")]
+    [SerializeField] public bool isFight = false;
     [SerializeField] public bool isDead = false;
     [SerializeField] public bool isReady = false;
 
