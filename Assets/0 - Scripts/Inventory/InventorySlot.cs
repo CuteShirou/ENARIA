@@ -11,8 +11,13 @@ public class InventorySlot : MonoBehaviour, IDropHandler
      public ItemType allowedType = ItemType.None;
      public SlotCategory slotCategory = SlotCategory.Inventory;
 
-    [HideInInspector] public InventoryItem currentItem;
+     [HideInInspector] public InventoryItem currentItem;
     
+     public bool IsValid()
+     {
+         return itemImage != null && quantityText != null;
+     }
+     
     public void SetItem(InventoryItem item)
     {
         currentItem = item;
@@ -75,11 +80,11 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         if (dragged == null) return;
 
         var sourceSlot = dragged.parentSlot;
-        var draggedItem = sourceSlot.currentItem;
+        var draggedItem = dragged.linkedItem ?? sourceSlot?.currentItem;
 
-        if (allowedType != ItemType.None && draggedItem.type != allowedType)
+        if (draggedItem == null)
         {
-            Debug.Log("❌ Ce type d'item ne peut pas être placé ici !");
+            Debug.LogWarning("❗ draggedItem est null dans OnDrop");
             return;
         }
 
@@ -119,10 +124,14 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         {
             InventoryItem temp = currentItem;
             SetItem(draggedItem);
-            if (temp != null)
-                sourceSlot.SetItem(temp);
-            else
-                sourceSlot.ClearSlot();
+
+            if (sourceSlot != null && sourceSlot.IsValid())
+            {
+                if (temp != null)
+                    sourceSlot.SetItem(temp);
+                else
+                    sourceSlot.ClearSlot();
+            }
         }
         
         dragged.parentAfterDrag = this.transform;
