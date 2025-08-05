@@ -23,6 +23,9 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     // Référence vers le Combat_PhaseManager principal
     private Combat_PhaseManager manager;
 
+    // ➕ Liste temporaire des joueurs arrivés avant que InitPhase() soit appelé
+    private List<GameObject> pendingPlayers = new();
+
     //--------------------------------------------------
     // Appelée par le Combat_PhaseManager lors de StartPhase(Enter)
     public void InitPhase(Combat_PhaseManager phaseManager)
@@ -36,6 +39,13 @@ public class Phase_EnterSetupCombat : MonoBehaviour
 
         // Spawn des monstres côté serveur
         SpawnMonstersInScene();
+
+        // Ajoute les joueurs qui étaient en attente
+        foreach (GameObject player in pendingPlayers)
+        {
+            AddPlayerToTeamVerte(player);
+        }
+        pendingPlayers.Clear();
 
         // Transition automatique vers la phase suivante
         Debug.Log("[Phase_EnterSetupCombat] Phase terminée. Passage à la phase de préparation.");
@@ -108,6 +118,15 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     // Ajoute un joueur dans l'équipe verte (appelé à l'entrée dans le trigger)
     public void AddPlayerToTeamVerte(GameObject player)
     {
+        // Si manager pas encore initialisé → on met en file d’attente
+        if (manager == null)
+        {
+            Debug.LogWarning("[Phase_EnterSetupCombat] Manager encore null → joueur ajouté en file d'attente.");
+            if (!pendingPlayers.Contains(player))
+                pendingPlayers.Add(player);
+            return;
+        }
+
         if (!greenTeam.Contains(player))
         {
             greenTeam.Add(player);
@@ -127,17 +146,26 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             {
                 NetworkIdentity greenNet = teamGreenParent.GetComponent<NetworkIdentity>();
                 if (greenNet != null)
+                {
                     setup.parentNetId = greenNet.netId;
+                    Debug.Log($"[DEBUG] ParentNetId assigné → {greenNet.netId}");
+                }
+
+                // ➕ Assigne le CombatManager au joueur
+                NetworkIdentity managerNetId = manager.GetComponent<NetworkIdentity>();
+                if (managerNetId != null)
+                {
+                    setup.combatManagerIdentity = managerNetId;
+                    Debug.Log($"[DEBUG] CombatManager assigné (NetID = {managerNetId.netId}) à {player.name}");
+                }
+                else
+                {
+                    Debug.LogError("[Phase_EnterSetupCombat] Le Combat_PhaseManager n'a pas de NetworkIdentity !");
+                }
             }
             else
             {
                 Debug.LogWarning("[Phase_EnterSetupCombat] Le joueur n'a pas de Player_SetupNetworkCombat !");
-            }
-
-            // ➕ Affecte le CombatManager au joueur
-            if (player.TryGetComponent(out Player_ControllerPhasePreparation controller))
-            {
-                controller.combatManager = manager;
             }
 
             // ➕ Placement dynamique si la phase de prépa est active

@@ -13,6 +13,9 @@ public class Player_SetupNetworkCombat : NetworkBehaviour
     [SyncVar(hook = nameof(OnPositionUpdated))]
     private Vector3 syncedPosition;
 
+    [Header("Référence au CombatManager de l'arène du Joueur")]
+    [SyncVar] public NetworkIdentity combatManagerIdentity;
+
     //------------------------------------------------------------
     public override void OnStartClient()
     {
