@@ -64,15 +64,15 @@ public class Combat_PhaseManager : MonoBehaviour
                 phasePrepa.InitPhase(this);
                 break;
 
-            //case CombatPhase.TurnByTurn:
-            //    Debug.Log("[CombatManager] → Phase_TurnByTurnCombat activée.");
-            //    phaseTurn.InitPhase(this);
-            //    break;
+            case CombatPhase.TurnByTurn:
+                Debug.Log("[CombatManager] → Phase_TurnByTurnCombat activée.");
+                phaseTurn.InitPhase(this);
+                break;
 
-            //case CombatPhase.End:
-            //    Debug.Log("[CombatManager] → Phase_EndCombat activée.");
-            //    phaseEnd.InitPhase(this);
-            //    break;
+                //case CombatPhase.End:
+                //    Debug.Log("[CombatManager] → Phase_EndCombat activée.");
+                //    phaseEnd.InitPhase(this);
+                //    break;
         }
     }
 
@@ -98,5 +98,17 @@ public class Combat_PhaseManager : MonoBehaviour
         {
             Debug.LogWarning("[CombatManager] Aucune phase suivante, combat déjà terminé.");
         }
+    }
+
+    //------------------------------------------------------------
+    // Optionnel : expose la phase actuelle aux interfaces
+    public CombatPhase GetCurrentPhase()
+    {
+        return currentPhase;
+    }
+
+    public string GetPhaseName()
+    {
+        return currentPhase.ToString();
     }
 }

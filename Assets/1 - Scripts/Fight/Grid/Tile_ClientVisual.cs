@@ -13,6 +13,8 @@ public class Tile_ClientVisual : MonoBehaviour
 
     [Header("Matériaux assignés")]
     [SerializeField] private Material matNone;
+    [SerializeField] private Material matColor1;
+    [SerializeField] private Material matColor2;
     [SerializeField] private Material matTeamGreen;
     [SerializeField] private Material matTeamRed;
     [SerializeField] private Material matObstacle;
@@ -108,5 +110,17 @@ public class Tile_ClientVisual : MonoBehaviour
                 tileRenderer.material = matNone;
                 break;
         }
+
+        // Si état None → alterner damier
+        if (networkTile.currentState == TileState.None)
+        {
+            bool isEven = (networkTile.tileX + networkTile.tileY) % 2 == 0;
+
+            if (isEven && matColor1 != null)
+                tileRenderer.material = matColor1;
+            else if (!isEven && matColor2 != null)
+                tileRenderer.material = matColor2;
+        }
+
     }
 }

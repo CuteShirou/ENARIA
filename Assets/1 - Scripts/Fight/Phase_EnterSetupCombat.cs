@@ -27,7 +27,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     private List<GameObject> pendingPlayers = new();
 
     //--------------------------------------------------
-    // Appelée par le Combat_PhaseManager lors de StartPhase(Enter)
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
@@ -47,13 +46,12 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         }
         pendingPlayers.Clear();
 
-        // Transition automatique vers la phase suivante
         Debug.Log("[Phase_EnterSetupCombat] Phase terminée. Passage à la phase de préparation.");
+
         manager.NextPhase();
     }
 
     //--------------------------------------------------
-    // Instancie les monstres dans la scène et les synchronise avec tous les clients
     private void SpawnMonstersInScene()
     {
         if (!NetworkServer.active)
@@ -78,7 +76,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             GameObject monster = Instantiate(prefabMonster, spawnPosition, spawnRotation);
             monster.transform.SetParent(teamRedParent); // Organisation hiérarchique serveur
 
-            // Renseigne le parent pour que le client le récupère
             if (monster.TryGetComponent(out Setup_NetworkMonster setup))
             {
                 NetworkIdentity redNet = teamRedParent.GetComponent<NetworkIdentity>();
@@ -100,7 +97,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     }
 
     //--------------------------------------------------
-    // Rempli les données de combat (appelé depuis Exploration_Trigger_GoCombat)
     public void SetCombatData(List<GameObject> newMonsters, Data_FightMap newMap, Exploration_InfoGroupMonster group)
     {
         redTeam = newMonsters;
@@ -115,10 +111,8 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     }
 
     //--------------------------------------------------
-    // Ajoute un joueur dans l'équipe verte (appelé à l'entrée dans le trigger)
     public void AddPlayerToTeamVerte(GameObject player)
     {
-        // Si manager pas encore initialisé → on met en file d’attente
         if (manager == null)
         {
             Debug.LogWarning("[Phase_EnterSetupCombat] Manager encore null → joueur ajouté en file d'attente.");
@@ -141,7 +135,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
 
             player.transform.SetParent(teamGreenParent); // Organisation hiérarchique serveur
 
-            // Renseigne le parent pour le client
             if (player.TryGetComponent(out Player_SetupNetworkCombat setup))
             {
                 NetworkIdentity greenNet = teamGreenParent.GetComponent<NetworkIdentity>();
@@ -151,7 +144,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                     Debug.Log($"[DEBUG] ParentNetId assigné → {greenNet.netId}");
                 }
 
-                // ➕ Assigne le CombatManager au joueur
                 NetworkIdentity managerNetId = manager.GetComponent<NetworkIdentity>();
                 if (managerNetId != null)
                 {
@@ -168,7 +160,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 Debug.LogWarning("[Phase_EnterSetupCombat] Le joueur n'a pas de Player_SetupNetworkCombat !");
             }
 
-            // ➕ Placement dynamique si la phase de prépa est active
             if (manager != null && manager.phasePrepa != null && manager.phasePrepa.isActiveAndEnabled)
             {
                 manager.phasePrepa.PlaceEntity(player);
@@ -176,6 +167,12 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             else
             {
                 Debug.LogWarning("[Phase_EnterSetupCombat] Phase de préparation non active : placement différé.");
+            }
+
+            // ✅ Activation du mode combat dans le script stats
+            if (player.TryGetComponent(out Entity_StatistiqueCombat stats))
+            {
+                stats.isFight = true;
             }
         }
         else
@@ -185,7 +182,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     }
 
     //--------------------------------------------------
-    // Permet aux autres phases ou au manager de changer l'état du groupe
     public void SetMonsterState(MonsterState newState)
     {
         if (currentGroup != null)

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Mirror;
 
 //-------------------------------------------------------------
@@ -6,10 +6,10 @@ using Mirror;
 public class Player_ControllerPhasePreparation : NetworkBehaviour
 {
     //-------------------------------------------------------------
-    // Appelée par la tuile quand elle est cliquée (client local uniquement)
+    // AppelÃ©e par la tuile quand elle est cliquÃ©e (client local uniquement)
     public void RequestTileClick(int x, int y)
     {
-        // Vérifie qu'on est bien le joueur local
+        // VÃ©rifie qu'on est bien le joueur local
         if (!isLocalPlayer) return;
 
         // Envoie au serveur la demande de clic
@@ -17,21 +17,21 @@ public class Player_ControllerPhasePreparation : NetworkBehaviour
     }
 
     //-------------------------------------------------------------
-    // Commande envoyée au serveur quand le joueur clique sur une tuile
+    // Commande envoyÃ©e au serveur quand le joueur clique sur une tuile
     [Command]
     private void CmdClickTile(int x, int y)
     {
         // Log debug serveur
-        Debug.Log($"[SERVER] Le joueur {gameObject.name} a cliqué sur la case ({x}, {y})");
+        Debug.Log($"[SERVER] Le joueur {gameObject.name} a cliquÃ© sur la case ({x}, {y})");
 
-        // Récupère la phase de préparation via le CombatManager associé
+        // RÃ©cupÃ¨re la phase de prÃ©paration via le CombatManager associÃ©
         if (!TryGetPreparationPhase(out Phase_PreparationPlacementCombat prepa))
         {
-            Debug.LogWarning("[SERVER] Impossible de trouver la phase de préparation depuis ce joueur.");
+            Debug.LogWarning("[SERVER] Impossible de trouver la phase de prÃ©paration depuis ce joueur.");
             return;
         }
 
-        // Vérifie que la phase est bien active
+        // VÃ©rifie que la phase est bien active
         if (prepa != null && prepa.isActiveAndEnabled)
         {
             prepa.TryMoveEntityToTile(gameObject, x, y);
@@ -41,47 +41,47 @@ public class Player_ControllerPhasePreparation : NetworkBehaviour
             Debug.LogWarning("[SERVER] Phase_PreparationPlacementCombat introuvable ou inactive.");
         }
 
-        // Message client visuel (inchangé)
+        // Message client visuel (inchangÃ©)
         RpcAnnounceTileClick(gameObject.name, x, y);
     }
 
     //-------------------------------------------------------------
-    // Reçu par tous les clients pour afficher le clic
+    // ReÃ§u par tous les clients pour afficher le clic
     [ClientRpc]
     private void RpcAnnounceTileClick(string playerName, int x, int y)
     {
-        Debug.Log($"[CLIENT] Le joueur {playerName} a cliqué sur la case ({x}, {y})");
+        Debug.Log($"[CLIENT] Le joueur {playerName} a cliquÃ© sur la case ({x}, {y})");
     }
 
     //-------------------------------------------------------------
-    // Essaie de retrouver la phase de préparation via Player_SetupNetworkCombat
+    // Essaie de retrouver la phase de prÃ©paration via Player_SetupNetworkCombat
     private bool TryGetPreparationPhase(out Phase_PreparationPlacementCombat phase)
     {
         phase = null;
 
-        // Vérifie que ce GameObject a bien le script de setup réseau
+        // VÃ©rifie que ce GameObject a bien le script de setup rÃ©seau
         if (!TryGetComponent(out Player_SetupNetworkCombat setup))
         {
             Debug.LogError("[SERVER] Ce joueur n'a pas de Player_SetupNetworkCombat !");
             return false;
         }
 
-        // Vérifie que la référence au manager a bien été synchronisée
+        // VÃ©rifie que la rÃ©fÃ©rence au manager a bien Ã©tÃ© synchronisÃ©e
         if (setup.combatManagerIdentity == null)
         {
-            Debug.LogError("[SERVER] combatManagerIdentity non assigné !");
+            Debug.LogError("[SERVER] combatManagerIdentity non assignÃ© !");
             return false;
         }
 
-        // Récupère le CombatManager depuis l'identité réseau
+        // RÃ©cupÃ¨re le CombatManager depuis l'identitÃ© rÃ©seau
         Combat_PhaseManager manager = setup.combatManagerIdentity.GetComponent<Combat_PhaseManager>();
         if (manager == null)
         {
-            Debug.LogError("[SERVER] Impossible d'accéder au Combat_PhaseManager !");
+            Debug.LogError("[SERVER] Impossible d'accÃ©der au Combat_PhaseManager !");
             return false;
         }
 
-        // Accède à la phase de préparation
+        // AccÃ¨de Ã  la phase de prÃ©paration
         phase = manager.phasePrepa;
         return true;
     }

@@ -73,6 +73,7 @@
     <Compile Include="Assets\1 - Scripts\System\Equipments\EquipmentManager.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\ItemDatabase.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\EquipmentData.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\UI\UI_ControllerLocal.cs" />
     <Compile Include="Assets\999 - BASE PROJECT\InputSystem_Actions.cs" />
     <Compile Include="Assets\1 - Scripts\System\Player\Stats\DetailedStatsPanel.cs" />
     <Compile Include="Assets\1 - Scripts\Network\MyNetworkManager.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Assets\1 - Scripts\Scene - Teleporter\TeleportCombat.cs" />
     <Compile Include="Assets\1 - Scripts\Fight\Player_Combat\Player_SetupNetworkCombat.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\StatsUIBinder.cs" />
+    <Compile Include="Assets\1 - Scripts\Fight\Player_Combat\Player_ControllerPhaseTurnByTurn.cs" />
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillTreeBranch.cs" />
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillTreeManager.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\InventoryItem.cs" />

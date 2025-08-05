@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+
 //--------------------------------------------------------------
 //--------------------------------------------------------------
 public class Phase_PreparationPlacementCombat : NetworkBehaviour
@@ -37,6 +39,9 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
             PlaceAllEntities();
 
             Debug_ShowEntityTileLinks();
+
+            // ✅ Lancement du check readiness global
+            StartCoroutine(CheckAllFightersReady());
         }
     }
 
@@ -93,7 +98,7 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
                 }
 
                 NetworkServer.Spawn(tile);
-                tileGrid.RegisterTile(tile); // Nouveau : enregistre la tuile dans la grille
+                tileGrid.RegisterTile(tile);
             }
         }
 
@@ -113,7 +118,6 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
     }
 
     //--------------------------------------------------------------
-    // Place dynamiquement une seule entité (joueur ou monstre)
     [Server]
     public void PlaceEntity(GameObject entityObj)
     {
@@ -135,12 +139,7 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
         }
 
         Vector3 newPosition = tile.transform.position + Vector3.up * 0.5f;
-        Quaternion newRotation = Quaternion.identity;
-
-        if (team == 0)
-            newRotation = Quaternion.Euler(rotationGreenTeamEuler);
-        else if (team == 1)
-            newRotation = Quaternion.Euler(rotationRedTeamEuler);
+        Quaternion newRotation = (team == 0) ? Quaternion.Euler(rotationGreenTeamEuler) : Quaternion.Euler(rotationRedTeamEuler);
 
         entityObj.transform.position = newPosition;
         entityObj.transform.rotation = newRotation;
@@ -150,9 +149,15 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
             setup.SetInitialPosition(newPosition);
         }
 
-        tileGrid.RegisterEntity(entityObj, tile); // Nouveau : enregistrement dans la grille
+        tileGrid.RegisterEntity(entityObj, tile);
 
         Debug.Log($"[Phase_Preparation] Nouvelle entité placée : {entityObj.name} sur {tile.name}");
+
+        if (entityObj.CompareTag("Monster"))
+        {
+            stats.isReady = true;
+            Debug.Log($"[Phase_Preparation] {entityObj.name} est un monstre → isReady = true");
+        }
     }
 
     //--------------------------------------------------------------
@@ -161,8 +166,7 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
     {
         foreach (GameObject tile in tileGrid.GetAllTiles())
         {
-            if (!tileGrid.IsTileFree(tile))
-                continue;
+            if (!tileGrid.IsTileFree(tile)) continue;
 
             if (tile.TryGetComponent(out Setup_NetworkTile setup))
             {
@@ -216,53 +220,19 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
     }
 
     //--------------------------------------------------------------
-    // Appelée par un joueur pour demander à changer de tuile
     [Server]
     public void TryMoveEntityToTile(GameObject playerObj, int x, int y)
     {
-        if (!isActiveAndEnabled)
-        {
-            Debug.LogWarning("[Phase_Preparation] Phase inactive, déplacement refusé.");
-            return;
-        }
+        if (!isActiveAndEnabled) return;
 
         GameObject tile = tileGrid.GetTileAtCoordinates(x, y);
+        if (tile == null) return;
+        if (!tile.TryGetComponent(out Setup_NetworkTile setup)) return;
+        if (setup.currentState != TileState.TeamGreen) return;
+        if (!tileGrid.IsTileFree(tile)) return;
 
-        if (tile == null)
-        {
-            Debug.LogError($"[TryMoveEntityToTile] Tile ({x},{y}) introuvable !");
-            return;
-        }
-
-        if (!tile.TryGetComponent(out Setup_NetworkTile setup))
-        {
-            Debug.LogError($"[TryMoveEntityToTile] La tuile ({x},{y}) n’a pas de Setup_NetworkTile !");
-            return;
-        }
-
-        if (setup.currentState != TileState.TeamGreen)
-        {
-            Debug.LogWarning($"[TryMoveEntityToTile] La case ({x},{y}) n’est pas de l’équipe verte.");
-            return;
-        }
-
-        if (!tileGrid.IsTileFree(tile))
-        {
-            Debug.LogWarning($"[TryMoveEntityToTile] La case ({x},{y}) est déjà occupée.");
-            return;
-        }
-
-        if (!playerObj.TryGetComponent(out Entity_StatistiqueCombat stats))
-        {
-            Debug.LogWarning("[TryMoveEntityToTile] Entité sans Entity_StatistiqueCombat.");
-            return;
-        }
-
-        if (stats.team != 0)
-        {
-            Debug.LogWarning("[TryMoveEntityToTile] Seul un joueur de l’équipe verte peut se déplacer.");
-            return;
-        }
+        if (!playerObj.TryGetComponent(out Entity_StatistiqueCombat stats)) return;
+        if (stats.team != 0) return;
 
         Vector3 newPosition = tile.transform.position + Vector3.up * 0.5f;
         Quaternion newRotation = Quaternion.Euler(rotationGreenTeamEuler);
@@ -278,5 +248,44 @@ public class Phase_PreparationPlacementCombat : NetworkBehaviour
         tileGrid.RegisterEntity(playerObj, tile);
 
         Debug.Log($"[Phase_Preparation] {playerObj.name} s’est déplacé sur {tile.name}");
+    }
+
+    //--------------------------------------------------------------
+    [Server]
+    private IEnumerator CheckAllFightersReady()
+    {
+        Debug.Log("[Phase_Preparation] Vérification readiness de tous les combattants...");
+
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            List<GameObject> allFighters = manager.phaseEnter.AllFighters;
+            bool allFightersReady = true;
+
+            foreach (GameObject entityObj in allFighters)
+            {
+                if (entityObj == null) continue;
+
+                if (!entityObj.TryGetComponent(out Entity_StatistiqueCombat stats))
+                {
+                    allFightersReady = false;
+                    break;
+                }
+
+                if (!stats.isReady)
+                {
+                    allFightersReady = false;
+                    break;
+                }
+            }
+
+            if (allFightersReady)
+            {
+                Debug.Log("[Phase_Preparation] TOUS les combattants sont prêts → Transition vers TourParTour.");
+                manager.StartPhase(CombatPhase.TurnByTurn);
+                yield break;
+            }
+        }
     }
 }

@@ -5,9 +5,9 @@ using UnityEngine;
 public class Entity_StatistiqueCombat : NetworkBehaviour
 {
     [Header("État de l'entité")]
-    [SerializeField] public bool isFight = false;
-    [SerializeField] public bool isDead = false;
-    [SerializeField] public bool isReady = false;
+    [SyncVar] public bool isFight = false;
+    [SyncVar(hook = nameof(OnDeadChanged))] public bool isDead = false;
+    [SyncVar(hook = nameof(OnReadyChanged))] public bool isReady = false;
 
     [Header("Team")]
     [SyncVar] public int team; // 0 = Verte, 1 = Rouge
@@ -18,7 +18,6 @@ public class Entity_StatistiqueCombat : NetworkBehaviour
     [SerializeField] public int basePM = 4;
     [SerializeField] public int basePO = 0;
     [SerializeField] public int baseInitiative;
-
     [SerializeField][Range(0, 100)] public float baseCritChance;
     [SerializeField] public int baseForce;
     [SerializeField] public int baseDexterite;
@@ -48,7 +47,6 @@ public class Entity_StatistiqueCombat : NetworkBehaviour
     [SyncVar(hook = nameof(OnResFoiChanged))][Range(0, 100)] public float currentResistanceFoi;
 
     //------------------------------------------------------------
-    // Initialisation des stats depuis les valeurs de base (serveur uniquement)
     [Server]
     public void InitStatsFromBase()
     {
@@ -70,7 +68,6 @@ public class Entity_StatistiqueCombat : NetworkBehaviour
         Debug.Log($"[Stats] Stats initialisées pour {gameObject.name}");
     }
 
-    //------------------------------------------------------------
     [Server]
     public void ResetTurnStats()
     {
@@ -79,7 +76,6 @@ public class Entity_StatistiqueCombat : NetworkBehaviour
     }
 
     //------------------------------------------------------------
-    // Hooks déclenchés automatiquement côté client
     private void OnHPChanged(int oldVal, int newVal) => Debug.Log($"[SyncVar] HP : {oldVal} → {newVal}");
     private void OnPAChanged(int oldVal, int newVal) => Debug.Log($"[SyncVar] PA : {oldVal} → {newVal}");
     private void OnPMChanged(int oldVal, int newVal) => Debug.Log($"[SyncVar] PM : {oldVal} → {newVal}");
@@ -94,4 +90,22 @@ public class Entity_StatistiqueCombat : NetworkBehaviour
     private void OnResDexChanged(float oldVal, float newVal) => Debug.Log($"[SyncVar] Résistance Dextérité : {oldVal}% → {newVal}%");
     private void OnResMagieChanged(float oldVal, float newVal) => Debug.Log($"[SyncVar] Résistance Magie : {oldVal}% → {newVal}%");
     private void OnResFoiChanged(float oldVal, float newVal) => Debug.Log($"[SyncVar] Résistance Foi : {oldVal}% → {newVal}%");
+
+    private void OnDeadChanged(bool oldVal, bool newVal)
+    {
+        Debug.Log($"[SyncVar] isDead : {oldVal} → {newVal} pour {gameObject.name}");
+    }
+
+    private void OnReadyChanged(bool oldVal, bool newVal)
+    {
+        Debug.Log($"[SyncVar] isReady : {oldVal} → {newVal} pour {gameObject.name}");
+    }
+
+    [Command]
+    public void CmdToggleReady()
+    {
+        isReady = !isReady;
+        Debug.Log($"[SERVER] {gameObject.name} → isReady = {isReady}");
+    }
+
 }
