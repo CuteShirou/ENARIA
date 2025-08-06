@@ -6,7 +6,7 @@ public class cerealesprogress : MonoBehaviour
 {
     public float x;
     public float y;
-    public float height;
+    public static float height;
     
     
     // get the transform of the OuiOuiBaguette object

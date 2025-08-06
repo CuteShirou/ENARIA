@@ -83,6 +83,7 @@
     <Compile Include="Assets\0 - Scripts\Network\DebugNetworkSpawn.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\Utilities\MobileDisableAutoSwitchControls.cs" />
     <Compile Include="Assets\0 - Scripts\BDD - DATA\DATA\CraftRecipeData.cs" />
+    <Compile Include="Assets\0 - Scripts\System\OnClick3D.cs" />
     <Compile Include="Assets\0 - Scripts\System\Crafts\CraftManager.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\plantes\minijeu plantes.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualJoystick.cs" />
@@ -101,8 +102,8 @@
     <Compile Include="Assets\0 - Scripts\System\SkillTree\SkillTreeBranch.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\minage\minage button.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\cereales\cereales gameplay.cs" />
-    <Compile Include="Assets\0 - Scripts\System\Jobs\Peche\peche progress.cs" />
     <Compile Include="Assets\0 - Scripts\GridManager\ReachableTilesHighlighter.cs" />
+    <Compile Include="Assets\0 - Scripts\System\Jobs\Peche\peche progress.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Menu\MainMenu.cs" />
     <Compile Include="Assets\0 - Scripts\Inventory\InventoryItem.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Craft\CraftingPropertyDrawer.cs" />
@@ -972,6 +973,9 @@
     <Reference Include="Mono.CecilX.Mdb">
       <HintPath>C:\Users\gamer\source\repos\ENARIA\Assets\6 - Tools\Mirror\Plugins\Mono.Cecil\Mono.CecilX.Mdb.dll</HintPath>
     </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>C:\Users\gamer\source\repos\ENARIA\Assets\0 - Scripts\System\RATS Plugins\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
       <HintPath>C:\Users\gamer\source\repos\ENARIA\Library\PackageCache\com.unity.collections@1.4.0\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
     </Reference>
@@ -995,9 +999,6 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>C:\Users\gamer\source\repos\ENARIA\Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="0Harmony">
-      <HintPath>C:\Users\gamer\source\repos\ENARIA\Assets\0 - Scripts\System\RATS Plugins\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity 2023.2.20f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
@@ -1407,11 +1408,11 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>C:\Users\gamer\source\repos\ENARIA\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
-      <HintPath>C:\Users\gamer\source\repos\ENARIA\Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.PlasticSCM.Editor">
       <HintPath>C:\Users\gamer\source\repos\ENARIA\Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
+      <HintPath>C:\Users\gamer\source\repos\ENARIA\Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Splines">
       <HintPath>C:\Users\gamer\source\repos\ENARIA\Library\ScriptAssemblies\Unity.Splines.dll</HintPath>
@@ -1540,13 +1541,13 @@
       <Project>{ab397a14-f7cf-ecff-4d37-5a6590d8ff9b}</Project>
       <Name>Mirror</Name>
     </ProjectReference>
-    <ProjectReference Include="SimpleWebTransport.csproj">
-      <Project>{26f03bbd-d252-a46e-bf34-274af1638fc6}</Project>
-      <Name>SimpleWebTransport</Name>
-    </ProjectReference>
     <ProjectReference Include="one.razgriz.rats.csproj">
       <Project>{91b9cfe3-43ef-94b7-3e63-30370889976c}</Project>
       <Name>one.razgriz.rats</Name>
+    </ProjectReference>
+    <ProjectReference Include="SimpleWebTransport.csproj">
+      <Project>{26f03bbd-d252-a46e-bf34-274af1638fc6}</Project>
+      <Name>SimpleWebTransport</Name>
     </ProjectReference>
     <ProjectReference Include="Mirror.CompilerSymbols.csproj">
       <Project>{207332ad-b50a-fbbe-3c28-fc131553b823}</Project>

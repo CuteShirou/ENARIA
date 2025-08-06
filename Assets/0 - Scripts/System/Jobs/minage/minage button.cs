@@ -21,6 +21,7 @@ public class minagebutton : MonoBehaviour
     public GameObject pepite15;
     public float x;
     public float y;
+    public static bool Win = false;
     
     // Start is called before the first frame update
     void Start()
@@ -69,8 +70,9 @@ public class minagebutton : MonoBehaviour
             rtPepite12.anchoredPosition.x == -4000 && rtPepite12.anchoredPosition.y == -4000 &&
             rtPepite13.anchoredPosition.x == -4000 && rtPepite13.anchoredPosition.y == -4000 &&
             rtPepite14.anchoredPosition.x == -4000 && rtPepite14.anchoredPosition.y == -4000 &&
-            rtPepite15.anchoredPosition.x == -4000 && rtPepite15.anchoredPosition.y == -4000) 
+            rtPepite15.anchoredPosition.x == -4000 && rtPepite15.anchoredPosition.y == -4000)
         {
+            Win = true;
             Debug.Log("réussite");
         }
         

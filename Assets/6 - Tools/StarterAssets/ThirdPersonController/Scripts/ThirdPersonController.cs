@@ -89,6 +89,31 @@ public class ThirdPersonController : NetworkBehaviour
 
         if (UIToggle.IsInventoryOpen)
             return;
+        if (OnClick3D.cerealesIsActive) 
+            return;
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         if (EventSystem.current.IsPointerOverGameObject())
             return;

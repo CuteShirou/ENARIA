@@ -9,7 +9,7 @@ public class minijeuplantes : MonoBehaviour
     
     public float x;
     public float y;
-    public float height;
+    public static float height;
     public float gain;
     public bool lastIsA;
     public GameObject KeyA;
