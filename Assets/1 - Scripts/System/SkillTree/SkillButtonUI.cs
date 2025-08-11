@@ -65,6 +65,8 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
 
 
+//using System.Collections.Generic;
+//using Mirror;
 //using UnityEngine;
 //using UnityEngine.UI;
 //using UnityEngine.EventSystems;
@@ -101,6 +103,7 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 //    {
 //        unlocked = isUnlocked;
 //        node.isUnlocked = isUnlocked;
+//        UpdateVisual(manager.AvailablePoints, unlocked);
 //    }
 
 //    public void UpdateVisual(int points, bool isUnlocked)
@@ -112,7 +115,7 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
 //    private void OnClick()
 //    {
-//        manager.OnSkillButtonClicked(index);
+//        manager.RequestUnlock(index);
 //    }
 
 //    public void OnPointerEnter(PointerEventData eventData)

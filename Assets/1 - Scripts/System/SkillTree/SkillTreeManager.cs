@@ -139,10 +139,13 @@ public class SkillTreeManager : MonoBehaviour
 //    public readonly SyncList<bool> unlockedFlags = new SyncList<bool>();
 //    private readonly List<SkillButtonUI> allSkillButtons = new List<SkillButtonUI>();
 
+//    // Référence à ton API Unity
+//    private SkillApi skillApi;
+//    private string playerId = "1"; // à configurer dynamiquement si besoin
+
 //    public override void OnStartServer()
 //    {
 //        base.OnStartServer();
-//        // initialize unlocked flags from branches order
 //        foreach (var branch in branches)
 //            foreach (var node in branch.nodes)
 //                unlockedFlags.Add(node.isUnlocked);
@@ -151,29 +154,41 @@ public class SkillTreeManager : MonoBehaviour
 //    public override void OnStartClient()
 //    {
 //        base.OnStartClient();
+
+//        skillApi = FindFirstObjectByType<SkillApi>();
+
 //        BuildUI();
 //        unlockedFlags.Callback += OnUnlockedFlagChanged;
 //        UpdateAllSkillButtons();
+
+//        // 1) Fetch initial unlocked skills depuis le serveur
+//        skillApi.FetchUnlockedSkills(playerId,
+//            skills => {
+//                // pour chaque skill côté client, on met à jour unlockedFlags
+//                HashSet<int> ids = new HashSet<int>();
+//                foreach (var s in skills) ids.Add(s.id);
+//                for (int i = 0; i < allSkillButtons.Count; i++)
+//                    CmdSetFlag(i, ids.Contains(branches[GetBranchIndex(i)].nodes[GetNodeIndexInBranch(i)].skillData.ID));
+//            },
+//            error => Debug.LogError("Fetch skills failed: " + error)
+//        );
 //    }
 
-//    private void OnPointsChanged(int oldPoints, int newPoints)
-//    {
-//        UpdateAllSkillButtons();
-//    }
+//    // Hook SyncVar
+//    private void OnPointsChanged(int oldPoints, int newPoints) => UpdateAllSkillButtons();
 
-//    private void OnUnlockedFlagChanged(SyncList<bool>.Operation op, int index, bool oldValue, bool newValue)
+//    // Hook SyncList
+//    private void OnUnlockedFlagChanged(SyncList<bool>.Operation op, int idx, bool oldVal, bool newVal)
 //    {
-//        allSkillButtons[index].SetUnlocked(newValue);
+//        allSkillButtons[idx].SetUnlocked(newVal);
 //        UpdateAllSkillButtons();
 //    }
 
 //    private void BuildUI()
 //    {
-//        // clear previous
 //        foreach (Transform child in skillListParent) Destroy(child.gameObject);
 //        allSkillButtons.Clear();
 
-//        // container
 //        var row = new GameObject("BranchesRow");
 //        row.transform.SetParent(skillListParent, false);
 //        var hLayout = row.AddComponent<HorizontalLayoutGroup>();
@@ -199,7 +214,6 @@ public class SkillTreeManager : MonoBehaviour
 //            var fitterBranch = panel.AddComponent<ContentSizeFitter>();
 //            fitterBranch.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-//            // label
 //            var labelGO = new GameObject("Label");
 //            labelGO.transform.SetParent(panel.transform, false);
 //            var label = labelGO.AddComponent<Text>();
@@ -212,17 +226,40 @@ public class SkillTreeManager : MonoBehaviour
 //            {
 //                var go = Instantiate(skillButtonPrefab, panel.transform);
 //                var btnUI = go.GetComponent<SkillButtonUI>();
-//                btnUI.Initialize(node, this, idx, unlockedFlags.Count > idx && unlockedFlags[idx]);
+//                bool isUnlocked = unlockedFlags.Count > idx && unlockedFlags[idx];
+//                btnUI.Initialize(node, this, idx, isUnlocked);
 //                allSkillButtons.Add(btnUI);
 //                idx++;
 //            }
 //        }
 //    }
 
+//    // Client -> Server pour synchroniser drapeaux initiaux
+//    [Command]
+//    private void CmdSetFlag(int index, bool isUnlocked)
+//    {
+//        if (index >= 0 && index < unlockedFlags.Count)
+//            unlockedFlags[index] = isUnlocked;
+//    }
+
+//    /// <summary>
+//    /// Appelée par le SkillButtonUI lors du clic
+//    /// </summary>
+//    public void RequestUnlock(int index)
+//    {
+//        // 1) on poste au serveur Unity (Mirror) pour diminution de points et maj SyncList
+//        CmdTryUnlock(index);
+
+//        // 2) on poste aussi à l’API HTTP pour persistance en BDD
+//        int skillId = branches[GetBranchIndex(index)].nodes[GetNodeIndexInBranch(index)].skillData.ID;
+//        skillApi.UnlockSkill(playerId, skillId.ToString(), success => {
+//            if (!success) Debug.LogError("API Unlock failed");
+//        });
+//    }
+
 //    [Command]
 //    public void CmdTryUnlock(int index)
 //    {
-//        // Commands are only executed on server; no need for authority check here
 //        if (index < 0 || index >= unlockedFlags.Count) return;
 //        int cost = GetNodeCost(index);
 //        if (!unlockedFlags[index] && availablePoints >= cost)
@@ -244,15 +281,32 @@ public class SkillTreeManager : MonoBehaviour
 //        return int.MaxValue;
 //    }
 
-//    public void OnSkillButtonClicked(int index)
-//    {
-//        // Client invokes command
-//        CmdTryUnlock(index);
-//    }
-
 //    private void UpdateAllSkillButtons()
 //    {
 //        for (int i = 0; i < allSkillButtons.Count; i++)
 //            allSkillButtons[i].UpdateVisual(availablePoints, unlockedFlags[i]);
+//    }
+
+//    // Helpers pour retrouver branche + index interne
+//    private int GetBranchIndex(int flatIndex)
+//    {
+//        int sum = 0;
+//        for (int b = 0; b < branches.Count; b++)
+//        {
+//            if (flatIndex < sum + branches[b].nodes.Count) return b;
+//            sum += branches[b].nodes.Count;
+//        }
+//        return 0;
+//    }
+//    private int GetNodeIndexInBranch(int flatIndex)
+//    {
+//        int sum = 0;
+//        foreach (var branch in branches)
+//        {
+//            if (flatIndex < sum + branch.nodes.Count)
+//                return flatIndex - sum;
+//            sum += branch.nodes.Count;
+//        }
+//        return 0;
 //    }
 //}

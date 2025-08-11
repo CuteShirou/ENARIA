@@ -9,53 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e734b846e2090f7498272070c4c7dd99, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c40ec22df324b941bd98f01bd381eaf, type: 3}
   m_Name: EForceBranch
   m_EditorClassIdentifier: 
-  branchName: Force
+  branchName: 
   nodes:
   - skillData: {fileID: 0}
     manualIcon: {fileID: 0}
     manualName: 
     manualDescription: 
-    cost: 1
-    isUnlocked: 1
-    onUnlock:
-      m_PersistentCalls:
-        m_Calls: []
-  - skillData: {fileID: 0}
-    manualIcon: {fileID: 21300000, guid: 1f57d7e147a2a3e45a28a3e8937fc3d3, type: 3}
-    manualName: Frappe Verticale 2
-    manualDescription: 8-16 -> 18-24
-    cost: 1
-    isUnlocked: 0
-    onUnlock:
-      m_PersistentCalls:
-        m_Calls: []
-  - skillData: {fileID: 0}
-    manualIcon: {fileID: 0}
-    manualName: 
-    manualDescription: 
-    cost: 1
-    isUnlocked: 0
-    onUnlock:
-      m_PersistentCalls:
-        m_Calls: []
-  - skillData: {fileID: 0}
-    manualIcon: {fileID: 21300000, guid: 1009992b9624df04d98a40860b356114, type: 3}
-    manualName: Force Harmonieuse
-    manualDescription: 'Frappe Verticale: 18-24 -> 21-27. Charge Frontale 14-24 ->
-      17-25.'
-    cost: 1
-    isUnlocked: 0
-    onUnlock:
-      m_PersistentCalls:
-        m_Calls: []
-  - skillData: {fileID: 0}
-    manualIcon: {fileID: 0}
-    manualName: 
-    manualDescription: 
-    cost: 1
+    cost: 0
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
