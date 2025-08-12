@@ -29,6 +29,7 @@ public class OnClick3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (cerealesprogress.height >= 599)
         {
             cereales.SetActive(false);
@@ -46,6 +47,7 @@ public class OnClick3D : MonoBehaviour
             bois.SetActive(false);
             boisIsActive = false;
             Debug.Log("bois récolté");
+            boisgameplay.isstarting = true; 
         }
 
         if (pecheprogress.height >= 599)

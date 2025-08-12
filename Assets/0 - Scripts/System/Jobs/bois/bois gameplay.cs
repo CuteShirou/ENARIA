@@ -5,28 +5,31 @@ using UnityEngine;
 
 public class boisgameplay : MonoBehaviour
 {
+
+    public GameObject minijeu;
     public boisprogress progressBarScript;
-    public float gain; 
+    public  float gain; 
+    public static bool isstarting = false;
     
     public float x;
     public float y;
-    public float height;
-    public float speed;
-    public bool goup;
-    public float b;
+    public  float height;
+    public  float speed;
+    public  bool goup;
+    public  float b;
     
     
     
-    public GameObject top;
-    public GameObject bottom;
-    public float heightTB;
-    public float a;
-    public float topx;
-    public float topy;
-    public float bottomx;
-    public float bottomy;
+    public  GameObject top;
+    public  GameObject bottom;
+    public  float heightTB;
+    public  float a;
+    public  float topx;
+    public  float topy;
+    public  float bottomx;
+    public  float bottomy;
 
-    public bool lastIsTop ;
+    public  bool lastIsTop ;
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +67,14 @@ public class boisgameplay : MonoBehaviour
     void Update()
     {
        
+        if (minijeu.activeSelf == true && isstarting == true )
+        {
+            Start(); // Skip update if the mini-game is active
+            isstarting = false;
+        }
+        
+        
+        
         RectTransform rt = gameObject.GetComponent<RectTransform>();
         float move = speed * Time.deltaTime;
         x = rt.anchoredPosition.x;
