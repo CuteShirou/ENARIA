@@ -828,7 +828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b9ba07a340606948a5e78ddcd274975, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Menu overall
+  sceneAsset: {fileID: 102900000, guid: 818e2c1a936dca142b129db0fd0159ef, type: 3}
 --- !u!114 &1248552282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -874,8 +874,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1248552281}
-        m_TargetAssemblyTypeName: scenechanger, Assembly-CSharp
-        m_MethodName: change_scene
+        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
+        m_MethodName: ChangeScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1140,5 +1140,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 440775726}
   - {fileID: 1203490889}
-  - {fileID: 774336129}
   - {fileID: 618291942}
+  - {fileID: 774336129}
