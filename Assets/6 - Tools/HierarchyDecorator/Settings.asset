@@ -281,7 +281,7 @@ MonoBehaviour:
         m_StretchHeight: 0
     - prefix: '!'
       noSpaceAfterPrefix: 0
-      name: New Style
+      name: HARD TITLE
       font: {fileID: 0}
       fontSize: 15
       fontAlignment: 4
@@ -292,6 +292,86 @@ MonoBehaviour:
         backgroundColour: {r: 1, g: 1, b: 1, a: 1}
       - fontColour: {r: 1, g: 1, b: 1, a: 1}
         backgroundColour: {r: 1, g: 0, b: 0, a: 1}
+      style:
+        m_Name: HARD TITLE
+        m_Normal:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+        m_Hover:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_Active:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_Focused:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_OnNormal:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_OnHover:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_OnActive:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_OnFocused:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_Border:
+          m_Left: 0
+          m_Right: 0
+          m_Top: 0
+          m_Bottom: 0
+        m_Margin:
+          m_Left: 0
+          m_Right: 0
+          m_Top: 0
+          m_Bottom: 0
+        m_Padding:
+          m_Left: 0
+          m_Right: 0
+          m_Top: 0
+          m_Bottom: 0
+        m_Overflow:
+          m_Left: 0
+          m_Right: 0
+          m_Top: 0
+          m_Bottom: 0
+        m_Font: {fileID: 0}
+        m_FontSize: 15
+        m_FontStyle: 1
+        m_Alignment: 4
+        m_WordWrap: 0
+        m_RichText: 1
+        m_TextClipping: 0
+        m_ImagePosition: 0
+        m_ContentOffset: {x: 0, y: 0}
+        m_FixedWidth: 0
+        m_FixedHeight: 0
+        m_StretchWidth: 1
+        m_StretchHeight: 0
+    - prefix: '*'
+      noSpaceAfterPrefix: 0
+      name: BIG BLOCK
+      font: {fileID: 0}
+      fontSize: 30
+      fontAlignment: 4
+      fontStyle: 1
+      textFormatting: 2
+      modes:
+      - fontColour: {r: 0, g: 0, b: 0, a: 1}
+        backgroundColour: {r: 1, g: 1, b: 1, a: 1}
+      - fontColour: {r: 1, g: 1, b: 1, a: 1}
+        backgroundColour: {r: 0, g: 0, b: 0, a: 1}
       style:
         m_Name: New Style
         m_Normal:
@@ -347,7 +427,7 @@ MonoBehaviour:
           m_Top: 0
           m_Bottom: 0
         m_Font: {fileID: 0}
-        m_FontSize: 15
+        m_FontSize: 11
         m_FontStyle: 1
         m_Alignment: 4
         m_WordWrap: 0
@@ -492,6 +572,19 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 1
+      - displayName: SplineAnimate
+        name: UnityEngine.Splines.SplineAnimate, Unity.Splines, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: SplineAnimate
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: SplineAnimate
+          m_TextWithWhitespace: "SplineAnimate\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: TMP_SpriteAnimator
         name: TMPro.TMP_SpriteAnimator, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
@@ -567,6 +660,19 @@ MonoBehaviour:
           m_Image: {fileID: -2692084220489661059, guid: 0000000000000000d000000000000000, type: 0}
           m_Tooltip: CapsuleCollider2D
           m_TextWithWhitespace: "CapsuleCollider2D\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineConfiner2D
+        name: Unity.Cinemachine.CinemachineConfiner2D, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineConfiner2D
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineConfiner2D
+          m_TextWithWhitespace: "CinemachineConfiner2D\u200B"
         shown: 0
         excluded: 0
         isBuiltIn: 1
@@ -1068,6 +1174,19 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 1
+      - displayName: BezierShape
+        name: UnityEngine.ProBuilder.BezierShape, Unity.ProBuilder, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: BezierShape
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: BezierShape
+          m_TextWithWhitespace: "BezierShape\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: Camera
         name: UnityEngine.Camera, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
@@ -1107,6 +1226,773 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 1
+      - displayName: Cinemachine3rdPersonFollow
+        name: Unity.Cinemachine.Cinemachine3rdPersonFollow, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: Cinemachine3rdPersonFollow
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: Cinemachine3rdPersonFollow
+          m_TextWithWhitespace: "Cinemachine3rdPersonFollow\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineAutoFocus
+        name: Unity.Cinemachine.CinemachineAutoFocus, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineAutoFocus
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineAutoFocus
+          m_TextWithWhitespace: "CinemachineAutoFocus\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineBasicMultiChannelPerlin
+        name: Unity.Cinemachine.CinemachineBasicMultiChannelPerlin, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineBasicMultiChannelPerlin
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineBasicMultiChannelPerlin
+          m_TextWithWhitespace: "CinemachineBasicMultiChannelPerlin\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineBrain
+        name: Unity.Cinemachine.CinemachineBrain, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineBrain
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+          m_Tooltip: CinemachineBrain
+          m_TextWithWhitespace: "CinemachineBrain\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineBrainEvents
+        name: Unity.Cinemachine.CinemachineBrainEvents, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineBrainEvents
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineBrainEvents
+          m_TextWithWhitespace: "CinemachineBrainEvents\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineCamera
+        name: Unity.Cinemachine.CinemachineCamera, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineCamera
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+          m_Tooltip: CinemachineCamera
+          m_TextWithWhitespace: "CinemachineCamera\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineCameraEvents
+        name: Unity.Cinemachine.CinemachineCameraEvents, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineCameraEvents
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineCameraEvents
+          m_TextWithWhitespace: "CinemachineCameraEvents\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineCameraManagerEvents
+        name: Unity.Cinemachine.CinemachineCameraManagerEvents, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineCameraManagerEvents
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineCameraManagerEvents
+          m_TextWithWhitespace: "CinemachineCameraManagerEvents\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineCameraOffset
+        name: Unity.Cinemachine.CinemachineCameraOffset, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineCameraOffset
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineCameraOffset
+          m_TextWithWhitespace: "CinemachineCameraOffset\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineClearShot
+        name: Unity.Cinemachine.CinemachineClearShot, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineClearShot
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+          m_Tooltip: CinemachineClearShot
+          m_TextWithWhitespace: "CinemachineClearShot\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineCollisionImpulseSource
+        name: Unity.Cinemachine.CinemachineCollisionImpulseSource, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineCollisionImpulseSource
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineCollisionImpulseSource
+          m_TextWithWhitespace: "CinemachineCollisionImpulseSource\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineComposer
+        name: Unity.Cinemachine.CinemachineComposer, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineComposer
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineComposer
+          m_TextWithWhitespace: "CinemachineComposer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineConfiner
+        name: Unity.Cinemachine.CinemachineConfiner, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineConfiner
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineConfiner
+          m_TextWithWhitespace: "CinemachineConfiner\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineConfiner3D
+        name: Unity.Cinemachine.CinemachineConfiner3D, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineConfiner3D
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineConfiner3D
+          m_TextWithWhitespace: "CinemachineConfiner3D\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineDeoccluder
+        name: Unity.Cinemachine.CinemachineDeoccluder, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineDeoccluder
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineDeoccluder
+          m_TextWithWhitespace: "CinemachineDeoccluder\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineDollyCart
+        name: Unity.Cinemachine.CinemachineDollyCart, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineDollyCart
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineDollyCart
+          m_TextWithWhitespace: "CinemachineDollyCart\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineDoNotUpgrade
+        name: Unity.Cinemachine.CinemachineDoNotUpgrade, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineDoNotUpgrade
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineDoNotUpgrade
+          m_TextWithWhitespace: "CinemachineDoNotUpgrade\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineExternalCamera
+        name: Unity.Cinemachine.CinemachineExternalCamera, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineExternalCamera
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+          m_Tooltip: CinemachineExternalCamera
+          m_TextWithWhitespace: "CinemachineExternalCamera\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineExternalImpulseListener
+        name: Unity.Cinemachine.CinemachineExternalImpulseListener, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineExternalImpulseListener
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineExternalImpulseListener
+          m_TextWithWhitespace: "CinemachineExternalImpulseListener\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineFollow
+        name: Unity.Cinemachine.CinemachineFollow, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineFollow
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineFollow
+          m_TextWithWhitespace: "CinemachineFollow\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineFollowZoom
+        name: Unity.Cinemachine.CinemachineFollowZoom, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineFollowZoom
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineFollowZoom
+          m_TextWithWhitespace: "CinemachineFollowZoom\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineFramingTransposer
+        name: Unity.Cinemachine.CinemachineFramingTransposer, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineFramingTransposer
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineFramingTransposer
+          m_TextWithWhitespace: "CinemachineFramingTransposer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineFreeLook
+        name: Unity.Cinemachine.CinemachineFreeLook, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineFreeLook
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+          m_Tooltip: CinemachineFreeLook
+          m_TextWithWhitespace: "CinemachineFreeLook\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineFreeLookModifier
+        name: Unity.Cinemachine.CinemachineFreeLookModifier, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineFreeLookModifier
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineFreeLookModifier
+          m_TextWithWhitespace: "CinemachineFreeLookModifier\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineGroupComposer
+        name: Unity.Cinemachine.CinemachineGroupComposer, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineGroupComposer
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineGroupComposer
+          m_TextWithWhitespace: "CinemachineGroupComposer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineGroupFraming
+        name: Unity.Cinemachine.CinemachineGroupFraming, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineGroupFraming
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineGroupFraming
+          m_TextWithWhitespace: "CinemachineGroupFraming\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineHardLockToTarget
+        name: Unity.Cinemachine.CinemachineHardLockToTarget, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineHardLockToTarget
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineHardLockToTarget
+          m_TextWithWhitespace: "CinemachineHardLockToTarget\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineHardLookAt
+        name: Unity.Cinemachine.CinemachineHardLookAt, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineHardLookAt
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineHardLookAt
+          m_TextWithWhitespace: "CinemachineHardLookAt\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineImpulseListener
+        name: Unity.Cinemachine.CinemachineImpulseListener, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineImpulseListener
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineImpulseListener
+          m_TextWithWhitespace: "CinemachineImpulseListener\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineImpulseSource
+        name: Unity.Cinemachine.CinemachineImpulseSource, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineImpulseSource
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineImpulseSource
+          m_TextWithWhitespace: "CinemachineImpulseSource\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineInputAxisController
+        name: Unity.Cinemachine.CinemachineInputAxisController, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineInputAxisController
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineInputAxisController
+          m_TextWithWhitespace: "CinemachineInputAxisController\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineInputProvider
+        name: Unity.Cinemachine.CinemachineInputProvider, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineInputProvider
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineInputProvider
+          m_TextWithWhitespace: "CinemachineInputProvider\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineLegacyCameraEvents
+        name: Unity.Cinemachine.CinemachineLegacyCameraEvents, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineLegacyCameraEvents
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineLegacyCameraEvents
+          m_TextWithWhitespace: "CinemachineLegacyCameraEvents\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineMixingCamera
+        name: Unity.Cinemachine.CinemachineMixingCamera, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineMixingCamera
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+          m_Tooltip: CinemachineMixingCamera
+          m_TextWithWhitespace: "CinemachineMixingCamera\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineOrbitalFollow
+        name: Unity.Cinemachine.CinemachineOrbitalFollow, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineOrbitalFollow
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineOrbitalFollow
+          m_TextWithWhitespace: "CinemachineOrbitalFollow\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineOrbitalTransposer
+        name: Unity.Cinemachine.CinemachineOrbitalTransposer, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineOrbitalTransposer
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineOrbitalTransposer
+          m_TextWithWhitespace: "CinemachineOrbitalTransposer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachinePanTilt
+        name: Unity.Cinemachine.CinemachinePanTilt, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachinePanTilt
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachinePanTilt
+          m_TextWithWhitespace: "CinemachinePanTilt\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachinePath
+        name: Unity.Cinemachine.CinemachinePath, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachinePath
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachinePath
+          m_TextWithWhitespace: "CinemachinePath\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachinePipeline
+        name: Unity.Cinemachine.CinemachinePipeline, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachinePipeline
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachinePipeline
+          m_TextWithWhitespace: "CinemachinePipeline\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachinePixelPerfect
+        name: Unity.Cinemachine.CinemachinePixelPerfect, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachinePixelPerfect
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachinePixelPerfect
+          m_TextWithWhitespace: "CinemachinePixelPerfect\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachinePositionComposer
+        name: Unity.Cinemachine.CinemachinePositionComposer, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachinePositionComposer
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachinePositionComposer
+          m_TextWithWhitespace: "CinemachinePositionComposer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachinePOV
+        name: Unity.Cinemachine.CinemachinePOV, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachinePOV
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachinePOV
+          m_TextWithWhitespace: "CinemachinePOV\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineRecomposer
+        name: Unity.Cinemachine.CinemachineRecomposer, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineRecomposer
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineRecomposer
+          m_TextWithWhitespace: "CinemachineRecomposer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineRotationComposer
+        name: Unity.Cinemachine.CinemachineRotationComposer, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineRotationComposer
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineRotationComposer
+          m_TextWithWhitespace: "CinemachineRotationComposer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineSameAsFollowTarget
+        name: Unity.Cinemachine.CinemachineSameAsFollowTarget, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineSameAsFollowTarget
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineSameAsFollowTarget
+          m_TextWithWhitespace: "CinemachineSameAsFollowTarget\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineSequencerCamera
+        name: Unity.Cinemachine.CinemachineSequencerCamera, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineSequencerCamera
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+          m_Tooltip: CinemachineSequencerCamera
+          m_TextWithWhitespace: "CinemachineSequencerCamera\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineSmoothPath
+        name: Unity.Cinemachine.CinemachineSmoothPath, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineSmoothPath
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineSmoothPath
+          m_TextWithWhitespace: "CinemachineSmoothPath\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineSplineCart
+        name: Unity.Cinemachine.CinemachineSplineCart, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineSplineCart
+          m_Image: {fileID: 2800000, guid: 9c4067e4e9dc4483f8164d5d36b6e2c5, type: 3}
+          m_Tooltip: CinemachineSplineCart
+          m_TextWithWhitespace: "CinemachineSplineCart\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineSplineDolly
+        name: Unity.Cinemachine.CinemachineSplineDolly, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineSplineDolly
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineSplineDolly
+          m_TextWithWhitespace: "CinemachineSplineDolly\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineSplineRoll
+        name: Unity.Cinemachine.CinemachineSplineRoll, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineSplineRoll
+          m_Image: {fileID: 2800000, guid: 9c4067e4e9dc4483f8164d5d36b6e2c5, type: 3}
+          m_Tooltip: CinemachineSplineRoll
+          m_TextWithWhitespace: "CinemachineSplineRoll\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineStateDrivenCamera
+        name: Unity.Cinemachine.CinemachineStateDrivenCamera, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineStateDrivenCamera
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+          m_Tooltip: CinemachineStateDrivenCamera
+          m_TextWithWhitespace: "CinemachineStateDrivenCamera\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineStoryboard
+        name: Unity.Cinemachine.CinemachineStoryboard, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineStoryboard
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineStoryboard
+          m_TextWithWhitespace: "CinemachineStoryboard\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineTargetGroup
+        name: Unity.Cinemachine.CinemachineTargetGroup, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineTargetGroup
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineTargetGroup
+          m_TextWithWhitespace: "CinemachineTargetGroup\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineThirdPersonAim
+        name: Unity.Cinemachine.CinemachineThirdPersonAim, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineThirdPersonAim
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineThirdPersonAim
+          m_TextWithWhitespace: "CinemachineThirdPersonAim\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineThirdPersonFollow
+        name: Unity.Cinemachine.CinemachineThirdPersonFollow, Unity.Cinemachine,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineThirdPersonFollow
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineThirdPersonFollow
+          m_TextWithWhitespace: "CinemachineThirdPersonFollow\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineTouchInputMapper
+        name: Unity.Cinemachine.CinemachineTouchInputMapper, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineTouchInputMapper
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineTouchInputMapper
+          m_TextWithWhitespace: "CinemachineTouchInputMapper\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineTrackedDolly
+        name: Unity.Cinemachine.CinemachineTrackedDolly, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineTrackedDolly
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineTrackedDolly
+          m_TextWithWhitespace: "CinemachineTrackedDolly\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineTransposer
+        name: Unity.Cinemachine.CinemachineTransposer, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineTransposer
+          m_Image: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+          m_Tooltip: CinemachineTransposer
+          m_TextWithWhitespace: "CinemachineTransposer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineTriggerAction
+        name: Unity.Cinemachine.CinemachineTriggerAction, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineTriggerAction
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineTriggerAction
+          m_TextWithWhitespace: "CinemachineTriggerAction\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: CinemachineUniversalPixelPerfect
         name: UnityEngine.Rendering.Universal.CinemachineUniversalPixelPerfect, Unity.RenderPipelines.Universal.2D.Runtime,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -1115,6 +2001,32 @@ MonoBehaviour:
           m_Image: {fileID: 2800000, guid: ec2f01df0bb1bfe459b5562a9e71c8d4, type: 3}
           m_Tooltip: CinemachineUniversalPixelPerfect
           m_TextWithWhitespace: "CinemachineUniversalPixelPerfect\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineVirtualCamera
+        name: Unity.Cinemachine.CinemachineVirtualCamera, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineVirtualCamera
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+          m_Tooltip: CinemachineVirtualCamera
+          m_TextWithWhitespace: "CinemachineVirtualCamera\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: CinemachineVolumeSettings
+        name: Unity.Cinemachine.CinemachineVolumeSettings, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineVolumeSettings
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachineVolumeSettings
+          m_TextWithWhitespace: "CinemachineVolumeSettings\u200B"
         shown: 0
         excluded: 0
         isBuiltIn: 1
@@ -1601,6 +2513,19 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 1
+      - displayName: Entity
+        name: UnityEngine.ProBuilder.Entity, Unity.ProBuilder, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: Entity
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: Entity
+          m_TextWithWhitespace: "Entity\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: EventTrigger
         name: UnityEngine.EventSystems.EventTrigger, UnityEngine.UI, Version=1.0.0.0,
           Culture=neutral, PublicKeyToken=null
@@ -1713,6 +2638,19 @@ MonoBehaviour:
           m_Image: {fileID: 8779834242249542326, guid: 0000000000000000d000000000000000, type: 0}
           m_Tooltip: GridLayout
           m_TextWithWhitespace: "GridLayout\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: GroupWeightManipulator
+        name: Unity.Cinemachine.GroupWeightManipulator, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: GroupWeightManipulator
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: GroupWeightManipulator
+          m_TextWithWhitespace: "GroupWeightManipulator\u200B"
         shown: 0
         excluded: 0
         isBuiltIn: 1
@@ -2017,6 +2955,19 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 1
+      - displayName: PolyShape
+        name: UnityEngine.ProBuilder.PolyShape, Unity.ProBuilder, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: PolyShape
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: PolyShape
+          m_TextWithWhitespace: "PolyShape\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: ProbeTouchupVolume
         name: UnityEngine.Rendering.ProbeTouchupVolume, Unity.RenderPipelines.Core.Runtime,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -2051,6 +3002,19 @@ MonoBehaviour:
           m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
           m_Tooltip: ProbeVolumePerSceneData
           m_TextWithWhitespace: "ProbeVolumePerSceneData\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: ProBuilderShape
+        name: UnityEngine.ProBuilder.Shapes.ProBuilderShape, Unity.ProBuilder, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: ProBuilderShape
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: ProBuilderShape
+          m_TextWithWhitespace: "ProBuilderShape\u200B"
         shown: 0
         excluded: 0
         isBuiltIn: 1
@@ -2186,6 +3150,45 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 1
+      - displayName: SplineContainer
+        name: UnityEngine.Splines.SplineContainer, Unity.Splines, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: SplineContainer
+          m_Image: {fileID: 2800000, guid: ef393047d79a40a4abf8394716d6d703, type: 3}
+          m_Tooltip: SplineContainer
+          m_TextWithWhitespace: "SplineContainer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: SplineExtrude
+        name: UnityEngine.Splines.SplineExtrude, Unity.Splines, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: SplineExtrude
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: SplineExtrude
+          m_TextWithWhitespace: "SplineExtrude\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: SplineInstantiate
+        name: UnityEngine.Splines.SplineInstantiate, Unity.Splines, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: SplineInstantiate
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: SplineInstantiate
+          m_TextWithWhitespace: "SplineInstantiate\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: SpriteMask
         name: UnityEngine.SpriteMask, UnityEngine.SpriteMaskModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
@@ -2316,6 +3319,19 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 0
+      - displayName: TriggerBehaviour
+        name: UnityEngine.ProBuilder.TriggerBehaviour, Unity.ProBuilder, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: TriggerBehaviour
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: TriggerBehaviour
+          m_TextWithWhitespace: "TriggerBehaviour\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: UIDocument
         name: UnityEngine.UIElements.UIDocument, UnityEngine.UIElementsModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
@@ -3908,6 +4924,19 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 1
+      - displayName: ProBuilderMesh
+        name: UnityEngine.ProBuilder.ProBuilderMesh, Unity.ProBuilder, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: ProBuilderMesh
+          m_Image: {fileID: 2800000, guid: 432b3086cebdc438d9d33de3669fb063, type: 2}
+          m_Tooltip: ProBuilderMesh
+          m_TextWithWhitespace: "ProBuilderMesh\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: Renderer
         name: UnityEngine.Renderer, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
@@ -4118,6 +5147,19 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 0
+      - displayName: CinemachineCollider
+        name: Unity.Cinemachine.CinemachineCollider, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachineCollider
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CinemachineCollider
+          m_TextWithWhitespace: "CinemachineCollider\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: Collider
         name: UnityEngine.Collider, UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
@@ -4126,6 +5168,19 @@ MonoBehaviour:
           m_Image: {fileID: 8779834242249542326, guid: 0000000000000000d000000000000000, type: 0}
           m_Tooltip: Collider
           m_TextWithWhitespace: "Collider\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: ColliderBehaviour
+        name: UnityEngine.ProBuilder.ColliderBehaviour, Unity.ProBuilder, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: ColliderBehaviour
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: ColliderBehaviour
+          m_TextWithWhitespace: "ColliderBehaviour\u200B"
         shown: 0
         excluded: 0
         isBuiltIn: 1
@@ -4318,11 +5373,11 @@ MonoBehaviour:
         script: {fileID: 11500000, guid: 1ca002da428252441b92f28d83c8a65f, type: 3}
         hasToggle: 1
       - displayName: CinemachineBrain
-        name: Cinemachine.CinemachineBrain, Cinemachine, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
+        name: Unity.Cinemachine.CinemachineBrain, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
         content:
           m_Text: CinemachineBrain
-          m_Image: {fileID: 2800000, guid: 5f2a108eb023faf43a809979fd3d38f2, type: 3}
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
           m_Tooltip: CinemachineBrain
           m_TextWithWhitespace: "CinemachineBrain\u200B"
         shown: 0
@@ -4331,11 +5386,11 @@ MonoBehaviour:
         script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
         hasToggle: 1
       - displayName: CinemachineVirtualCamera
-        name: Cinemachine.CinemachineVirtualCamera, Cinemachine, Version=0.0.0.0,
+        name: Unity.Cinemachine.CinemachineVirtualCamera, Unity.Cinemachine, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
         content:
           m_Text: CinemachineVirtualCamera
-          m_Image: {fileID: 2800000, guid: 5f2a108eb023faf43a809979fd3d38f2, type: 3}
+          m_Image: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
           m_Tooltip: CinemachineVirtualCamera
           m_TextWithWhitespace: "CinemachineVirtualCamera\u200B"
         shown: 0
@@ -4344,8 +5399,8 @@ MonoBehaviour:
         script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
         hasToggle: 1
       - displayName: ThirdPersonController
-        name: StarterAssets.ThirdPersonController, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
+        name: ThirdPersonController, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
         content:
           m_Text: ThirdPersonController
           m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
@@ -4408,5 +5463,132 @@ MonoBehaviour:
         isBuiltIn: 0
         script: {fileID: 11500000, guid: 901182334643ba1438a25accc6bd0c79, type: 3}
         hasToggle: 1
+      - displayName: NetworkAnimator
+        name: Mirror.NetworkAnimator, Mirror.Components, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: NetworkAnimator
+          m_Image: {fileID: 2800000, guid: 7453abfe9e8b2c04a8a47eb536fe21eb, type: 3}
+          m_Tooltip: NetworkAnimator
+          m_TextWithWhitespace: "NetworkAnimator\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+        hasToggle: 1
+      - displayName: NetworkIdentity
+        name: Mirror.NetworkIdentity, Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: NetworkIdentity
+          m_Image: {fileID: 2800000, guid: 7453abfe9e8b2c04a8a47eb536fe21eb, type: 3}
+          m_Tooltip: NetworkIdentity
+          m_TextWithWhitespace: "NetworkIdentity\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+        hasToggle: 1
+      - displayName: InventoryManager
+        name: InventoryManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: InventoryManager
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: InventoryManager
+          m_TextWithWhitespace: "InventoryManager\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: c7a6ef1077db3554580697adcd395e45, type: 3}
+        hasToggle: 1
+      - displayName: CombatStats
+        name: CombatStats, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CombatStats
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CombatStats
+          m_TextWithWhitespace: "CombatStats\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 65bf97c21f9bfa0459c26be52d1d6282, type: 3}
+        hasToggle: 1
+      - displayName: PlayerStats
+        name: PlayerStats, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: PlayerStats
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: PlayerStats
+          m_TextWithWhitespace: "PlayerStats\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 008b65620804b2e4986c5f130ed10089, type: 3}
+        hasToggle: 1
+      - displayName: EquipmentManager
+        name: EquipmentManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: EquipmentManager
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: EquipmentManager
+          m_TextWithWhitespace: "EquipmentManager\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 966fec2bac4c3ab4b808fba246bd404a, type: 3}
+        hasToggle: 1
+      - displayName: MyNetworkManager
+        name: MyNetworkManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: MyNetworkManager
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: MyNetworkManager
+          m_TextWithWhitespace: "MyNetworkManager\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: a5b5c1ee650c46946b67004969c53804, type: 3}
+        hasToggle: 1
+      - displayName: NetworkManagerHUD
+        name: Mirror.NetworkManagerHUD, Mirror, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: NetworkManagerHUD
+          m_Image: {fileID: 2800000, guid: 7453abfe9e8b2c04a8a47eb536fe21eb, type: 3}
+          m_Tooltip: NetworkManagerHUD
+          m_TextWithWhitespace: "NetworkManagerHUD\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
+        hasToggle: 1
+      - displayName: KcpTransport
+        name: kcp2k.KcpTransport, Mirror.Transports, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: KcpTransport
+          m_Image: {fileID: 2800000, guid: 7453abfe9e8b2c04a8a47eb536fe21eb, type: 3}
+          m_Tooltip: KcpTransport
+          m_TextWithWhitespace: "KcpTransport\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 6b0fecffa3f624585964b0d0eb21b18e, type: 3}
+        hasToggle: 1
+      - displayName: NetworkStartPosition
+        name: Mirror.NetworkStartPosition, Mirror, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: NetworkStartPosition
+          m_Image: {fileID: 2800000, guid: 7453abfe9e8b2c04a8a47eb536fe21eb, type: 3}
+          m_Tooltip: NetworkStartPosition
+          m_TextWithWhitespace: "NetworkStartPosition\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 41f84591ce72545258ea98cb7518d8b9, type: 3}
+        hasToggle: 1
     unityVersion: 2023.2.20f1
-    unityCount: 306
+    unityCount: 374
