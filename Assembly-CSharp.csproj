@@ -69,6 +69,7 @@
     <Compile Include="Assets\1 - Scripts\GridManager\GridManager.cs" />
     <Compile Include="Assets\1 - Scripts\System\Crafts\CraftIngredient.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Menu\MainMenu.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Menu\RequireLogin.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\InventoryManager.cs" />
     <Compile Include="Assets\1 - Scripts\System\Quest\ItemReward.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\CraftDetailUI.cs" />
@@ -117,7 +118,9 @@
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualButton.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\BDD\QuestSaver.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\Utilities\MobileDisableAutoSwitchControls.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Menu\NavigationManager.cs" />
     <Compile Include="Assets\1 - Scripts\System\SkillTree\SkillNode.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Menu\ForceLoginForTest.cs" />
     <Compile Include="Assets\1 - Scripts\Inventory\InventorySlot.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Options\ScreenModeManager.cs" />
     <Compile Include="Assets\1 - Scripts\System\Player\PlayerStats.cs" />
@@ -132,6 +135,7 @@
     <Compile Include="Assets\1 - Scripts\Network\DebugNetworkSpawn.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\UI\FriendSearchUI.cs" />
     <Compile Include="Assets\1 - Scripts\Tools\Quest\QuestTestButton.cs" />
+    <Compile Include="Assets\1 - Scripts\Tools\Menu\LoginObserver.cs" />
     <Compile Include="Assets\1 - Scripts\GridManager\TileCoord.cs" />
     <Compile Include="Assets\1 - Scripts\BDD - DATA\DATA\RessourceData.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\ThirdPersonController\Scripts\ThirdPersonController.cs" />

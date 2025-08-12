@@ -35,9 +35,21 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/999 - BASE PROJECT/Scenes/CombatScene.unity
     guid: 4e1c836d57e93d844b66f80027887d1e
-  - enabled: 1
+  - enabled: 0
     path: Assets/999 - BASE PROJECT/Scenes/UI/Chat.unity
     guid: 1fbabdde37f9c944982e773679bf63aa
+  - enabled: 1
+    path: Assets/999 - BASE PROJECT/Scenes/MASTER SCENE/Register.unity
+    guid: b7dbaed3a5bbdfe44bda3f810a04c32f
+  - enabled: 1
+    path: Assets/999 - BASE PROJECT/Scenes/UI/CharSelection.unity
+    guid: 256428f151afb504692a352947d9be6d
+  - enabled: 1
+    path: Assets/999 - BASE PROJECT/Scenes/UI/CharCreation.unity
+    guid: 0eae1e70a3c73374186eca60bc99492c
+  - enabled: 1
+    path: Assets/999 - BASE PROJECT/Scenes/MASTER SCENE/Login.unity
+    guid: 8d3399c79e15a9f489ee58e21140af41
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
