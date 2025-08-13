@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 
 //----------------------------------------------------------
+// Setup Network Name Player GameObject
 public class SetupPlayer : NetworkBehaviour
 {
     // Appelé sur tous (clients + serveur)

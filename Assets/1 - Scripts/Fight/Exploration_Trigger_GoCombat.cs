@@ -4,6 +4,10 @@ using System.Collections;
 //----------------------------------------------------------
 public class Exploration_Trigger_GoCombat : MonoBehaviour
 {
+    [Header("Save Settings (Offsets)")]
+    [SerializeField] private float offsetX = 0f;  // Décalage appliqué sur l'axe X lors de la sauvegarde de la position
+    [SerializeField] private float offsetZ = 0f;  // Décalage appliqué sur l'axe Y lors de la sauvegarde de la position
+
     // Détection de la collision avec un autre collider
     private void OnTriggerEnter(Collider other)
     {
@@ -23,6 +27,9 @@ public class Exploration_Trigger_GoCombat : MonoBehaviour
             return;
         }
 
+        //Sauvegarde les informations liée à l'exploration du joueur (position + caméra)
+        SavePlayerExplorationContext(other.gameObject, info);
+
         // Recherche du manager d'arène via l'index donné
         Combat_PhaseManager phaseManager = FindArenaByIndex(info.arenaIndex);
 
@@ -35,7 +42,6 @@ public class Exploration_Trigger_GoCombat : MonoBehaviour
         // Accès à la phaseEnter via le manager
         var phaseEnter = phaseManager.phaseEnter;
 
-        // Cas 1 : monstre libre
         // Cas 1 : monstre libre
         if (info.IsState(MonsterState.InNature))
         {
@@ -69,6 +75,36 @@ public class Exploration_Trigger_GoCombat : MonoBehaviour
             Debug.LogWarning("[Combat Refusé] Groupe déjà en combat actif (InFight).");
         }
     }
+
+    private void SavePlayerExplorationContext(GameObject playerGO, Exploration_InfoGroupMonster monsterInfo)
+    {
+        // Récupération du composant Entity_Info sur le joueur
+        Entity_Info entityInfo = playerGO.GetComponent<Entity_Info>();
+        if (entityInfo == null)
+        {
+            Debug.LogWarning("[SaveContext] Entity_Info introuvable sur le joueur : " + playerGO.name);
+            return;
+        }
+
+        // Calcul de la position avec décalage (X,Z) en espace monde
+
+        Vector3 originalPos = playerGO.transform.position;
+        Vector3 savedPos = new Vector3(originalPos.x + offsetX, originalPos.y , originalPos.z + offsetZ);
+
+        // Sauvegarde de la position dans Entity_Info
+        entityInfo.savePosEntity = savedPos;
+
+        // Sauvegarde de la caméra d'exploration affiliée au monstre (string id/nom)
+        entityInfo.saveCamEntity = monsterInfo.cameraExplo;
+
+        // Logs pour debug
+        Debug.Log($"[SaveContext] Position sauvegardée (avec offset) pour '{playerGO.name}' = {savedPos}");
+        if (!string.IsNullOrEmpty(entityInfo.saveCamEntity))
+            Debug.Log($"[SaveContext] Caméra d'exploration associée = '{entityInfo.saveCamEntity}'");
+        else
+            Debug.LogWarning("[SaveContext] cameraExplo vide sur le groupe de monstres, aucun nom de caméra sauvegardé.");
+    }
+
 
     // Recherche le Combat_PhaseManager de l'arène correspondante
     private Combat_PhaseManager FindArenaByIndex(int index)

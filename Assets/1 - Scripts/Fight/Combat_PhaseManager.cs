@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 //------------------------------------------------------------
 // Enum représentant les différentes phases du combat
@@ -110,5 +111,24 @@ public class Combat_PhaseManager : MonoBehaviour
     public string GetPhaseName()
     {
         return currentPhase.ToString();
+    }
+
+
+
+    [Server]
+    public void TryStopCombatIfNoPlayers()
+    {
+        if (phaseEnter == null) return;
+
+        int count = phaseEnter.greenTeam != null ? phaseEnter.greenTeam.Count : 0;
+
+        if (count <= 0)
+        {
+            // Remet l'état des monstres
+            phaseEnter.SetMonsterState(MonsterState.InNature);
+
+            // Tu peux ici déclencher une fin propre si ta phaseEnd est prête
+            Debug.Log("[Combat_PhaseManager] Aucun joueur restant. Groupe remis en InNature.");
+        }
     }
 }

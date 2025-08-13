@@ -23,6 +23,9 @@ public class Exploration_InfoGroupMonster : MonoBehaviour
     [Header("Arène associé")]
     public int arenaIndex = 0;
 
+    [Header("Caméra Exploration associé")]
+    public string cameraExplo = "";
+
     // État actuel du groupe de monstres
     [Header("État du groupe de monstres")]
     public MonsterState currentState = MonsterState.InNature;

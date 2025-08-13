@@ -5,7 +5,12 @@ using Mirror;
 public class MyNetworkManager : NetworkManager
 {
     [Header("Player attached")]
-        [SerializeField] private Transform playerParent;
+    [SerializeField] private Transform playerParent; // Parent des players en exploration (ex: 'Player List')
+
+    // FR : Accès public et en lecture seule au parent d'exploration.
+    //      Utilisé par Player_CombatExit pour remettre le joueur dans le bon dossier.
+    public Transform PlayerParent => playerParent;
+
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
         if (conn.identity != null)
@@ -17,7 +22,7 @@ public class MyNetworkManager : NetworkManager
         Transform start = GetStartPosition();
         GameObject player = Instantiate(playerPrefab, start.position, start.rotation);
 
-        // ✅ Ajouter le joueur comme enfant du parent défini
+        // ✅ Ajouter le joueur comme enfant du parent défini (ex: 'Player List')
         if (playerParent != null)
         {
             player.transform.SetParent(playerParent);
@@ -38,7 +43,7 @@ public class MyNetworkManager : NetworkManager
         Debug.Log("🟢 Client connecté, envoie AddPlayer");
         NetworkClient.Send(new AddPlayerMessage());
     }
-    
+
     void Awake()
     {
         Scene currentScene = SceneManager.GetActiveScene();
