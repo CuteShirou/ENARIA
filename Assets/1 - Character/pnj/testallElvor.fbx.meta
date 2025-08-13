@@ -1,0 +1,738 @@
+fileFormatVersion: 2
+guid: defb9f1e434e5ba498b815a82d47e89d
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: temp
+    second: {fileID: 2100000, guid: 29c683b667c72f340af7da1142298caa, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human:
+    - boneName: Elvor_Hips
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_LeftUpLeg
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_RightUpLeg
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_LeftLeg
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_RightLeg
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_LeftFoot
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_RightFoot
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_Spine
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_Spine1
+      humanName: Chest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_Neck
+      humanName: Neck
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_Head
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_LeftShoulder
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_RightShoulder
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_LeftArm
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_RightArm
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_LeftForeArm
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_RightForeArm
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_LeftHand
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_RightHand
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_LeftToeBase
+      humanName: LeftToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_RightToeBase
+      humanName: RightToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Elvor_Spine2
+      humanName: UpperChest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: testallElvor(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor1
+      parentName: testallElvor(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_Reference
+      parentName: testallElvor(Clone)
+      position: {x: 0.0006654739, y: -0.9991452, z: 0.0006400108}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_ChestEndEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.0004506588, y: 1.6091843, z: 0.03408787}
+      rotation: {x: 0.0810991, y: 0.02612412, z: -0.002791461, w: 0.99635977}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_ChestOriginEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.00021663311, y: 1.2274959, z: 0.024950767}
+      rotation: {x: 0.08112592, y: 0.005243146, z: -0.0005602535, w: 0.9966899}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_HeadEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: 0.0045246193, y: 1.795259, z: 0.124007836}
+      rotation: {x: 0.081094705, y: 0.026124146, z: -0.0027914117, w: 0.99636006}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_Hips
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.00014730226, y: 1.1039919, z: 0.009136716}
+      rotation: {x: 0.08113167, y: 0.003876591, z: 0.00045764883, w: 0.99669576}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftUpLeg
+      parentName: Elvor_Ctrl_Hips
+      position: {x: -0.09873305, y: -0.061750516, z: 0.0038806924}
+      rotation: {x: 0.0018451061, y: -0.0052965935, z: -0.019882172, w: 0.9997866}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftLeg
+      parentName: Elvor_Ctrl_LeftUpLeg
+      position: {x: -0, y: -0.42760524, z: 0}
+      rotation: {x: 0.08463951, y: -0.0015409024, z: -0.00018186192, w: 0.9964105}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftFoot
+      parentName: Elvor_Ctrl_LeftLeg
+      position: {x: -0, y: -0.58747303, z: 0}
+      rotation: {x: -0.16680305, y: -0.0009877766, z: 0.020306626, w: 0.98578066}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftToeBase
+      parentName: Elvor_Ctrl_LeftFoot
+      position: {x: -0.00000013351443, y: -0.02134789, z: 0.20544499}
+      rotation: {x: 2.2365468e-32, y: -0, z: -1.2246467e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightUpLeg
+      parentName: Elvor_Ctrl_Hips
+      position: {x: 0.09873305, y: -0.061750516, z: 0.0038806924}
+      rotation: {x: -0.2809477, y: -0.0005807134, z: 0.018307654, w: 0.9595483}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightLeg
+      parentName: Elvor_Ctrl_RightUpLeg
+      position: {x: 0.000000028610236, y: -0.42760524, z: 0.000004183055}
+      rotation: {x: 0.14948784, y: -0.0009929269, z: -0.000110715766, w: 0.9887631}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightFoot
+      parentName: Elvor_Ctrl_RightLeg
+      position: {x: -0.000000019073491, y: -0.58747303, z: 0}
+      rotation: {x: 0.03377752, y: -0.0006959007, z: -0.01897718, w: 0.999249}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightToeBase
+      parentName: Elvor_Ctrl_RightFoot
+      position: {x: 0.000017213826, y: -0.02134789, z: 0.20544498}
+      rotation: {x: 2.2365468e-32, y: -0, z: -1.2246467e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_Spine
+      parentName: Elvor_Ctrl_Hips
+      position: {x: -0, y: 0.12443589, z: -0.004368801}
+      rotation: {x: -0.0000006761949, y: 0.001279481, z: -0.0011254295, w: 0.99999857}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_Spine1
+      parentName: Elvor_Ctrl_Spine
+      position: {x: -0, y: 0.1440743, z: -0.008260003}
+      rotation: {x: 0.000000069700484, y: 0.010316891, z: -0.0019591835, w: 0.99994487}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_Spine2
+      parentName: Elvor_Ctrl_Spine1
+      position: {x: -0, y: 0.15358844, z: -0.008260002}
+      rotation: {x: -0.000000026372094, y: 0.010316808, z: -0.0019591707, w: 0.99994487}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftShoulder
+      parentName: Elvor_Ctrl_Spine2
+      position: {x: -0.17653653, y: 0.08047594, z: -0.03620639}
+      rotation: {x: -0.11838584, y: 0.039492086, z: 0.29231647, w: 0.9481436}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftArm
+      parentName: Elvor_Ctrl_LeftShoulder
+      position: {x: -0.08437435, y: -0.11792746, z: 0}
+      rotation: {x: 0.032235276, y: 0.0036193628, z: 0.3435284, w: 0.93858194}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftForeArm
+      parentName: Elvor_Ctrl_LeftArm
+      position: {x: -0.2201458, y: 0, z: 0}
+      rotation: {x: -0.0001227607, y: 0.18066055, z: -0.00046826116, w: 0.9835454}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftHand
+      parentName: Elvor_Ctrl_LeftForeArm
+      position: {x: -0.27538455, y: 0, z: -8.881784e-18}
+      rotation: {x: 0.000065362416, y: -0.00010483153, z: -0.000001031307, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_Neck
+      parentName: Elvor_Ctrl_Spine2
+      position: {x: -0, y: 0.103865914, z: -0.019724224}
+      rotation: {x: -0.0000043336354, y: 2.8102675e-13, z: -0.00000006481409, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_Head
+      parentName: Elvor_Ctrl_Neck
+      position: {x: -0, y: 0.1748041, z: 0.042292785}
+      rotation: {x: -0.0000000637039, y: -3.9007393e-24, z: 3.9007393e-24, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightShoulder
+      parentName: Elvor_Ctrl_Spine2
+      position: {x: 0.17653653, y: 0.08047594, z: -0.03620639}
+      rotation: {x: 0.14936922, y: 0.050551873, z: -0.28681907, w: 0.9449171}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightArm
+      parentName: Elvor_Ctrl_RightShoulder
+      position: {x: 0.08437435, y: -0.11792746, z: 8.881784e-18}
+      rotation: {x: 0.03227513, y: -0.0036355373, z: -0.34352377, w: 0.9385822}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightForeArm
+      parentName: Elvor_Ctrl_RightArm
+      position: {x: 0.2201458, y: 0, z: 8.881784e-18}
+      rotation: {x: -0.00002951719, y: -0.11189715, z: 0.00045112858, w: 0.9937197}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightHand
+      parentName: Elvor_Ctrl_RightForeArm
+      position: {x: 0.27538455, y: -0.000000038146982, z: -8.881784e-18}
+      rotation: {x: -0.000052080308, y: -0.08498658, z: 0.0000043874757, w: 0.9963821}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_HipsEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.00009953976, y: 1.0424267, z: 0.0029792523}
+      rotation: {x: 0.08113167, y: 0.003876591, z: 0.00045764883, w: 0.99669576}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftAnkleEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.13835275, y: 0.06660476, z: -0.26026022}
+      rotation: {x: -0.0000000036408687, y: -0.0039613303, z: -0.00041162377, w: 0.9999921}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftElbowEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.23775166, y: 1.2535403, z: 0.07488036}
+      rotation: {x: -0.09687389, y: 0.20518722, z: 0.595062, w: 0.77098304}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftFootEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.13999812, y: 0.04525772, z: -0.054821834}
+      rotation: {x: -0.00000020861643, y: -0.0039613303, z: -0.00041162048, w: 0.9999921}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftHipEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.098829485, y: 1.0422746, z: 0.0037348866}
+      rotation: {x: 0.08287872, y: 0.00021058925, z: -0.019795798, w: 0.996363}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftKneeEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.11571414, y: 0.62088305, z: -0.06690371}
+      rotation: {x: 0.16688238, y: -0.0029858986, z: -0.020051476, w: 0.9857684}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftShoulderEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.17948222, y: 1.4650143, z: 0.056238003}
+      rotation: {x: 0.012415078, y: 0.06264319, z: 0.60310763, w: 0.7950993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_LeftWristEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: -0.29492137, y: 1.0118045, z: 0.1937583}
+      rotation: {x: -0.09676129, y: 0.20514524, z: 0.59505796, w: 0.7710115}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightAnkleEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: 0.1383534, y: 0.06658531, z: 0.2340926}
+      rotation: {x: -0.019724142, y: 0.002407319, z: 0.00032982609, w: 0.99980253}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightElbowEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: 0.2313777, y: 1.2942766, z: -0.14624019}
+      rotation: {x: 0.13239582, y: 0.06753805, z: -0.6112971, w: 0.77731967}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightFootEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: 0.139373, y: 0.053357236, z: 0.4402168}
+      rotation: {x: -0.019724136, y: 0.0024073187, z: 0.000329826, w: 0.99980253}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightHipEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: 0.098630406, y: 1.0425789, z: 0.002223618}
+      rotation: {x: -0.20209841, y: 0.0015270753, z: 0.019728303, w: 0.9791653}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightKneeEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: 0.115413465, y: 0.65026283, z: 0.17149423}
+      rotation: {x: -0.05343472, y: 0.0034644417, z: 0.019370597, w: 0.99837744}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightShoulderEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: 0.17651455, y: 1.4803404, z: -0.042151716}
+      rotation: {x: 0.19995923, y: 0.15413542, z: -0.5929958, w: 0.7646009}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Ctrl_RightWristEffector
+      parentName: Elvor_Ctrl_Reference
+      position: {x: 0.2984361, y: 1.0374908, z: -0.21973108}
+      rotation: {x: 0.07992461, y: 0.0012632123, z: -0.62033033, w: 0.7802568}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Guides
+      parentName: testallElvor(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Head
+      parentName: Elvor_Guides
+      position: {x: 0.0006654739, y: 0.83806974, z: 0.0019936278}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Hips
+      parentName: Elvor_Guides
+      position: {x: 0.0006654739, y: 0.13730125, z: 0.0003138733}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftArm
+      parentName: Elvor_Guides
+      position: {x: -0.26024535, y: 0.5219483, z: -0.05678131}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftFoot
+      parentName: Elvor_Guides
+      position: {x: -0.13768761, y: -0.93253934, z: -0.09546604}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftForeArm
+      parentName: Elvor_Guides
+      position: {x: -0.4350163, y: 0.38809034, z: -0.055631712}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftHand
+      parentName: Elvor_Guides
+      position: {x: -0.6356539, y: 0.20214637, z: -0.02391391}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftLeg
+      parentName: Elvor_Guides
+      position: {x: -0.12501407, y: -0.35078746, z: -0.014667091}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftShoulder
+      parentName: Elvor_Guides
+      position: {x: -0.17587103, y: 0.6398757, z: -0.05678131}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftToeBase
+      parentName: Elvor_Guides
+      position: {x: -0.13933301, y: -0.9538872, z: 0.10997231}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftUpLeg
+      parentName: Elvor_Guides
+      position: {x: -0.09806756, y: 0.07555075, z: 0.0041945647}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Neck
+      parentName: Elvor_Guides
+      position: {x: 0.0006654739, y: 0.66326565, z: -0.040299147}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Reference
+      parentName: Elvor_Guides
+      position: {x: 0.0006654739, y: -0.9991452, z: 0.0006400108}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightArm
+      parentName: Elvor_Guides
+      position: {x: 0.2615763, y: 0.5219483, z: -0.05678131}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightFoot
+      parentName: Elvor_Guides
+      position: {x: 0.13901857, y: -0.93253934, z: -0.09546604}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightForeArm
+      parentName: Elvor_Guides
+      position: {x: 0.43634728, y: 0.38809034, z: -0.055631712}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightHand
+      parentName: Elvor_Guides
+      position: {x: 0.6369849, y: 0.20214637, z: -0.02391391}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightLeg
+      parentName: Elvor_Guides
+      position: {x: 0.12634502, y: -0.35078746, z: -0.014667091}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightShoulder
+      parentName: Elvor_Guides
+      position: {x: 0.17720197, y: 0.6398757, z: -0.05678131}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightToeBase
+      parentName: Elvor_Guides
+      position: {x: 0.14066395, y: -0.9538872, z: 0.10997231}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightUpLeg
+      parentName: Elvor_Guides
+      position: {x: 0.09939851, y: 0.07555075, z: 0.0041945647}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Spine
+      parentName: Elvor_Guides
+      position: {x: 0.0006654739, y: 0.2617371, z: -0.004054927}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Spine1
+      parentName: Elvor_Guides
+      position: {x: 0.0006654739, y: 0.40581137, z: -0.012314929}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Spine2
+      parentName: Elvor_Guides
+      position: {x: 0.0006654739, y: 0.5593998, z: -0.02057493}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Reference
+      parentName: testallElvor(Clone)
+      position: {x: 0.0006654739, y: -0.9991452, z: 0.0006400108}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Elvor_Hips
+      parentName: Elvor_Reference
+      position: {x: -0.007544209, y: 2.1212192, z: 0.0075013596}
+      rotation: {x: 0.49114987, y: -0.5086962, z: -0.49114987, w: 0.50869626}
+      scale: {x: 0.99999976, y: 0.99999994, z: 0.99999976}
+    - name: Elvor_LeftUpLeg
+      parentName: Elvor_Hips
+      position: {x: 0.061848674, y: 0.0017116477, z: 0.09873308}
+      rotation: {x: -0.020129979, y: -0.0052033067, z: 0.9990976, w: 0.037038907}
+      scale: {x: 1, y: 0.9999995, z: 1}
+    - name: Elvor_LeftLeg
+      parentName: Elvor_LeftUpLeg
+      position: {x: -0.42760447, y: -0.000062859806, z: 0.0000001960301}
+      rotation: {x: 0.0015530703, y: -0.0000650867, z: -0.051163454, w: 0.9986892}
+      scale: {x: 1.0000001, y: 1.0000002, z: 1.0000002}
+    - name: Elvor_LeftFoot
+      parentName: Elvor_LeftLeg
+      position: {x: -0.5874723, y: -0.00000019702017, z: 0.00000012488547}
+      rotation: {x: 0.012281441, y: 0.015180873, z: -0.7201906, w: -0.6935014}
+      scale: {x: 1, y: 1.0000002, z: 1}
+    - name: Elvor_LeftToeBase
+      parentName: Elvor_LeftFoot
+      position: {x: -0.20655096, y: -0.000000043872195, z: 0.00000016164628}
+      rotation: {x: 9.3132235e-10, y: -0, z: 2.9103825e-10, w: 1}
+      scale: {x: 0.9999999, y: 1.0000004, z: 1}
+    - name: Elvor_RightUpLeg
+      parentName: Elvor_Hips
+      position: {x: 0.06184862, y: 0.0017116504, z: -0.098733045}
+      rotation: {x: -0.0051947683, y: 0.020127594, z: -0.037042543, w: 0.9990975}
+      scale: {x: 1.0000001, y: 1.0000002, z: 1.0000002}
+    - name: Elvor_RightLeg
+      parentName: Elvor_RightUpLeg
+      position: {x: 0.42760468, y: 0.000039493647, z: -0.0000013317863}
+      rotation: {x: 0.0015727705, y: -0.00006348825, z: -0.051159892, w: 0.9986893}
+      scale: {x: 1.0000004, y: 1.0000004, z: 1.0000002}
+    - name: Elvor_RightFoot
+      parentName: Elvor_RightLeg
+      position: {x: 0.58747274, y: -0.0000009315007, z: 0.000000037324877}
+      rotation: {x: -0.012302472, y: -0.015161464, z: 0.7201917, w: 0.69350034}
+      scale: {x: 0.99999994, y: 0.9999998, z: 1.0000001}
+    - name: Elvor_RightToeBase
+      parentName: Elvor_RightFoot
+      position: {x: 0.20655105, y: 0.00000003962889, z: -0.000000026310278}
+      rotation: {x: 0.000025423238, y: 0.00000011827794, z: 0.00000005663604, w: 1}
+      scale: {x: 1, y: 1, z: 1.0000001}
+    - name: Elvor_Spine
+      parentName: Elvor_Hips
+      position: {x: -0.124512486, y: -0.00000004825216, z: 0.00000003526879}
+      rotation: {x: -0, y: -0, z: 0.011086941, w: 0.99993855}
+      scale: {x: 1.0000001, y: 1.0000002, z: 1.0000004}
+    - name: Elvor_Spine1
+      parentName: Elvor_Spine
+      position: {x: -0.1443108, y: 0.000000004727334, z: 0.0000000057143805}
+      rotation: {x: 0.00000002947007, y: -0.000000030130902, z: -0.0017702912, w: 0.99999845}
+      scale: {x: 1.0000002, y: 1.0000002, z: 1.0000001}
+    - name: Elvor_Spine2
+      parentName: Elvor_Spine1
+      position: {x: -0.15381035, y: -0.000000008864164, z: 0.0000000059797722}
+      rotation: {x: 0.0000000020790143, y: 0.000000001908246, z: 0.06691892, w: 0.9977585}
+      scale: {x: 1.0000001, y: 1.0000002, z: 1.0000002}
+    - name: Elvor_LeftShoulder
+      parentName: Elvor_Spine2
+      position: {x: -0.08581783, y: -0.02055655, z: 0.17653649}
+      rotation: {x: -0.36401972, y: 0.6062091, z: 0.52765197, w: 0.47072673}
+      scale: {x: 0.9999997, y: 0.99999994, z: 0.9999998}
+    - name: Elvor_LeftArm
+      parentName: Elvor_LeftShoulder
+      position: {x: -0.14500308, y: 0.00000006432125, z: 0.000000049173323}
+      rotation: {x: 0.7227333, y: -0.0952038, z: -0.080055274, w: 0.67984116}
+      scale: {x: 1.0000001, y: 1.0000004, z: 1}
+    - name: Elvor_LeftForeArm
+      parentName: Elvor_LeftArm
+      position: {x: -0.22014564, y: 0.000008943094, z: -0.0000036507492}
+      rotation: {x: -0.00089561904, y: -0.011939889, z: -0.042461924, w: 0.9990264}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: Elvor_LeftHand
+      parentName: Elvor_LeftForeArm
+      position: {x: -0.27538455, y: -0.00000090114946, z: -0.000000057861083}
+      rotation: {x: -0.000000052368698, y: -0.00000003489549, z: 0.00003297084, w: 1}
+      scale: {x: 1.0000002, y: 1.0000002, z: 1.0000002}
+    - name: Elvor_Neck
+      parentName: Elvor_Spine2
+      position: {x: -0.105721585, y: 0.00000004481804, z: 0.0000000027902163}
+      rotation: {x: 0.000000055573143, y: 0.000000018664679, z: -0.2109265, w: 0.977502}
+      scale: {x: 1, y: 0.9999998, z: 0.99999994}
+    - name: Elvor_Head
+      parentName: Elvor_Neck
+      position: {x: -0.17984399, y: 0.00000035774337, z: -0.0000000022662312}
+      rotation: {x: -0, y: -0, z: -0.000000014901159, w: 1}
+      scale: {x: 1, y: 1.0000001, z: 1.0000002}
+    - name: Elvor_RightShoulder
+      parentName: Elvor_Spine2
+      position: {x: -0.085817814, y: -0.020556562, z: -0.17653652}
+      rotation: {x: 0.6062091, y: 0.36401966, z: -0.4707267, w: 0.52765197}
+      scale: {x: 0.9999999, y: 1, z: 0.99999994}
+    - name: Elvor_RightArm
+      parentName: Elvor_RightShoulder
+      position: {x: 0.14500307, y: -0.000000003784499, z: -0.0000000074129156}
+      rotation: {x: -0.7227628, y: 0.09520897, z: 0.08005388, w: -0.6798092}
+      scale: {x: 1.0000002, y: 1.0000002, z: 1.0000002}
+    - name: Elvor_RightForeArm
+      parentName: Elvor_RightArm
+      position: {x: 0.22014567, y: -0.000008847215, z: 0.000003656382}
+      rotation: {x: -0.00089567865, y: -0.011938746, z: -0.042460464, w: 0.9990264}
+      scale: {x: 1, y: 1.0000002, z: 1.0000004}
+    - name: Elvor_RightHand
+      parentName: Elvor_RightForeArm
+      position: {x: 0.27538443, y: 0.000001215758, z: 0.00000013055308}
+      rotation: {x: -0.0000006127046, y: 0.000000686501, z: 0.000032084215, w: 1}
+      scale: {x: 1, y: 0.9999998, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 3
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
