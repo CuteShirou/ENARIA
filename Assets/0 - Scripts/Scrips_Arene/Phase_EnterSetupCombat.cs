@@ -78,7 +78,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         // 2) Monstres → team=1 + parent Rouge
         SpawnMonstersInScene_Local();
 
-        // 3) Joueurs → team=0 + parent Vert
+        // 3) Joueurs → team=0 (+ parent Vert seulement si on est en combat)
         ReparentAllGreenPlayers();
 
         // 4) Joueurs arrivés avant Init
@@ -181,8 +181,12 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 pStats.isFight = true;
             }
 
-            if (forceReparentOnInit || player.transform.parent != teamGreenParent)
-                player.transform.SetParent(teamGreenParent, true);
+            // ✅ Reparent uniquement si on est effectivement en combat
+            if (manager != null && manager.isInCombat)
+            {
+                if (forceReparentOnInit || player.transform.parent != teamGreenParent)
+                    player.transform.SetParent(teamGreenParent, true);
+            }
         }
     }
 
@@ -225,7 +229,8 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 stats.isFight = true;
             }
 
-            if (teamGreenParent)
+            // ✅ Reparent seulement si on est en combat
+            if (manager.isInCombat && teamGreenParent)
                 player.transform.SetParent(teamGreenParent, true);
 
             if (manager.phasePrepa && manager.phasePrepa.isActiveAndEnabled)

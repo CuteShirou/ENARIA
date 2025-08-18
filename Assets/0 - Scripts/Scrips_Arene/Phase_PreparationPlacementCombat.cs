@@ -34,6 +34,17 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
 
         if (!ValidateReferences()) return;
 
+        // ➜ Bascule en mode Préparation pour tous les joueurs (équipe verte)
+        if (manager.phaseEnter != null)
+        {
+            foreach (var player in manager.phaseEnter.greenTeam)
+            {
+                if (!player) continue;
+                var sm = player.GetComponent<Player_ScriptManager>();
+                if (sm) sm.SetPreparationCombat();
+            }
+        }
+
         GenerateGrid();
         PlaceAllEntities();
         Debug_ShowEntityTileLinks();
@@ -51,7 +62,6 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
         anyNull |= LogIfNull(mapData, nameof(mapData));
         anyNull |= LogIfNull(tileGrid, nameof(tileGrid));
 
-        // Affiche toutes les manques d'un coup
         if (anyNull)
         {
             Debug.LogError("[Prépa] Références manquantes → arrêt de la phase.", this);
@@ -97,7 +107,6 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
                 tile.transform.localPosition = localPos;
                 tile.transform.localRotation = Quaternion.identity;
 
-                // --- SetupTile + Tile_State (nouvel enum)
                 var setup = tile.GetComponent<SetupTile>();
                 if (setup == null) setup = tile.AddComponent<SetupTile>();
 
@@ -110,12 +119,10 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
                     mapData.interactiveObjectPositions.Contains(pos) ? Tile_State.Obstacle :
                     Tile_State.None;
 
-                // Enregistre la tuile auprès du gestionnaire de grille (local)
                 tileGrid.RegisterTile(tile);
             }
         }
 
-        // Debug comptage des couleurs
         int greens = 0, reds = 0;
         foreach (var t in tileGrid.GetAllTiles())
         {
@@ -133,9 +140,7 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
     {
         List<GameObject> fighters = manager.phaseEnter.AllFighters;
         foreach (GameObject entityObj in fighters)
-        {
             PlaceEntity(entityObj);
-        }
     }
 
     // -------------------------------------------------------------
@@ -149,7 +154,6 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
             return;
         }
 
-        // Petit filet : si team inconnue, force Rouge (monstre probable)
         if (stats.team != 0 && stats.team != 1)
         {
             Debug.LogWarning($"[Prépa] {entityObj.name} a une team invalide ({stats.team}). Forçage Rouge.");
@@ -169,11 +173,8 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
             : Quaternion.Euler(rotationRedTeamEuler);
 
         entityObj.transform.SetPositionAndRotation(newPosition, newRotation);
-
         tileGrid.RegisterEntity(entityObj, tile);
-        Debug.Log($"[Prépa] Entité placée : {entityObj.name} sur {tile.name}");
 
-        // Monstres auto-ready
         if (stats.team == 1 && !stats.isReady)
         {
             stats.isReady = true;
@@ -195,12 +196,10 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
         return null;
     }
 
-    // -------------------------------------------------------------
     public GameObject GetTileAtCoordinates(int x, int y) => tileGrid.GetTileAtCoordinates(x, y);
     public bool IsTileFree(GameObject tile) => tileGrid.IsTileFree(tile);
 
     // -------------------------------------------------------------
-    // Appelée par le contrôleur joueur local (clic dans la zone verte)
     public void TryMoveEntityToTile(GameObject playerObj, int x, int y)
     {
         if (!isActiveAndEnabled) return;
@@ -208,15 +207,13 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
 
         var tile = tileGrid.GetTileAtCoordinates(x, y);
         if (tile == null) return;
-
         if (!tile.TryGetComponent(out SetupTile setup)) return;
 
-        // On n’autorise que les cases "TeamGreen" et libres
         if (setup.currentState != Tile_State.TeamGreen) return;
         if (!tileGrid.IsTileFree(tile)) return;
 
         if (!playerObj.TryGetComponent(out Entity_StatistiqueCombat stats)) return;
-        if (stats.team != 0) return; // uniquement l’équipe verte
+        if (stats.team != 0) return;
 
         Vector3 newPosition = tile.transform.position + Vector3.up * 0.5f;
         Quaternion newRotation = Quaternion.Euler(rotationGreenTeamEuler);
@@ -243,18 +240,8 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
             foreach (GameObject entityObj in allFighters)
             {
                 if (entityObj == null) continue;
-
-                if (!entityObj.TryGetComponent(out Entity_StatistiqueCombat stats))
-                {
-                    allFightersReady = false;
-                    break;
-                }
-
-                if (!stats.isReady)
-                {
-                    allFightersReady = false;
-                    break;
-                }
+                if (!entityObj.TryGetComponent(out Entity_StatistiqueCombat stats)) { allFightersReady = false; break; }
+                if (!stats.isReady) { allFightersReady = false; break; }
             }
 
             if (allFightersReady)
@@ -277,9 +264,7 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
             string tileName = tile.name;
 
             if (tile.TryGetComponent(out SetupTile local))
-            {
                 tileName += $" ({local.tileX}, {local.tileY})";
-            }
 
             GameObject occupant = tileGrid.GetEntityOnTile(tile);
             string occupantName = occupant != null ? occupant.name : "VIDE";

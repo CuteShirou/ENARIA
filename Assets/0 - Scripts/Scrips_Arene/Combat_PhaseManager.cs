@@ -18,6 +18,9 @@ public class Combat_PhaseManager : MonoBehaviour
     [Tooltip("Identifiant logique (ex: 0..9) si tu as plusieurs arènes dans la scène.")]
     public int arenaIndex = 0;
 
+    [Header("Résultat du combat")]
+    public bool lastCombatWinning = false;  // dernier résultat connu
+
     [Header("Références des scripts de phase (Drag & Drop)")]
     public Phase_EnterSetupCombat phaseEnter;
     public Phase_PreparationPlacementCombat phasePrepa;
@@ -34,11 +37,13 @@ public class Combat_PhaseManager : MonoBehaviour
     // Phase en cours dans cette arène
     private CombatPhase currentPhase;
 
+    // ✅ Nouveau : vrai uniquement pendant Enter/Preparation/TurnByTurn
+    public bool isInCombat { get; private set; } = false;
+
     private void Awake()
     {
         if (autoWireIfNull)
         {
-            // Récupère les références manquantes si possible (dans l’arborescence)
             if (phaseEnter == null) phaseEnter = GetComponentInChildren<Phase_EnterSetupCombat>(true);
             if (phasePrepa == null) phasePrepa = GetComponentInChildren<Phase_PreparationPlacementCombat>(true);
             if (phaseTurn == null) phaseTurn = GetComponentInChildren<Phase_TurnByTurnCombat>(true);
@@ -46,15 +51,17 @@ public class Combat_PhaseManager : MonoBehaviour
             if (tileGrid == null) tileGrid = GetComponentInChildren<TileGrid_Manager>(true);
         }
 
-        // Désactive tout par sécurité au démarrage (la phase active sera choisie par StartPhase)
+        // Désactive toutes les phases au démarrage
         SafeEnablePhase(phaseEnter, false);
         SafeEnablePhase(phasePrepa, false);
         SafeEnablePhase(phaseTurn, false);
         SafeEnablePhase(phaseEnd, false);
+
+        isInCombat = false; // boot = exploration
     }
 
     //------------------------------------------------------------
-    // Appelée manuellement par un déclencheur (ex: un joueur qui attaque)
+    // Compat: certains scripts appellent encore LaunchCombat()
     public void LaunchCombat()
     {
         Debug.Log($"[CombatManager][Arena {arenaIndex}] Initialisation. Démarrage du combat...");
@@ -66,6 +73,11 @@ public class Combat_PhaseManager : MonoBehaviour
     public void StartPhase(CombatPhase phase)
     {
         currentPhase = phase;
+
+        // ✅ Met à jour le drapeau "en combat"
+        isInCombat = (phase == CombatPhase.Enter ||
+                      phase == CombatPhase.Preparation ||
+                      phase == CombatPhase.TurnByTurn);
 
         // Active uniquement la phase demandée, désactive les autres
         SafeEnablePhase(phaseEnter, phase == CombatPhase.Enter);
@@ -94,10 +106,12 @@ public class Combat_PhaseManager : MonoBehaviour
                 phaseTurn?.InitPhase(this);
                 break;
 
-                //case CombatPhase.End:
-                //    Debug.Log("[CombatManager] → Phase_EndCombat activée.");
-                //    phaseEnd?.InitPhase(this);
-                //    break;
+            case CombatPhase.End:
+                // On n'est plus en combat
+                isInCombat = false;
+                Debug.Log("[CombatManager] → Phase_EndCombat activée.");
+                phaseEnd?.InitPhase(this);
+                break;
         }
     }
 
@@ -108,29 +122,25 @@ public class Combat_PhaseManager : MonoBehaviour
         Debug.Log($"[CombatManager][Arena {arenaIndex}] Passage à la phase suivante depuis {currentPhase}");
 
         if (currentPhase == CombatPhase.Enter)
-        {
             StartPhase(CombatPhase.Preparation);
-        }
         else if (currentPhase == CombatPhase.Preparation)
-        {
             StartPhase(CombatPhase.TurnByTurn);
-        }
         else if (currentPhase == CombatPhase.TurnByTurn)
-        {
             StartPhase(CombatPhase.End);
-        }
         else
-        {
             Debug.LogWarning("[CombatManager] Aucune phase suivante, combat déjà terminé.");
-        }
     }
 
-    //------------------------------------------------------------
-    // Optionnel : expose la phase actuelle aux interfaces
+    public void ForceEndPhase(bool isWinning)
+    {
+        lastCombatWinning = isWinning;
+        StartPhase(CombatPhase.End);
+    }
+
+    // Expose la phase actuelle aux interfaces
     public CombatPhase GetCurrentPhase() => currentPhase;
     public string GetPhaseName() => currentPhase.ToString();
 
-    //------------------------------------------------------------
     //------------------------------------------------------------
     private static void SafeEnablePhase(MonoBehaviour phaseBehaviour, bool enable)
     {

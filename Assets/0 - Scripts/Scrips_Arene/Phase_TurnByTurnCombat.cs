@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 [AddComponentMenu("Combat/Phase - Turn By Turn Combat (Local)")]
@@ -6,47 +6,43 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
 {
     private Combat_PhaseManager manager;
 
-    //------------------------------------------------------------
-    // Appelée par le manager quand on passe en phase TourParTour
     public void InitPhase(Combat_PhaseManager combatManager)
     {
         manager = combatManager;
 
-        Debug.Log($"[Phase_TurnByTurn] Début de la phase tour par tour sur l’arène {manager.arenaIndex}");
+        Debug.Log($"[Phase_TurnByTurn] DÃ©but de la phase tour par tour sur lâ€™arÃ¨ne {manager.arenaIndex}");
 
-        // 1) Désactive la phase de préparation
+        // Couper le script de prÃ©pa si besoin
         if (manager.phasePrepa != null)
             manager.phasePrepa.enabled = false;
 
-        // 2) Active/désactive les bons contrôleurs + reset de tour (optionnel)
         if (manager.phaseEnter != null && manager.phaseEnter.AllFighters != null)
         {
             foreach (GameObject entity in manager.phaseEnter.AllFighters)
             {
                 if (entity == null) continue;
 
-                var prepCtrl = entity.GetComponent<Player_ControllerPhasePreparation>();
-                if (prepCtrl != null) prepCtrl.enabled = false;
+                // âžœ Joueur : mode Combat
+                var sm = entity.GetComponent<Player_ScriptManager>();
+                if (sm) sm.SetTurnByTurnCombat();
 
-                var turnCtrl = entity.GetComponent<Player_ControllerPhaseTurnByTurn>();
-                if (turnCtrl != null) turnCtrl.enabled = true;
-
-                // Option pratique : reset PA/PM en début de phase
+                // Stats : reset "ready" + reset de tour
                 if (entity.TryGetComponent(out Entity_StatistiqueCombat stats))
+                {
+                    if (stats.isReady) stats.isReady = false;
                     stats.ResetTurnStats();
+                }
             }
         }
 
-        // 3) Appliquer le damier à toutes les cases (état logique = None)
         ApplyCheckerboardToTiles();
     }
 
-    //------------------------------------------------------------
     private void ApplyCheckerboardToTiles()
     {
         if (manager == null || manager.tileGrid == null)
         {
-            Debug.LogWarning("[Phase_TurnByTurn] tileGrid manquant, damier non appliqué.");
+            Debug.LogWarning("[Phase_TurnByTurn] tileGrid manquant, damier non appliquÃ©.");
             return;
         }
 
@@ -58,11 +54,10 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             if (tileObj == null) continue;
             if (!tileObj.TryGetComponent(out SetupTile setup)) continue;
 
-            // Réinitialise l'état logique : le visuel damier est géré par Tile_Visual quand l'état est None
             setup.currentState = Tile_State.None;
-            setup.isFighterActif = false; // par sécurité, retire l'indicateur d'actif si tu l'utilises
+            setup.isFighterActif = false;
         }
 
-        Debug.Log("[Phase_TurnByTurn] Damier visuel ré-appliqué sur la grille (état None).");
+        Debug.Log("[Phase_TurnByTurn] Damier visuel rÃ©-appliquÃ© sur la grille (Ã©tat None).");
     }
 }

@@ -29,14 +29,10 @@ public class TileGrid_Manager : MonoBehaviour
         if (tile == null) return;
 
         if (!allTiles.Contains(tile))
-        {
             allTiles.Add(tile);
-        }
 
         if (!tileToEntity.ContainsKey(tile))
-        {
             tileToEntity[tile] = null; // libre par défaut
-        }
     }
 
     //------------------------------------------------------------
@@ -49,11 +45,9 @@ public class TileGrid_Manager : MonoBehaviour
             return;
         }
 
-        // Libère l’ancienne tuile
+        // Libère l’ancienne tuile occupée par cette entité
         if (entityToTile.TryGetValue(entity, out GameObject oldTile) && oldTile != null)
-        {
             tileToEntity[oldTile] = null;
-        }
 
         entityToTile[entity] = tile;
         tileToEntity[tile] = entity;
@@ -66,11 +60,18 @@ public class TileGrid_Manager : MonoBehaviour
         if (entity == null) return;
 
         if (entityToTile.TryGetValue(entity, out GameObject tile) && tile != null)
-        {
             tileToEntity[tile] = null;
-        }
 
         entityToTile.Remove(entity);
+    }
+
+    //------------------------------------------------------------
+    // Libère toutes les entités (ne détruit rien)
+    public void UnregisterAllEntities()
+    {
+        var copy = new List<GameObject>(entityToTile.Keys);
+        foreach (var e in copy)
+            UnregisterEntity(e);
     }
 
     //------------------------------------------------------------
@@ -114,6 +115,36 @@ public class TileGrid_Manager : MonoBehaviour
             }
         }
         return null;
+    }
+
+    //------------------------------------------------------------
+    // RESET COMPLET : détruit les GameObjects de tuiles et vide les dictionnaires
+    public void ClearGrid(bool destroyTilesGameObjects = true)
+    {
+        // 1) Libère toutes les entités (aucun occupant sur aucune tuile)
+        UnregisterAllEntities();
+
+        // 2) Détruit les tuiles si demandé
+        if (destroyTilesGameObjects)
+        {
+            foreach (var tile in allTiles)
+            {
+                if (tile == null) continue;
+#if UNITY_EDITOR
+                if (!Application.isPlaying)
+                    Object.DestroyImmediate(tile);
+                else
+#endif
+                    Object.Destroy(tile);
+            }
+        }
+
+        // 3) Vide les structures
+        allTiles.Clear();
+        tileToEntity.Clear();
+        entityToTile.Clear();
+
+        Debug.Log("[TileGrid] Grille nettoyée (tuiles " + (destroyTilesGameObjects ? "détruites" : "préservées") + ").");
     }
 
     //==================================================================
