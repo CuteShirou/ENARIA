@@ -66,11 +66,12 @@
     <Compile Include="Assets\0 - Scripts\PathFinding\AStarPathFinder.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\cereales\cereales target.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\UIToggle.cs" />
-    <Compile Include="Assets\0 - Scripts\Inventory\DraggableItem.cs" />
     <Compile Include="Assets\999 - BASE PROJECT\InputSystem_Actions.cs" />
     <Compile Include="Assets\0 - Scripts\System\Player\PlayerStats.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\Peche\peche poisson.cs" />
+    <Compile Include="Assets\0 - Scripts\Inventory\InventorySlotView.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\Peche\peche ammeçon.cs" />
+    <Compile Include="Assets\0 - Scripts\Inventory\InventoryPageManager\UIPageManager.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\CanvasInputs\UICanvasControllerInput.cs" />
     <Compile Include="Assets\0 - Scripts\CombatManager\SkillCaster.cs" />
     <Compile Include="Assets\0 - Scripts\GridManager\GridManager.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Assets\0 - Scripts\BDD - DATA\DATA\MonsterData.cs" />
     <Compile Include="Assets\0 - Scripts\CombatManager\CombatController.cs" />
     <Compile Include="Assets\0 - Scripts\System\Player\Stats\StatAllocationInput.cs" />
+    <Compile Include="Assets\0 - Scripts\Inventory\SlotRemoveButton.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\bois\bois gameplay.cs" />
     <Compile Include="Assets\0 - Scripts\CombatManager\CombatStats.cs" />
@@ -101,11 +103,12 @@
     <Compile Include="Assets\0 - Scripts\BDD - DATA\DATA\CraftRecipeData.cs" />
     <Compile Include="Assets\0 - Scripts\System\OnClick3D.cs" />
     <Compile Include="Assets\0 - Scripts\System\Crafts\CraftManager.cs" />
+    <Compile Include="Assets\0 - Scripts\Inventory\InventoryItemController.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\plantes\minijeu plantes.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualJoystick.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\SkillButtonUI.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\IngredientSlotUI.cs" />
-    <Compile Include="Assets\0 - Scripts\Inventory\UIPageManager.cs" />
+    <Compile Include="Assets\0 - Scripts\Inventory\Item.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\SkillTooltipUI.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Skills\SkillType.cs" />
     <Compile Include="Assets\0 - Scripts\System\MaterialSwapper.cs" />
@@ -121,7 +124,6 @@
     <Compile Include="Assets\0 - Scripts\GridManager\ReachableTilesHighlighter.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\Peche\peche progress.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Menu\MainMenu.cs" />
-    <Compile Include="Assets\0 - Scripts\Inventory\InventoryItem.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Craft\CraftingPropertyDrawer.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\CraftDetailUI.cs" />
     <Compile Include="Assets\0 - Scripts\Inventory\InventorySlot.cs" />
@@ -130,7 +132,6 @@
     <Compile Include="Assets\0 - Scripts\PathFinding\PathFindingNode.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\RecipeItemUI.cs" />
     <Compile Include="Assets\0 - Scripts\System\Player\Stats\StatAllocationButton.cs" />
-    <Compile Include="Assets\0 - Scripts\Inventory\ItemDatabase.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\StatsUIBinder.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualTouchZone.cs" />
   </ItemGroup>
