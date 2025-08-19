@@ -6,7 +6,7 @@ public class InventorySlotView : MonoBehaviour
     [Header("Refs UI")]
     [SerializeField] private Image iconImage;
     [SerializeField] private Text nameText;
-    [SerializeField] private Text countText; // s'affiche uniquement pour les stackables
+    [SerializeField] private Text countText;
 
     [Header("Data")]
     [SerializeField] private int index;
@@ -15,7 +15,7 @@ public class InventorySlotView : MonoBehaviour
     private Item currentItem;
     private int currentCount;
 
-    public void BindIndex(int i) => index = i;
+    public void BindIndex(int idx) => index = idx;
 
     private void Awake()
     {
@@ -39,7 +39,6 @@ public class InventorySlotView : MonoBehaviour
             if (t != null) countText = t.GetComponent<Text>();
         }
 
-        // Génère automatiquement un ItemCount si absent (optionnel mais pratique)
         if (countText == null)
         {
             var go = new GameObject("ItemCount", typeof(RectTransform));
@@ -58,11 +57,10 @@ public class InventorySlotView : MonoBehaviour
         }
     }
 
-    // ===== Nouvelle signature (avec quantité) =====
     public void Set(Item item, int count, Sprite emptySprite)
     {
         currentItem = item;
-        currentCount = Mathf.Max(0, count);
+        currentCount = count;
 
         if (iconImage != null)
         {
@@ -76,11 +74,8 @@ public class InventorySlotView : MonoBehaviour
         ApplyCount();
     }
 
-    // ===== Compat : ancienne signature =====
     public void Set(Item item, Sprite emptySprite)
     {
-        // Si l'ancien manager appelle encore cette signature,
-        // on suppose count = 1 si item non null (affichage minimal)
         int count = (item != null) ? 1 : 0;
         Set(item, count, emptySprite);
     }
@@ -106,18 +101,21 @@ public class InventorySlotView : MonoBehaviour
     private void ApplyName()
     {
         if (nameText == null) return;
-        nameText.gameObject.SetActive(true);
-        if (currentItem != null && !string.IsNullOrEmpty(currentItem.itemName))
-            nameText.text = currentItem.itemName;
-        else
-            nameText.text = string.Empty;
+        if (currentItem != null) nameText.text = currentItem.itemName;
+        else nameText.text = string.Empty;
     }
+
 
     private void ApplyCount()
     {
         if (countText == null) return;
-        bool stackable = (currentItem != null && currentItem.itemType == Item.ItemType.Consumable);
-        bool show = stackable && currentCount > 0;
+
+        bool stackable = (currentItem != null) && 
+                         (currentItem.itemType == Item.ItemType.Consumable ||
+                          currentItem.itemType == Item.ItemType.Ressource ||
+                          currentItem.itemType == Item.ItemType.Item);
+
+        bool show = stackable && currentCount > 1;
         countText.gameObject.SetActive(show);
         countText.text = show ? currentCount.ToString() : string.Empty;
     }

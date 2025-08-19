@@ -26,6 +26,10 @@ public class InventoryManager : MonoBehaviour
     private int[] counts;
     private InventorySlotView[] slotViews;
 
+    private const int DEFAULT_MAX_STACK_CONSUMABLE = 99;
+    private const int DEFAULT_MAX_STACK_RESSOURCE  = 999;
+    private const int DEFAULT_MAX_STACK_ITEM       = 20;
+    
     private void Awake() => Instance = this;
 
     private void Start()
@@ -41,18 +45,14 @@ public class InventoryManager : MonoBehaviour
         if (items == null) return;
         for (int i = 0; i < items.Count; i++)
         {
-            var it = items[i];
-            if (it == null) continue;
-            int canonical = i + 1;
-            if (it.id != canonical)
-                it.id = canonical;
+            if (items[i] != null) items[i].id = i;
         }
     }
     
     private int GetOrAssignCanonicalId(Item item)
     {
         if (item == null) return 0;
-        // si déjà dans la liste -> id = index+1
+        
         int idx = items.IndexOf(item);
         if (idx >= 0)
         {
@@ -93,8 +93,32 @@ public class InventoryManager : MonoBehaviour
         if (counts == null || counts.Length != initialSlotCount) counts = new int[initialSlotCount];
     }
 
-    public bool IsStackable(Item item) => (item != null && item.itemType == Item.ItemType.Consumable);
+    public bool IsStackable(Item item)
+    {
+        if (item == null) return false;
+        switch (item.itemType)
+        {
+            case Item.ItemType.Ressource:
+            case Item.ItemType.Consumable:
+            case Item.ItemType.Item:
+                return true;
+            default:
+                return false;
+        }
+    }
 
+    public int MaxStackFor(Item item)
+    {
+        if (item == null) return 1;
+        switch (item.itemType)
+        {
+            case Item.ItemType.Consumable: return DEFAULT_MAX_STACK_CONSUMABLE;
+            case Item.ItemType.Ressource:  return DEFAULT_MAX_STACK_RESSOURCE;
+            case Item.ItemType.Item:       return DEFAULT_MAX_STACK_ITEM;
+            default:                       return 1;
+        }
+    }
+    
     public int FindFirstEmpty()
     {
         for (int i = 0; i < initialSlotCount; i++)
@@ -102,17 +126,18 @@ public class InventoryManager : MonoBehaviour
         return -1;
     }
 
-    public int FindFirstStackableSlot(Item item)
+    public int FindFirstStackable(Item item)
     {
-        if (!IsStackable(item)) return -1;
-        NormalizeItemId(item);
+        if (item == null) return -1;
         for (int i = 0; i < initialSlotCount; i++)
-            if (slots[i] != null && slots[i].itemType == Item.ItemType.Consumable && slots[i].id == item.id)
+        {
+            if (slots[i] != null && slots[i].id == item.id && IsStackable(item) && counts[i] < MaxStackFor(item))
                 return i;
+        }
         return -1;
     }
 
-    public int GetCountAt(int index) => IsValid(index) ? counts[index] : 0;
+    public int  GetCountAt(int index) => IsValid(index) ? counts[index] : 0;
 
     public bool RemoveAmountAt(int index, int amount = 1)
     {
@@ -144,7 +169,7 @@ public class InventoryManager : MonoBehaviour
 
         if (IsStackable(item))
         {
-            int idx = FindFirstStackableSlot(item);
+            int idx = FindFirstStackable(item);
             if (idx >= 0)
             {
                 counts[idx] += amount;
@@ -174,17 +199,27 @@ public class InventoryManager : MonoBehaviour
         if (!IsValid(index)) return;
         if (item != null) NormalizeItemId(item);
 
+        // Merge if same item and stackable
         if (item != null && IsStackable(item) && slots[index] != null && slots[index].id == item.id)
         {
-            counts[index] += Mathf.Max(1, count);
+            int max = MaxStackFor(item);
+            counts[index] = Mathf.Clamp(counts[index] + Mathf.Max(1, count), 0, max);
             RefreshSlot(index);
             return;
         }
 
         slots[index] = item;
-        counts[index] = Mathf.Max(0, count);
-        if (item == null) counts[index] = 0;
-        if (item != null && !IsStackable(item)) counts[index] = 1;
+        if (item == null)
+        {
+            counts[index] = 0;
+        }
+        else
+        {
+            counts[index] = Mathf.Max(0, count);
+            if (!IsStackable(item)) counts[index] = 1;
+            int max = MaxStackFor(item);
+            if (IsStackable(item) && counts[index] > max) counts[index] = max;
+        }
         RefreshSlot(index);
     }
 
@@ -213,14 +248,13 @@ public class InventoryManager : MonoBehaviour
 
     private bool IsValid(int index) => index >= 0 && index < initialSlotCount;
 
-    public void RefreshAllSlots()
+    private void RefreshAllSlots()
     {
-        if (slotViews == null) return;
-        for (int i = 0; i < slotViews.Length && i < slots.Length; i++)
-            slotViews[i].Set(slots[i], counts[i], emptySlotSprite);
+        for (int i = 0; i < initialSlotCount; i++)
+            RefreshSlot(i);
     }
 
-    public void RefreshSlot(int index)
+    private void RefreshSlot(int index)
     {
         if (slotViews == null || !IsValid(index)) return;
         slotViews[index].Set(slots[index], counts[index], emptySlotSprite);
@@ -229,6 +263,24 @@ public class InventoryManager : MonoBehaviour
     public void SwapItems(int indexA, int indexB)
     {
         if (!IsValid(indexA) || !IsValid(indexB)) return;
+
+        var a = slots[indexA];
+        var b = slots[indexB];
+        if (a != null && b != null && a.id == b.id && IsStackable(a))
+        {
+            int max = MaxStackFor(a);
+            int room = max - counts[indexB];
+            if (room > 0)
+            {
+                int move = Mathf.Min(room, counts[indexA]);
+                counts[indexB] += move;
+                counts[indexA] -= move;
+                if (counts[indexA] == 0) slots[indexA] = null;
+                RefreshSlot(indexA);
+                RefreshSlot(indexB);
+                return;
+            }
+        }
 
         var tmpItem = slots[indexA];
         var tmpCount = counts[indexA];
@@ -266,5 +318,74 @@ public class InventoryManager : MonoBehaviour
         if (PageDebug == null) return;
         if (DebugToggle != null && DebugToggle.isOn) PageDebug.SetActive(true);
         else PageDebug.SetActive(false);
+    }
+    
+    public int Add(Item item, int amount = 1)
+    {
+        if (item == null || amount <= 0) return -1;
+        NormalizeItemId(item);
+
+        int remaining = amount;
+
+        if (IsStackable(item))
+        {
+            for (int i = 0; i < initialSlotCount && remaining > 0; i++)
+            {
+                if (slots[i] != null && slots[i].id == item.id)
+                {
+                    int max = MaxStackFor(item);
+                    int room = max - counts[i];
+                    if (room > 0)
+                    {
+                        int add = Mathf.Min(room, remaining);
+                        counts[i] += add;
+                        remaining -= add;
+                        RefreshSlot(i);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < initialSlotCount && remaining > 0; i++)
+        {
+            if (slots[i] == null)
+            {
+                slots[i] = item;
+                if (IsStackable(item))
+                {
+                    int max = MaxStackFor(item);
+                    int add = Mathf.Min(max, remaining);
+                    counts[i] = add;
+                    remaining -= add;
+                }
+                else
+                {
+                    counts[i] = 1;
+                    remaining -= 1;
+                }
+                RefreshSlot(i);
+            }
+        }
+
+        return remaining == amount ? -1 : 0;
+    }
+    
+    public bool SplitStack(int index, int amount)
+    {
+        if (!IsValid(index) || amount <= 0) return false;
+        var item = slots[index];
+        if (item == null || !IsStackable(item)) return false;
+        if (counts[index] <= amount) return false;
+
+        int empty = FindFirstEmpty();
+        if (empty < 0) return false;
+
+        slots[empty] = item;
+        counts[empty] = amount;
+        counts[index] -= amount;
+
+        RefreshSlot(index);
+        RefreshSlot(empty);
+        return true;
     }
 }
