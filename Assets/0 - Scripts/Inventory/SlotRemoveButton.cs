@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+
 [RequireComponent(typeof(InventorySlotView))]
 public class SlotRemoveButton : MonoBehaviour
 {
     [SerializeField] private Button removeButton;
-    [SerializeField] private InventorySlotView slotView;
-
-
+    [SerializeField] private InventorySlotView slotView; // si null, on le récupère en Awake
+    
     private void Awake()
     {
         if (slotView == null) slotView = GetComponent<InventorySlotView>();
