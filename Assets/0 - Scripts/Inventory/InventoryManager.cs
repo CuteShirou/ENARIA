@@ -23,7 +23,7 @@ public class InventoryManager : MonoBehaviour
 
     // PRIVATE VARIABLES
     private Item[] slots;
-    private int[] counts; // quantité par slot (0 si vide/non stackable)
+    private int[] counts;
     private InventorySlotView[] slotViews;
 
     private void Awake() => Instance = this;
@@ -32,7 +32,45 @@ public class InventoryManager : MonoBehaviour
     {
         EnsureSlotsInitialized();
         EnsureDataInitialized();
+        EnsureCanonicalItemIds();
         RefreshAllSlots();
+    }
+
+    private void EnsureCanonicalItemIds()
+    {
+        if (items == null) return;
+        for (int i = 0; i < items.Count; i++)
+        {
+            var it = items[i];
+            if (it == null) continue;
+            int canonical = i + 1;
+            if (it.id != canonical)
+                it.id = canonical;
+        }
+    }
+    
+    private int GetOrAssignCanonicalId(Item item)
+    {
+        if (item == null) return 0;
+        // si déjà dans la liste -> id = index+1
+        int idx = items.IndexOf(item);
+        if (idx >= 0)
+        {
+            int canonical = idx + 1;
+            if (item.id != canonical) item.id = canonical;
+            return canonical;
+        }
+        
+        items.Add(item);
+        int newId = items.Count;
+        item.id = newId;
+        return newId;
+    }
+
+    private void NormalizeItemId(Item item)
+    {
+        if (item == null) return;
+        GetOrAssignCanonicalId(item);
     }
 
     private void EnsureSlotsInitialized()
@@ -55,7 +93,6 @@ public class InventoryManager : MonoBehaviour
         if (counts == null || counts.Length != initialSlotCount) counts = new int[initialSlotCount];
     }
 
-    // ===== Stack logic (Consumable only) =====
     public bool IsStackable(Item item) => (item != null && item.itemType == Item.ItemType.Consumable);
 
     public int FindFirstEmpty()
@@ -65,10 +102,10 @@ public class InventoryManager : MonoBehaviour
         return -1;
     }
 
-    // Stack par "id" pour éviter le piège des instances ScriptableObject différentes
     public int FindFirstStackableSlot(Item item)
     {
         if (!IsStackable(item)) return -1;
+        NormalizeItemId(item);
         for (int i = 0; i < initialSlotCount; i++)
             if (slots[i] != null && slots[i].itemType == Item.ItemType.Consumable && slots[i].id == item.id)
                 return i;
@@ -100,13 +137,10 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
-    /// <summary>
-    /// Ajoute un item. Si stackable (Consumable), cumule (par id); sinon occupe un slot vide.
-    /// Retourne l'index utilisé, ou -1 si plein.
-    /// </summary>
     public int AddItem(Item item, int amount = 1)
     {
         if (item == null || amount <= 0) return -1;
+        NormalizeItemId(item);
 
         if (IsStackable(item))
         {
@@ -130,18 +164,16 @@ public class InventoryManager : MonoBehaviour
         return -1;
     }
 
-    // ===== API d'origine (compat) + surcharge =====
     public void SetItemAt(int index, Item item)
     {
-        // Compat : si item non null, quantité 1; si null, 0
         SetItemAt(index, item, (item != null) ? 1 : 0);
     }
 
     public void SetItemAt(int index, Item item, int count)
     {
         if (!IsValid(index)) return;
+        if (item != null) NormalizeItemId(item);
 
-        // Si on place un Consumable sur un slot qui contient déjà le même id, on cumule.
         if (item != null && IsStackable(item) && slots[index] != null && slots[index].id == item.id)
         {
             counts[index] += Mathf.Max(1, count);
@@ -152,7 +184,7 @@ public class InventoryManager : MonoBehaviour
         slots[index] = item;
         counts[index] = Mathf.Max(0, count);
         if (item == null) counts[index] = 0;
-        if (item != null && !IsStackable(item)) counts[index] = 1; // non stackable → toujours 1
+        if (item != null && !IsStackable(item)) counts[index] = 1;
         RefreshSlot(index);
     }
 
