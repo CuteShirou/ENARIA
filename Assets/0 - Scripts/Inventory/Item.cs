@@ -16,8 +16,13 @@ public class Item : ScriptableObject
        Sword,
        Helmet,
        Chestplate,
+       Gloves,
        Leggins,
        Boots,
+       Cape,
+       Ring,
+       Amulette,
+       Belt,
        Accessory,
        Consumable,
        Item
