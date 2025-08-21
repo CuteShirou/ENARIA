@@ -10,7 +10,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
 
     [Header("Équipes de combat")]
     public List<GameObject> greenTeam = new(); // Joueurs (team=0)
-    public List<GameObject> redTeam = new(); // Monstres (team=1)
+    public List<GameObject> redTeam = new();   // Monstres (team=1)
     public List<GameObject> AllFighters = new();
 
     [Header("Parents hiérarchiques (Drag & Drop ou auto-tag)")]
@@ -19,10 +19,8 @@ public class Phase_EnterSetupCombat : MonoBehaviour
 
     [Tooltip("Si actif, trouvera les parents manquants en cherchant des objets taggés.")]
     public bool autoFindParentsByTagIfNull = true;
-    [Tooltip("Tag pour le parent Rouge")]
-    public string tagTeamRed = "TeamRed";
-    [Tooltip("Tag pour le parent Vert")]
-    public string tagTeamGreen = "TeamGreen";
+    [Tooltip("Tag pour le parent Rouge")] public string tagTeamRed = "TeamRed";
+    [Tooltip("Tag pour le parent Vert")] public string tagTeamGreen = "TeamGreen";
 
     [Header("Options de placement")]
     [Tooltip("Force le reparenting de tous les monstres et joueurs à l'Init, même s'ils ont déjà un parent.")]
@@ -85,10 +83,26 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         foreach (var p in pendingPlayers) AddPlayerToTeamVerte(p);
         pendingPlayers.Clear();
 
-        // 5) Rebuild liste
+        // 5) Rebuild liste brute
         RebuildAllFighters();
 
-        // 6) Phase suivante
+        // 5.bis) ✅ Initialiser les "current" depuis les "base" (HP/PA/PM/PO, résistances, etc.)
+        EnsureCombatStatsInitialized();
+
+        // 6) [ORDER] Construire l'ordre d'initiative avec alternance 1/1 quand possible
+        var ordered = BuildInitiativeOrderInterleaved(AllFighters);
+        AllFighters.Clear();
+        AllFighters.AddRange(ordered);
+
+        // 7) [TIMELINE] Construire la timeline maintenant que AllFighters est ordonné
+        var timeline = FindAnyObjectByType<Timeline_CombatUI>(FindObjectsInactive.Include);
+        if (timeline)
+        {
+            timeline.BuildFromManager(manager);
+            timeline.SetNoActive(); // aucun “Actif” pendant la Préparation
+        }
+
+        // 8) Phase suivante
         Debug.Log("[Enter] Fin → passage à la phase Préparation.");
         manager.NextPhase();
     }
@@ -155,7 +169,10 @@ public class Phase_EnterSetupCombat : MonoBehaviour
 
             // Forçage équipe = Rouge (1)
             if (monsterInstance.TryGetComponent(out Entity_StatistiqueCombat mStats))
+            {
                 mStats.team = 1;
+                mStats.isFight = true;
+            }
 
             if (forceReparentOnInit || monsterInstance.transform.parent != teamRedParent)
                 monsterInstance.transform.SetParent(teamRedParent, true);
@@ -213,8 +230,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         if (manager == null)
         {
             Debug.LogWarning("[Enter] Manager null → joueur mis en attente.");
-            if (!pendingPlayers.Contains(player))
-                pendingPlayers.Add(player);
+            if (!pendingPlayers.Contains(player)) pendingPlayers.Add(player);
             return;
         }
 
@@ -227,6 +243,10 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             {
                 stats.team = 0;
                 stats.isFight = true;
+
+                // ✅ S'assure que les "current" ne restent pas à 0 par défaut (HP/PA/PM/PO, résistances, etc.)
+                if (stats.baseHP > 0 && stats.currentHP <= 0)
+                    stats.InitStatsFromBase();
             }
 
             // ✅ Reparent seulement si on est en combat
@@ -248,5 +268,100 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     {
         if (currentGroup != null) currentGroup.SetState(newState);
         else Debug.LogWarning("[Enter] Aucun groupe de monstres référencé pour SetMonsterState.");
+    }
+
+    // ============ [ORDER] Calcul ordre initiative + alternance 1/1 ============
+    private List<GameObject> BuildInitiativeOrderInterleaved(List<GameObject> source)
+    {
+        var greens = new List<GameObject>();
+        var reds = new List<GameObject>();
+
+        // Split + filtre
+        foreach (var e in source)
+        {
+            if (!e) continue;
+            if (!e.TryGetComponent(out Entity_StatistiqueCombat s)) continue;
+            if (s.team == 0) greens.Add(e);
+            else reds.Add(e);
+        }
+
+        // Tri décroissant baseInitiative
+        greens.Sort((a, b) =>
+        {
+            var sa = a.GetComponent<Entity_StatistiqueCombat>();
+            var sb = b.GetComponent<Entity_StatistiqueCombat>();
+            int ia = sa ? sa.baseInitiative : 0;
+            int ib = sb ? sb.baseInitiative : 0;
+            int cmp = ib.CompareTo(ia); // desc
+            return (cmp != 0) ? cmp : string.Compare(a.name, b.name, System.StringComparison.Ordinal);
+        });
+
+        reds.Sort((a, b) =>
+        {
+            var sa = a.GetComponent<Entity_StatistiqueCombat>();
+            var sb = b.GetComponent<Entity_StatistiqueCombat>();
+            int ia = sa ? sa.baseInitiative : 0;
+            int ib = sb ? sb.baseInitiative : 0;
+            int cmp = ib.CompareTo(ia); // desc
+            return (cmp != 0) ? cmp : string.Compare(a.name, b.name, System.StringComparison.Ordinal);
+        });
+
+        // Qui commence ? meilleur top ; égalité → Verte
+        int topGreen = greens.Count > 0 ? (greens[0].GetComponent<Entity_StatistiqueCombat>()?.baseInitiative ?? 0) : -1;
+        int topRed = reds.Count > 0 ? (reds[0].GetComponent<Entity_StatistiqueCombat>()?.baseInitiative ?? 0) : -1;
+        int currentTeam = (topRed > topGreen) ? 1 : 0; // 0=Verte, 1=Rouge
+
+        // Merge 1/1 tant que possible
+        var order = new List<GameObject>(greens.Count + reds.Count);
+        int gi = 0, ri = 0;
+        while (gi < greens.Count || ri < reds.Count)
+        {
+            if (currentTeam == 0) // Verte
+            {
+                if (gi < greens.Count) { order.Add(greens[gi++]); currentTeam = 1; }
+                else if (ri < reds.Count) { order.Add(reds[ri++]); }
+            }
+            else // Rouge
+            {
+                if (ri < reds.Count) { order.Add(reds[ri++]); currentTeam = 0; }
+                else if (gi < greens.Count) { order.Add(greens[gi++]); }
+            }
+        }
+
+#if UNITY_EDITOR
+        System.Text.StringBuilder sb = new System.Text.StringBuilder("[Order] Timeline: ");
+        for (int i = 0; i < order.Count; i++)
+        {
+            var s = order[i].GetComponent<Entity_StatistiqueCombat>();
+            sb.Append($"{order[i].name}(T{s?.team}, Ini={s?.baseInitiative})");
+            if (i < order.Count - 1) sb.Append(" -> ");
+        }
+        Debug.Log(sb.ToString());
+#endif
+
+        return order;
+    }
+
+    // ===================== NEW: init des stats =====================
+    /// <summary>
+    /// Initialise les stats COURANTES (HP/PA/PM/PO, Crit, Init, caracs, résistances)
+    /// depuis les stats de base, si l'entité n'a pas encore été initialisée.
+    /// </summary>
+    private void EnsureCombatStatsInitialized()
+    {
+        if (AllFighters == null) return;
+
+        foreach (var go in AllFighters)
+        {
+            if (!go) continue;
+            if (!go.TryGetComponent(out Entity_StatistiqueCombat s)) continue;
+
+            // Heuristique : si currentHP est 0 alors que baseHP > 0, on considère non initialisé.
+            // (évite d'écraser une entité déjà entamée)
+            if (s.baseHP > 0 && s.currentHP <= 0)
+            {
+                s.InitStatsFromBase();
+            }
+        }
     }
 }

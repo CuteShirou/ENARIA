@@ -25,7 +25,7 @@ public class Exploration_DisplayInfoGroupMonster : MonoBehaviour
         {
             if (monster == null) continue;
 
-            Data_Information_Entity infos = monster.GetComponent<Data_Information_Entity>();
+            Entity_Info infos = monster.GetComponent<Entity_Info>();
             if (infos != null)
                 monsterLines.Add($"{infos.entity_Name} (LVL {infos.entity_Level})");
             else

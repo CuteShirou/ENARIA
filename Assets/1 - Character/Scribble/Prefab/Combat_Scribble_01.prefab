@@ -1217,7 +1217,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4659335501791222833}
-  - component: {fileID: 4521044748826881670}
+  - component: {fileID: 6528460534439820018}
   - component: {fileID: 5880728914182243740}
   m_Layer: 0
   m_Name: Combat_Scribble_01
@@ -1242,7 +1242,7 @@ Transform:
   - {fileID: 4930153674737848017}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &4521044748826881670
+--- !u!114 &6528460534439820018
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1251,11 +1251,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3498709505535415068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d47affab2f4a0d4ab0894cbbb1f1778, type: 3}
+  m_Script: {fileID: 11500000, guid: d9f0fda7733430e4a886912e23abc0ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entity_Name: Scribble
+  entity_Name: Scribble Combattant
   entity_Level: 5
+  entity_Icon: {fileID: 21300000, guid: ede3d94c3e30ee74e8d261b9b792608c, type: 3}
+  savePosEntity: {x: 0, y: 0, z: 0}
+  saveCamEntity: 
 --- !u!114 &5880728914182243740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1272,20 +1275,20 @@ MonoBehaviour:
   _isDead: 0
   _isReady: 0
   team: 0
-  baseHP: 200
-  basePA: 7
-  basePM: 4
+  baseHP: 120
+  basePA: 6
+  basePM: 3
   basePO: 0
-  baseInitiative: 0
+  baseInitiative: 150
   baseCritChance: 0
-  baseForce: 0
-  baseDexterite: 0
-  baseMagie: 0
-  baseFoi: 0
+  baseForce: 10
+  baseDexterite: 5
+  baseMagie: 5
+  baseFoi: 5
   baseResistanceForce: 0
-  baseResistanceDexterite: 0
-  baseResistanceMagie: 0
-  baseResistanceFoi: 0
+  baseResistanceDexterite: -10
+  baseResistanceMagie: 20
+  baseResistanceFoi: 20
   _currentHP: 0
   _currentPA: 0
   _currentPM: 0

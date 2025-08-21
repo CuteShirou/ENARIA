@@ -8,11 +8,6 @@ public class CombatUI_ReadyButton : MonoBehaviour
     [Header("Références")]
     [SerializeField] private Combat_PhaseManager combatManager;       // Drag & Drop (ou auto-find)
     [SerializeField] private Entity_StatistiqueCombat playerStats;    // Drag & Drop (ou auto-find)
-    [SerializeField] private TMP_Text labelTMP;                        // TMP_Text du bouton
-
-    [Header("Libellés")]
-    [SerializeField] private string textWhenNotReady = "Prêt";
-    [SerializeField] private string textWhenReady = "Pas prêt";
 
     [Header("Comportement")]
     [Tooltip("Refuse de toggler si on n'est pas en phase Préparation.")]
@@ -49,9 +44,6 @@ public class CombatUI_ReadyButton : MonoBehaviour
 #endif
         }
 
-        if (labelTMP == null)
-            labelTMP = GetComponentInChildren<TMP_Text>(true);
-
         RefreshUI();
     }
 
@@ -74,8 +66,6 @@ public class CombatUI_ReadyButton : MonoBehaviour
     private void RefreshUI()
     {
         if (btn != null) btn.interactable = playerStats != null;
-        if (labelTMP != null && playerStats != null)
-            labelTMP.text = playerStats.isReady ? textWhenReady : textWhenNotReady;
     }
 
     private void TryAdvanceIfAllReady()
