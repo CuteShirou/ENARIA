@@ -14,16 +14,14 @@ public class Phase_EndCombat : MonoBehaviour
     [SerializeField] private string combatUIObjectName = "Combat_UI";
 
     [Header("Arena parents (containers)")]
-    [SerializeField] private Transform teamRedParent;     // si vide → pris depuis phaseEnter.teamRedParent
-    [SerializeField] private Transform obstaclesParent;   // si vide → cherché par nom "Obstacles"
-    [SerializeField] private bool autoFindParentsIfNull = true;
-    [SerializeField] private string obstaclesObjectName = "Obstacles";
+    [SerializeField] private Transform teamRedParent;   
+    [SerializeField] private Transform obstaclesParent;
 
     [Header("Popup résultat (dans Exploration_UI)")]
     [SerializeField] private GameObject resultPopupRoot;
     [SerializeField] private TMP_Text resultPopupText;
-    [SerializeField] private string winText = "Vous avez WIN le combat";
-    [SerializeField] private string loseText = "Vous avez LOSE le combat";
+    [SerializeField] private string winText = "Vous avez GAGNE le combat";
+    [SerializeField] private string loseText = "Vous avez PERDU le combat";
 
     private Combat_PhaseManager manager;
 
@@ -32,12 +30,10 @@ public class Phase_EndCombat : MonoBehaviour
         manager = phaseManager;
 
         // UI: Exploration ON, Combat OFF
-        EnsureUIReferences();
         if (combatUIRoot) combatUIRoot.SetActive(false);
         if (explorationUIRoot) explorationUIRoot.SetActive(true);
 
         // Parents d’arène
-        EnsureArenaParents();
 
         // === ORDRE : Dicos → Monstres/Obstacles → Joueurs → Grille ===
 
@@ -144,33 +140,6 @@ public class Phase_EndCombat : MonoBehaviour
             else
 #endif
                 Destroy(go);
-        }
-    }
-
-    private void EnsureUIReferences()
-    {
-        if (!autoFindUIsIfNull) return;
-        if (explorationUIRoot == null)
-        {
-            var go = GameObject.Find(explorationUIObjectName);
-            if (go != null) explorationUIRoot = go;
-        }
-        if (combatUIRoot == null)
-        {
-            var go = GameObject.Find(combatUIObjectName);
-            if (go != null) combatUIRoot = go;
-        }
-    }
-
-    private void EnsureArenaParents()
-    {
-        if (teamRedParent == null && manager != null && manager.phaseEnter != null)
-            teamRedParent = manager.phaseEnter.teamRedParent;
-
-        if (obstaclesParent == null && autoFindParentsIfNull)
-        {
-            var go = GameObject.Find(obstaclesObjectName);
-            if (go != null) obstaclesParent = go.transform;
         }
     }
 

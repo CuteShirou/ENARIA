@@ -4,10 +4,6 @@ using TMPro;
 
 /// <summary>
 /// Panneau d'infos d'une entité (UI de combat).
-/// - Références en Drag & Drop uniquement (aucun Find).
-/// - Value01..04 = Résistances : Force, Dextérité, Foi, Magie (floats, négatifs possibles).
-/// - PA/PM/PO : valeurs courantes si dispo, sinon 0.
-/// - HP : "current / base" + barre Filled Horizontal (Origin Left).
 /// - Rafraîchit l'affichage HP en continu quand le panel est visible.
 /// </summary>
 [AddComponentMenu("Combat/UI/Info Entity Panel UI")]
@@ -17,24 +13,23 @@ public class InfoEntityPanelUI : MonoBehaviour
     [SerializeField] private GameObject panelRoot;
 
     [Header("En-tête")]
-    [SerializeField] private TMP_Text nameText;   // ex: Bubble_Pseudo_Entity/Text_Name_Entity
-    [SerializeField] private TMP_Text levelText;  // ex: Bubble_Lvl_Entity/Text_Lvl_Entity
-    [SerializeField] private Image portrait;      // ex: InfoBubble_IconPlayer
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private TMP_Text levelText;
+    [SerializeField] private Image portrait;
 
     [Header("Valeurs (texte uniquement)")]
-    [SerializeField] private TMP_Text valuePA;    // Stat_PA/ValuePA
-    [SerializeField] private TMP_Text valuePM;    // Stat_PM/ValuePM
-    [SerializeField] private TMP_Text valuePO;    // Stat_PO/ValuePO
+    [SerializeField] private TMP_Text valuePA;
+    [SerializeField] private TMP_Text valuePM;
+    [SerializeField] private TMP_Text valuePO;
 
-    // Value01..04 = résistances (ordre demandé)
-    [SerializeField] private TMP_Text value01_ResForce;     // Stat_01/Value1
-    [SerializeField] private TMP_Text value02_ResDexterite; // Stat_02/Value2
-    [SerializeField] private TMP_Text value03_ResFoi;       // Stat_03/Value3
-    [SerializeField] private TMP_Text value04_ResMagie;     // Stat_04/Value4
+    [SerializeField] private TMP_Text value01_ResForce;
+    [SerializeField] private TMP_Text value02_ResDexterite;
+    [SerializeField] private TMP_Text value03_ResFoi;
+    [SerializeField] private TMP_Text value04_ResMagie;
 
     [Header("HP")]
-    [SerializeField] private TMP_Text hpText;     // Stat_HP/ValueHP
-    [SerializeField] private Image hpBar;         // HP_Bar/Image_CurrentHP (Image Filled)
+    [SerializeField] private TMP_Text hpText;
+    [SerializeField] private Image hpBar;
 
     [Header("Options")]
     [SerializeField] private bool autoRefreshHPWhileVisible = true;
@@ -47,13 +42,6 @@ public class InfoEntityPanelUI : MonoBehaviour
     {
         if (!panelRoot) panelRoot = gameObject;
         panelRoot.SetActive(false);
-
-        if (hpBar)
-        {
-            hpBar.type = Image.Type.Filled;
-            hpBar.fillMethod = Image.FillMethod.Horizontal;
-            hpBar.fillOrigin = (int)Image.OriginHorizontal.Left; // se vide de droite vers gauche
-        }
     }
 
     private void Update()
@@ -145,7 +133,7 @@ public class InfoEntityPanelUI : MonoBehaviour
     private void SetFloatPercent(TMP_Text label, float? value)
     {
         if (!label) return;
-        float v = value ?? 0f;                 // on affiche exactement la current (sinon 0)
+        float v = value ?? 0f;
         label.text = $"{v:0.##} %";             // 0, 1.5, -12.25, etc. → formaté avec 2 décimales max
     }
 }

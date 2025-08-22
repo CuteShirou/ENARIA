@@ -26,22 +26,16 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     [Tooltip("Force le reparenting de tous les monstres et joueurs à l'Init, même s'ils ont déjà un parent.")]
     public bool forceReparentOnInit = true;
 
-    // ==================== UI (scène unique) ====================
+    // ========================================
     [Header("UI (Scène unique)")]
     [Tooltip("Canvas racine de l'UI d'exploration (ex: 'Exploration_UI').")]
     [SerializeField] private GameObject explorationUIRoot;
     [Tooltip("Canvas racine de l'UI de combat (ex: 'Combat_UI').")]
     [SerializeField] private GameObject combatUIRoot;
 
-    [Tooltip("Tenter de retrouver automatiquement par nom si non assigné.")]
-    [SerializeField] private bool autoFindUIsIfNull = true;
-
-    [SerializeField] private string explorationUIObjectName = "Exploration_UI";
-    [SerializeField] private string combatUIObjectName = "Combat_UI";
-
     [Tooltip("À l'ouverture de la scène, activer Exploration_UI et désactiver Combat_UI.")]
     [SerializeField] private bool setInitialUIOnAwake = true;
-    // ===========================================================
+    // ========================================
 
     private Exploration_InfoGroupMonster currentGroup;
     private Combat_PhaseManager manager;
@@ -51,7 +45,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     {
         if (setInitialUIOnAwake)
         {
-            EnsureUIReferences();
             if (explorationUIRoot != null) explorationUIRoot.SetActive(true);
             if (combatUIRoot != null) combatUIRoot.SetActive(false);
         }
@@ -65,7 +58,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         Debug.Log($"[Enter] Arena {manager.arenaIndex} – phase d'entrée (LOCAL).");
 
         // 0) Switch UI : Exploration → OFF, Combat → ON
-        EnsureUIReferences();
         if (explorationUIRoot != null) explorationUIRoot.SetActive(false);
         if (combatUIRoot != null) combatUIRoot.SetActive(true);
         else Debug.LogWarning("[Enter] Combat_UI introuvable. Assigne 'combatUIRoot' ou renomme l'objet en 'Combat_UI'.");
@@ -85,8 +77,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
 
         // 5) Rebuild liste brute
         RebuildAllFighters();
-
-        // 5.bis) ✅ Initialiser les "current" depuis les "base" (HP/PA/PM/PO, résistances, etc.)
+        //Initialiser les "current" depuis les "base" (HP/PA/PM/PO, résistances, etc.)
         EnsureCombatStatsInitialized();
 
         // 6) [ORDER] Construire l'ordre d'initiative avec alternance 1/1 quand possible
@@ -107,23 +98,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         manager.NextPhase();
     }
 
-    private void EnsureUIReferences()
-    {
-        if (autoFindUIsIfNull)
-        {
-            if (explorationUIRoot == null)
-            {
-                var go = GameObject.Find(explorationUIObjectName);
-                if (go != null) explorationUIRoot = go;
-            }
-            if (combatUIRoot == null)
-            {
-                var go = GameObject.Find(combatUIObjectName);
-                if (go != null) combatUIRoot = go;
-            }
-        }
-    }
-
     private void EnsureParents()
     {
         if (teamRedParent == null && autoFindParentsByTagIfNull)
@@ -141,7 +115,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         if (teamGreenParent == null) Debug.LogError("[Enter] teamGreenParent manquant (Drag&Drop ou tag).", this);
     }
 
-    // Instancie OU réorganise les monstres localement (aucun réseau)
+    // Instancie OU réorganise les monstres localement
     private void SpawnMonstersInScene_Local()
     {
         if (teamRedParent == null) return;
@@ -198,7 +172,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 pStats.isFight = true;
             }
 
-            // ✅ Reparent uniquement si on est effectivement en combat
+            // Reparent uniquement si on est effectivement en combat
             if (manager != null && manager.isInCombat)
             {
                 if (forceReparentOnInit || player.transform.parent != teamGreenParent)
@@ -342,11 +316,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         return order;
     }
 
-    // ===================== NEW: init des stats =====================
-    /// <summary>
-    /// Initialise les stats COURANTES (HP/PA/PM/PO, Crit, Init, caracs, résistances)
-    /// depuis les stats de base, si l'entité n'a pas encore été initialisée.
-    /// </summary>
     private void EnsureCombatStatsInitialized()
     {
         if (AllFighters == null) return;

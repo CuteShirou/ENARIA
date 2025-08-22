@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 
-//------------------------------------------------------------
-// Enum représentant les différentes phases du combat
 public enum CombatPhase
 {
-    Enter,         // Récupération des données de combat
-    Preparation,   // Placement des entités et bouton prêt
-    TurnByTurn,    // Tour par tour (combat)
-    End            // Fin de combat, retour à l'exploration
+    Enter,
+    Preparation,
+    TurnByTurn,
+    End
 }
 
-//------------------------------------------------------------
 [AddComponentMenu("Combat/Combat Phase Manager (Local)")]
 public class Combat_PhaseManager : MonoBehaviour
 {
@@ -37,7 +34,6 @@ public class Combat_PhaseManager : MonoBehaviour
     // Phase en cours dans cette arène
     private CombatPhase currentPhase;
 
-    // ✅ Nouveau : vrai uniquement pendant Enter/Preparation/TurnByTurn
     public bool isInCombat { get; private set; } = false;
 
     private void Awake()
@@ -57,11 +53,10 @@ public class Combat_PhaseManager : MonoBehaviour
         SafeEnablePhase(phaseTurn, false);
         SafeEnablePhase(phaseEnd, false);
 
-        isInCombat = false; // boot = exploration
+        isInCombat = false;
     }
 
     //------------------------------------------------------------
-    // Compat: certains scripts appellent encore LaunchCombat()
     public void LaunchCombat()
     {
         Debug.Log($"[CombatManager][Arena {arenaIndex}] Initialisation. Démarrage du combat...");
@@ -74,7 +69,6 @@ public class Combat_PhaseManager : MonoBehaviour
     {
         currentPhase = phase;
 
-        // ✅ Met à jour le drapeau "en combat"
         isInCombat = (phase == CombatPhase.Enter ||
                       phase == CombatPhase.Preparation ||
                       phase == CombatPhase.TurnByTurn);
@@ -97,25 +91,26 @@ public class Combat_PhaseManager : MonoBehaviour
                 break;
 
             case CombatPhase.Preparation:
+                Debug.Log("--------------------------------------------------");
                 Debug.Log("[CombatManager] → Phase_PreparationPlacementCombat activée.");
                 phasePrepa?.InitPhase(this);
                 break;
 
             case CombatPhase.TurnByTurn:
+                Debug.Log("--------------------------------------------------");
                 Debug.Log("[CombatManager] → Phase_TurnByTurnCombat activée.");
                 phaseTurn?.InitPhase(this);
                 break;
 
             case CombatPhase.End:
-                // On n'est plus en combat
                 isInCombat = false;
+                Debug.Log("--------------------------------------------------");
                 Debug.Log("[CombatManager] → Phase_EndCombat activée.");
                 phaseEnd?.InitPhase(this);
                 break;
         }
     }
 
-    //------------------------------------------------------------
     // Permet d'enchaîner automatiquement la phase suivante dans l'ordre logique
     public void NextPhase()
     {

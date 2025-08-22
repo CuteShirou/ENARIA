@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//--------------------------------------------------------------
-// Phase locale (sans Mirror) pour la préparation/placement
 [AddComponentMenu("Combat/Phase - Preparation Placement (Local)")]
 public class Phase_PreparationPlacementCombat : MonoBehaviour
 {

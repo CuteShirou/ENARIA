@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;       // pour Button
-using TMPro;                // <- TextMesh Pro
+using UnityEngine.UI;
+using TMPro;
 
 [AddComponentMenu("Combat/UI/Ready Button (Preparation)")]
 public class CombatUI_ReadyButton : MonoBehaviour
 {
     [Header("Références")]
-    [SerializeField] private Combat_PhaseManager combatManager;       // Drag & Drop (ou auto-find)
-    [SerializeField] private Entity_StatistiqueCombat playerStats;    // Drag & Drop (ou auto-find)
+    [SerializeField] private Combat_PhaseManager combatManager;
+    [SerializeField] private Entity_StatistiqueCombat playerStats;
 
     [Header("Comportement")]
     [Tooltip("Refuse de toggler si on n'est pas en phase Préparation.")]
@@ -17,33 +17,6 @@ public class CombatUI_ReadyButton : MonoBehaviour
 
     private void Awake()
     {
-        btn = GetComponent<Button>();
-        if (combatManager == null)
-            combatManager = FindAnyObjectByType<Combat_PhaseManager>(FindObjectsInactive.Exclude);
-
-        if (playerStats == null)
-        {
-            // 1) via le contrôleur joueur (si présent)
-            var controller = FindAnyObjectByType<Player_ControllerPhasePreparation>(FindObjectsInactive.Exclude);
-            if (controller != null) controller.TryGetComponent(out playerStats);
-
-            // 2) sinon, premier combattant d'équipe verte trouvé
-#if UNITY_2023_1_OR_NEWER
-            if (playerStats == null)
-            {
-                var allStats = Object.FindObjectsByType<Entity_StatistiqueCombat>(
-                    FindObjectsInactive.Include, FindObjectsSortMode.None);
-                foreach (var s in allStats) { if (s != null && s.team == 0) { playerStats = s; break; } }
-            }
-#else
-            if (playerStats == null)
-            {
-                var allStats = FindObjectsOfType<Entity_StatistiqueCombat>(true);
-                foreach (var s in allStats) { if (s != null && s.team == 0) { playerStats = s; break; } }
-            }
-#endif
-        }
-
         RefreshUI();
     }
 

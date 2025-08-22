@@ -4,18 +4,12 @@ using UnityEngine.UI;
 [AddComponentMenu("Combat/UI/Exit Button")]
 public class CombatUI_ExitButton : MonoBehaviour
 {
-    [SerializeField] private Combat_PhaseManager combatManager; // drag & drop
+    [SerializeField] private Combat_PhaseManager combatManager;
     [SerializeField] private bool allowDuringPreparation = true;
     [SerializeField] private bool allowDuringTurnByTurn = true;
 
     private Button btn;
 
-    private void Awake()
-    {
-        btn = GetComponent<Button>();
-        if (combatManager == null)
-            combatManager = FindAnyObjectByType<Combat_PhaseManager>(FindObjectsInactive.Exclude);
-    }
 
     private void OnEnable() => RefreshInteractable();
     private void Update() => RefreshInteractable();

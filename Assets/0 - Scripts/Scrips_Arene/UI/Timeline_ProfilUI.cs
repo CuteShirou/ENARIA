@@ -6,17 +6,15 @@ using UnityEngine.EventSystems;
 public class Timeline_ProfilUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Réfs UI (Drag & Drop depuis le prefab)")]
-    [SerializeField] private Image portrait;       // Icon_Entity
-    [SerializeField] private Image currentHpBar;   // CurrentHP_Bar (Image)
+    [SerializeField] private Image portrait;
+    [SerializeField] private Image currentHpBar;
 
     private GameObject entity;
     private Entity_Info info;
     private Entity_StatistiqueCombat stats;
 
-    // Réf fournie par Timeline_CombatUI
     private InfoEntityPanelUI infoPanel;
 
-    /// <summary>Appelé par Timeline_CombatUI juste après l'Instantiate.</summary>
     public void Bind(GameObject boundEntity, InfoEntityPanelUI panel)
     {
         entity = boundEntity;
@@ -27,14 +25,6 @@ public class Timeline_ProfilUI : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         if (portrait) portrait.sprite = info ? info.entity_Icon : null;
 
-        // IMPORTANT : s'assurer que l'Image est bien en Filled au runtime
-        if (currentHpBar)
-        {
-            currentHpBar.type = Image.Type.Filled;
-            currentHpBar.fillMethod = Image.FillMethod.Vertical;
-            currentHpBar.fillOrigin = (int)Image.OriginVertical.Bottom; // (ou Top si tu veux que ça descende)
-        }
-
         RefreshHP();
     }
 
@@ -43,9 +33,6 @@ public class Timeline_ProfilUI : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (!stats || !currentHpBar) return;
         float ratio = (stats.baseHP > 0) ? Mathf.Clamp01(stats.currentHP / (float)stats.baseHP) : 0f;
         currentHpBar.fillAmount = ratio;
-
-        // DEBUG (optionnel) : décommente si tu veux vérifier la valeur
-        // Debug.Log($"[Timeline] {entity?.name} HP {stats.currentHP}/{stats.baseHP} => fill {ratio:0.00}");
     }
 
     // Survol = afficher/cacher le panneau d’info

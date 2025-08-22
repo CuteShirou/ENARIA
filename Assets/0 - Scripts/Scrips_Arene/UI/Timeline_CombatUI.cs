@@ -10,8 +10,8 @@ public class Timeline_CombatUI : MonoBehaviour
     [SerializeField] private Transform content;
 
     [Header("Prefabs (attente / actif)")]
-    [SerializeField] private GameObject prefabWaiting; // Profil_Entity
-    [SerializeField] private GameObject prefabActive;  // Profil_Entity_Actif
+    [SerializeField] private GameObject prefabWaiting;
+    [SerializeField] private GameObject prefabActive;
 
     [Header("Référence du panel d'info (Drag & Drop)")]
     [SerializeField] private InfoEntityPanelUI infoPanel;
@@ -29,7 +29,7 @@ public class Timeline_CombatUI : MonoBehaviour
     private readonly List<Row> rows = new();
     private int currentIndex = -1; // -1 = aucun actif
 
-    // (Re)construit TOUTE la timeline, sans actif
+    // construit TOUTE la timeline
     public void BuildFromManager(Combat_PhaseManager mng)
     {
         manager = mng;
@@ -99,7 +99,6 @@ public class Timeline_CombatUI : MonoBehaviour
         var ui = go.GetComponent<Timeline_ProfilUI>();
         if (!ui) ui = go.AddComponent<Timeline_ProfilUI>();
 
-        // >>> pas de Find : on passe la réf du panel ici
         ui.Bind(entity, infoPanel);
 
         return new Row { entity = entity, go = go, ui = ui, isActive = isActive };
@@ -140,7 +139,7 @@ public class Timeline_CombatUI : MonoBehaviour
 
         var ui = go.GetComponent<Timeline_ProfilUI>();
         if (!ui) ui = go.AddComponent<Timeline_ProfilUI>();
-        ui.Bind(old.entity, infoPanel); // <<< panel transmis
+        ui.Bind(old.entity, infoPanel);
 
         rows[rowIndex].go = go;
         rows[rowIndex].ui = ui;
