@@ -1257,7 +1257,9 @@ MonoBehaviour:
   entity_Name: Scribble Combattant
   entity_Level: 5
   entity_Icon: {fileID: 21300000, guid: 087cb1cf5a189b844a69aa7f5e3bed05, type: 3}
-  listDropRessources: []
+  listDropRessources:
+  - ressourcePrefab: {fileID: 7322513746942802617, guid: 8c3dcbf0353b03746b6cdb4fca2fed7a, type: 3}
+    dropChance: 80
   gainXp: 0
   savePosEntity: {x: 0, y: 0, z: 0}
   saveCamEntity: 

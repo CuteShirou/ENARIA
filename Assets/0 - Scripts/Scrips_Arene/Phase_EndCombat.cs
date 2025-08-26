@@ -8,12 +8,12 @@ using UnityEngine.Animations;
 public class Phase_EndCombat : MonoBehaviour
 {
     [Header("UI (références scène)")]
-    [SerializeField] private GameObject explorationUIRoot; // Glisser l'objet Exploration_UI
-    [SerializeField] private GameObject combatUIRoot;      // Glisser l'objet Combat_UI
+    [SerializeField] private GameObject explorationUIRoot;
+    [SerializeField] private GameObject combatUIRoot;
 
     [Header("Parents arène")]
-    [SerializeField] private Transform teamRedParent;      // Conteneur des monstres
-    [SerializeField] private Transform obstaclesParent;    // Conteneur des obstacles
+    [SerializeField] private Transform teamRedParent;
+    [SerializeField] private Transform obstaclesParent;
 
     [Header("Popup résultat")]
     [SerializeField] private GameObject resultPopupRoot;   // Panel_Popup_EndCombat
@@ -24,37 +24,35 @@ public class Phase_EndCombat : MonoBehaviour
     [Header("Win/Lose UI")]
     [SerializeField] private Transform contentWin;         // .../Panel_Team_Win/.../Content
     [SerializeField] private Transform contentLose;        // .../Panel_Team_Lose/.../Content
-    [SerializeField] private GameObject prefabLineWin;     // Prefab_Ligne_EndFight_Win
+    [SerializeField] private GameObject prefabLineWin;     // Prefab_Ligne_EndFight_Win (avec EndFight_LineUI)
     [SerializeField] private GameObject prefabLineLose;    // Prefab_Ligne_EndFight_Lose
-    [SerializeField] private Sprite defaultIcon;           // Icône par défaut si entité sans sprite
+    [SerializeField] private Sprite defaultIcon;
 
     private Combat_PhaseManager manager;
 
-    // Appelée par le PhaseManager à l'entrée de la phase
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
 
-        // Bascule d'UI (aucun Find : tout est assigné dans l’Inspector)
+        // Bascule d'UI
         if (combatUIRoot) combatUIRoot.SetActive(false);
         if (explorationUIRoot) explorationUIRoot.SetActive(true);
 
-        // Snapshot des équipes avant nettoyage (évite de perdre les données)
+        // Snapshot des équipes avant nettoyage
         var greenSnapshot = manager?.phaseEnter != null ? new List<GameObject>(manager.phaseEnter.greenTeam) : new List<GameObject>();
         var redSnapshot = manager?.phaseEnter != null ? new List<GameObject>(manager.phaseEnter.redTeam) : new List<GameObject>();
 
-        // Affiche la pop-up et remplit les panels Win/Lose
+        // Affiche la pop-up + construit les panels
         ShowResultPopup(manager.lastCombatWinning);
-        BuildWinLosePanels(manager.winnerTeam, greenSnapshot, redSnapshot);
+        BuildWinLosePanels_PerPlayerDistribution(manager.winnerTeam, greenSnapshot, redSnapshot);
 
-        // Nettoyage de l’arène
+        // Nettoyage arène / retour joueurs
         if (manager.tileGrid != null)
             manager.tileGrid.UnregisterAllEntities();
 
         if (teamRedParent) DestroyAllChildren(teamRedParent);
         if (obstaclesParent) DestroyAllChildren(obstaclesParent);
 
-        // Retour des joueurs et reset des listes
         if (manager.phaseEnter != null)
         {
             var players = new List<GameObject>(manager.phaseEnter.greenTeam);
@@ -73,34 +71,115 @@ public class Phase_EndCombat : MonoBehaviour
         Debug.Log($"[End] Combat terminé. Résultat: {(manager.lastCombatWinning ? "WIN" : "LOSE")}");
     }
 
-    // Construit les panneaux Win et Lose
-    private void BuildWinLosePanels(CombatTeamId winner, List<GameObject> green, List<GameObject> red)
+    // Construit Win/Lose avec répartition de drops PAR joueur gagnant
+    private void BuildWinLosePanels_PerPlayerDistribution(CombatTeamId winner, List<GameObject> green, List<GameObject> red)
     {
         ClearContainer(contentWin);
         ClearContainer(contentLose);
 
-        // Sélectionne gagnants/perdants
+        // Gagnants / perdants
         List<GameObject> winners = winner == CombatTeamId.Green ? green : (winner == CombatTeamId.Red ? red : new List<GameObject>());
         List<GameObject> losers = winner == CombatTeamId.Green ? red : (winner == CombatTeamId.Red ? green : new List<GameObject>());
 
-        // Instancie une ligne par entité
+        // WIN : une ligne par gagnant + tirages indépendants
         if (contentWin && prefabLineWin)
-            foreach (var e in winners) CreateLineForEntity(e, contentWin, prefabLineWin);
+        {
+            foreach (var winnerEntity in winners)
+            {
+                var lineGO = CreateLineForEntity(winnerEntity, contentWin, prefabLineWin, isWinner: true);
 
+                // 1) Calcule les drops pour CE joueur
+                List<GameObject> dropsForThisWinner = ComputeDropsForOneWinner(losers);
+
+                // 2) Ajoute les items correspondants à l'inventaire
+                GiveItemsToInventory(dropsForThisWinner);
+
+                // 3) Affiche ces drops dans la ligne UI
+                var ui = lineGO ? lineGO.GetComponent<EndFight_LineUI>() : null;
+                if (ui != null) ui.SetDrops(dropsForThisWinner);
+            }
+        }
+
+        // LOSE : lignes simples
         if (contentLose && prefabLineLose)
-            foreach (var e in losers) CreateLineForEntity(e, contentLose, prefabLineLose);
+        {
+            foreach (var loserEntity in losers)
+            {
+                CreateLineForEntity(loserEntity, contentLose, prefabLineLose, isWinner: false);
+            }
+        }
     }
 
-    // Crée une ligne et renseigne l'icône + le nom
-    private void CreateLineForEntity(GameObject entity, Transform parent, GameObject prefabLine)
+    // Calcule les drops pour UN gagnant à partir de tous les perdants
+    private List<GameObject> ComputeDropsForOneWinner(List<GameObject> losers)
     {
-        if (!entity || !parent || !prefabLine) return;
+        var drops = new List<GameObject>();
+        if (losers == null || losers.Count == 0) return drops;
+
+        foreach (var entity in losers)
+        {
+            if (!entity) continue;
+
+            var info = entity.GetComponent<Entity_Info>();
+            if (info == null || info.listDropRessources == null) continue;
+
+            foreach (var entry in info.listDropRessources)
+            {
+                if (entry == null) continue;
+
+                GameObject prefab = entry.ressourcePrefab;   // Prefab_DropRessource spécifique
+                float chance = Mathf.Clamp(entry.dropChance, 0f, 100f);
+
+                if (!prefab) continue;
+
+                if (RollChance(chance))
+                    drops.Add(prefab); // On garde le prefab (il contient l'Item via InventoryItemController)
+            }
+        }
+
+        return drops;
+    }
+
+    // Ajoute chaque drop dans l'inventaire joueur
+    private void GiveItemsToInventory(List<GameObject> dropPrefabs)
+    {
+        if (dropPrefabs == null || dropPrefabs.Count == 0) return;
+
+        foreach (var prefab in dropPrefabs)
+        {
+            if (!prefab) continue;
+
+            // Récupère l'Item depuis le prefab (via InventoryItemController)
+            var ctrl = prefab.GetComponent<InventoryItemController>();
+            Item item = ctrl != null ? ctrl.GetItem() : null;
+
+            if (item != null)
+            {
+                // Ajoute dans le premier slot vide (selon ton utilitaire)
+                InventoryUtil.AddItemToFirstEmpty(item);
+            }
+            else
+            {
+                Debug.LogWarning($"[End] Drop prefab sans Item lisible: {prefab.name}");
+            }
+        }
+    }
+
+    // Tirage sur un pourcentage [0..100]
+    private bool RollChance(float percent)
+    {
+        return Random.Range(0f, 100f) < percent;
+    }
+
+    // Instancie une ligne et renseigne l'icône + le nom
+    private GameObject CreateLineForEntity(GameObject entity, Transform parent, GameObject prefabLine, bool isWinner)
+    {
+        if (!entity || !parent || !prefabLine) return null;
 
         var go = Instantiate(prefabLine, parent, false);
 
-        // On reste dans la hiérarchie du prefab (transform.Find local est OK)
         var icon = go.transform.Find("IconEntity")?.GetComponent<Image>();
-        if (icon == null) icon = go.transform.Find("IconPlayer")?.GetComponent<Image>(); // secours si ancien nom
+        if (icon == null) icon = go.transform.Find("IconPlayer")?.GetComponent<Image>();
         var nameText = go.transform.Find("Name_Text")?.GetComponent<TMP_Text>();
 
         GetEntityDisplay(entity, out Sprite iconSprite, out string displayName);
@@ -113,29 +192,26 @@ public class Phase_EndCombat : MonoBehaviour
         }
         if (nameText)
             nameText.text = string.IsNullOrWhiteSpace(displayName) ? entity.name : displayName;
+
+        return go;
     }
 
-    // Lit icône et nom depuis les composants de l'entité
+    // Lit icône et nom depuis l'entité (Entity_Info prioritaire)
     private void GetEntityDisplay(GameObject entity, out Sprite iconSprite, out string displayName)
     {
         iconSprite = null;
         displayName = entity ? entity.name : "";
 
-        // Source principale: Entity_Info (entity_Name, entity_Icon)
         var info = entity ? entity.GetComponent<Entity_Info>() : null;
         if (info != null)
         {
             if (!string.IsNullOrWhiteSpace(info.entity_Name))
                 displayName = info.entity_Name;
-
             if (info.entity_Icon != null)
                 iconSprite = info.entity_Icon;
         }
-
-        // Ajouter ici d’autres sources si nécessaire (stats, data sheet, etc.)
     }
 
-    // Active la pop-up + texte
     private void ShowResultPopup(bool win)
     {
         if (!resultPopupRoot) return;
@@ -143,7 +219,6 @@ public class Phase_EndCombat : MonoBehaviour
         if (resultPopupText) resultPopupText.text = win ? winText : loseText;
     }
 
-    // Bouton fermer (appelé depuis l’UI)
     public void OnClick_CloseResultPopup()
     {
         if (resultPopupRoot) resultPopupRoot.SetActive(false);
@@ -151,19 +226,16 @@ public class Phase_EndCombat : MonoBehaviour
 
     // ----------------- Utilitaires -----------------
 
-    // Replace le joueur en exploration et restaure ses réglages
     private void ReturnPlayerToExploration(GameObject player)
     {
         if (!player) return;
 
-        // Détache du parent d'équipe si besoin
         if (manager.phaseEnter != null && manager.phaseEnter.teamGreenParent != null &&
             player.transform.parent == manager.phaseEnter.teamGreenParent)
         {
             player.transform.SetParent(null, true);
         }
 
-        // Restaure position/caméra depuis Entity_Info
         var info = player.GetComponent<Entity_Info>();
         if (info != null)
         {
@@ -171,11 +243,9 @@ public class Phase_EndCombat : MonoBehaviour
             RestorePlayerCameraConstraint(player, info.saveCamEntity);
         }
 
-        // Repasse le contrôleur en mode exploration
         var sm = player.GetComponent<Player_ScriptManager>();
         if (sm) sm.SetExploration();
 
-        // Hook optionnel si d'autres systèmes écoutent la fin de combat
         player.SendMessage("OnCombatEnd", manager.lastCombatWinning, SendMessageOptions.DontRequireReceiver);
     }
 
@@ -211,7 +281,6 @@ public class Phase_EndCombat : MonoBehaviour
             Debug.LogWarning($"[End] Source '{targetSourceName}' non trouvée dans le ParentConstraint de la caméra joueur.");
     }
 
-    // Détruit tous les enfants d’un conteneur
     private void DestroyAllChildren(Transform root)
     {
         var toDestroy = new List<GameObject>();
@@ -232,7 +301,6 @@ public class Phase_EndCombat : MonoBehaviour
         }
     }
 
-    // Vide un container UI (pour re-remplir proprement)
     private void ClearContainer(Transform container)
     {
         if (!container) return;
