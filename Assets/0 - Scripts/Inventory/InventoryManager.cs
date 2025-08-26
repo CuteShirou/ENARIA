@@ -95,28 +95,12 @@ public class InventoryManager : MonoBehaviour
 
     public bool IsStackable(Item item)
     {
-        if (item == null) return false;
-        switch (item.itemType)
-        {
-            case Item.ItemType.Ressource:
-            case Item.ItemType.Consumable:
-            case Item.ItemType.Item:
-                return true;
-            default:
-                return false;
-        }
+        return item != null && item.itemType == Item.ItemType.Consumable;
     }
 
     public int MaxStackFor(Item item)
     {
-        if (item == null) return 1;
-        switch (item.itemType)
-        {
-            case Item.ItemType.Consumable: return DEFAULT_MAX_STACK_CONSUMABLE;
-            case Item.ItemType.Ressource:  return DEFAULT_MAX_STACK_RESSOURCE;
-            case Item.ItemType.Item:       return DEFAULT_MAX_STACK_ITEM;
-            default:                       return 1;
-        }
+        return IsStackable(item) ? DEFAULT_MAX_STACK_CONSUMABLE : 1;
     }
     
     public int FindFirstEmpty()
