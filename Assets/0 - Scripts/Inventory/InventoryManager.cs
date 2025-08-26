@@ -15,11 +15,16 @@ public class InventoryManager : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private GameObject PageDebug;
 
+    // Save flags
+    [SerializeField] private bool autoSave = true;
+    private bool suppressAutoSave = false;
+    
     // PUBLIC VARIABLES
     public static InventoryManager Instance;
     public List<Item> items = new List<Item>();
     public static Sprite EmptySlotSprite => Instance != null ? Instance.emptySlotSprite : null;
     public Toggle DebugToggle;
+    public int SlotCapacity => initialSlotCount;
 
     // PRIVATE VARIABLES
     private Item[] slots;
@@ -37,6 +42,9 @@ public class InventoryManager : MonoBehaviour
         EnsureSlotsInitialized();
         EnsureDataInitialized();
         EnsureCanonicalItemIds();
+
+        InventorySaveSystem.Load(this);
+        
         RefreshAllSlots();
     }
 
@@ -189,6 +197,7 @@ public class InventoryManager : MonoBehaviour
             int max = MaxStackFor(item);
             counts[index] = Mathf.Clamp(counts[index] + Mathf.Max(1, count), 0, max);
             RefreshSlot(index);
+            AutoSave();
             return;
         }
 
@@ -205,6 +214,7 @@ public class InventoryManager : MonoBehaviour
             if (IsStackable(item) && counts[index] > max) counts[index] = max;
         }
         RefreshSlot(index);
+        AutoSave();
     }
 
     public void ClearItemAt(int index)
@@ -216,19 +226,6 @@ public class InventoryManager : MonoBehaviour
     }
 
     public Item GetItemAt(int index) => IsValid(index) ? slots[index] : null;
-
-    public void Remove(Item item)
-    {
-        if (item == null || slots == null) return;
-        for (int i = 0; i < slots.Length; i++)
-        {
-            if (slots[i] == item)
-            {
-                ClearItemAt(i);
-                break;
-            }
-        }
-    }
 
     private bool IsValid(int index) => index >= 0 && index < initialSlotCount;
 
@@ -275,6 +272,7 @@ public class InventoryManager : MonoBehaviour
 
         RefreshSlot(indexA);
         RefreshSlot(indexB);
+        AutoSave();
     }
 
     public void EnableItemRemover()
@@ -371,5 +369,50 @@ public class InventoryManager : MonoBehaviour
         RefreshSlot(index);
         RefreshSlot(empty);
         return true;
+    }
+
+    internal void LoadFrom(int[] itemIds, int[] itemCounts)
+    {
+        EnsureDataInitialized();
+        int n = Mathf.Min(initialSlotCount, itemIds != null ? itemIds.Length : 0);
+
+        for (int i = 0; i < initialSlotCount; i++)
+        {
+            Item it = null;
+            int ct = 0;
+
+            if (i < n)
+            {
+                int id = itemIds[i];
+                if (id > 0)
+                {
+                    it = ResolveById(id);
+                    ct = (itemCounts != null && i < itemCounts.Length) ? itemCounts[i] : 1;
+                    if (!IsStackable(it)) ct = 1;
+                    if (IsStackable(it)) ct = Mathf.Max(1, Mathf.Min(ct, MaxStackFor(it)));
+                }
+            }
+            
+            slots[i] = it;
+            counts[i] = ct;
+        }
+        
+        RefreshAllSlots();
+    }
+
+    internal Item ResolveById(int id)
+    {
+        if (id <= 0) return null;
+        int idx = id - 1;
+        if (idx >= 0 && idx < items.Count) return items[idx];
+        return null;
+    }
+
+    internal void SetSuppressAutoSave(bool v) => suppressAutoSave = v;
+
+    private void AutoSave()
+    {
+        if (!autoSave || suppressAutoSave) return;
+        InventorySaveSystem.Save(this);
     }
 }

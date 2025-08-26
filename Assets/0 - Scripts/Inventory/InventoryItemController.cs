@@ -16,6 +16,9 @@ public class InventoryItemController : MonoBehaviour
         if (slotView != null && InventoryManager.Instance != null)
         {
             InventoryManager.Instance.ClearItemAt(slotView.Index);
+            
+            if (InventoryManager.Instance.DebugToggle == null || InventoryManager.Instance.DebugToggle.isOn)
+                InventorySaveSystem.Save(InventoryManager.Instance);
         }
         item = null;
     }
