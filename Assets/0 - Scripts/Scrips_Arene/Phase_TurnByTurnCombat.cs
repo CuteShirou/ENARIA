@@ -6,10 +6,10 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
 {
     private Combat_PhaseManager manager;
 
-    // --- Simulation simple de tour ---
-    private int turnIndex = -1;                 // index courant dans AllFighters
-    private Timeline_CombatUI timeline;         // ref UI
-    private SetupTile lastActiveTile = null;    // pour éteindre l’ancien highlight
+    // Simulation simple de tour
+    private int turnIndex = -1;
+    private Timeline_CombatUI timeline;
+    private SetupTile lastActiveTile = null;
 
     public void InitPhase(Combat_PhaseManager combatManager)
     {
@@ -38,10 +38,10 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             }
         }
 
-        // 3) Appliquer le damier logique (None)
+        // 3) Appliquer état neutre aux tuiles (damier logique côté data)
         ApplyCheckerboardToTiles();
 
-        // 4) Timeline : focus sur le premier combattant (si existant)
+        // 4) UI Timeline
         timeline = FindAnyObjectByType<Timeline_CombatUI>(FindObjectsInactive.Include);
 
         if (manager.phaseEnter?.AllFighters != null && manager.phaseEnter.AllFighters.Count > 0)
@@ -51,7 +51,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
 
             if (timeline)
             {
-                timeline.SetCurrentEntity(first); // passe en prefab “Actif”
+                timeline.SetCurrentEntity(first);
                 timeline.RefreshAllHP();
             }
 
@@ -68,37 +68,31 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
         if (!isActiveAndEnabled) return;
         if (turnIndex < 0) return;
 
-        // --- TEST MANUEL ---
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GoToNextFighter();
-        }
+        // Raccourcis de test existants
+        if (Input.GetKeyDown(KeyCode.Space)) { GoToNextFighter(); }
         else if (Input.GetKeyDown(KeyCode.X))
         {
-            // -1 PA / -1 PM
             var e = GetCurrentEntity();
             if (!e) return;
             if (e.TryGetComponent(out Entity_StatistiqueCombat s))
             {
                 s.SetPA(s.currentPA - 1);
                 s.SetPM(s.currentPM - 1);
-                RefreshUIForCurrent(e, refreshHpInTimeline: false); // pas besoin de maj HP ici
+                RefreshUIForCurrent(e, false);
             }
         }
         else if (Input.GetKeyDown(KeyCode.C))
         {
-            // -10 HP
             var e = GetCurrentEntity();
             if (!e) return;
             if (e.TryGetComponent(out Entity_StatistiqueCombat s))
             {
                 s.SetHP(s.currentHP - 10);
-                RefreshUIForCurrent(e, refreshHpInTimeline: true); // met à jour la barre HP
+                RefreshUIForCurrent(e, true);
             }
         }
         else if (Input.GetKeyDown(KeyCode.V))
         {
-            // -5% à toutes les résistances
             var e = GetCurrentEntity();
             if (!e) return;
             if (e.TryGetComponent(out Entity_StatistiqueCombat s))
@@ -107,7 +101,46 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
                 s.SetResDex(s.currentResistanceDexterite - 5f);
                 s.SetResMagie(s.currentResistanceMagie - 5f);
                 s.SetResFoi(s.currentResistanceFoi - 5f);
-                RefreshUIForCurrent(e, refreshHpInTimeline: false); // pas de maj HP
+                RefreshUIForCurrent(e, false);
+            }
+        }
+
+        // --- Touches de debug pour fin de combat ---
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            // met à 0 les PV de toute l'équipe VERTE via phaseEnter.greenTeam
+            KillTeamForDebug(manager?.phaseEnter != null ? manager.phaseEnter.greenTeam : null);
+            if (timeline) timeline.RefreshAllHP();
+        }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            // met à 0 les PV de toute l'équipe ROUGE via phaseEnter.redTeam
+            KillTeamForDebug(manager?.phaseEnter != null ? manager.phaseEnter.redTeam : null);
+            if (timeline) timeline.RefreshAllHP();
+        }
+
+        // Détection Win/Lose à chaque frame
+        if (manager != null)
+        {
+            if (manager.TryEvaluateEndOfCombat())
+            {
+                // si fin détectée → Phase_End activée. Ce script sera désactivé.
+                return;
+            }
+        }
+    }
+
+    // utilitaire debug pour "tuer" une équipe
+    private void KillTeamForDebug(List<GameObject> team)
+    {
+        if (team == null) return;
+        for (int i = 0; i < team.Count; i++)
+        {
+            var go = team[i];
+            if (!go) continue;
+            if (go.TryGetComponent(out Entity_StatistiqueCombat s))
+            {
+                s.SetHP(0);
             }
         }
     }
@@ -122,15 +155,12 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
 
     private void RefreshUIForCurrent(GameObject entity, bool refreshHpInTimeline)
     {
-        if (timeline)
-        {
-            if (refreshHpInTimeline) timeline.RefreshAllHP();
+        if (!timeline) return;
+        if (refreshHpInTimeline) timeline.RefreshAllHP();
 
-            // Réaffiche l'info-bulle pour recharger PA/PM/Res/HP à la volée
-            var panel = timeline.InfoPanel; // exposé par Timeline_CombatUI
-            if (panel && panel.gameObject.activeInHierarchy)
-                panel.ShowFor(entity);
-        }
+        var panel = timeline.InfoPanel;
+        if (panel && panel.gameObject.activeInHierarchy)
+            panel.ShowFor(entity);
     }
 
     private void GoToNextFighter()
@@ -141,25 +171,17 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
         turnIndex = (turnIndex + 1) % fighters.Count;
         var current = fighters[turnIndex];
 
-        // Timeline → bascule l’item actif
         if (timeline) timeline.SetCurrentEntity(current);
-
-        // Grille → highlight de la case
         HighlightEntityTile(current);
-
-        // Réaffiche la bulle pour la nouvelle entité
-        RefreshUIForCurrent(current, refreshHpInTimeline: true);
+        RefreshUIForCurrent(current, true);
     }
 
     private void HighlightEntityTile(GameObject entity)
     {
         if (manager?.tileGrid == null || entity == null) return;
 
-        // Éteindre l’ancienne tuile active
-        if (lastActiveTile != null)
-            lastActiveTile.isFighterActif = false;
+        if (lastActiveTile != null) lastActiveTile.isFighterActif = false;
 
-        // Allumer la tuile de l’entité courante
         var tileObj = manager.tileGrid.GetTileOfEntity(entity);
         if (tileObj != null && tileObj.TryGetComponent(out SetupTile setup))
         {
@@ -189,7 +211,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             if (!tileObj.TryGetComponent(out SetupTile setup)) continue;
 
             setup.currentState = Tile_State.None;
-            setup.isFighterActif = false; // on repart sans highlight
+            setup.isFighterActif = false;
         }
 
         Debug.Log("[Phase_TurnByTurn] Damier logique réinitialisé (état None).");

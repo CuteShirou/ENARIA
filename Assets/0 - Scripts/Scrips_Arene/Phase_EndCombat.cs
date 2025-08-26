@@ -1,51 +1,60 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine.Animations;
 
 [AddComponentMenu("Combat/Phase - End Combat (Local)")]
 public class Phase_EndCombat : MonoBehaviour
 {
-    [Header("UI (scène unique)")]
-    [SerializeField] private GameObject explorationUIRoot; // Exploration_UI
-    [SerializeField] private GameObject combatUIRoot;      // Combat_UI
-    [SerializeField] private bool autoFindUIsIfNull = true;
-    [SerializeField] private string explorationUIObjectName = "Exploration_UI";
-    [SerializeField] private string combatUIObjectName = "Combat_UI";
+    [Header("UI (références scène)")]
+    [SerializeField] private GameObject explorationUIRoot; // Glisser l'objet Exploration_UI
+    [SerializeField] private GameObject combatUIRoot;      // Glisser l'objet Combat_UI
 
-    [Header("Arena parents (containers)")]
-    [SerializeField] private Transform teamRedParent;   
-    [SerializeField] private Transform obstaclesParent;
+    [Header("Parents arène")]
+    [SerializeField] private Transform teamRedParent;      // Conteneur des monstres
+    [SerializeField] private Transform obstaclesParent;    // Conteneur des obstacles
 
-    [Header("Popup résultat (dans Exploration_UI)")]
-    [SerializeField] private GameObject resultPopupRoot;
-    [SerializeField] private TMP_Text resultPopupText;
-    [SerializeField] private string winText = "Vous avez GAGNE le combat";
+    [Header("Popup résultat")]
+    [SerializeField] private GameObject resultPopupRoot;   // Panel_Popup_EndCombat
+    [SerializeField] private TMP_Text resultPopupText;     // Title_Result_EndFight
+    [SerializeField] private string winText = "Vous avez GAGNÉ le combat";
     [SerializeField] private string loseText = "Vous avez PERDU le combat";
+
+    [Header("Win/Lose UI")]
+    [SerializeField] private Transform contentWin;         // .../Panel_Team_Win/.../Content
+    [SerializeField] private Transform contentLose;        // .../Panel_Team_Lose/.../Content
+    [SerializeField] private GameObject prefabLineWin;     // Prefab_Ligne_EndFight_Win
+    [SerializeField] private GameObject prefabLineLose;    // Prefab_Ligne_EndFight_Lose
+    [SerializeField] private Sprite defaultIcon;           // Icône par défaut si entité sans sprite
 
     private Combat_PhaseManager manager;
 
+    // Appelée par le PhaseManager à l'entrée de la phase
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
 
-        // UI: Exploration ON, Combat OFF
+        // Bascule d'UI (aucun Find : tout est assigné dans l’Inspector)
         if (combatUIRoot) combatUIRoot.SetActive(false);
         if (explorationUIRoot) explorationUIRoot.SetActive(true);
 
-        // Parents d’arène
+        // Snapshot des équipes avant nettoyage (évite de perdre les données)
+        var greenSnapshot = manager?.phaseEnter != null ? new List<GameObject>(manager.phaseEnter.greenTeam) : new List<GameObject>();
+        var redSnapshot = manager?.phaseEnter != null ? new List<GameObject>(manager.phaseEnter.redTeam) : new List<GameObject>();
 
-        // === ORDRE : Dicos → Monstres/Obstacles → Joueurs → Grille ===
+        // Affiche la pop-up et remplit les panels Win/Lose
+        ShowResultPopup(manager.lastCombatWinning);
+        BuildWinLosePanels(manager.winnerTeam, greenSnapshot, redSnapshot);
 
-        // 1) Clear dictionnaires
+        // Nettoyage de l’arène
         if (manager.tileGrid != null)
             manager.tileGrid.UnregisterAllEntities();
 
-        // 2) Clear monstres & obstacles
         if (teamRedParent) DestroyAllChildren(teamRedParent);
         if (obstaclesParent) DestroyAllChildren(obstaclesParent);
 
-        // 2.b) Joueurs → retour exploration + mode exploration
+        // Retour des joueurs et reset des listes
         if (manager.phaseEnter != null)
         {
             var players = new List<GameObject>(manager.phaseEnter.greenTeam);
@@ -58,24 +67,103 @@ public class Phase_EndCombat : MonoBehaviour
             manager.phaseEnter.SetMonsterState(MonsterState.InNature);
         }
 
-        // 3) Clear cases & grille
         if (manager.tileGrid != null)
             manager.tileGrid.ClearGrid(true);
 
-        ShowResultPopup(manager.lastCombatWinning);
         Debug.Log($"[End] Combat terminé. Résultat: {(manager.lastCombatWinning ? "WIN" : "LOSE")}");
     }
 
+    // Construit les panneaux Win et Lose
+    private void BuildWinLosePanels(CombatTeamId winner, List<GameObject> green, List<GameObject> red)
+    {
+        ClearContainer(contentWin);
+        ClearContainer(contentLose);
+
+        // Sélectionne gagnants/perdants
+        List<GameObject> winners = winner == CombatTeamId.Green ? green : (winner == CombatTeamId.Red ? red : new List<GameObject>());
+        List<GameObject> losers = winner == CombatTeamId.Green ? red : (winner == CombatTeamId.Red ? green : new List<GameObject>());
+
+        // Instancie une ligne par entité
+        if (contentWin && prefabLineWin)
+            foreach (var e in winners) CreateLineForEntity(e, contentWin, prefabLineWin);
+
+        if (contentLose && prefabLineLose)
+            foreach (var e in losers) CreateLineForEntity(e, contentLose, prefabLineLose);
+    }
+
+    // Crée une ligne et renseigne l'icône + le nom
+    private void CreateLineForEntity(GameObject entity, Transform parent, GameObject prefabLine)
+    {
+        if (!entity || !parent || !prefabLine) return;
+
+        var go = Instantiate(prefabLine, parent, false);
+
+        // On reste dans la hiérarchie du prefab (transform.Find local est OK)
+        var icon = go.transform.Find("IconEntity")?.GetComponent<Image>();
+        if (icon == null) icon = go.transform.Find("IconPlayer")?.GetComponent<Image>(); // secours si ancien nom
+        var nameText = go.transform.Find("Name_Text")?.GetComponent<TMP_Text>();
+
+        GetEntityDisplay(entity, out Sprite iconSprite, out string displayName);
+
+        if (icon)
+        {
+            icon.sprite = iconSprite ? iconSprite : defaultIcon;
+            icon.enabled = (icon.sprite != null);
+            icon.preserveAspect = true;
+        }
+        if (nameText)
+            nameText.text = string.IsNullOrWhiteSpace(displayName) ? entity.name : displayName;
+    }
+
+    // Lit icône et nom depuis les composants de l'entité
+    private void GetEntityDisplay(GameObject entity, out Sprite iconSprite, out string displayName)
+    {
+        iconSprite = null;
+        displayName = entity ? entity.name : "";
+
+        // Source principale: Entity_Info (entity_Name, entity_Icon)
+        var info = entity ? entity.GetComponent<Entity_Info>() : null;
+        if (info != null)
+        {
+            if (!string.IsNullOrWhiteSpace(info.entity_Name))
+                displayName = info.entity_Name;
+
+            if (info.entity_Icon != null)
+                iconSprite = info.entity_Icon;
+        }
+
+        // Ajouter ici d’autres sources si nécessaire (stats, data sheet, etc.)
+    }
+
+    // Active la pop-up + texte
+    private void ShowResultPopup(bool win)
+    {
+        if (!resultPopupRoot) return;
+        resultPopupRoot.SetActive(true);
+        if (resultPopupText) resultPopupText.text = win ? winText : loseText;
+    }
+
+    // Bouton fermer (appelé depuis l’UI)
+    public void OnClick_CloseResultPopup()
+    {
+        if (resultPopupRoot) resultPopupRoot.SetActive(false);
+    }
+
+    // ----------------- Utilitaires -----------------
+
+    // Replace le joueur en exploration et restaure ses réglages
     private void ReturnPlayerToExploration(GameObject player)
     {
-        if (player == null) return;
+        if (!player) return;
 
+        // Détache du parent d'équipe si besoin
         if (manager.phaseEnter != null && manager.phaseEnter.teamGreenParent != null &&
             player.transform.parent == manager.phaseEnter.teamGreenParent)
         {
             player.transform.SetParent(null, true);
         }
 
+        // Restaure position/caméra depuis Entity_Info
         var info = player.GetComponent<Entity_Info>();
         if (info != null)
         {
@@ -83,10 +171,11 @@ public class Phase_EndCombat : MonoBehaviour
             RestorePlayerCameraConstraint(player, info.saveCamEntity);
         }
 
-        // ➜ Mode Exploration via ScriptManager
+        // Repasse le contrôleur en mode exploration
         var sm = player.GetComponent<Player_ScriptManager>();
         if (sm) sm.SetExploration();
 
+        // Hook optionnel si d'autres systèmes écoutent la fin de combat
         player.SendMessage("OnCombatEnd", manager.lastCombatWinning, SendMessageOptions.DontRequireReceiver);
     }
 
@@ -98,16 +187,15 @@ public class Phase_EndCombat : MonoBehaviour
         if (cc != null) cc.enabled = true;
     }
 
-    // Re-sélectionne la source du ParentConstraint de la caméra DU JOUEUR
     private void RestorePlayerCameraConstraint(GameObject player, string targetSourceName)
     {
         if (string.IsNullOrWhiteSpace(targetSourceName)) return;
 
         var playerCam = player.GetComponentInChildren<Camera>(true);
-        if (playerCam == null) { Debug.LogWarning("[End] Caméra enfant du joueur introuvable."); return; }
+        if (!playerCam) { Debug.LogWarning("[End] Caméra enfant du joueur introuvable."); return; }
 
         var constraint = playerCam.GetComponent<ParentConstraint>();
-        if (constraint == null) { Debug.LogWarning("[End] ParentConstraint introuvable sur la caméra du joueur."); return; }
+        if (!constraint) { Debug.LogWarning("[End] ParentConstraint introuvable sur la caméra du joueur."); return; }
 
         bool found = false;
         for (int i = 0; i < constraint.sourceCount; i++)
@@ -123,6 +211,7 @@ public class Phase_EndCombat : MonoBehaviour
             Debug.LogWarning($"[End] Source '{targetSourceName}' non trouvée dans le ParentConstraint de la caméra joueur.");
     }
 
+    // Détruit tous les enfants d’un conteneur
     private void DestroyAllChildren(Transform root)
     {
         var toDestroy = new List<GameObject>();
@@ -134,7 +223,7 @@ public class Phase_EndCombat : MonoBehaviour
 #endif
         foreach (var go in toDestroy)
         {
-            if (go == null) continue;
+            if (!go) continue;
 #if UNITY_EDITOR
             if (immediate) DestroyImmediate(go);
             else
@@ -143,19 +232,18 @@ public class Phase_EndCombat : MonoBehaviour
         }
     }
 
-    private void ShowResultPopup(bool win)
+    // Vide un container UI (pour re-remplir proprement)
+    private void ClearContainer(Transform container)
     {
-        if (resultPopupRoot != null)
+        if (!container) return;
+        for (int i = container.childCount - 1; i >= 0; i--)
         {
-            resultPopupRoot.SetActive(true);
-            if (resultPopupText != null)
-                resultPopupText.text = win ? winText : loseText;
+            var c = container.GetChild(i);
+#if UNITY_EDITOR
+            if (!Application.isPlaying) DestroyImmediate(c.gameObject);
+            else
+#endif
+                Destroy(c.gameObject);
         }
-    }
-
-    public void OnClick_CloseResultPopup()
-    {
-        if (resultPopupRoot != null)
-            resultPopupRoot.SetActive(false);
     }
 }
