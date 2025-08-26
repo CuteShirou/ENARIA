@@ -104,17 +104,12 @@ public class InventorySlotView : MonoBehaviour
         if (currentItem != null) nameText.text = currentItem.itemName;
         else nameText.text = string.Empty;
     }
-
-
+    
     private void ApplyCount()
     {
         if (countText == null) return;
 
-        bool stackable = (currentItem != null) && 
-                         (currentItem.itemType == Item.ItemType.Consumable ||
-                          currentItem.itemType == Item.ItemType.Ressource ||
-                          currentItem.itemType == Item.ItemType.Item);
-
+        bool stackable = (currentItem != null) && (currentItem.itemType == Item.ItemType.Consumable);
         bool show = stackable && currentCount > 1;
         countText.gameObject.SetActive(show);
         countText.text = show ? currentCount.ToString() : string.Empty;
