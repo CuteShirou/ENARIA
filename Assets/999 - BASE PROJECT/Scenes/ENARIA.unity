@@ -24739,6 +24739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allTiles: []
+  infoPanelForTiles: {fileID: 1713123609}
   entityToTileDebug: []
   tileToEntityDebug: []
 --- !u!114 &821466464
@@ -31116,9 +31117,9 @@ GameObject:
   - component: {fileID: 1056735325}
   - component: {fileID: 1056735328}
   - component: {fileID: 1056735327}
-  - component: {fileID: 1056735329}
   - component: {fileID: 1056735326}
   - component: {fileID: 1056735330}
+  - component: {fileID: 1056735329}
   m_Layer: 5
   m_Name: SkillBar
   m_TagString: Untagged
@@ -45145,7 +45146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2bde06efefeaf442b06db0a0f93fef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explorationUIRoot: {fileID: 0}
+  explorationUIRoot: {fileID: 4325261927040640668}
   combatUIRoot: {fileID: 1324805326}
   teamRedParent: {fileID: 1926502236}
   obstaclesParent: {fileID: 1605852056}
@@ -45170,7 +45171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cb9385f653107e4193610cced888c94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 0}
+  manager: {fileID: 806924282}
 --- !u!114 &1657418459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95113,8 +95114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c6f4a02754a024448c24565487d3e43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatManager: {fileID: 806924282}
-  phaseTurn: {fileID: 1657418458}
+  phaseManager: {fileID: 0}
+  tileGrid: {fileID: 0}
   equippedSkill: {fileID: 0}
 --- !u!114 &8241175490545116215
 MonoBehaviour:

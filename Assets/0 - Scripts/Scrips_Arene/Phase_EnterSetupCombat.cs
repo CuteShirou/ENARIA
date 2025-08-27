@@ -141,21 +141,36 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 Debug.Log($"[Enter] Monstre déjà en scène : {monsterInstance.name}");
             }
 
-            // Forçage équipe = Rouge (1)
+            // Équipe = Rouge (1), état combat
             if (monsterInstance.TryGetComponent(out Entity_StatistiqueCombat mStats))
             {
                 mStats.team = 1;
                 mStats.isFight = true;
+
+                // [FR] Sécurité d'init stats si besoin (HP/PA/PM/PO, etc.)
+                if (mStats.baseHP > 0 && mStats.currentHP <= 0)
+                    mStats.InitStatsFromBase();
             }
 
+            // Parent rouge
             if (forceReparentOnInit || monsterInstance.transform.parent != teamRedParent)
                 monsterInstance.transform.SetParent(teamRedParent, true);
+
+            // ─────────────────────────────────────────────────────────
+            // INJECTION ICI : on fournit Phase & Grid aux monstres (prefab ou déjà scène)
+            if (monsterInstance.TryGetComponent(out Monster_CombatController ai))
+            {
+                ai.phaseManager = manager;                 // [FR] pas d'auto-find : ref explicite
+                ai.tileGrid = manager != null ? manager.tileGrid : null;
+            }
+            // ─────────────────────────────────────────────────────────
 
             monstersSpawned.Add(monsterInstance);
         }
 
         redTeam = monstersSpawned;
     }
+
 
     private void ReparentAllGreenPlayers()
     {
