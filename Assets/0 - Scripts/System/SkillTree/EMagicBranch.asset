@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e734b846e2090f7498272070c4c7dd99, type: 3}
+  m_Script: {fileID: 11500000, guid: b6598aad1a149174fa5d0b6d7aa35116, type: 3}
   m_Name: EMagicBranch
   m_EditorClassIdentifier: 
   branchName: Magie
@@ -18,7 +18,7 @@ MonoBehaviour:
     manualIcon: {fileID: 0}
     manualName: 
     manualDescription: 
-    cost: 1
+    cost: 0
     isUnlocked: 1
     onUnlock:
       m_PersistentCalls:
@@ -26,7 +26,7 @@ MonoBehaviour:
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: 3970b47afba824d449a05059a089c11b, type: 3}
     manualName: Ronce Magique 2
-    manualDescription: 11-17 -> 17-22
+    manualDescription: 17-22 DPC MAGIE
     cost: 1
     isUnlocked: 0
     onUnlock:
@@ -43,9 +43,9 @@ MonoBehaviour:
         m_Calls: []
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: 7d30844ab26c7644aa26554bed0dac7c, type: 3}
-    manualName: Sang Sylvestre
-    manualDescription: Ronce Magique a 15% d'enlever 1PM. Marais De Ronce a 5% d'enlever
-      1PM.
+    manualName: "Ronces g\xE9nante"
+    manualDescription: 'Ronce Magique : + 15% retrait PM. Marai de ronce: 5% retait
+      1PM'
     cost: 1
     isUnlocked: 0
     onUnlock:

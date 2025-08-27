@@ -8,6 +8,7 @@ public class QuestManager : MonoBehaviour
     [Header("Données")]
     public List<QuestData> allQuests;
     public List<QuestInstance> activeQuests = new();
+    public List<QuestInstance> trackedQuests = new();
 
     [Header("Réseau")]
     public QuestSaver questSaver;
@@ -110,6 +111,28 @@ public class QuestManager : MonoBehaviour
             if (inst != null) activeQuests.Add(inst);
         }
         Debug.Log("Quêtes rechargées depuis la sauvegarde.");
+    }
+
+    public void FollowQuest(QuestInstance quest)
+    {
+        if (!trackedQuests.Contains(quest))
+        {
+            trackedQuests.Add(quest);
+            Debug.Log($"[QuestManager] FollowQuest: added '{quest.questData.questName}'. trackedCount={trackedQuests.Count}");
+        }
+        else
+        {
+            Debug.Log($"[QuestManager] FollowQuest: already tracked '{quest.questData.questName}'. trackedCount={trackedQuests.Count}");
+        }
+    }
+
+    public void UnfollowQuest(QuestInstance quest)
+    {
+        if (trackedQuests.Contains(quest))
+        {
+            trackedQuests.Remove(quest);
+            Debug.Log($"[QuestManager] Quête retirée du suivi : {quest.questData.questName}");
+        }
     }
 
     [System.Serializable]

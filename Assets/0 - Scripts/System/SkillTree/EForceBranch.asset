@@ -9,16 +9,53 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c40ec22df324b941bd98f01bd381eaf, type: 3}
+  m_Script: {fileID: 11500000, guid: b6598aad1a149174fa5d0b6d7aa35116, type: 3}
   m_Name: EForceBranch
   m_EditorClassIdentifier: 
-  branchName: 
+  branchName: Force
   nodes:
   - skillData: {fileID: 0}
     manualIcon: {fileID: 0}
     manualName: 
     manualDescription: 
     cost: 0
+    isUnlocked: 1
+    onUnlock:
+      m_PersistentCalls:
+        m_Calls: []
+  - skillData: {fileID: 0}
+    manualIcon: {fileID: 21300000, guid: 1f57d7e147a2a3e45a28a3e8937fc3d3, type: 3}
+    manualName: Frappe Verticale 2
+    manualDescription: 18 - 24 DPC FORCE
+    cost: 1
+    isUnlocked: 0
+    onUnlock:
+      m_PersistentCalls:
+        m_Calls: []
+  - skillData: {fileID: 0}
+    manualIcon: {fileID: 0}
+    manualName: 
+    manualDescription: 
+    cost: 1
+    isUnlocked: 0
+    onUnlock:
+      m_PersistentCalls:
+        m_Calls: []
+  - skillData: {fileID: 0}
+    manualIcon: {fileID: 21300000, guid: 1009992b9624df04d98a40860b356114, type: 3}
+    manualName: "Attaques pr\xE9cis"
+    manualDescription: 'Frappe vertivale: 21-17 DPC FORCE. Charge frontale: 17-25
+      DPC FORCE'
+    cost: 1
+    isUnlocked: 0
+    onUnlock:
+      m_PersistentCalls:
+        m_Calls: []
+  - skillData: {fileID: 0}
+    manualIcon: {fileID: 0}
+    manualName: 
+    manualDescription: 
+    cost: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:

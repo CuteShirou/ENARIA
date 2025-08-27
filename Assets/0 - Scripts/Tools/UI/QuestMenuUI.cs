@@ -25,6 +25,9 @@ public class QuestMenuUI : MonoBehaviour
     [Header("Item Prefab")]
     public QuestListItem questListItemPrefab;
 
+    [Header("Tracker UI")]
+    public QuestTrackerUI questTrackerUI;
+
     private void Awake()
     {
         mainListContent.gameObject.SetActive(false);
@@ -86,8 +89,8 @@ public class QuestMenuUI : MonoBehaviour
             return;
         }
 
+        questInfoUI.Init(questManager, questTrackerUI);
         questInfoUI.SetQuestInfo(inst.questData);
-
         questInfoUI.gameObject.SetActive(true);
     }
 
