@@ -7,7 +7,7 @@ public class StatsUIBinder : MonoBehaviour
 
     [Header("Références")]
     public PlayerStats playerStats;
-    public CombatStats combatStats;
+    public Entity_StatistiqueCombat combatStats;
     public EquipmentManager equipmentManager;
     public GameObject detailedStatsPanel;
 

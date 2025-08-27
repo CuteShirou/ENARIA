@@ -31,6 +31,11 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         set { if (_isReady == value) return; bool old = _isReady; _isReady = value; OnReadyChanged(old, _isReady); }
     }
 
+    // ---------------------------------------------------------------------
+
+    [Header("Compétences disponibles")]
+    public System.Collections.Generic.List<Data_Skill> skillBook = new System.Collections.Generic.List<Data_Skill>(); // [FR] Liste des compétences que possède cette entité
+
     // ─────────────────────────────────────────────────────────────────────
     // STATS BASE (Design)
     [Header("Stats de base (Design)")]

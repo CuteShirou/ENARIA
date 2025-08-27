@@ -16,6 +16,12 @@ public class TileGrid_Manager : MonoBehaviour
     [Header("Liste des tuiles de la grille")]
     [SerializeField] private List<GameObject> allTiles = new();
 
+    // ─────────────────────────────────────────────────────────
+    // AJOUT — refs de scène à propager automatiquement aux tuiles
+    [Header("Injection vers Tile_Visual")]
+    public InfoEntityPanelUI infoPanelForTiles; // [FR] Assigne ici ton Panel_Info_Bubble (InfoEntityPanelUI)
+    // ─────────────────────────────────────────────────────────
+
     // Dictionnaire entité → tuile
     private readonly Dictionary<GameObject, GameObject> entityToTile = new();
 
@@ -33,6 +39,14 @@ public class TileGrid_Manager : MonoBehaviour
 
         if (!tileToEntity.ContainsKey(tile))
             tileToEntity[tile] = null; // libre par défaut
+
+        // ─────────────────────────────────────────────────────
+        // AJOUT — Injection auto des refs sur cette tuile
+        // [FR] Pas d'auto-find : on passe "this" + le panel assigné dans l'inspector
+        var visual = tile.GetComponent<Tile_Visual>();
+        if (visual != null)
+            visual.SetShared(this, infoPanelForTiles);
+        // ─────────────────────────────────────────────────────
     }
 
     //------------------------------------------------------------
@@ -45,7 +59,7 @@ public class TileGrid_Manager : MonoBehaviour
             return;
         }
 
-        // Libère l’ancienne tuile occupée par cette entité
+        // Libère l'ancienne tuile occupée par cette entité
         if (entityToTile.TryGetValue(entity, out GameObject oldTile) && oldTile != null)
             tileToEntity[oldTile] = null;
 
@@ -175,4 +189,19 @@ public class TileGrid_Manager : MonoBehaviour
             tileToEntityDebug.Add($"{tile} ← {entity}");
         }
     }
+
+    // ─────────────────────────────────────────────────────────────────
+    // AJOUT — utilitaire: ré-injecter aux tuiles déjà enregistrées (facultatif)
+    [ContextMenu("Reinject Shared Refs To All Tiles")]
+    private void ReinjectSharedToAllTiles()
+    {
+        foreach (var tile in allTiles)
+        {
+            if (!tile) continue;
+            var visual = tile.GetComponent<Tile_Visual>();
+            if (visual != null)
+                visual.SetShared(this, infoPanelForTiles);
+        }
+    }
+    // ─────────────────────────────────────────────────────────────────
 }
