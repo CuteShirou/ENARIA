@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7700235324439689204}
   - component: {fileID: 7622290928582153062}
   m_Layer: 0
-  m_Name: Test_OrbeMagique
+  m_Name: 01_Test_OrbeMagique
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -99,8 +99,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9be8394fa0aca1840b280d6481ac19c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: new_animation
-  displayName: New Animation
+  id: 01
+  displayName: Test_OrbeMagique
   frames:
   - {fileID: 21300000, guid: f9d4d08e7f3317b48bdd4080cbf2fc83, type: 3}
   - {fileID: 21300000, guid: f01f3b4ff10890a4e89eaaa53a925494, type: 3}
@@ -156,7 +156,7 @@ MonoBehaviour:
   autoDestroyOnEnd: 1
   useUnscaledTime: 0
   randomStartFrame: 0
-  startDelay: 0.1
+  startDelay: 0.2
   onCompleted:
     m_PersistentCalls:
       m_Calls: []

@@ -761,7 +761,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -116.49958, y: -0.00050566223}
+  m_AnchoredPosition: {x: -116.50243, y: -0.00050566223}
   m_SizeDelta: {x: 232, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &21806944
@@ -28337,8 +28337,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1298034287}
   m_HandleRect: {fileID: 1298034286}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 0.998389
+  m_Value: 1
+  m_Size: 0.99808156
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -99135,12 +99135,12 @@ MonoBehaviour:
   skillBook:
   - skill: {fileID: 11400000, guid: a16a90a539bf20f48aa53626dbef51d0, type: 2}
     fxData: {fileID: 0}
-    fxPrefabOverride: {fileID: 7622290928582153062, guid: 84609a41e7abc69469ce6e7dcb44d5a3, type: 3}
-    fxYOffset: 0
+    fxPrefabOverride: {fileID: 1532018302712660875, guid: 8b962a963f5eda14c9594136c41bf8b5, type: 3}
+    fxYOffset: 1
   - skill: {fileID: 11400000, guid: 34057e58d791acc428c88f69dc695a6c, type: 2}
     fxData: {fileID: 0}
-    fxPrefabOverride: {fileID: 6758823822365446687, guid: 00bd4c299e30b6e4985973a35cca091a, type: 3}
-    fxYOffset: 0
+    fxPrefabOverride: {fileID: 9120369696128885661, guid: e4376f89177f7c54c9f3eaf28bc8a7b8, type: 3}
+    fxYOffset: 1
   baseHP: 350
   basePA: 8
   basePM: 4
