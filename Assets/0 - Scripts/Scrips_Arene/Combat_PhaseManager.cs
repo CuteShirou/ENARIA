@@ -36,10 +36,6 @@ public class Combat_PhaseManager : MonoBehaviour
     [Header("Grille de l’arène")]
     public TileGrid_Manager tileGrid;
 
-    [Header("Auto-wire (optionnel)")]
-    [Tooltip("Si vrai, cherche automatiquement les références manquantes au Awake().")]
-    [SerializeField] private bool autoWireIfNull = true;
-
     // --- Etat courant de la victoire (utilisé pour la pop-up WIN/LOSE) ---
     [Header("Etat courant de la victoire")]
     [Tooltip("Vrai si l'équipe verte est détectée gagnante.")]
@@ -58,17 +54,7 @@ public class Combat_PhaseManager : MonoBehaviour
 
     private void Awake()
     {
-        // commentaire FR : auto-récupération des références manquantes si demandé
-        if (autoWireIfNull)
-        {
-            if (phaseEnter == null) phaseEnter = GetComponentInChildren<Phase_EnterSetupCombat>(true);
-            if (phasePrepa == null) phasePrepa = GetComponentInChildren<Phase_PreparationPlacementCombat>(true);
-            if (phaseTurn == null) phaseTurn = GetComponentInChildren<Phase_TurnByTurnCombat>(true);
-            if (phaseEnd == null) phaseEnd = GetComponentInChildren<Phase_EndCombat>(true);
-            if (tileGrid == null) tileGrid = GetComponentInChildren<TileGrid_Manager>(true);
-        }
-
-        // commentaire FR : désactiver toutes les phases au démarrage
+        // Désactivation de toutes les phases au démarrage
         SafeEnablePhase(phaseEnter, false);
         SafeEnablePhase(phasePrepa, false);
         SafeEnablePhase(phaseTurn, false);
@@ -76,30 +62,30 @@ public class Combat_PhaseManager : MonoBehaviour
 
         isInCombat = false;
 
-        // commentaire FR : reset des états de victoire
+        // Réinitialisation des états de victoire
         teamGreenIsWinning = false;
         teamRedIsWinning = false;
         winnerTeam = CombatTeamId.None;
     }
 
-    //------------------------------------------------------------
-    // Fonction appelée depuis l’exploration (ou setup) pour démarrer un combat
+    // Lance le cycle complet de combat en démarrant par la phase d'entrée
     public void LaunchCombat()
     {
         Debug.Log($"[CombatManager][Arena {arenaIndex}] Initialisation. Démarrage du combat...");
         StartPhase(CombatPhase.Enter);
     }
 
-    //------------------------------------------------------------
     // Active uniquement la phase demandée et appelle son Init
     public void StartPhase(CombatPhase phase)
     {
         currentPhase = phase;
 
+        // Flag global de présence en combat
         isInCombat = (phase == CombatPhase.Enter ||
                       phase == CombatPhase.Preparation ||
                       phase == CombatPhase.TurnByTurn);
 
+        // Activation exclusive des scripts de phase
         SafeEnablePhase(phaseEnter, phase == CombatPhase.Enter);
         SafeEnablePhase(phasePrepa, phase == CombatPhase.Preparation);
         SafeEnablePhase(phaseTurn, phase == CombatPhase.TurnByTurn);
@@ -151,29 +137,28 @@ public class Combat_PhaseManager : MonoBehaviour
             Debug.LogWarning("[CombatManager] Aucune phase suivante, combat déjà terminé.");
     }
 
-    // Force l'entrée en phase End (flag simple conservé)
+    // Force l'entrée en phase End (et mémorise un flag simple de victoire)
     public void ForceEndPhase(bool isWinning)
     {
         lastCombatWinning = isWinning;
         StartPhase(CombatPhase.End);
     }
 
-    // Accès lecture de la phase
+    // Accès en lecture de la phase courante
     public CombatPhase GetCurrentPhase() => currentPhase;
     public string GetPhaseName() => currentPhase.ToString();
 
-    //------------------------------------------------------------
-    // ----------- Détection Win / Lose (utilise phaseEnter.greenTeam/redTeam) -----------
+    // Détection de fin de combat (WIN/LOSE) pendant la phase tour-par-tour
     public bool TryEvaluateEndOfCombat()
     {
-        // uniquement pendant la phase tour-par-tour
+        // Uniquement pendant la phase tour-par-tour
         if (currentPhase != CombatPhase.TurnByTurn) return false;
 
-        // récupérer les listes depuis Phase_EnterSetupCombat
+        // Récupère les listes d'équipes depuis Phase_EnterSetupCombat
         List<GameObject> teamGreen = phaseEnter != null ? phaseEnter.greenTeam : null;
         List<GameObject> teamRed = phaseEnter != null ? phaseEnter.redTeam : null;
 
-        // si indisponibles ou vides, on considère la détection non-applicable
+        // Si indisponibles/vides, détection non applicable
         if (teamGreen == null || teamRed == null) return false;
         if (teamGreen.Count == 0 || teamRed.Count == 0) return false;
 
@@ -205,6 +190,7 @@ public class Combat_PhaseManager : MonoBehaviour
         return false;
     }
 
+    // Teste si au moins une entité de la liste est encore vivante (HP > 0)
     private bool HasAnyAlive(List<GameObject> team)
     {
         if (team == null || team.Count == 0) return false;
@@ -223,7 +209,7 @@ public class Combat_PhaseManager : MonoBehaviour
         return false;
     }
 
-    //------------------------------------------------------------
+    // Active/Désactive en sécurité un script de phase
     private static void SafeEnablePhase(MonoBehaviour phaseBehaviour, bool enable)
     {
         if (phaseBehaviour != null) phaseBehaviour.enabled = enable;

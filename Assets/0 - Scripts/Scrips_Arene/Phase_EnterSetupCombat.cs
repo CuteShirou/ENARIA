@@ -13,29 +13,21 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     public List<GameObject> redTeam = new();   // Monstres (team=1)
     public List<GameObject> AllFighters = new();
 
-    [Header("Parents hiérarchiques (Drag & Drop ou auto-tag)")]
+    [Header("Parents hiérarchiques (Drag & Drop obligatoire)")]
     public Transform teamRedParent;    // parent pour l'équipe Rouge
     public Transform teamGreenParent;  // parent pour l'équipe Verte
-
-    [Tooltip("Si actif, trouvera les parents manquants en cherchant des objets taggés.")]
-    public bool autoFindParentsByTagIfNull = true;
-    [Tooltip("Tag pour le parent Rouge")] public string tagTeamRed = "TeamRed";
-    [Tooltip("Tag pour le parent Vert")] public string tagTeamGreen = "TeamGreen";
 
     [Header("Options de placement")]
     [Tooltip("Force le reparenting de tous les monstres et joueurs à l'Init, même s'ils ont déjà un parent.")]
     public bool forceReparentOnInit = true;
 
-    // ========================================
-    [Header("UI (Scène unique)")]
-    [Tooltip("Canvas racine de l'UI d'exploration (ex: 'Exploration_UI').")]
-    [SerializeField] private GameObject explorationUIRoot;
-    [Tooltip("Canvas racine de l'UI de combat (ex: 'Combat_UI').")]
-    [SerializeField] private GameObject combatUIRoot;
-
-    [Tooltip("À l'ouverture de la scène, activer Exploration_UI et désactiver Combat_UI.")]
+    [Header("UI (références à assigner)")]
+    [SerializeField] private GameObject explorationUIRoot; // Canvas Exploration
+    [SerializeField] private GameObject combatUIRoot;      // Canvas Combat
     [SerializeField] private bool setInitialUIOnAwake = true;
-    // ========================================
+
+    [Header("Timeline (référence directe, pas d'auto-find)")]
+    [SerializeField] private Timeline_CombatUI timelineUI;
 
     private Exploration_InfoGroupMonster currentGroup;
     private Combat_PhaseManager manager;
@@ -43,6 +35,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
 
     private void Awake()
     {
+        // Active/désactive les Canvas selon l'état initial demandé
         if (setInitialUIOnAwake)
         {
             if (explorationUIRoot != null) explorationUIRoot.SetActive(true);
@@ -50,72 +43,63 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         }
     }
 
-    // Appelée par Combat_PhaseManager.StartPhase(CombatPhase.Enter)
+    // Démarrage de la phase d'entrée (appelée par Combat_PhaseManager)
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
 
         Debug.Log($"[Enter] Arena {manager.arenaIndex} – phase d'entrée (LOCAL).");
 
-        // 0) Switch UI : Exploration → OFF, Combat → ON
+        // Bascule d'UI : Exploration OFF, Combat ON
         if (explorationUIRoot != null) explorationUIRoot.SetActive(false);
         if (combatUIRoot != null) combatUIRoot.SetActive(true);
-        else Debug.LogWarning("[Enter] Combat_UI introuvable. Assigne 'combatUIRoot' ou renomme l'objet en 'Combat_UI'.");
+        else Debug.LogWarning("[Enter] 'combatUIRoot' non assigné.");
 
-        // 1) Parents
-        EnsureParents();
+        // Vérifie que les parents hiérarchiques sont assignés
+        ValidateParentsOrLog();
 
-        // 2) Monstres → team=1 + parent Rouge
+        // Prépare/instancie les monstres et les configure pour le combat
         SpawnMonstersInScene_Local();
 
-        // 3) Joueurs → team=0 (+ parent Vert seulement si on est en combat)
+        // Reparent les joueurs verts et force le mode combat
         ReparentAllGreenPlayers();
 
-        // 4) Joueurs arrivés avant Init
+        // Ajoute les joueurs reçus avant l'Init
         foreach (var p in pendingPlayers) AddPlayerToTeamVerte(p);
         pendingPlayers.Clear();
 
-        // 5) Rebuild liste brute
+        // Reconstruit la liste globale et initialise les stats si nécessaire
         RebuildAllFighters();
-        //Initialiser les "current" depuis les "base" (HP/PA/PM/PO, résistances, etc.)
         EnsureCombatStatsInitialized();
 
-        // 6) [ORDER] Construire l'ordre d'initiative avec alternance 1/1 quand possible
+        // Construit l'ordre d'initiative en alternant si possible
         var ordered = BuildInitiativeOrderInterleaved(AllFighters);
         AllFighters.Clear();
         AllFighters.AddRange(ordered);
 
-        // 7) [TIMELINE] Construire la timeline maintenant que AllFighters est ordonné
-        var timeline = FindAnyObjectByType<Timeline_CombatUI>(FindObjectsInactive.Include);
-        if (timeline)
+        // Construit la timeline si la référence est fournie
+        if (timelineUI != null)
         {
-            timeline.BuildFromManager(manager);
-            timeline.SetNoActive(); // aucun “Actif” pendant la Préparation
+            timelineUI.BuildFromManager(manager);
+            timelineUI.SetNoActive(); // aucun actif pendant la Préparation
         }
 
-        // 8) Phase suivante
+        // Enchaîne vers la phase de Préparation
         Debug.Log("[Enter] Fin → passage à la phase Préparation.");
         manager.NextPhase();
     }
 
-    private void EnsureParents()
+    // Vérifie que teamRedParent et teamGreenParent sont présents
+    private void ValidateParentsOrLog()
     {
-        if (teamRedParent == null && autoFindParentsByTagIfNull)
-        {
-            var go = GameObject.FindGameObjectWithTag(tagTeamRed);
-            if (go) teamRedParent = go.transform;
-        }
-        if (teamGreenParent == null && autoFindParentsByTagIfNull)
-        {
-            var go = GameObject.FindGameObjectWithTag(tagTeamGreen);
-            if (go) teamGreenParent = go.transform;
-        }
+        if (teamRedParent == null)
+            Debug.LogError("[Enter] teamRedParent manquant. Assigne la référence dans l'Inspector.", this);
 
-        if (teamRedParent == null) Debug.LogError("[Enter] teamRedParent manquant (Drag&Drop ou tag).", this);
-        if (teamGreenParent == null) Debug.LogError("[Enter] teamGreenParent manquant (Drag&Drop ou tag).", this);
+        if (teamGreenParent == null)
+            Debug.LogError("[Enter] teamGreenParent manquant. Assigne la référence dans l'Inspector.", this);
     }
 
-    // Instancie OU réorganise les monstres localement
+    // Instancie ou réorganise les monstres localement et injecte les références nécessaires
     private void SpawnMonstersInScene_Local()
     {
         if (teamRedParent == null) return;
@@ -141,37 +125,32 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 Debug.Log($"[Enter] Monstre déjà en scène : {monsterInstance.name}");
             }
 
-            // Équipe = Rouge (1), état combat
+            // Configure l'équipe et le mode combat + init des stats si nécessaire
             if (monsterInstance.TryGetComponent(out Entity_StatistiqueCombat mStats))
             {
                 mStats.team = 1;
                 mStats.isFight = true;
 
-                // [FR] Sécurité d'init stats si besoin (HP/PA/PM/PO, etc.)
                 if (mStats.baseHP > 0 && mStats.currentHP <= 0)
                     mStats.InitStatsFromBase();
             }
 
-            // Parent rouge
+            // Reparent sous le parent Rouge
             if (forceReparentOnInit || monsterInstance.transform.parent != teamRedParent)
                 monsterInstance.transform.SetParent(teamRedParent, true);
 
-            // ─────────────────────────────────────────────────────────
-            // INJECTION : fournit Phase & Grid aux composants runtime des monstres
-            // [FR] Monster_CombatController
+            // Injection : fournit Phase & Grid aux scripts runtime
             if (monsterInstance.TryGetComponent(out Monster_CombatController ai))
             {
-                ai.phaseManager = manager;                 // [FR] Réf explicite (pas d'auto-find)
+                ai.phaseManager = manager;
                 ai.tileGrid = manager != null ? manager.tileGrid : null;
             }
 
-            // [FR] Entity_SkillCaster (nouveau : injection identique)
             if (monsterInstance.TryGetComponent(out Entity_SkillCaster caster))
             {
                 caster.phaseManager = manager;
                 caster.tileGrid = manager != null ? manager.tileGrid : null;
             }
-            // ─────────────────────────────────────────────────────────
 
             monstersSpawned.Add(monsterInstance);
         }
@@ -179,7 +158,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         redTeam = monstersSpawned;
     }
 
-
+    // Reparent les joueurs verts et force leur statut de combat
     private void ReparentAllGreenPlayers()
     {
         if (teamGreenParent == null) return;
@@ -188,14 +167,12 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         {
             if (!player) continue;
 
-            // Forçage équipe = Verte (0)
             if (player.TryGetComponent(out Entity_StatistiqueCombat pStats))
             {
                 pStats.team = 0;
                 pStats.isFight = true;
             }
 
-            // Reparent uniquement si on est effectivement en combat
             if (manager != null && manager.isInCombat)
             {
                 if (forceReparentOnInit || player.transform.parent != teamGreenParent)
@@ -204,6 +181,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         }
     }
 
+    // Reconstruit la liste globale AllFighters
     private void RebuildAllFighters()
     {
         AllFighters.Clear();
@@ -211,6 +189,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         AllFighters.AddRange(greenTeam);
     }
 
+    // Renseigne les données de combat (monstres, map, groupe source)
     public void SetCombatData(List<GameObject> newMonsters, Data_FightMap newMap, Exploration_InfoGroupMonster group)
     {
         redTeam = newMonsters ?? new List<GameObject>();
@@ -220,6 +199,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         Debug.Log($"[Enter] Données OK – Monstres: {redTeam.Count} | Map: {(combatMap ? combatMap.name : "null")}");
     }
 
+    // Ajoute un joueur côté Vert et tente son placement si la Préparation est active
     public void AddPlayerToTeamVerte(GameObject player)
     {
         if (!player) return;
@@ -241,12 +221,10 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 stats.team = 0;
                 stats.isFight = true;
 
-                // ✅ S'assure que les "current" ne restent pas à 0 par défaut (HP/PA/PM/PO, résistances, etc.)
                 if (stats.baseHP > 0 && stats.currentHP <= 0)
                     stats.InitStatsFromBase();
             }
 
-            // ✅ Reparent seulement si on est en combat
             if (manager.isInCombat && teamGreenParent)
                 player.transform.SetParent(teamGreenParent, true);
 
@@ -261,19 +239,19 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         }
     }
 
+    // Met à jour l'état du groupe de monstres d'exploration
     public void SetMonsterState(MonsterState newState)
     {
         if (currentGroup != null) currentGroup.SetState(newState);
         else Debug.LogWarning("[Enter] Aucun groupe de monstres référencé pour SetMonsterState.");
     }
 
-    // ============ [ORDER] Calcul ordre initiative + alternance 1/1 ============
+    // Construit un ordre d'initiative alterné (Vert/Rouge) à partir des initiatives
     private List<GameObject> BuildInitiativeOrderInterleaved(List<GameObject> source)
     {
         var greens = new List<GameObject>();
         var reds = new List<GameObject>();
 
-        // Split + filtre
         foreach (var e in source)
         {
             if (!e) continue;
@@ -282,7 +260,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             else reds.Add(e);
         }
 
-        // Tri décroissant baseInitiative
         greens.Sort((a, b) =>
         {
             var sa = a.GetComponent<Entity_StatistiqueCombat>();
@@ -303,22 +280,20 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             return (cmp != 0) ? cmp : string.Compare(a.name, b.name, System.StringComparison.Ordinal);
         });
 
-        // Qui commence ? meilleur top ; égalité → Verte
         int topGreen = greens.Count > 0 ? (greens[0].GetComponent<Entity_StatistiqueCombat>()?.baseInitiative ?? 0) : -1;
         int topRed = reds.Count > 0 ? (reds[0].GetComponent<Entity_StatistiqueCombat>()?.baseInitiative ?? 0) : -1;
         int currentTeam = (topRed > topGreen) ? 1 : 0; // 0=Verte, 1=Rouge
 
-        // Merge 1/1 tant que possible
         var order = new List<GameObject>(greens.Count + reds.Count);
         int gi = 0, ri = 0;
         while (gi < greens.Count || ri < reds.Count)
         {
-            if (currentTeam == 0) // Verte
+            if (currentTeam == 0)
             {
                 if (gi < greens.Count) { order.Add(greens[gi++]); currentTeam = 1; }
                 else if (ri < reds.Count) { order.Add(reds[ri++]); }
             }
-            else // Rouge
+            else
             {
                 if (ri < reds.Count) { order.Add(reds[ri++]); currentTeam = 0; }
                 else if (gi < greens.Count) { order.Add(greens[gi++]); }
@@ -339,6 +314,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         return order;
     }
 
+    // Initialise les stats de combat si l'entité n'a pas encore été préparée
     private void EnsureCombatStatsInitialized()
     {
         if (AllFighters == null) return;
@@ -348,8 +324,6 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             if (!go) continue;
             if (!go.TryGetComponent(out Entity_StatistiqueCombat s)) continue;
 
-            // Heuristique : si currentHP est 0 alors que baseHP > 0, on considère non initialisé.
-            // (évite d'écraser une entité déjà entamée)
             if (s.baseHP > 0 && s.currentHP <= 0)
             {
                 s.InitStatsFromBase();
