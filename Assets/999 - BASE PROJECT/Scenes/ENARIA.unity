@@ -16314,35 +16314,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65bf97c21f9bfa0459c26be52d1d6282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHP: 200
-  basePA: 7
-  basePM: 4
-  basePO: 0
-  baseInitiative: 0
-  baseCritChance: 0
-  baseForce: 0
-  baseDexterite: 0
-  baseMagie: 0
-  baseFoi: 0
-  baseResistanceForce: 0
-  baseResistanceDexterite: 0
-  baseResistanceMagie: 0
-  baseResistanceFoi: 0
-  currentHP: 0
-  currentPA: 0
-  currentPM: 0
-  currentPO: 0
-  currentCritChance: 0
-  currentForce: 0
-  currentDexterite: 0
-  currentMagie: 0
-  currentFoi: 0
-  currentResistanceForce: 0
-  currentResistanceDexterite: 0
-  currentResistanceMagie: 0
-  currentResistanceFoi: 0
-  activeEffects: []
-  currentShield: 0
 --- !u!4 &506140003
 Transform:
   m_ObjectHideFlags: 0
@@ -95114,8 +95085,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c6f4a02754a024448c24565487d3e43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  phaseManager: {fileID: 0}
-  tileGrid: {fileID: 0}
+  phaseManager: {fileID: 806924282}
+  tileGrid: {fileID: 821466463}
   equippedSkill: {fileID: 0}
 --- !u!114 &8241175490545116215
 MonoBehaviour:

@@ -1220,6 +1220,8 @@ GameObject:
   - component: {fileID: 6528460534439820018}
   - component: {fileID: 5880728914182243740}
   - component: {fileID: 8527171880832732203}
+  - component: {fileID: -735355414354322416}
+  - component: {fileID: 3299852960925963550}
   m_Layer: 0
   m_Name: Combat_Scribble_01
   m_TagString: Monster
@@ -1327,8 +1329,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   phaseManager: {fileID: 0}
   tileGrid: {fileID: 0}
-  moveSpeed: 5
-  isMoving: 0
+  stats: {fileID: 5880728914182243740}
+  caster: {fileID: -735355414354322416}
+  behaviorComponent: {fileID: 3299852960925963550}
+  typeIA: 0
+  startDelaySec: 1
+  afterMoveDelaySec: 0
+  stepDuration: 0.2
+  verboseLog: 0
+--- !u!114 &-735355414354322416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3498709505535415068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c6f4a02754a024448c24565487d3e43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phaseManager: {fileID: 0}
+  tileGrid: {fileID: 0}
+  equippedSkill: {fileID: 0}
+--- !u!114 &3299852960925963550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3498709505535415068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b0f2b62dece1246bcf1435df8c3320, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3521687495318982046
 GameObject:
   m_ObjectHideFlags: 0

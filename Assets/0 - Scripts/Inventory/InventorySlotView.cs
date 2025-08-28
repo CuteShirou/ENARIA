@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,37 +24,18 @@ public class InventorySlotView : MonoBehaviour
         {
             var t = transform.Find("ItemIcon");
             if (t != null) iconImage = t.GetComponent<Image>();
-            if (iconImage == null) iconImage = GetComponentInChildren<Image>(true);
         }
 
         if (nameText == null)
         {
             var t = transform.Find("ItemName");
             if (t != null) nameText = t.GetComponent<Text>();
-            if (nameText == null) nameText = GetComponentInChildren<Text>(true);
         }
 
         if (countText == null)
         {
             var t = transform.Find("ItemCount");
             if (t != null) countText = t.GetComponent<Text>();
-        }
-
-        if (countText == null)
-        {
-            var go = new GameObject("ItemCount", typeof(RectTransform));
-            go.transform.SetParent(transform, false);
-            var rt = go.GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(1f, 0f);
-            rt.anchorMax = new Vector2(1f, 0f);
-            rt.pivot = new Vector2(1f, 0f);
-            rt.anchoredPosition = new Vector2(-6f, 6f);
-            rt.sizeDelta = new Vector2(40f, 20f);
-            countText = go.AddComponent<Text>();
-            countText.alignment = TextAnchor.LowerRight;
-            countText.fontSize = 12;
-            countText.text = "";
-            countText.color = Color.white;
         }
     }
 
@@ -104,7 +86,7 @@ public class InventorySlotView : MonoBehaviour
         if (currentItem != null) nameText.text = currentItem.itemName;
         else nameText.text = string.Empty;
     }
-    
+
     private void ApplyCount()
     {
         if (countText == null) return;

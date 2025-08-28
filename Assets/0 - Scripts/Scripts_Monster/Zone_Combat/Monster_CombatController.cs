@@ -1,252 +1,399 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Monster_CombatController
-/// [FR] IA minimale : au début de son tour -> attend 1s -> se déplace (utilise ses PM) -> 
-///      quand il est sur la nouvelle case -> attend 1s -> termine son tour.
+/// [FR] Contrôleur commun des monstres : tempo de tour, déplacement pas-à-pas,
+///      lancement de compétences via Entity_SkillCaster, et utilitaires IA.
+///      Le "cerveau" (IA) est fourni par un composant séparé implémentant IMonsterAI.
 /// </summary>
 [AddComponentMenu("Combat/Monster Combat Controller")]
 public class Monster_CombatController : MonoBehaviour
 {
-    [Header("References")]
-    public Combat_PhaseManager phaseManager;   // [FR] Référence explicite (pas d'auto-find)
-    public TileGrid_Manager tileGrid;          // [FR] Grille de combat (coordonnées & occupation)
-
-    [Header("Movement")]
-    public float moveSpeed = 5f;               // [FR] Vitesse visuelle du déplacement
-    public bool isMoving = false;              // [FR] Lu par la phase pour interdire EndTurn pendant le mouvement
-
-    // [FR] Etat interne (simple machine à états temps réel)
-    private bool prevWasMyTurn = false;        // [FR] Détection front début/fin de tour
-    private bool movedThisTurn = false;        // [FR] A-t-il déjà fait sa séquence de déplacement ?
-    private bool waitingAfterMove = false;     // [FR] Attend-il la seconde d’après-mouvement ?
-    private float waitTimer = 0f;              // [FR] Compteur d’attente (1s)
-
-    private readonly Queue<Vector3> movementQueue = new(); // [FR] File des positions monde à suivre
-    private Entity_StatistiqueCombat stats;    // [FR] Accès aux PM
-    private GameObject plannedFinalTile;       // [FR] Tuile visée à la fin du déplacement (pour vérifier l'occupation)
-
     // =========================
     // Constructor / Destructor
     // =========================
     public Monster_CombatController() { /* Constructeur */ }
     ~Monster_CombatController() { /* Déconstructeur - non utilisé */ }
 
-    private void Start()
+    [Header("Références (assignées au spawn / prefab)")]
+    public Combat_PhaseManager phaseManager;   // [FR] Réf manager combat (injectée dans Phase_EnterSetupCombat)
+    public TileGrid_Manager tileGrid;          // [FR] Grille (injectée)
+    public Entity_StatistiqueCombat stats;     // [FR] Stats de l'entité (HP/PA/PM/PO/Team/skillBook)
+    public Entity_SkillCaster caster;          // [FR] Lanceur de compétences (commun)
+
+    [Header("IA (plug-in)")]
+    [Tooltip("Brancher ici le composant IA (ex: IA_Aggressif). Aucun auto-find.")]
+    public MonoBehaviour behaviorComponent;    // [FR] Doit implémenter IMonsterAI
+    private IMonsterAI behavior;               // [FR] Interface IA
+    public MonsterAIType typeIA;               // [FR] Indicatif pour l’inspector
+
+    [Header("Tempo")]
+    public float startDelaySec = 1.0f;         // [FR] Attente en début de tour
+    public float afterMoveDelaySec = 0.1f;     // [FR] Petite pause après un pas (lisibilité)
+    public float stepDuration = 0.2f;          // [FR] Durée d’un pas (lerp court)
+
+    [Header("Debug")]
+    public bool verboseLog = false;
+
+    // [FR] Flag lu par la phase (elle bloque EndTurn si une entité bouge)
+    public bool isMoving { get; private set; } = false;
+
+    // [FR] Routine unique par tour
+    private bool isPlayingTurn = false;
+
+    private void Awake()
     {
-        // [FR] Références locales
-        stats = GetComponent<Entity_StatistiqueCombat>();
-        // [FR] Références externes fournies via Inspector (pas d'auto-find)
+        // [FR] Réfs locales (jamais d'auto-find scène)
+        if (!stats) TryGetComponent(out stats);
+        if (!caster) TryGetComponent(out caster);
+
+        // [FR] Vérifie le compos IA
+        if (behaviorComponent != null)
+        {
+            behavior = behaviorComponent as IMonsterAI;
+            if (behavior == null)
+                Debug.LogError($"[{name}] Le composant IA assigné ne supporte pas IMonsterAI.");
+        }
+        else
+        {
+            Debug.LogWarning($"[{name}] Aucun composant IA assigné (IMonsterAI).");
+        }
+
+        // [FR] Le caster doit connaître ses refs (on push seulement si vides)
+        if (caster != null)
+        {
+            if (!caster.phaseManager) caster.phaseManager = phaseManager;
+            if (!caster.tileGrid) caster.tileGrid = tileGrid;
+        }
     }
 
     private void Update()
     {
-        // [FR] Réfs indispensables
-        if (phaseManager == null || phaseManager.phaseTurn == null || tileGrid == null || stats == null) return;
+        // [FR] Sécurités
+        if (phaseManager == null || phaseManager.phaseTurn == null || tileGrid == null || stats == null || caster == null || behavior == null)
+            return;
+        if (!phaseManager.isInCombat || stats.isDead) return;
 
-        bool myTurn = phaseManager.phaseTurn.IsMyTurn(gameObject);
-
-        // [FR] Front de début de tour → reset de la mini IA + 1s d'attente
-        if (myTurn && !prevWasMyTurn)
-        {
-            movementQueue.Clear();
-            isMoving = false;
-            movedThisTurn = false;
-            waitingAfterMove = false;
-            plannedFinalTile = null;
-
-            waitTimer = 1f; // [FR] Attente initiale
-        }
-
-        // [FR] Front de fin de tour → nettoyage
-        if (!myTurn && prevWasMyTurn)
-        {
-            movementQueue.Clear();
-            isMoving = false;
-            movedThisTurn = false;
-            waitingAfterMove = false;
-            plannedFinalTile = null;
-            waitTimer = 0f;
-        }
-
-        prevWasMyTurn = myTurn;
-
-        if (!myTurn) return; // [FR] Ne fait rien hors de son tour
-
-        // [FR] Avance du déplacement visuel si nécessaire
-        HandleMovement();
-
-        // [FR] IA minimale
-        RunTurnLogic();
+        // [FR] Déclenche un tour uniquement si c'est à lui
+        if (phaseManager.phaseTurn.IsMyTurn(gameObject) && !isPlayingTurn)
+            StartCoroutine(PlayTurnRoutine());
     }
 
-    // ---------------------------------------------------------------------
-    // [FR] Déplacement visuel frame par frame (comme Player_Controller)
-    private void HandleMovement()
+    private IEnumerator PlayTurnRoutine()
     {
-        if (!isMoving || movementQueue.Count == 0) return;
+        isPlayingTurn = true;
 
-        Vector3 target = movementQueue.Peek();
-        float step = moveSpeed * Time.deltaTime;
+        // [FR] Tempo d'entrée de tour
+        if (startDelaySec > 0f) yield return new WaitForSeconds(startDelaySec);
 
-        transform.position = Vector3.MoveTowards(transform.position, target, step);
+        // [FR] Construit le contexte partagé (références + utilitaires)
+        var ctx = new AIContext(this, phaseManager, tileGrid, stats, caster);
 
-        if (Vector3.Distance(transform.position, target) <= 0.01f)
+        // [FR] Hook IA début de tour
+        behavior.OnTurnStart(ctx);
+
+        // [FR] Boucle de décision simple : on exécute les actions jusqu’à EndTurn
+        int guard = 16; // [FR] Sécurité anti-boucles
+        while (guard-- > 0)
         {
-            movementQueue.Dequeue();
-            if (movementQueue.Count == 0) isMoving = false;
-        }
-    }
+            AIAction action = behavior.DecideNextAction(ctx);
 
-    // ---------------------------------------------------------------------
-    // [FR] Séquence d'un tour : attente 1s -> déplacement -> attente 1s -> EndTurn
-    private void RunTurnLogic()
-    {
-        // [FR] 1) Attente initiale (si demandée)
-        if (waitTimer > 0f)
-        {
-            waitTimer -= Time.deltaTime;
-            return;
-        }
-
-        // [FR] 2) Si pas encore déplacé, on planifie et on lance le déplacement
-        if (!movedThisTurn && !isMoving)
-        {
-            List<Vector2Int> path = PlanRandomWalk(stats.currentPM); // [FR] Essaie d'utiliser un max de PM
-            if (path != null && path.Count > 0)
-            {
-                // [FR] Consomme les PM
-                stats.SetPM(stats.currentPM - path.Count);
-
-                // [FR] Convertit en positions monde
-                movementQueue.Clear();
-                for (int i = 0; i < path.Count; i++)
-                {
-                    var stepTile = tileGrid.GetTileAtCoordinates(path[i].x, path[i].y);
-                    if (!stepTile) continue;
-                    Vector3 wp = stepTile.transform.position; wp.y += 0.1f;
-                    movementQueue.Enqueue(wp);
-
-                    if (i == path.Count - 1)
-                        plannedFinalTile = stepTile; // [FR] On mémorise la tuile cible finale
-                }
-
-                isMoving = movementQueue.Count > 0;
-            }
-
-            // [FR] Qu'il ait bougé ou non, on marque "déplacement traité"
-            movedThisTurn = true;
-
-            // [FR] Si aucun déplacement n'a été possible → on passera directement à l'attente finale
-            if (!isMoving) waitingAfterMove = false; // sera réglé plus bas
-            return;
-        }
-
-        // [FR] 3) Si on a fini de bouger, on vérifie que la tuile finale est bien occupée par le monstre
-        if (movedThisTurn && !isMoving && !waitingAfterMove)
-        {
-            if (plannedFinalTile == null)
-            {
-                // [FR] Pas de mouvement ce tour → on peut enchaîner l'attente finale.
-                waitTimer = 1f;
-                waitingAfterMove = true;
-                return;
-            }
-
-            // [FR] Vérifie l'occupation via la grille (Phase met à jour les dicos en temps réel)
-            var occ = tileGrid.GetEntityOnTile(plannedFinalTile);
-            if (occ == gameObject)
-            {
-                waitTimer = 1f;          // [FR] Attente d'après-mouvement
-                waitingAfterMove = true;
-            }
-            // [FR] Sinon: on attend le prochain frame (la Phase va enregistrer la nouvelle tuile)
-            return;
-        }
-
-        // [FR] 4) Après l'attente d'après-mouvement → Fin de tour
-        if (waitingAfterMove && waitTimer <= 0f)
-        {
-            phaseManager.phaseTurn.EndTurn();   // [FR] Termine le tour proprement
-            waitingAfterMove = false;
-        }
-    }
-
-    // ---------------------------------------------------------------------
-    // [FR] Planifie un "random walk" jusqu'à PM cases (quand possible), en évitant les cases occupées.
-    private List<Vector2Int> PlanRandomWalk(int maxSteps)
-    {
-        var path = new List<Vector2Int>();
-        if (maxSteps <= 0) return path;
-
-        Vector2Int cursor = GetCurrentCoord();
-
-        // [FR] Pour chaque PM, on essaie un pas vers un voisin libre (ordre aléatoire)
-        for (int step = 0; step < maxSteps; step++)
-        {
-            // 4 directions cardinales mélangées
-            var dirs = ShuffleDirections(new[]
-            {
-                new Vector2Int( 1, 0),
-                new Vector2Int(-1, 0),
-                new Vector2Int( 0, 1),
-                new Vector2Int( 0,-1),
-            });
-
-            bool moved = false;
-            for (int i = 0; i < dirs.Length; i++)
-            {
-                Vector2Int next = cursor + dirs[i];
-
-                var tileObj = tileGrid.GetTileAtCoordinates(next.x, next.y);
-                if (!tileObj) continue; // hors grille
-
-                var occ = tileGrid.GetEntityOnTile(tileObj);
-                if (occ && occ != gameObject) continue; // occupée par autre chose
-
-                // [FR] Pas valide → on l'ajoute au chemin et on avance le curseur
-                path.Add(next);
-                cursor = next;
-                moved = true;
+            if (action.type == AIActionType.EndTurn)
                 break;
+
+            if (action.type == AIActionType.MoveStep && action.targetTile != null)
+            {
+                // [FR] Un pas visuel vers la tuile (cases cardinales)
+                yield return StepToTile(action.targetTile);
+
+                // [FR] Consomme 1 PM si dispo
+                if (stats.currentPM > 0) stats.SetPM(stats.currentPM - 1);
+
+                // [FR] Petite pause lisible (évite téléport visuelle)
+                if (afterMoveDelaySec > 0f) yield return new WaitForSeconds(afterMoveDelaySec);
+                continue;
             }
 
-            if (!moved) break; // [FR] Encerclé / pas de case libre autour → on s'arrête
+            if (action.type == AIActionType.Cast && action.skill != null && action.targetTile != null)
+            {
+                // [FR] Équipe et caste via l’API du caster (pas de souris)
+                caster.EquipSkill(action.skill);
+                caster.CastAtTile(action.skill, action.targetTile);
+
+                // [FR] Micro-pause → laisse l’UI respirer (timeline déjà rafraîchie par le caster)
+                yield return new WaitForSeconds(0.05f);
+                continue;
+            }
+
+            // [FR] Action invalide -> on coupe
+            if (verboseLog) Debug.LogWarning($"[{name}] Action IA invalide -> fin de tour.");
+            break;
         }
 
-        return path;
+        // [FR] Hook IA fin de tour
+        behavior.OnTurnEnd(ctx);
+
+        // [FR] Fin de tour: assure-toi de ne pas couper pendant un mouvement
+        if (!isMoving && phaseManager != null && phaseManager.phaseTurn != null)
+            phaseManager.phaseTurn.EndTurn();
+
+        isPlayingTurn = false;
     }
 
-    // [FR] Mélange simple d'un tableau de directions (Fisher–Yates light)
-    private Vector2Int[] ShuffleDirections(Vector2Int[] dirs)
-    {
-        for (int i = 0; i < dirs.Length; i++)
-        {
-            int j = Random.Range(i, dirs.Length);
-            (dirs[i], dirs[j]) = (dirs[j], dirs[i]);
-        }
-        return dirs;
-    }
+    // =====================================================================
+    // ==============         UTILITAIRES COMMUNS IA         ===============
+    // =====================================================================
 
-    // [FR] Récupère la coordonnée (x,y) de la tuile actuelle du monstre
-    private Vector2Int GetCurrentCoord()
+    /// <summary>[FR] Renvoie l’ennemi vivant le plus proche (distance Manhattan).</summary>
+    public GameObject GetNearestEnemy()
     {
-        var tileObj = tileGrid.GetTileOfEntity(gameObject);
-        if (tileObj && tileObj.TryGetComponent(out SetupTile st))
-            return new Vector2Int(st.tileX, st.tileY);
+        var enemies = GetOpponents();
+        if (enemies == null || enemies.Count == 0) return null;
 
-        // [FR] Fallback (devrait peu arriver) : plus proche tuile
-        Vector2Int best = Vector2Int.zero;
-        float min = float.MaxValue;
-        var tiles = tileGrid.GetAllTiles();
-        for (int i = 0; i < tiles.Count; i++)
+        var myTile = tileGrid.GetTileOfEntity(gameObject);
+        if (!myTile || !myTile.TryGetComponent(out SetupTile myS)) return null;
+        Vector2Int my = new(myS.tileX, myS.tileY);
+
+        GameObject best = null;
+        int bestDist = int.MaxValue;
+        for (int i = 0; i < enemies.Count; i++)
         {
-            var t = tiles[i];
-            if (!t || !t.TryGetComponent(out SetupTile s)) continue;
-            float d = Vector3.Distance(transform.position, t.transform.position);
-            if (d < min) { min = d; best = new Vector2Int(s.tileX, s.tileY); }
+            var e = enemies[i];
+            if (!e || !e.TryGetComponent(out Entity_StatistiqueCombat es) || es.isDead) continue;
+            var et = tileGrid.GetTileOfEntity(e);
+            if (!et || !et.TryGetComponent(out SetupTile esu)) continue;
+
+            int d = Mathf.Abs(my.x - esu.tileX) + Mathf.Abs(my.y - esu.tileY);
+            if (d < bestDist) { bestDist = d; best = e; }
         }
         return best;
     }
+
+    /// <summary>[FR] Retourne la distance Manhattan entre soi et la cible.</summary>
+    public int GetDistanceTo(GameObject entity)
+    {
+        var a = tileGrid.GetTileOfEntity(gameObject);
+        var b = tileGrid.GetTileOfEntity(entity);
+        if (!a || !b) return int.MaxValue;
+        var sa = a.GetComponent<SetupTile>();
+        var sb = b.GetComponent<SetupTile>();
+        return Mathf.Abs(sa.tileX - sb.tileX) + Mathf.Abs(sa.tileY - sb.tileY);
+    }
+
+    /// <summary>[FR] Liste des adversaires dynamiquement, selon ma team (aucun hardcode Rouge/Verte).</summary>
+    public List<GameObject> GetOpponents()
+    {
+        return (stats != null && stats.team == 0)
+            ? phaseManager.phaseEnter.redTeam
+            : phaseManager.phaseEnter.greenTeam;
+    }
+
+    /// <summary>[FR] Liste des alliés dynamiquement, selon ma team.</summary>
+    public List<GameObject> GetAllies()
+    {
+        return (stats != null && stats.team == 0)
+            ? phaseManager.phaseEnter.greenTeam
+            : phaseManager.phaseEnter.redTeam;
+    }
+
+    /// <summary>[FR] Sélectionne les meilleurs skills d'attaque (mêlée et distance) depuis le skillBook.</summary>
+    public void GetBestAttackSkills(out Data_Skill bestMelee, out Data_Skill bestRanged)
+    {
+        bestMelee = null;
+        bestRanged = null;
+
+        // [FR] 1) récupère le skillBook si présent sur les stats (recommandé)
+        List<Data_Skill> book = null;
+        var f = typeof(Entity_StatistiqueCombat).GetField("skillBook");
+        if (f != null) book = f.GetValue(stats) as List<Data_Skill>;
+
+        // [FR] 2) fallback: on utilise la skill équipée s'il n'y a pas de liste
+        if (book == null || book.Count == 0)
+        {
+            book = new List<Data_Skill>();
+            if (caster.equippedSkill) book.Add(caster.equippedSkill);
+        }
+
+        for (int i = 0; i < book.Count; i++)
+        {
+            var sk = book[i];
+            if (!sk || sk.skillType != SkillType.Attack) continue;
+
+            if (sk.rangeMax <= 1)
+            {
+                if (bestMelee == null || sk.damageMax > bestMelee.damageMax) bestMelee = sk;
+            }
+            else
+            {
+                if (bestRanged == null || sk.damageMax > bestRanged.damageMax) bestRanged = sk;
+            }
+        }
+    }
+
+    /// <summary>[FR] Teste si un skill peut être lancé sur la tuile de l'entité 'target' (mono-cible).</summary>
+    public bool CanCastOnEntity(Data_Skill skill, GameObject target)
+    {
+        if (!skill || !target) return false;
+        var tile = tileGrid.GetTileOfEntity(target);
+        if (!tile) return false;
+        return caster.CanCastAtTile(skill, tile, out _);
+    }
+
+    /// <summary>[FR] Renvoie la "meilleure" tuile voisine libre qui rapproche de 'target'. Null si bloqué.</summary>
+    public GameObject GetBestNeighborTowards(GameObject target)
+    {
+        var myT = tileGrid.GetTileOfEntity(gameObject);
+        var tgT = tileGrid.GetTileOfEntity(target);
+        if (!myT || !tgT) return null;
+
+        var myS = myT.GetComponent<SetupTile>();
+        var tgS = tgT.GetComponent<SetupTile>();
+        int bestDist = Mathf.Abs(myS.tileX - tgS.tileX) + Mathf.Abs(myS.tileY - tgS.tileY);
+
+        Vector2Int[] dirs = { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down };
+        GameObject best = null;
+
+        for (int i = 0; i < dirs.Length; i++)
+        {
+            int nx = myS.tileX + dirs[i].x;
+            int ny = myS.tileY + dirs[i].y;
+            var n = tileGrid.GetTileAtCoordinates(nx, ny);
+            if (!n) continue;
+            if (!tileGrid.IsTileFree(n)) continue;
+
+            int d = Mathf.Abs(nx - tgS.tileX) + Mathf.Abs(ny - tgS.tileY);
+            if (d < bestDist) { bestDist = d; best = n; }
+        }
+        return best; // [FR] peut être null (bloqué)
+    }
+
+    /// <summary>
+    /// [FR] Choisit, parmi MES 4 voisins libres, la tuile qui RAPPROCHE le plus d'une tuile cible 'goalTile'.
+    /// Retourne null si bloqué.
+    /// </summary>
+    public GameObject GetBestNeighborTowardsTile(GameObject goalTile)
+    {
+        var myT = tileGrid.GetTileOfEntity(gameObject);
+        if (!myT || !goalTile) return null;
+
+        var myS = myT.GetComponent<SetupTile>();
+        var gS = goalTile.GetComponent<SetupTile>();
+        if (!myS || !gS) return null;
+
+        int bestDist = Mathf.Abs(myS.tileX - gS.tileX) + Mathf.Abs(myS.tileY - gS.tileY);
+        GameObject best = null;
+
+        Vector2Int[] dirs = { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down };
+        for (int i = 0; i < dirs.Length; i++)
+        {
+            int nx = myS.tileX + dirs[i].x;
+            int ny = myS.tileY + dirs[i].y;
+            var n = tileGrid.GetTileAtCoordinates(nx, ny);
+            if (!n) continue;
+            if (!tileGrid.IsTileFree(n)) continue;
+
+            int d = Mathf.Abs(nx - gS.tileX) + Mathf.Abs(ny - gS.tileY);
+            if (d < bestDist) { bestDist = d; best = n; }
+        }
+        return best;
+    }
+
+    // ---------------------------------------------------------------------
+    /// <summary>[FR] Un pas visuel vers 'tile' + mise à jour de la grille (verrou Y).</summary>
+    public IEnumerator StepToTile(GameObject tile)
+    {
+        if (!tile) yield break;
+        isMoving = true;
+
+        Vector3 start = transform.position;
+        Vector3 end = tile.transform.position;
+
+        // [FR] Verrouillage axe vertical : on conserve le Y de départ (pas de mouvement en hauteur)
+        end.y = start.y;
+
+        float t = 0f;
+        float dur = Mathf.Max(0.01f, stepDuration);
+        while (t < 1f)
+        {
+            t += Time.deltaTime / dur;
+
+            // [FR] Interpolation lissée sur X/Z, Y reste constant
+            Vector3 pos = Vector3.Lerp(start, end, Mathf.Clamp01(t));
+            pos.y = start.y;
+            transform.position = pos;
+
+            yield return null;
+        }
+
+        // [FR] Position finale (Y toujours verrouillé)
+        transform.position = end;
+
+        // [FR] Mise à jour mapping entité ↔ tuile
+        tileGrid.RegisterEntity(gameObject, tile);
+        isMoving = false;
+    }
+}
+
+// ========================================================================
+// ======================   CONTRAT & CONTEXTE IA   =======================
+// ========================================================================
+
+public enum MonsterAIType { Agressif, Passif, Fuyard }
+
+public enum AIActionType { None, MoveStep, Cast, EndTurn }
+
+/// <summary>
+/// [FR] Action renvoyée par une IA : un pas, un cast, ou fin de tour.
+/// </summary>
+public struct AIAction
+{
+    public AIActionType type;
+    public Data_Skill skill;      // [FR] pour Cast
+    public GameObject targetTile; // [FR] pour MoveStep / Cast (mono)
+
+    public static AIAction End() => new AIAction { type = AIActionType.EndTurn };
+    public static AIAction MoveTo(GameObject tile) => new AIAction { type = AIActionType.MoveStep, targetTile = tile };
+    public static AIAction Cast(Data_Skill s, GameObject tile) => new AIAction { type = AIActionType.Cast, skill = s, targetTile = tile };
+}
+
+/// <summary>
+/// [FR] Contexte fourni à l'IA (réfs + helpers via le contrôleur).
+/// </summary>
+public class AIContext
+{
+    public Monster_CombatController controller;
+    public Combat_PhaseManager phaseManager;
+    public TileGrid_Manager tileGrid;
+    public Entity_StatistiqueCombat stats;
+    public Entity_SkillCaster caster;
+
+    // [FR] Mémoire transitoire (ex: cible courante)
+    public GameObject currentTarget;
+
+    public AIContext(Monster_CombatController c, Combat_PhaseManager pm, TileGrid_Manager grid, Entity_StatistiqueCombat s, Entity_SkillCaster cast)
+    {
+        controller = c; phaseManager = pm; tileGrid = grid; stats = s; caster = cast;
+    }
+
+    // [FR] Helpers exposés aux IA (wrappers vers le contrôleur)
+    public GameObject GetNearestEnemy() => controller.GetNearestEnemy();
+    public int GetDistanceTo(GameObject e) => controller.GetDistanceTo(e);
+    public void GetBestAttackSkills(out Data_Skill melee, out Data_Skill ranged) => controller.GetBestAttackSkills(out melee, out ranged);
+    public bool CanCastOnEntity(Data_Skill sk, GameObject target) => controller.CanCastOnEntity(sk, target);
+    public GameObject GetBestNeighborTowards(GameObject target) => controller.GetBestNeighborTowards(target);
+    public GameObject GetBestNeighborTowardsTile(GameObject goalTile) => controller.GetBestNeighborTowardsTile(goalTile);
+    public List<GameObject> GetOpponents() => controller.GetOpponents();
+    public List<GameObject> GetAllies() => controller.GetAllies();
+}
+
+/// <summary>
+/// [FR] Contrat minimal d’une IA de monstre.
+/// </summary>
+public interface IMonsterAI
+{
+    void OnTurnStart(AIContext ctx);          // [FR] Init / choix de cible initial
+    AIAction DecideNextAction(AIContext ctx); // [FR] Renvoie l'action suivante à exécuter
+    void OnTurnEnd(AIContext ctx);            // [FR] Nettoyage si besoin
 }

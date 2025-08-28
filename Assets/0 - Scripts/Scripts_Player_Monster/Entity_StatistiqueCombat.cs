@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [AddComponentMenu("Combat/Entity Statistique Combat (Local)")]
 public class Entity_StatistiqueCombat : MonoBehaviour
@@ -34,7 +35,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     // ---------------------------------------------------------------------
 
     [Header("Compétences disponibles")]
-    public System.Collections.Generic.List<Data_Skill> skillBook = new System.Collections.Generic.List<Data_Skill>(); // [FR] Liste des compétences que possède cette entité
+    public List<Data_Skill> skillBook = new List<Data_Skill>(); // [FR] Liste des compétences que possède cette entité
 
     // ─────────────────────────────────────────────────────────────────────
     // STATS BASE (Design)
@@ -102,7 +103,15 @@ public class Entity_StatistiqueCombat : MonoBehaviour
 
     // ─────────────────────────────────────────────────────────────────────
     // INITIALISATION / TOURS
-    /// <summary>Copie toutes les bases vers les "current". À appeler à l'entrée en combat.</summary>
+
+    /// <summary>Constructeur.</summary>
+    public Entity_StatistiqueCombat() { }
+    /// <summary>Déconstructeur.</summary>
+    ~Entity_StatistiqueCombat() { }
+
+    /// <summary>
+    /// [FR] Copie toutes les bases vers les "current". À appeler à l'entrée en combat.
+    /// </summary>
     public void InitStatsFromBase()
     {
         SetHP(baseHP);
@@ -126,14 +135,16 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         Debug.Log($"[Stats] Init depuis bases pour {name}");
     }
 
-    /// <summary>Réinitialise PA/PM au début d’un tour.</summary>
+    /// <summary>
+    /// [FR] Réinitialise PA/PM à la fin d’un tour (nouvelle logique).
+    /// </summary>
     public void ResetTurnStats()
     {
         SetPA(basePA);
         SetPM(basePM);
     }
 
-    /// <summary>Inverse le statut prêt (phase de préparation).</summary>
+    /// <summary>[FR] Inverse le statut prêt (phase de préparation).</summary>
     public void ToggleReady()
     {
         isReady = !isReady;
@@ -142,6 +153,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
 
     // ─────────────────────────────────────────────────────────────────────
     // SETTERS (avec logs type "hooks")
+
     public void SetHP(int value)
     {
         value = Mathf.Clamp(value, 0, Mathf.Max(1, baseHP));
@@ -200,6 +212,125 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         float old = _currentResistanceFoi;
         _currentResistanceFoi = Mathf.Clamp(value, -100f, 100f);
         OnResFoiChanged(old, _currentResistanceFoi);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // EFFETS TEMPORISÉS (PA/PM/PO/PV…)
+
+    [System.Serializable]
+    public class ActiveEffect
+    {
+        // [FR] Copie minimale d’un SkillEffect pour runtime
+        public EffectType type;
+        public int value;
+        public int remainingTurns;
+
+        // Constructeur / Déconstructeur
+        public ActiveEffect() { }
+        ~ActiveEffect() { }
+
+        public ActiveEffect(SkillEffect from)
+        {
+            type = from.effectType;
+            value = Mathf.RoundToInt(from.value);
+            remainingTurns = Mathf.Max(1, from.duration);
+        }
+    }
+
+    // [FR] Effets actifs sur cette entité
+    [HideInInspector] public List<ActiveEffect> activeEffects = new List<ActiveEffect>();
+
+    /// <summary>
+    /// [FR] Applique IMMÉDIATEMENT un effet (durée 0) sur cette entité.
+    /// </summary>
+    public void ApplyInstantEffect(SkillEffect eff)
+    {
+        if (eff == null) return;
+        int v = Mathf.RoundToInt(eff.value);
+
+        switch (eff.effectType)
+        {
+            // Vitalité / PA / PM / PO
+            case EffectType.BonusPV: SetHP(currentHP + v); break;
+            case EffectType.BonusPA: SetPA(currentPA + v); break;
+            case EffectType.MalusPA: SetPA(currentPA - v); break;
+            case EffectType.BonusPM: SetPM(currentPM + v); break;
+            case EffectType.MalusPM: SetPM(currentPM - v); break;
+            case EffectType.BonusPO: SetPO(currentPO + v); break;
+            case EffectType.MalusPO: SetPO(currentPO - v); break;
+
+            // Caractéristiques (ex : Force, Dextérité…)
+            case EffectType.BonusFor: SetForce(currentForce + v); break;
+            case EffectType.MalusFor: SetForce(currentForce - v); break;
+            case EffectType.BonusDex: SetDex(currentDexterite + v); break;
+            case EffectType.MalusDex: SetDex(currentDexterite - v); break;
+            case EffectType.BonusMag: SetMagie(currentMagie + v); break;
+            case EffectType.MalusMag: SetMagie(currentMagie - v); break;
+            case EffectType.BonusFoi: SetFoi(currentFoi + v); break;
+            case EffectType.MalusFoi: SetFoi(currentFoi - v); break;
+
+            // Résistances
+            case EffectType.BonusResFor: SetResForce(currentResistanceForce + v); break;
+            case EffectType.MalusResFor: SetResForce(currentResistanceForce - v); break;
+            case EffectType.BonusResDex: SetResDex(currentResistanceDexterite + v); break;
+            case EffectType.MalusResDex: SetResDex(currentResistanceDexterite - v); break;
+            case EffectType.BonusResMag: SetResMagie(currentResistanceMagie + v); break;
+            case EffectType.MalusResMag: SetResMagie(currentResistanceMagie - v); break;
+            case EffectType.BonusResFoi: SetResFoi(currentResistanceFoi + v); break;
+            case EffectType.MalusResFoi: SetResFoi(currentResistanceFoi - v); break;
+
+            default:
+                Debug.Log($"[Stats] Instant effect not handled: {eff.effectType}");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// [FR] Début de MON tour : applique les effets à durée (PA/PM/PO/PV…).
+    /// </summary>
+    public void ApplyActiveEffectsAtTurnStart()
+    {
+        if (activeEffects == null || activeEffects.Count == 0) return;
+
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            var e = activeEffects[i];
+            switch (e.type)
+            {
+                case EffectType.BonusPA: SetPA(currentPA + e.value); break;
+                case EffectType.MalusPA: SetPA(currentPA - e.value); break;
+                case EffectType.BonusPM: SetPM(currentPM + e.value); break;
+                case EffectType.MalusPM: SetPM(currentPM - e.value); break;
+                case EffectType.BonusPO: SetPO(currentPO + e.value); break;
+                case EffectType.MalusPO: SetPO(currentPO - e.value); break;
+
+                case EffectType.BonusPV: SetHP(currentHP + e.value); break; // ex: HoT simple
+                                                                            // [NOTE] Si tu veux un DoT, ajoute EffectType.MalusPV et gère-le ici.
+            }
+        }
+    }
+
+    /// <summary>
+    /// [FR] Fin de MON tour : décrémente les durées et supprime les effets expirés.
+    /// </summary>
+    public void TickActiveEffectsAtTurnEnd()
+    {
+        if (activeEffects == null || activeEffects.Count == 0) return;
+
+        for (int i = activeEffects.Count - 1; i >= 0; i--)
+        {
+            activeEffects[i].remainingTurns -= 1;
+            if (activeEffects[i].remainingTurns <= 0)
+                activeEffects.RemoveAt(i);
+        }
+    }
+
+    /// <summary>
+    /// [FR] Utilitaire : si HP <= 0, marque mort.
+    /// </summary>
+    public void VerifDead()
+    {
+        if (currentHP <= 0) isDead = true;
     }
 
     // ─────────────────────────────────────────────────────────────────────

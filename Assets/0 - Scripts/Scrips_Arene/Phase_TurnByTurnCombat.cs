@@ -18,6 +18,9 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     // [FR] Tuile actuellement connue pour l'entité active (pour détecter les changements en déplacement)
     private GameObject lastTileForCurrent = null;
 
+    // [FR] Morts déjà traités (évite un double-traitement)
+    private readonly HashSet<GameObject> removedDead = new();
+
     // Constructeur / Déconstructeur
     public Phase_TurnByTurnCombat() { }
     ~Phase_TurnByTurnCombat() { }
@@ -35,7 +38,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             return;
         }
 
-        // [FR] Passe tous les joueurs en mode combat + reset début de phase
+        // [FR] Passe tous les joueurs en mode combat + init début de phase
         for (int i = 0; i < manager.phaseEnter.AllFighters.Count; i++)
         {
             GameObject e = manager.phaseEnter.AllFighters[i];
@@ -47,7 +50,8 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             if (e.TryGetComponent(out Entity_StatistiqueCombat s))
             {
                 s.isReady = false;
-                s.ResetTurnStats();
+                // [FR] IMPORTANT : on ne remet PAS les PA/PM ici.
+                // On suppose que l'entrée en phase a déjà mis les "current" égaux aux "base".
             }
         }
 
@@ -105,8 +109,11 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             if (timeline) timeline.RefreshAllHP();
         }
 
-        // [FR] TIENT À JOUR en temps réel : placement + surbrillance quand l'entité active se déplace
+        // [FR] Tient à jour mapping + surbrillance de l’entité active quand elle bouge
         TrackActiveEntityTileChange();
+
+        // [FR] Nouveau : traite les "morts" (libère case + retire du tour)
+        ProcessDeathsIfAny();
 
         // [FR] Détection de fin de combat centralisée dans le manager
         if (manager.TryEvaluateEndOfCombat()) return;
@@ -138,6 +145,14 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             return;
         }
 
+        // [FR] Fin de tour : reset PA/PM + décrémente la durée des effets (nouvelle logique)
+        if (current && current.TryGetComponent(out Entity_StatistiqueCombat sEnd))
+        {
+            sEnd.ResetTurnStats();          // [FR] on remonte PA/PM maintenant
+            sEnd.TickActiveEffectsAtTurnEnd(); // [FR] on consomme 1 tour de durée
+        }
+
+        // [FR] Enchaîner sur le suivant
         turnIndex = (turnIndex + 1) % list.Count;
         StartTurnForCurrent();
     }
@@ -151,11 +166,13 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
 
         var current = list[turnIndex];
 
-        if (current && current.TryGetComponent(out Entity_StatistiqueCombat s))
-            s.ResetTurnStats();
+        // [FR] IMPORTANT : on NE reset plus PA/PM ici.
+        // [FR] Applique les effets temporisés pour CE tour (ex: –10 PA, –10 PM, etc.)
+        if (current && current.TryGetComponent(out Entity_StatistiqueCombat sTurn))
+            sTurn.ApplyActiveEffectsAtTurnStart();
 
         if (current && current.TryGetComponent(out Entity_SkillCaster caster))
-            caster.ResetSkillTurnUsage();
+            caster.ResetSkillTurnUsage(); // [FR] quotas de sorts (par cible) remis à zéro au début du tour
 
         if (timeline)
         {
@@ -250,7 +267,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     }
 
     // =====================================================================
-    // ============   NOUVELLE LOGIQUE : suivi de déplacement   =============
+    // ============   LOGIQUE : suivi de déplacement actif   ===============
     // =====================================================================
 
     /// <summary>
@@ -343,11 +360,85 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
         return best;
     }
 
-    // [FR] Appelé par le caster après un sort : force la mise à jour des PV dans la Timeline
-    public void RefreshTimelineHP()
+    // ---------------------------------------------------------------------
+    // Gestion unifiée des morts (libère la case + retire du tour)
+    private void ProcessDeathsIfAny()
     {
-        // [FR] Met à jour immédiatement la barre de vie de toutes les entités dans la Timeline
+        var list = manager.phaseEnter.AllFighters;
+        if (list == null || list.Count == 0) return;
+
+        var snapshot = new List<GameObject>(list);
+
+        for (int i = 0; i < snapshot.Count; i++)
+        {
+            var e = snapshot[i];
+            if (!e || removedDead.Contains(e)) continue;
+
+            if (!e.TryGetComponent(out Entity_StatistiqueCombat s)) continue;
+
+            if (s.currentHP <= 0)
+                HandleEntityDeath(e, s);
+        }
+    }
+
+    /// <summary>
+    /// [FR] Libère la case, cache visuel, retire l'entité de AllFighters, et met la timeline à jour.
+    /// </summary>
+    private void HandleEntityDeath(GameObject entity, Entity_StatistiqueCombat stats)
+    {
+        removedDead.Add(entity);
+
+        stats.isDead = true;
+
+        var tile = manager.tileGrid.GetTileOfEntity(entity);
+        if (tile && tile.TryGetComponent(out InfoTile ti)) ti.SetFree();
+        manager.tileGrid.UnregisterEntity(entity);
+
+        foreach (var r in entity.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
+        foreach (var c in entity.GetComponentsInChildren<Collider>(true)) c.enabled = false;
+
+        var pc = entity.GetComponent<Player_CombatController>(); if (pc) pc.enabled = false;
+        var mc = entity.GetComponent<Monster_CombatController>(); if (mc) mc.enabled = false;
+
+        RemoveFromInitiative(entity);
+
         if (timeline) timeline.RefreshAllHP();
     }
 
+    /// <summary>
+    /// [FR] Retire l'entité de AllFighters en ajustant turnIndex proprement.
+    /// </summary>
+    private void RemoveFromInitiative(GameObject entity)
+    {
+        var list = manager.phaseEnter.AllFighters;
+        if (list == null) return;
+
+        int idx = list.IndexOf(entity);
+        if (idx < 0) return;
+
+        bool wasCurrent = (turnIndex == idx);
+        list.RemoveAt(idx);
+
+        if (list.Count == 0)
+        {
+            turnIndex = -1;
+            return;
+        }
+
+        if (wasCurrent)
+        {
+            turnIndex = (idx >= list.Count) ? 0 : idx;
+            StartTurnForCurrent();
+        }
+        else if (idx < turnIndex)
+        {
+            turnIndex = Mathf.Max(0, turnIndex - 1);
+        }
+    }
+
+    // [FR] Appelé par le caster après un sort : force la mise à jour des PV dans la Timeline
+    public void RefreshTimelineHP()
+    {
+        if (timeline) timeline.RefreshAllHP();
+    }
 }

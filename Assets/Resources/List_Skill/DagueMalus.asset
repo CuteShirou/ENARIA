@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9d43e5e33451354fafa6f3a8ca8e671, type: 3}
-  m_Name: "Dague Empoisonn\xE9"
+  m_Name: DagueMalus
   m_EditorClassIdentifier: 
   ID: 1
-  skillName: "Dague Empoisonn\xE9"
-  description: "Lance une dague, qui applique un poison \xE0 la cible durant 2tours
-    qui lui fais perdre 2PA."
+  skillName: DagueMalus
+  description: Lance une dague appliquant un malus.
   skillType: 1
   skillElement: 2
   damageMin: 10
-  damageMax: 30
+  damageMax: 20
   costPA: 2
   rangeMin: 1
   rangeMax: 6
@@ -30,7 +29,11 @@ MonoBehaviour:
     - {x: 0, y: 0}
   effects:
   - effectType: 6
-    value: 2
+    value: 10
+    duration: 2
+    applyToSelf: 0
+  - effectType: 7
+    value: 10
     duration: 2
     applyToSelf: 0
   critChance: 0

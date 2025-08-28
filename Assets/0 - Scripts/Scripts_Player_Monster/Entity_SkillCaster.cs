@@ -1,27 +1,27 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// [FR] Lanceur de compétences pour une entité de combat.
-/// - Vérifie le tour via Phase_TurnByTurnCombat
-/// - Cible une tuile au clic droit et applique la compétence équipée (Data_Skill)
-/// - Gère portée, coût PA, zone d'impact et effets immédiats
-/// - Notifie la Timeline pour rafraîchir les PV immédiatement après le cast
+/// - Gère l'équipement et le lancement d'un Data_Skill (clic souris OU API publique pour l'IA)
+/// - Vérifie PA, portée (Manhattan + PO), zone d'impact, limites par cible, application des effets
+/// - Notifie la Timeline pour rafraîchir les PV immédiatement après un cast
 /// </summary>
 [AddComponentMenu("Combat/Entity Skill Caster")]
 public class Entity_SkillCaster : MonoBehaviour
 {
     [Header("References")]
-    public Combat_PhaseManager phaseManager;   // [FR] Accès à phaseTurn + tileGrid
-    public TileGrid_Manager tileGrid;          // [FR] Grille de combat
+    public Combat_PhaseManager phaseManager;   // [FR] Assigné/injecté (aucun auto-find)
+    public TileGrid_Manager tileGrid;          // [FR] Assigné/injecté (aucun auto-find)
 
     [Header("Skill")]
-    public Data_Skill equippedSkill;           // [FR] Sort sélectionné (UI)
+    public Data_Skill equippedSkill;           // [FR] Sort sélectionné (UI joueur ou IA via EquipSkill)
 
     private Entity_StatistiqueCombat stats;
 
-    // [FR] Compteur "lancers par cible" pour CE tour
-    private readonly Dictionary<GameObject, int> perTargetCastCount = new();
+    // [FR] Limite "(skill, cible) par tour"
+    private readonly Dictionary<(Data_Skill, GameObject), int> perTargetPerSkillThisTurn = new();
 
     // =========================
     // Constructor / Destructor
@@ -29,108 +29,163 @@ public class Entity_SkillCaster : MonoBehaviour
     public Entity_SkillCaster() { }
     ~Entity_SkillCaster() { }
 
-    private void Awake()
-    {
-        // [FR] Récupère les refs si non assignées dans l’inspector
-        if (!phaseManager) phaseManager = FindAnyObjectByType<Combat_PhaseManager>(FindObjectsInactive.Include);
-        if (!tileGrid && phaseManager) tileGrid = phaseManager.tileGrid;
-    }
-
     private void Start()
     {
-        // [FR] Cache la ref aux stats
         stats = GetComponent<Entity_StatistiqueCombat>();
     }
 
     private void Update()
     {
-        if (!enabled || equippedSkill == null || stats == null) return;
+        if (!enabled || stats == null) return;
         if (phaseManager == null || phaseManager.phaseTurn == null) return;
         if (!phaseManager.phaseTurn.IsMyTurn(gameObject)) return;
 
-        // [FR] Clic droit = tentative de lancer le sort
-        if (Input.GetMouseButtonDown(1))
-        {
+        // [FR] Ne pas caster si la souris est sur une UI (boutons, etc.)
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        // [FR] CLIC DROIT = lancer le sort sur la tuile sous la souris
+        if (equippedSkill != null && Input.GetMouseButtonDown(1))
             TryCastAtMouse();
-        }
     }
 
-    /// <summary>[FR] À appeler en début de tour pour réinitialiser les limites par cible.</summary>
-    public void ResetSkillTurnUsage() => perTargetCastCount.Clear();
 
-    // ---------------------------------------------------------------------
+    // =====================================================================
+    // =====================     API PUBLIQUE POUR IA     ===================
+    // =====================================================================
+
+    /// <summary>
+    /// [FR] Équipe un skill (utilisé par l'UI joueur ou l'IA).
+    /// </summary>
+    public void EquipSkill(Data_Skill skill)
+    {
+        equippedSkill = skill;
+    }
+
+    /// <summary>
+    /// [FR] Vérifie si 'skill' peut être lancé sur la tuile 'targetTile' (sans consommer).
+    /// </summary>
+    public bool CanCastAtTile(Data_Skill skill, GameObject targetTile, out string reason)
+    {
+        reason = "";
+        if (skill == null) { reason = "Skill null."; return false; }
+        if (tileGrid == null) { reason = "TileGrid null."; return false; }
+        if (stats == null) { reason = "Stats null."; return false; }
+        if (targetTile == null || !targetTile.TryGetComponent(out SetupTile setup)) { reason = "Tuile invalide."; return false; }
+
+        // [FR] PA suffisants ?
+        if (stats.currentPA < skill.costPA) { reason = "PA insuffisants."; return false; }
+
+        // [FR] Portée (Manhattan) + bonus de PO
+        Vector2Int from = GetCurrentCoord();
+        Vector2Int to = new Vector2Int(setup.tileX, setup.tileY);
+        int dist = Mathf.Abs(from.x - to.x) + Mathf.Abs(from.y - to.y);
+
+        if (dist < skill.rangeMin) { reason = "Trop proche."; return false; }
+        if (dist > skill.rangeMax + stats.currentPO) { reason = "Trop loin."; return false; }
+
+        // [FR] Mono-cible -> nécessité d'une entité sur la tuile + quota par cible
+        if (IsSingleTarget(skill))
+        {
+            var target = tileGrid.GetEntityOnTile(targetTile);
+            if (!target) { reason = "Aucune cible sur la tuile."; return false; }
+            if (!CheckPerTargetLimit(skill, target)) { reason = "Limite par cible atteinte."; return false; }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// [FR] Lance effectivement 'skill' sur la tuile 'targetTile' (si autorisé).
+    /// </summary>
+    public bool CastAtTile(Data_Skill skill, GameObject targetTile)
+    {
+        if (!CanCastAtTile(skill, targetTile, out string why))
+        {
+            Debug.LogWarning("[Caster] Cast refusé: " + why);
+            return false;
+        }
+
+        if (!targetTile.TryGetComponent(out SetupTile setup)) return false;
+
+        bool isMono = IsSingleTarget(skill);
+
+        // [FR] Swap temporaire pour réutiliser les helpers basés sur 'equippedSkill'
+        var saved = equippedSkill;
+        equippedSkill = skill;
+
+        if (isMono)
+        {
+            var target = tileGrid.GetEntityOnTile(targetTile);
+            if (!target) { equippedSkill = saved; return false; }
+            if (!CheckPerTargetLimit(skill, target)) { equippedSkill = saved; return false; }
+
+            ApplySkillOnTarget(skill, target);
+            IncrementPerTarget(skill, target);
+            stats.SetPA(stats.currentPA - skill.costPA);
+        }
+        else
+        {
+            Vector2Int center = new Vector2Int(setup.tileX, setup.tileY);
+            var targets = GetTargetsInImpactZone(skill, center);
+            if (targets.Count == 0) { equippedSkill = saved; return false; }
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                var t = targets[i];
+                if (t == null) continue;
+                if (!CheckPerTargetLimit(skill, t)) continue;
+                ApplySkillOnTarget(skill, t);
+                IncrementPerTarget(skill, t);
+            }
+            stats.SetPA(stats.currentPA - skill.costPA);
+        }
+
+        equippedSkill = saved;
+
+        // [FR] UI: rafraîchit Timeline immédiatement
+        RequestTimelineHpRefresh();
+        return true;
+    }
+
+    /// <summary>
+    /// [FR] À appeler en début de tour pour réinitialiser les limites par cible & skill.
+    /// </summary>
+    public void ResetSkillTurnUsage()
+    {
+        perTargetPerSkillThisTurn.Clear();
+    }
+
+    // =====================================================================
+    // ========================  INTERACTION SOURIS  =======================
+    // =====================================================================
+
     private void TryCastAtMouse()
     {
         if (!Camera.main || tileGrid == null) return;
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hit, 200f)) return;
         if (!hit.collider.TryGetComponent(out SetupTile tile)) return;
 
-        TryCastAtTile(tile);
+        CastAtTile(equippedSkill, tile.gameObject);
     }
 
-    private void TryCastAtTile(SetupTile targetTile)
+    // =====================================================================
+    // ============================  HELPERS  ===============================
+    // =====================================================================
+
+    private static bool IsSingleTarget(Data_Skill skill)
     {
-        if (tileGrid == null) return;
-
-        // [FR] Vérif PA
-        if (stats.currentPA < equippedSkill.costPA)
-        {
-            Debug.Log("[Skill] PA insuffisants.");
-            return;
-        }
-
-        // [FR] Vérif portée (Manhattan) + bonus PO courant
-        Vector2Int from = GetCurrentCoord();
-        Vector2Int to = new Vector2Int(targetTile.tileX, targetTile.tileY);
-        int dist = Mathf.Abs(from.x - to.x) + Mathf.Abs(from.y - to.y);
-        if (dist < equippedSkill.rangeMin || dist > equippedSkill.rangeMax + stats.currentPO)
-        {
-            Debug.Log("[Skill] Cible hors de portée.");
-            return;
-        }
-
-        // [FR] Applique sur cibles
-        if (equippedSkill.impactZone != null && equippedSkill.impactZone.zone != null &&
-            equippedSkill.impactZone.zone.Length == 1)
-        {
-            // [FR] Monocible : entité sur la tuile cliquée
-            var target = tileGrid.GetEntityOnTile(targetTile.gameObject);
-            if (!target)
-            {
-                Debug.Log("[Skill] Aucune cible sur la tuile.");
-                return;
-            }
-
-            if (!CheckPerTargetLimit(target)) return;
-
-            ApplySkillOnTarget(target);
-            IncrementPerTarget(target);
-            stats.SetPA(stats.currentPA - equippedSkill.costPA);
-
-            RequestTimelineHpRefresh(); // [FR] UI : met à jour la timeline immédiatement
-        }
-        else
-        {
-            // [FR] Zone : récupère toutes les cibles dans la zone d'impact
-            var targets = GetTargetsInImpactZone(to);
-            if (targets.Count == 0)
-            {
-                Debug.Log("[Skill] Aucune cible dans la zone.");
-                return;
-            }
-
-            for (int i = 0; i < targets.Count; i++)
-                ApplySkillOnTarget(targets[i]);
-
-            stats.SetPA(stats.currentPA - equippedSkill.costPA);
-
-            RequestTimelineHpRefresh(); // [FR] UI : met à jour la timeline immédiatement
-        }
+        // [FR] Mono-cible si:
+        //  - impactZone == null, ou zone == null, ou zone.Length == 0
+        //  - OU zone == [ (0,0) ]
+        if (skill == null || skill.impactZone == null || skill.impactZone.zone == null) return true;
+        var z = skill.impactZone.zone;
+        if (z.Length == 0) return true;
+        if (z.Length == 1 && z[0] == Vector2Int.zero) return true;
+        return z.Length == 1; // [FR] par sécurité : une seule case relative
     }
 
-    // ---------------------------------------------------------------------
     private Vector2Int GetCurrentCoord()
     {
         if (tileGrid == null) return Vector2Int.zero;
@@ -153,14 +208,13 @@ public class Entity_SkillCaster : MonoBehaviour
         return best;
     }
 
-    private List<GameObject> GetTargetsInImpactZone(Vector2Int center)
+    private List<GameObject> GetTargetsInImpactZone(Data_Skill skill, Vector2Int center)
     {
         var res = new List<GameObject>();
-        if (tileGrid == null || equippedSkill == null ||
-            equippedSkill.impactZone == null || equippedSkill.impactZone.zone == null)
+        if (tileGrid == null || skill == null || skill.impactZone == null || skill.impactZone.zone == null)
             return res;
 
-        var zone = equippedSkill.impactZone.zone;
+        var zone = skill.impactZone.zone;
         for (int i = 0; i < zone.Length; i++)
         {
             Vector2Int c = center + zone[i];
@@ -172,40 +226,44 @@ public class Entity_SkillCaster : MonoBehaviour
         return res;
     }
 
-    private bool CheckPerTargetLimit(GameObject target)
+    private bool CheckPerTargetLimit(Data_Skill skill, GameObject target)
     {
-        if (equippedSkill.maxPerTargetPerTurn <= 0) return true;
-        int count = perTargetCastCount.TryGetValue(target, out var v) ? v : 0;
-        if (count >= equippedSkill.maxPerTargetPerTurn)
+        if (skill == null || target == null) return false;
+
+        if (skill.maxPerTargetPerTurn <= 0) return true;
+
+        var key = (skill, target);
+        int count = perTargetPerSkillThisTurn.TryGetValue(key, out var v) ? v : 0;
+        if (count >= skill.maxPerTargetPerTurn)
         {
-            Debug.LogWarning($"[Skill] Limite par cible atteinte pour {equippedSkill.skillName} sur {target.name}.");
+            Debug.LogWarning($"[Skill] Limite par cible atteinte pour {skill.skillName} sur {target.name}.");
             return false;
         }
         return true;
     }
 
-    private void IncrementPerTarget(GameObject target)
+    private void IncrementPerTarget(Data_Skill skill, GameObject target)
     {
-        int count = perTargetCastCount.TryGetValue(target, out var v) ? v : 0;
-        perTargetCastCount[target] = count + 1;
+        var key = (skill, target);
+        int count = perTargetPerSkillThisTurn.TryGetValue(key, out var v) ? v : 0;
+        perTargetPerSkillThisTurn[key] = count + 1;
     }
 
-    // ---------------------------------------------------------------------
-    private void ApplySkillOnTarget(GameObject target)
+    private void ApplySkillOnTarget(Data_Skill skill, GameObject target)
     {
-        if (!target || !target.TryGetComponent(out Entity_StatistiqueCombat ts)) return;
+        if (skill == null || !target || !target.TryGetComponent(out Entity_StatistiqueCombat ts)) return;
 
         // [FR] Critique : caster + skill
-        float critChance = Mathf.Clamp(stats.currentCritChance + equippedSkill.critChance, 0f, 100f);
+        float critChance = Mathf.Clamp(stats.currentCritChance + skill.critChance, 0f, 100f);
         bool isCrit = Random.value < (critChance / 100f);
 
         // [FR] Jet dégâts
-        int jet = Random.Range(equippedSkill.damageMin, equippedSkill.damageMax + 1);
+        int jet = Random.Range(skill.damageMin, skill.damageMax + 1);
 
         // [FR] Multiplicateur selon stat élémentaire + résistance cible (en %)
-        float attackerStat = GetOffensiveStat(stats, equippedSkill.skillElement);
+        float attackerStat = GetOffensiveStat(stats, skill.skillElement);
         float statMult = (attackerStat + 100f) / 100f;
-        float res = GetResistanceFor(ts, equippedSkill.skillElement);
+        float res = GetResistanceFor(ts, skill.skillElement);
 
         float dmg = jet * statMult;
         if (isCrit) dmg *= 1.5f;
@@ -218,23 +276,44 @@ public class Entity_SkillCaster : MonoBehaviour
 
         Debug.Log($"[Skill] {name} → {target.name} : {final} dmg{(isCrit ? " (CRIT)" : "")}");
 
-        // [FR] Effets normaux (immédiats seulement)
-        if (equippedSkill.effects != null && equippedSkill.effects.Count > 0)
+        // [FR] Effets non-crit
+        if (skill.effects != null && skill.effects.Count > 0)
         {
-            for (int i = 0; i < equippedSkill.effects.Count; i++)
+            for (int i = 0; i < skill.effects.Count; i++)
             {
-                var eff = equippedSkill.effects[i];
-                ApplyImmediateEffect(eff, eff.applyToSelf ? stats : ts);
+                var eff = skill.effects[i];
+                var receiver = eff.applyToSelf ? stats : ts;
+
+                // [FR] Durée > 0 → on empile pour application au début des tours
+                if (eff.duration > 0)
+                {
+                    if (receiver.activeEffects == null) receiver.activeEffects = new List<Entity_StatistiqueCombat.ActiveEffect>();
+                    receiver.activeEffects.Add(new Entity_StatistiqueCombat.ActiveEffect(eff));
+                }
+                else
+                {
+                    ApplyImmediateEffect(eff, receiver);
+                }
             }
         }
 
-        // [FR] Effets critiques (immédiats seulement)
-        if (isCrit && equippedSkill.critEffects != null && equippedSkill.critEffects.Count > 0)
+        // [FR] Effets critiques
+        if (isCrit && skill.critEffects != null && skill.critEffects.Count > 0)
         {
-            for (int i = 0; i < equippedSkill.critEffects.Count; i++)
+            for (int i = 0; i < skill.critEffects.Count; i++)
             {
-                var eff = equippedSkill.critEffects[i];
-                ApplyImmediateEffect(eff, eff.applyToSelf ? stats : ts);
+                var eff = skill.critEffects[i];
+                var receiver = eff.applyToSelf ? stats : ts;
+
+                if (eff.duration > 0)
+                {
+                    if (receiver.activeEffects == null) receiver.activeEffects = new List<Entity_StatistiqueCombat.ActiveEffect>();
+                    receiver.activeEffects.Add(new Entity_StatistiqueCombat.ActiveEffect(eff));
+                }
+                else
+                {
+                    ApplyImmediateEffect(eff, receiver);
+                }
             }
         }
     }
@@ -243,18 +322,11 @@ public class Entity_SkillCaster : MonoBehaviour
     {
         if (eff == null || to == null) return;
 
-        if (eff.duration > 0)
-        {
-            // [FR] On ne modifie pas ton runtime actuel : effet temporisé à gérer plus tard
-            Debug.LogWarning($"[Skill] Timed effect TODO: {eff.effectType} ({eff.duration} tours).");
-            return;
-        }
-
         int v = Mathf.RoundToInt(eff.value);
 
         switch (eff.effectType)
         {
-            // [FR] Vitalité / PA / PM / PO
+            // [FR] Vitalité / PA / PM / PO (instantanés)
             case EffectType.BonusPV: to.SetHP(to.currentHP + v); break;
             case EffectType.BonusPA: to.SetPA(to.currentPA + v); break;
             case EffectType.MalusPA: to.SetPA(to.currentPA - v); break;
@@ -297,7 +369,7 @@ public class Entity_SkillCaster : MonoBehaviour
         switch (element)
         {
             case SkillElement.Force: return s.currentForce;
-            case SkillElement.Dexterité: return s.currentDexterite;   // [FR] enum avec accent
+            case SkillElement.Dexterité: return s.currentDexterite;
             case SkillElement.Magie: return s.currentMagie;
             case SkillElement.Foi: return s.currentFoi;
             default: return s.currentForce;
@@ -309,7 +381,7 @@ public class Entity_SkillCaster : MonoBehaviour
         switch (element)
         {
             case SkillElement.Force: return s.currentResistanceForce;
-            case SkillElement.Dexterité: return s.currentResistanceDexterite; // [FR] enum avec accent
+            case SkillElement.Dexterité: return s.currentResistanceDexterite;
             case SkillElement.Magie: return s.currentResistanceMagie;
             case SkillElement.Foi: return s.currentResistanceFoi;
             default: return 0f;
@@ -318,7 +390,6 @@ public class Entity_SkillCaster : MonoBehaviour
 
     private void RequestTimelineHpRefresh()
     {
-        // [FR] Notifie la phase de rafraîchir l'UI des PV (Timeline)
         if (phaseManager != null && phaseManager.phaseTurn != null)
             phaseManager.phaseTurn.RefreshTimelineHP();
     }

@@ -157,11 +157,19 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 monsterInstance.transform.SetParent(teamRedParent, true);
 
             // ─────────────────────────────────────────────────────────
-            // INJECTION ICI : on fournit Phase & Grid aux monstres (prefab ou déjà scène)
+            // INJECTION : fournit Phase & Grid aux composants runtime des monstres
+            // [FR] Monster_CombatController
             if (monsterInstance.TryGetComponent(out Monster_CombatController ai))
             {
-                ai.phaseManager = manager;                 // [FR] pas d'auto-find : ref explicite
+                ai.phaseManager = manager;                 // [FR] Réf explicite (pas d'auto-find)
                 ai.tileGrid = manager != null ? manager.tileGrid : null;
+            }
+
+            // [FR] Entity_SkillCaster (nouveau : injection identique)
+            if (monsterInstance.TryGetComponent(out Entity_SkillCaster caster))
+            {
+                caster.phaseManager = manager;
+                caster.tileGrid = manager != null ? manager.tileGrid : null;
             }
             // ─────────────────────────────────────────────────────────
 

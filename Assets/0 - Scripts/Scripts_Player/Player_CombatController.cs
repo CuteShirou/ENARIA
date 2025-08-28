@@ -168,4 +168,28 @@ public class Player_CombatController : MonoBehaviour
         }
         return best;
     }
+
+    // [FR] À lier au bouton "Passe Tour" (OnClick)
+    public void OnClickPassTurn()
+    {
+        // [FR] Sécurité : on ne fait rien si la phase n'est pas prête
+        if (phaseManager == null || phaseManager.phaseTurn == null) return;
+
+        // [FR] On ne peut passer le tour que si c'est bien mon tour
+        if (!phaseManager.phaseTurn.IsMyTurn(gameObject)) return;
+
+        // [FR] On évite de couper un déplacement en cours
+        if (isMoving) return;
+
+        // [FR] Nettoie toute file de déplacement résiduelle (visuel propre)
+        movementQueue.Clear();
+        isMoving = false;
+
+        // [FR] Demande à la phase de passer au prochain combattant.
+        // [FR] Adapte le nom exact de la méthode selon ton Phase_TurnByTurn :
+        phaseManager.phaseTurn.EndTurn();
+        // phaseManager.phaseTurn.EndTurnForCurrent();         // <- si ta méthode s'appelle comme ceci
+        // phaseManager.phaseTurn.RequestEndTurn(gameObject);  // <- si elle attend l'actor en paramètre
+    }
+
 }
