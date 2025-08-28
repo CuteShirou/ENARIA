@@ -10,7 +10,6 @@ public class QuestStep
 
     public QuestObjectiveType objectiveType;
 
-    public MonsterData monsterToKill;
     public int monsterKillCount;
 
     public string npcName;
@@ -26,21 +25,16 @@ public class QuestStep
 
         string objectiveText = objectiveType switch
         {
-            QuestObjectiveType.KillMonster =>
-                monsterToKill != null
-                    ? $"Tué \"{monsterToKill.monsterName}\": {currentProgress}/{monsterKillCount}"
-                    : $"Tué des monstres: {currentProgress}/{monsterKillCount}",
-
             QuestObjectiveType.TalkToNPC =>
-                $"Dialogué avec \"{npcName}\"",
+                $"Dialoguï¿½ avec \"{npcName}\"",
 
             QuestObjectiveType.CollectItem =>
                 itemToCollect != null
-                    ? $"Apporté \"{GetCollectibleName(itemToCollect)}\": {currentProgress}/{itemQuantity}"
-                    : $"Apporté des objets: {currentProgress}/{itemQuantity}",
+                    ? $"Apportï¿½ \"{GetCollectibleName(itemToCollect)}\": {currentProgress}/{itemQuantity}"
+                    : $"Apportï¿½ des objets: {currentProgress}/{itemQuantity}",
 
             QuestObjectiveType.ReachLocation =>
-                $"Aller à \"{locationName}\"",
+                $"Aller ï¿½ \"{locationName}\"",
 
             _ => "Objectif inconnu"
         };
@@ -51,7 +45,7 @@ public class QuestStep
             $"{objectiveText}";
     }
 
-    // méthode privée locale pour récupérer le nom exact selon le type
+    // mï¿½thode privï¿½e locale pour rï¿½cupï¿½rer le nom exact selon le type
     private string GetCollectibleName(CollectibleData collectible)
     {
         if (collectible == null)
