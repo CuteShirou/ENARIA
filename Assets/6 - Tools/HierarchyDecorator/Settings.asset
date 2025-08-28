@@ -363,7 +363,7 @@ MonoBehaviour:
       noSpaceAfterPrefix: 0
       name: BIG BLOCK
       font: {fileID: 0}
-      fontSize: 30
+      fontSize: 15
       fontAlignment: 4
       fontStyle: 1
       textFormatting: 2
@@ -373,7 +373,7 @@ MonoBehaviour:
       - fontColour: {r: 1, g: 1, b: 1, a: 1}
         backgroundColour: {r: 0, g: 0, b: 0, a: 1}
       style:
-        m_Name: New Style
+        m_Name: BIG BLOCK
         m_Normal:
           m_Background: {fileID: 0}
           m_ScaledBackgrounds: []
@@ -427,9 +427,89 @@ MonoBehaviour:
           m_Top: 0
           m_Bottom: 0
         m_Font: {fileID: 0}
-        m_FontSize: 11
+        m_FontSize: 15
         m_FontStyle: 1
         m_Alignment: 4
+        m_WordWrap: 0
+        m_RichText: 1
+        m_TextClipping: 0
+        m_ImagePosition: 0
+        m_ContentOffset: {x: 0, y: 0}
+        m_FixedWidth: 0
+        m_FixedHeight: 0
+        m_StretchWidth: 1
+        m_StretchHeight: 0
+    - prefix: '?'
+      noSpaceAfterPrefix: 0
+      name: DATABASE
+      font: {fileID: 12800000, guid: 891349ed6c370194a8c6135995d27d32, type: 3}
+      fontSize: 15
+      fontAlignment: 5
+      fontStyle: 3
+      textFormatting: 0
+      modes:
+      - fontColour: {r: 0, g: 0, b: 0, a: 1}
+        backgroundColour: {r: 1, g: 1, b: 1, a: 1}
+      - fontColour: {r: 1, g: 0, b: 0, a: 1}
+        backgroundColour: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
+      style:
+        m_Name: DATABASE
+        m_Normal:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 1, g: 0, b: 0, a: 1}
+        m_Hover:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_Active:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_Focused:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_OnNormal:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_OnHover:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_OnActive:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_OnFocused:
+          m_Background: {fileID: 0}
+          m_ScaledBackgrounds: []
+          m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+        m_Border:
+          m_Left: 0
+          m_Right: 0
+          m_Top: 0
+          m_Bottom: 0
+        m_Margin:
+          m_Left: 0
+          m_Right: 0
+          m_Top: 0
+          m_Bottom: 0
+        m_Padding:
+          m_Left: 0
+          m_Right: 0
+          m_Top: 0
+          m_Bottom: 0
+        m_Overflow:
+          m_Left: 0
+          m_Right: 0
+          m_Top: 0
+          m_Bottom: 0
+        m_Font: {fileID: 12800000, guid: 891349ed6c370194a8c6135995d27d32, type: 3}
+        m_FontSize: 15
+        m_FontStyle: 3
+        m_Alignment: 5
         m_WordWrap: 0
         m_RichText: 1
         m_TextClipping: 0
@@ -1759,6 +1839,19 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 1
+      - displayName: CinemachinePostProcessing
+        name: Unity.Cinemachine.CinemachinePostProcessing, Unity.Cinemachine, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: CinemachinePostProcessing
+          m_Image: {fileID: 2800000, guid: 3327a326efc0c4079a8eada111b11d29, type: 3}
+          m_Tooltip: CinemachinePostProcessing
+          m_TextWithWhitespace: "CinemachinePostProcessing\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: CinemachinePOV
         name: Unity.Cinemachine.CinemachinePOV, Unity.Cinemachine, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
@@ -2963,6 +3056,45 @@ MonoBehaviour:
           m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
           m_Tooltip: PolyShape
           m_TextWithWhitespace: "PolyShape\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: PostProcessDebug
+        name: UnityEngine.Rendering.PostProcessing.PostProcessDebug, Unity.Postprocessing.Runtime,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: PostProcessDebug
+          m_Image: {fileID: 2800000, guid: 5f51e0b22aa8cb84b9f422576ce87ff9, type: 3}
+          m_Tooltip: PostProcessDebug
+          m_TextWithWhitespace: "PostProcessDebug\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: PostProcessLayer
+        name: UnityEngine.Rendering.PostProcessing.PostProcessLayer, Unity.Postprocessing.Runtime,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: PostProcessLayer
+          m_Image: {fileID: 2800000, guid: 5f51e0b22aa8cb84b9f422576ce87ff9, type: 3}
+          m_Tooltip: PostProcessLayer
+          m_TextWithWhitespace: "PostProcessLayer\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
+      - displayName: PostProcessVolume
+        name: UnityEngine.Rendering.PostProcessing.PostProcessVolume, Unity.Postprocessing.Runtime,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: PostProcessVolume
+          m_Image: {fileID: 2800000, guid: 5f51e0b22aa8cb84b9f422576ce87ff9, type: 3}
+          m_Tooltip: PostProcessVolume
+          m_TextWithWhitespace: "PostProcessVolume\u200B"
         shown: 0
         excluded: 0
         isBuiltIn: 1
@@ -5488,19 +5620,6 @@ MonoBehaviour:
         isBuiltIn: 0
         script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
         hasToggle: 1
-      - displayName: InventoryManager
-        name: InventoryManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
-        content:
-          m_Text: InventoryManager
-          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
-          m_Tooltip: InventoryManager
-          m_TextWithWhitespace: "InventoryManager\u200B"
-        shown: 0
-        excluded: 0
-        isBuiltIn: 0
-        script: {fileID: 11500000, guid: c7a6ef1077db3554580697adcd395e45, type: 3}
-        hasToggle: 1
       - displayName: CombatStats
         name: CombatStats, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         content:
@@ -5590,5 +5709,91 @@ MonoBehaviour:
         isBuiltIn: 0
         script: {fileID: 11500000, guid: 41f84591ce72545258ea98cb7518d8b9, type: 3}
         hasToggle: 1
+      - displayName: CombatController
+        name: CombatController, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: CombatController
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: CombatController
+          m_TextWithWhitespace: "CombatController\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 0a72b7bdf29e4034caf18153d86dd4bd, type: 3}
+        hasToggle: 1
+      - displayName: SkillCaster
+        name: SkillCaster, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: SkillCaster
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: SkillCaster
+          m_TextWithWhitespace: "SkillCaster\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: ec3323cea86ef0d48b5ee6e037a929ca, type: 3}
+        hasToggle: 1
+      - displayName: OnClick3D
+        name: OnClick3D, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: OnClick3D
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: OnClick3D
+          m_TextWithWhitespace: "OnClick3D\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: ddf9525551defb44585813ec997d0436, type: 3}
+        hasToggle: 1
+      - displayName: UIToggle
+        name: UIToggle, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: UIToggle
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: UIToggle
+          m_TextWithWhitespace: "UIToggle\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: b43276f397284c099510ff114aad3ab9, type: 3}
+        hasToggle: 1
+      - displayName: UIPageManager
+        name: UIPageManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: UIPageManager
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: UIPageManager
+          m_TextWithWhitespace: "UIPageManager\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 5cd1b028262b4c63b05b116216f2fed6, type: 3}
+        hasToggle: 1
+      - displayName: StatsUIBinder
+        name: StatsUIBinder, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: StatsUIBinder
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: StatsUIBinder
+          m_TextWithWhitespace: "StatsUIBinder\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 711c5123c2c61b34db4138c5f973f339, type: 3}
+        hasToggle: 1
+      - displayName: PlayerUI
+        name: Mirror.Examples.Basic.PlayerUI, Mirror.Examples, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: PlayerUI
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: PlayerUI
+          m_TextWithWhitespace: "PlayerUI\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 64acca8c87e5ceb44bcbd56ef21e2950, type: 3}
+        hasToggle: 1
     unityVersion: 2023.2.20f1
-    unityCount: 374
+    unityCount: 378
