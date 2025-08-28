@@ -80,6 +80,7 @@
     <Compile Include="Assets\0 - Scripts\System\SkillTree\SkillTreeManager.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\bois\bois progress.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\CraftUIManager.cs" />
+    <Compile Include="Assets\0 - Scripts\System\dialogues\DialogueString.cs" />
     <Compile Include="Assets\0 - Scripts\System\scene changer.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\StatsUIManager.cs" />
     <Compile Include="Assets\0 - Scripts\System\Crafts\CraftResult.cs" />
@@ -113,8 +114,10 @@
     <Compile Include="Assets\0 - Scripts\System\Jobs\cereales\cereales gameplay.cs" />
     <Compile Include="Assets\0 - Scripts\GridManager\ReachableTilesHighlighter.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\Peche\peche progress.cs" />
+    <Compile Include="Assets\0 - Scripts\System\dialogues\DialogueManager.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Menu\MainMenu.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Craft\CraftingPropertyDrawer.cs" />
+    <Compile Include="Assets\0 - Scripts\System\dialogues\Dialogue.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\CraftDetailUI.cs" />
     <Compile Include="Assets\0 - Scripts\Inventory\InventorySlot.cs" />
     <Compile Include="Assets\0 - Scripts\Scene - Teleporter\SceneTeleporter.cs" />
