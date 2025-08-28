@@ -12,7 +12,7 @@ public class OnClick3D : MonoBehaviour
     [SerializeField] private string arbreTag = "arbre";
     [SerializeField] private string rocherTag = "rocher";
     [SerializeField] private string planteTag = "plante";
-    [SerializeField] private string pnjspawnTag = "pnjSpawn";
+    [SerializeField] private string pnjspawnTag = "pnjspawn";
     [SerializeField] private string pnjforge1Tag = "pnjforge1";
     [SerializeField] private string pnjforge2Tag = "pnjforge2";
     [SerializeField] private string pnjshopTag = "pnjshop";
