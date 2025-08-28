@@ -7,16 +7,16 @@ public class TypeTabButton : MonoBehaviour
 {
     public Button button;
     public TMP_Text label;
-    public EquipmentType? equipmentType;
-    private Action<EquipmentType?> onClick;
+    public Item.ItemType? itemType;
+    private Action<Item.ItemType?> onClick;
 
-    public void Init(string text, Action<EquipmentType?> onClickAction, EquipmentType? type)
+    public void Init(string text, Action<Item.ItemType?> onClickAction, Item.ItemType? type)
     {
         label.text = text;
-        equipmentType = type;
+        itemType = type;
         onClick = onClickAction;
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => onClick?.Invoke(equipmentType));
+        button.onClick.AddListener(() => onClick?.Invoke(itemType));
     }
 
     public void SetSelected(bool selected)
