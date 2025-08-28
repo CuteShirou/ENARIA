@@ -35,7 +35,8 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     // ---------------------------------------------------------------------
 
     [Header("Compétences disponibles")]
-    public List<Data_Skill> skillBook = new List<Data_Skill>(); // [FR] Liste des compétences que possède cette entité
+    // [FR] SkillBook : liste de couples (Skill + FX lié)
+    public List<Skill_Binding> skillBook = new List<Skill_Binding>(); // Était: List<Data_Skill> ... :contentReference[oaicite:0]{index=0}
 
     // ─────────────────────────────────────────────────────────────────────
     // STATS BASE (Design)

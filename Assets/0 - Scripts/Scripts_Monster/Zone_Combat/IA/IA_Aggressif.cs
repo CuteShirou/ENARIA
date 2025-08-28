@@ -136,8 +136,8 @@ public class IA_Aggressif : MonoBehaviour, IMonsterAI
     {
         if (!targetEntity) return AIAction.End();
 
-        // [FR] SkillBook dynamique (ou skill équipée en fallback)
-        List<Data_Skill> book = TryGetSkillBook(ctx);
+        // [FR] Récupère les Data_Skill depuis le SkillBook (List<Skill_Binding>)
+        List<Data_Skill> book = BuildSkillListFromBindings(ctx);
         if (book == null || book.Count == 0)
         {
             book = new List<Data_Skill>();
@@ -171,11 +171,21 @@ public class IA_Aggressif : MonoBehaviour, IMonsterAI
         return AIAction.End();
     }
 
-    private List<Data_Skill> TryGetSkillBook(AIContext ctx)
+    /// <summary>
+    /// [FR] Construit une liste de Data_Skill à partir des Skill_Binding du monstre.
+    /// </summary>
+    private List<Data_Skill> BuildSkillListFromBindings(AIContext ctx)
     {
-        var f = typeof(Entity_StatistiqueCombat).GetField("skillBook");
-        if (f == null) return null;
-        return f.GetValue(ctx.stats) as List<Data_Skill>;
+        var res = new List<Data_Skill>();
+        if (ctx.stats != null && ctx.stats.skillBook != null)
+        {
+            for (int i = 0; i < ctx.stats.skillBook.Count; i++)
+            {
+                var b = ctx.stats.skillBook[i];
+                if (b != null && b.skill != null) res.Add(b.skill);
+            }
+        }
+        return res;
     }
 
     /// <summary>

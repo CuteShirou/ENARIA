@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &817471146814365925
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2240908856970864477}
+  - component: {fileID: 4844068477557129559}
+  - component: {fileID: 6758823822365446687}
+  m_Layer: 0
+  m_Name: 02_Test_LancerCouteau
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2240908856970864477
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817471146814365925}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &4844068477557129559
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817471146814365925}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 3ea000346477fc744b4b034876b17680, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 38.399998, y: 21.599998}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &6758823822365446687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817471146814365925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be8394fa0aca1840b280d6481ac19c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 02
+  displayName: Test_LancerCouteau
+  frames:
+  - {fileID: 21300000, guid: 3ea000346477fc744b4b034876b17680, type: 3}
+  - {fileID: 21300000, guid: 06fa2171254299748809e849a39a43f0, type: 3}
+  - {fileID: 21300000, guid: 4e1ba8035d581e047a77fa671f4900ab, type: 3}
+  - {fileID: 21300000, guid: 6465f36b5b37bf94fa35ce657dabcb7c, type: 3}
+  - {fileID: 21300000, guid: e14dc0f8989f22f45a765d2ad4fd3518, type: 3}
+  - {fileID: 21300000, guid: e6dda24b49e0a794eae4331c2836a894, type: 3}
+  - {fileID: 21300000, guid: fb1b1d93c006eb64e9ac555863704dd6, type: 3}
+  - {fileID: 21300000, guid: 6904f91ee66ad5941a8beb8b72925c2e, type: 3}
+  - {fileID: 21300000, guid: 46db8f48e90f1ce40b466e2674238f91, type: 3}
+  - {fileID: 21300000, guid: 46fa7c98807505842a6d38457407dd33, type: 3}
+  - {fileID: 21300000, guid: 32e70562c06d3ef4fb69f937529fbfba, type: 3}
+  framesPerSecond: 30
+  loop: 0
+  playOnAwake: 1
+  autoDestroyOnEnd: 1
+  useUnscaledTime: 0
+  randomStartFrame: 0
+  startDelay: 0.2
+  onCompleted:
+    m_PersistentCalls:
+      m_Calls: []

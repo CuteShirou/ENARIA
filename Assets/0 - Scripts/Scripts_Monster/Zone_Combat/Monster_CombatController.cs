@@ -118,11 +118,11 @@ public class Monster_CombatController : MonoBehaviour
 
             if (action.type == AIActionType.Cast && action.skill != null && action.targetTile != null)
             {
-                // [FR] Équipe et caste via l’API du caster (pas de souris)
+                // [FR] Équipe et caste via l’API du caster (gère le FX selon waitFxBeforeApply)
                 caster.EquipSkill(action.skill);
-                caster.CastAtTile(action.skill, action.targetTile);
+                yield return caster.CastAtTileWithFx(action.skill, action.targetTile);
 
-                // [FR] Micro-pause → laisse l’UI respirer (timeline déjà rafraîchie par le caster)
+                // [FR] Micro-pause pour lisibilité (la timeline est rafraîchie dans le caster)
                 yield return new WaitForSeconds(0.05f);
                 continue;
             }
@@ -204,17 +204,20 @@ public class Monster_CombatController : MonoBehaviour
         bestMelee = null;
         bestRanged = null;
 
-        // [FR] 1) récupère le skillBook si présent sur les stats (recommandé)
-        List<Data_Skill> book = null;
-        var f = typeof(Entity_StatistiqueCombat).GetField("skillBook");
-        if (f != null) book = f.GetValue(stats) as List<Data_Skill>;
-
-        // [FR] 2) fallback: on utilise la skill équipée s'il n'y a pas de liste
-        if (book == null || book.Count == 0)
+        // [FR] Construit une liste de Data_Skill à partir des Skill_Binding
+        List<Data_Skill> book = new List<Data_Skill>();
+        if (stats != null && stats.skillBook != null)
         {
-            book = new List<Data_Skill>();
-            if (caster.equippedSkill) book.Add(caster.equippedSkill);
+            for (int i = 0; i < stats.skillBook.Count; i++)
+            {
+                var b = stats.skillBook[i];
+                if (b != null && b.skill != null) book.Add(b.skill);
+            }
         }
+
+        // [FR] Fallback: on utilise la skill équipée si jamais la liste est vide
+        if (book.Count == 0 && caster != null && caster.equippedSkill != null)
+            book.Add(caster.equippedSkill);
 
         for (int i = 0; i < book.Count; i++)
         {

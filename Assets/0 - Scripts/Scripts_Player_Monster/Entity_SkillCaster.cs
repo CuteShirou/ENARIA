@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,6 +7,8 @@ using UnityEngine.EventSystems;
 /// [FR] Lanceur de compétences pour une entité de combat.
 /// - Gère l'équipement et le lancement d'un Data_Skill (clic souris OU API publique pour l'IA)
 /// - Vérifie PA, portée (Manhattan + PO), zone d'impact, limites par cible, application des effets
+/// - Déclenche un FX 2D (via Skill_Binding) sur la case ciblée, avec offset Y
+/// - Peut optionnellement attendre la fin de l'animation avant d'appliquer les effets
 /// - Notifie la Timeline pour rafraîchir les PV immédiatement après un cast
 /// </summary>
 [AddComponentMenu("Combat/Entity Skill Caster")]
@@ -17,6 +20,10 @@ public class Entity_SkillCaster : MonoBehaviour
 
     [Header("Skill")]
     public Data_Skill equippedSkill;           // [FR] Sort sélectionné (UI joueur ou IA via EquipSkill)
+
+    [Header("FX")]
+    public bool waitFxBeforeApply = false;     // [FR] Si vrai: on attend la fin du FX avant d'appliquer les effets
+    public Transform fxParent;                 // [FR] Parent optionnel pour les FX (ex: un "FXRoot" dans la scène)
 
     private Entity_StatistiqueCombat stats;
 
@@ -49,9 +56,33 @@ public class Entity_SkillCaster : MonoBehaviour
             TryCastAtMouse();
     }
 
+    // =====================================================================
+    // ========================  INTERACTION SOURIS  =======================
+    // =====================================================================
+
+    private void TryCastAtMouse()
+    {
+        if (!Camera.main || tileGrid == null) return;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out RaycastHit hit, 200f)) return;
+        if (!hit.collider.TryGetComponent(out SetupTile tile)) return;
+
+        GameObject tileGO = tile.gameObject;
+
+        // [FR] Au choix: on attend le FX, ou on applique tout de suite après avoir déclenché le FX
+        if (waitFxBeforeApply)
+            StartCoroutine(CastAtTile_PlayFxThenApply(equippedSkill, tileGO));
+        else
+        {
+            // [FR] Déclenche le FX immédiatement (fire-and-forget)
+            PlayFxFor(equippedSkill, tileGO);
+            // [FR] Applique le skill aussitôt (comme avant)
+            CastAtTile(equippedSkill, tileGO);
+        }
+    }
 
     // =====================================================================
-    // =====================     API PUBLIQUE POUR IA     ===================
+    // =====================     API PUBLIQUE POUR IA     ==================
     // =====================================================================
 
     /// <summary>
@@ -60,6 +91,24 @@ public class Entity_SkillCaster : MonoBehaviour
     public void EquipSkill(Data_Skill skill)
     {
         equippedSkill = skill;
+    }
+
+    /// <summary>
+    /// [FR] API IA: lance un skill sur une tuile, en gérant le FX selon waitFxBeforeApply.
+    ///      À utiliser avec: yield return caster.CastAtTileWithFx(skill, tile);
+    /// </summary>
+    public IEnumerator CastAtTileWithFx(Data_Skill skill, GameObject targetTile)
+    {
+        if (waitFxBeforeApply)
+        {
+            yield return CastAtTile_PlayFxThenApply(skill, targetTile);
+        }
+        else
+        {
+            PlayFxFor(skill, targetTile);
+            CastAtTile(skill, targetTile);
+            yield break;
+        }
     }
 
     /// <summary>
@@ -97,6 +146,7 @@ public class Entity_SkillCaster : MonoBehaviour
 
     /// <summary>
     /// [FR] Lance effectivement 'skill' sur la tuile 'targetTile' (si autorisé).
+    /// [FR] Ne gère PAS le FX ici (le FX est déclenché ailleurs).
     /// </summary>
     public bool CastAtTile(Data_Skill skill, GameObject targetTile)
     {
@@ -149,6 +199,21 @@ public class Entity_SkillCaster : MonoBehaviour
     }
 
     /// <summary>
+    /// [FR] Coroutine: joue le FX puis applique le skill. Utilisée si waitFxBeforeApply = true.
+    /// </summary>
+    private IEnumerator CastAtTile_PlayFxThenApply(Data_Skill skill, GameObject targetTile)
+    {
+        // [FR] Vérif rapide (hors FX) pour ne pas jouer un FX si le cast est impossible
+        if (!CanCastAtTile(skill, targetTile, out _)) yield break;
+
+        // [FR] 1) FX et attente de fin
+        yield return PlayFxAndWaitFor(skill, targetTile);
+
+        // [FR] 2) Appliquer le skill (logique standard)
+        CastAtTile(skill, targetTile);
+    }
+
+    /// <summary>
     /// [FR] À appeler en début de tour pour réinitialiser les limites par cible & skill.
     /// </summary>
     public void ResetSkillTurnUsage()
@@ -157,22 +222,40 @@ public class Entity_SkillCaster : MonoBehaviour
     }
 
     // =====================================================================
-    // ========================  INTERACTION SOURIS  =======================
-    // =====================================================================
-
-    private void TryCastAtMouse()
-    {
-        if (!Camera.main || tileGrid == null) return;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, 200f)) return;
-        if (!hit.collider.TryGetComponent(out SetupTile tile)) return;
-
-        CastAtTile(equippedSkill, tile.gameObject);
-    }
-
-    // =====================================================================
     // ============================  HELPERS  ===============================
     // =====================================================================
+
+    // [FR] Déclenche le FX (fire-and-forget). Ne fait rien si pas de binding ou pas de FX.
+    private void PlayFxFor(Data_Skill skill, GameObject targetTile)
+    {
+        var binding = FindBindingForSkill(skill);
+        if (binding == null) return;
+
+        Vector3 basePos = targetTile.transform.position;
+        Skill_FXHelper.PlayFx(binding, basePos, fxParent);
+    }
+
+    // [FR] Joue le FX et attend la fin (si présent).
+    private IEnumerator PlayFxAndWaitFor(Data_Skill skill, GameObject targetTile)
+    {
+        var binding = FindBindingForSkill(skill);
+        if (binding == null) yield break;
+
+        Vector3 basePos = targetTile.transform.position;
+        yield return Skill_FXHelper.PlayFxAndWait(binding, basePos, fxParent);
+    }
+
+    // [FR] Retrouve, dans le SkillBook de l'entité, le binding (Skill + FX) pour ce skill.
+    private Skill_Binding FindBindingForSkill(Data_Skill s)
+    {
+        if (stats == null || stats.skillBook == null || s == null) return null;
+        for (int i = 0; i < stats.skillBook.Count; i++)
+        {
+            var b = stats.skillBook[i];
+            if (b != null && b.skill == s) return b;
+        }
+        return null;
+    }
 
     private static bool IsSingleTarget(Data_Skill skill)
     {

@@ -1285,8 +1285,14 @@ MonoBehaviour:
   _team: 0
   _isReady: 0
   skillBook:
-  - {fileID: 11400000, guid: a44936334b9a6614bb27489fed9cd8d1, type: 2}
-  - {fileID: 11400000, guid: ca0a5bbc81314de4ab7349fbde97e9cc, type: 2}
+  - skill: {fileID: 11400000, guid: a44936334b9a6614bb27489fed9cd8d1, type: 2}
+    fxData: {fileID: 0}
+    fxPrefabOverride: {fileID: 7622290928582153062, guid: 84609a41e7abc69469ce6e7dcb44d5a3, type: 3}
+    fxYOffset: 0
+  - skill: {fileID: 11400000, guid: ca0a5bbc81314de4ab7349fbde97e9cc, type: 2}
+    fxData: {fileID: 0}
+    fxPrefabOverride: {fileID: 7622290928582153062, guid: 84609a41e7abc69469ce6e7dcb44d5a3, type: 3}
+    fxYOffset: 0
   baseHP: 120
   basePA: 6
   basePM: 3
@@ -1315,6 +1321,7 @@ MonoBehaviour:
   _currentResistanceDexterite: 0
   _currentResistanceMagie: 0
   _currentResistanceFoi: 0
+  activeEffects: []
 --- !u!114 &8527171880832732203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1352,6 +1359,8 @@ MonoBehaviour:
   phaseManager: {fileID: 0}
   tileGrid: {fileID: 0}
   equippedSkill: {fileID: 0}
+  waitFxBeforeApply: 1
+  fxParent: {fileID: 0}
 --- !u!114 &3299852960925963550
 MonoBehaviour:
   m_ObjectHideFlags: 0
