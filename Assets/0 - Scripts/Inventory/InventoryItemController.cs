@@ -8,7 +8,12 @@ public class InventoryItemController : MonoBehaviour
     [SerializeField] private Item item;
 
     public Button RemoveButton;
-    
+
+    public Item GetItem()
+    {
+        return item;
+    }
+
     public void RemoveItem()
     {
         if (item == null) return;

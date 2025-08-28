@@ -4,7 +4,7 @@ using TMPro;
 public class DetailedStatsPanel : MonoBehaviour
 {
     [Header("Source")]
-    public CombatStats combatStats;
+    public Entity_StatistiqueCombat combatStats;
 
     [Header("Colonnes")]
     public TextMeshProUGUI[] equipColumn;

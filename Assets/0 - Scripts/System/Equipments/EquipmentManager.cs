@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour
 {
-    public CombatStats combatStats;
+    public Entity_StatistiqueCombat combatStats;
 
     [Header("Équipements Équipés")]
     public EquipmentData coiffe;
