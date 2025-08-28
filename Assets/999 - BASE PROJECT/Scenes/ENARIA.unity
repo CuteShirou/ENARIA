@@ -3999,55 +3999,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 6.27, y: 0.09, z: 3.85}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &138631812
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 138631814}
-  - component: {fileID: 138631813}
-  m_Layer: 0
-  m_Name: PostProcessing
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &138631813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138631812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 84593b74bd68cd04da5d1eb0b9c02ede, type: 2}
-  isGlobal: 1
-  blendDistance: 0
-  weight: 1
-  priority: 0
---- !u!4 &138631814
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138631812}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &140390553
 GameObject:
   m_ObjectHideFlags: 0
@@ -16293,7 +16244,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 506140003}
-  - component: {fileID: 506140002}
   - component: {fileID: 506140004}
   m_Layer: 0
   m_Name: (sample)TestStats
@@ -16302,18 +16252,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &506140002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 506140001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65bf97c21f9bfa0459c26be52d1d6282, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &506140003
 Transform:
   m_ObjectHideFlags: 0
@@ -23726,7 +23664,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1534274745549080171, guid: ed1c6b44f7f924946ae875a800395fd7, type: 3}
       propertyPath: m_Name
-      value: _ ItemDataBase BOOTSTRAP
+      value: '? ItemDataBase BOOTSTRAP'
       objectReference: {fileID: 0}
     - target: {fileID: 8002676316975763451, guid: ed1c6b44f7f924946ae875a800395fd7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -24351,7 +24289,6 @@ MonoBehaviour:
   phaseTurn: {fileID: 1657418458}
   phaseEnd: {fileID: 1657418457}
   tileGrid: {fileID: 821466463}
-  autoWireIfNull: 1
   teamGreenIsWinning: 0
   teamRedIsWinning: 0
   winnerTeam: 0
@@ -28737,7 +28674,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 4a61fc93902f0734dbe4d4f8ee70cd98, type: 2}
     - target: {fileID: 4962134580971023198, guid: 352dff68683ab7a4797668da9f2c8735, type: 3}
       propertyPath: m_Name
-      value: _ ItemDataBase
+      value: '? ItemDataBase'
       objectReference: {fileID: 0}
     - target: {fileID: 8345085397809968084, guid: 352dff68683ab7a4797668da9f2c8735, type: 3}
       propertyPath: m_LocalPosition.x
@@ -31115,7 +31052,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -42.573364, y: -193.1}
-  m_SizeDelta: {x: -422.3619, y: -403.11}
+  m_SizeDelta: {x: -790, y: -403.11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1056735326
 MonoBehaviour:
@@ -42607,7 +42544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 966fec2bac4c3ab4b808fba246bd404a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatStats: {fileID: 506140002}
+  combatStats: {fileID: 0}
   coiffe: {fileID: 11400000, guid: cc838990fe8daff47934c30ae72f2920, type: 2}
   amulette: {fileID: 0}
   plastron: {fileID: 0}
@@ -45179,13 +45116,11 @@ MonoBehaviour:
   AllFighters: []
   teamRedParent: {fileID: 1926502236}
   teamGreenParent: {fileID: 197863784}
-  autoFindParentsByTagIfNull: 1
-  tagTeamRed: TeamRed
-  tagTeamGreen: TeamGreen
   forceReparentOnInit: 1
   explorationUIRoot: {fileID: 0}
   combatUIRoot: {fileID: 1324805326}
   setInitialUIOnAwake: 1
+  timelineUI: {fileID: 1274030177}
 --- !u!1 &1660602281
 GameObject:
   m_ObjectHideFlags: 0
@@ -77648,7 +77583,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8124348470631729451}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.32125425, y: -0.62991863, z: 0.32125494, w: 0.62991554}
+  m_LocalRotation: {x: 0.32125428, y: -0.6299186, z: 0.321255, w: 0.6299155}
   m_LocalPosition: {x: 9.159956, y: 15.142988, z: 10.2200575}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -91279,7 +91214,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3695149696792596216}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.32125425, y: -0.62991863, z: 0.32125494, w: 0.62991554}
+  m_LocalRotation: {x: 0.32125428, y: -0.6299186, z: 0.321255, w: 0.6299155}
   m_LocalPosition: {x: 9.159956, y: 15.142988, z: 10.2200575}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -95057,6 +94992,7 @@ MonoBehaviour:
   _currentResistanceDexterite: 0
   _currentResistanceMagie: 0
   _currentResistanceFoi: 0
+  activeEffects: []
 --- !u!114 &8238287124760553549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99568,7 +99504,6 @@ SceneRoots:
   - {fileID: 1597566354}
   - {fileID: 882969871}
   - {fileID: 985142120}
-  - {fileID: 138631814}
   - {fileID: 2077593230}
   - {fileID: 832575519}
   - {fileID: 410087041}

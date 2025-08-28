@@ -102,7 +102,7 @@ public class InventoryManager : MonoBehaviour
 
     // ------ STACK RULES ------
     // Seuls les consommables sont empilables.
-    public bool IsStackable(Item item) => item != null && item.itemType == Item.ItemType.Consumable;
+    public bool IsStackable(Item item) => item != null && item.itemType == Item.ItemType.Consumable || item.itemType == Item.ItemType.Ressource;
     public int MaxStackFor(Item item) => IsStackable(item) ? DEFAULT_MAX_STACK_CONSUMABLE : 1;
     // -------------------------
     
