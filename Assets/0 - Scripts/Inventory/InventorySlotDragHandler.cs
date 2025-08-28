@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class InventorySlotDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
 {
     private InventorySlotView slotView;
-
+    
     private bool isRightHeld = false;
     private Coroutine holdSplitRoutine = null;
     private const float holdInitialDelay = 0.35f;

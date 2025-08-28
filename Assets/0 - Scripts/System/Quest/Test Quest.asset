@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58851da1ad42b6b499c4486d6183804e, type: 3}
+  m_Name: Test Quest
+  m_EditorClassIdentifier: 
+  questId: Q0
+  questType: 0
+  questName: Le Testo-Moa
+  description: "Un monde de test \xE9trange"
+  steps:
+  - stepName: Voir le Moa particulier
+    stepDescription: "un Moa \xE9trange vous attend et veux vous dire des informations
+      interdit concernant un monde de test."
+    isOptional: 0
+    objectiveType: 1
+    monsterToKill: {fileID: 0}
+    monsterKillCount: 0
+    npcName: Moa
+    itemToCollect: {fileID: 0}
+    itemQuantity: 0
+    locationName: 
+  - stepName: "Tu\xE9 pour Moa"
+    stepDescription: "Le grand Moa r\xE9clame des sacrifices."
+    isOptional: 0
+    objectiveType: 0
+    monsterToKill: {fileID: 11400000, guid: 7e128123dfbde5647a6308c6806990ce, type: 2}
+    monsterKillCount: 5
+    npcName: 
+    itemToCollect: {fileID: 0}
+    itemQuantity: 0
+    locationName: 
+  - stepName: "Artefacts de la proph\xE9tie"
+    stepDescription: Des artefacts sont apparus dans le foncde, non c'est juste des
+      arbes?
+    isOptional: 1
+    objectiveType: 2
+    monsterToKill: {fileID: 11400000, guid: 7e128123dfbde5647a6308c6806990ce, type: 2}
+    monsterKillCount: 0
+    npcName: 
+    itemToCollect: {fileID: 11400000, guid: 8a925522bb23f60449ef6e2527838ae3, type: 2}
+    itemQuantity: 3
+    locationName: 
+  - stepName: Chemin vers l'ampha et l'omega
+    stepDescription: "Une br\xE9che c'est ouvert, c'est l'entr\xE9 d'un nouveau monde,
+      aller \xE0 cet endroit."
+    isOptional: 0
+    objectiveType: 3
+    monsterToKill: {fileID: 11400000, guid: 7e128123dfbde5647a6308c6806990ce, type: 2}
+    monsterKillCount: 5
+    npcName: 
+    itemToCollect: {fileID: 11400000, guid: ffb0abe877002184ea72d5dd5d135797, type: 2}
+    itemQuantity: 0
+    locationName: "Br\xE9che du monde de test"
+  experienceReward: 10
+  coinReward: 10
+  itemRewards:
+  - collectible: {fileID: 11400000, guid: cc838990fe8daff47934c30ae72f2920, type: 2}
+    quantity: 1

@@ -9,7 +9,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Transform ItemContent;
     [SerializeField] private GameObject slotPrefab;
     [SerializeField] private Sprite emptySlotSprite;
-
+    
     [Header("Setup")]
     [SerializeField] private int initialSlotCount = 30;
 
@@ -33,7 +33,7 @@ public class InventoryManager : MonoBehaviour
     private bool suppressAutoSave = false;
 
     private const int DEFAULT_MAX_STACK_CONSUMABLE = 99;
-
+    
     public int SlotCapacity => initialSlotCount;
 
     private void Awake() => Instance = this;
@@ -55,11 +55,11 @@ public class InventoryManager : MonoBehaviour
             if (items[i] != null) items[i].id = i + 1; // 1-based
         }
     }
-
+    
     private int GetOrAssignCanonicalId(Item item)
     {
         if (item == null) return 0;
-
+        
         int idx = items.IndexOf(item);
         if (idx >= 0)
         {
@@ -67,7 +67,7 @@ public class InventoryManager : MonoBehaviour
             if (item.id != canonical) item.id = canonical;
             return canonical;
         }
-
+        
         items.Add(item);
         int newId = items.Count;
         item.id = newId;
@@ -102,10 +102,10 @@ public class InventoryManager : MonoBehaviour
 
     // ------ STACK RULES ------
     // Seuls les consommables sont empilables.
-    public bool IsStackable(Item item) => item != null && item.itemType == Item.ItemType.Consumable;
+    public bool IsStackable(Item item) => item != null && item.itemType == Item.ItemType.Consumable || item.itemType == Item.ItemType.Ressource;
     public int MaxStackFor(Item item) => IsStackable(item) ? DEFAULT_MAX_STACK_CONSUMABLE : 1;
     // -------------------------
-
+    
     public int FindFirstEmpty()
     {
         for (int i = 0; i < initialSlotCount; i++)
@@ -124,7 +124,7 @@ public class InventoryManager : MonoBehaviour
         return -1;
     }
 
-    public int GetCountAt(int index) => IsValid(index) ? counts[index] : 0;
+    public int  GetCountAt(int index) => IsValid(index) ? counts[index] : 0;
 
     public bool RemoveAmountAt(int index, int amount = 1)
     {
@@ -344,7 +344,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (autoSaveOnChange && !suppressAutoSave)
         {
-            //InventorySaveSystem.Save(this);
+            InventorySaveSystem.Save(this);
         }
     }
 
@@ -403,7 +403,7 @@ public class InventoryManager : MonoBehaviour
                 if (btn != null) btn.gameObject.SetActive(true);
             }
         }
-        else
+        else 
         {
             foreach (Transform item in ItemContent)
             {
