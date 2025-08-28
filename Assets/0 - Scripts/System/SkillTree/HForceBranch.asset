@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e734b846e2090f7498272070c4c7dd99, type: 3}
+  m_Script: {fileID: 11500000, guid: b6598aad1a149174fa5d0b6d7aa35116, type: 3}
   m_Name: HForceBranch
   m_EditorClassIdentifier: 
   branchName: Force
@@ -18,15 +18,15 @@ MonoBehaviour:
     manualIcon: {fileID: 0}
     manualName: 
     manualDescription: 
-    cost: 1
+    cost: 0
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: c4ef24637f7514540b33fb5662302878, type: 3}
-    manualName: Frappe Lourde 2
-    manualDescription: 10-20 -> 15-28
+    manualName: Frappe lourde 2
+    manualDescription: 15-18 DPC FORCE
     cost: 1
     isUnlocked: 0
     onUnlock:
@@ -43,8 +43,9 @@ MonoBehaviour:
         m_Calls: []
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: 8a143d1c521defc4e887ee5f02d5424e, type: 3}
-    manualName: "Lanc\xE9 Surpuissant 2"
-    manualDescription: "12-16 -> 16-22. Traverse les entit\xE9es jusqu'\xE0 la cible"
+    manualName: "Lanc\xE9 violent"
+    manualDescription: "Lanc\xE9 surpuissant: 15-22 DPC FORCE, +Traverse les entit\xE9s
+      jusqu'\xE0 la cible"
     cost: 1
     isUnlocked: 0
     onUnlock:

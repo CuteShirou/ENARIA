@@ -132,3 +132,125 @@ public class CraftDetailUI : MonoBehaviour
         craftButton.interactable = CraftManager.Instance.CanCraft(_currentRecipe);
     }
 }
+
+
+
+
+
+
+
+
+
+
+//using System.Collections.Generic;
+//using UnityEngine;
+//using UnityEngine.UI;
+//using TMPro;
+
+//public class CraftDetailUI : MonoBehaviour
+//{
+//    [Header("Références UI")]
+//    public TextMeshProUGUI craftNameText;
+//    public TextMeshProUGUI professionLevelText;
+//    public Image resultImage;
+//    public Transform ingredientsContainer;
+//    public GameObject ingredientSlotPrefab;
+//    public Button craftButton;
+//    public GameObject plusImagePrefab;
+
+//    private readonly List<GameObject> _ingredientSlots = new();
+//    private CraftRecipeData _currentRecipe;
+
+//    public void ShowRecipe(CraftRecipeData recipe)
+//    {
+//        _currentRecipe = recipe;
+
+//        craftNameText.text = recipe.recipeName;
+//        professionLevelText.text = $"Lv : {recipe.requiredProfessionLevel}";
+
+//        resultImage.sprite = recipe.result.resultType switch
+//        {
+//            ResultType.Resource when recipe.result.resource != null => recipe.result.resource.icon,
+//            ResultType.Equipment when recipe.result.equipment != null => recipe.result.equipment.icon,
+//            _ => null
+//        };
+
+//        foreach (var slot in _ingredientSlots)
+//            Destroy(slot);
+//        _ingredientSlots.Clear();
+
+//        ingredientSlotPrefab.SetActive(false);
+
+//        int count = recipe.ingredients.Count;
+//        if (count == 0) return;
+
+//        int GetPlayerQuantity(CraftIngredient ing)
+//        {
+//            if (CraftManager.Instance == null)
+//                return 0;
+
+//            string id = ing.ingredientType == IngredientType.Resource
+//                ? ing.resource.resourceName
+//                : ing.equipment.equipmentName;
+
+//            return CraftManager.Instance.GetItemQuantity(id);
+//        }
+
+//        if (count == 1)
+//        {
+//            CreateSlot(recipe.ingredients[0], GetPlayerQuantity(recipe.ingredients[0]));
+//        }
+//        else
+//        {
+//            CreateSlot(recipe.ingredients[0], GetPlayerQuantity(recipe.ingredients[0]));
+
+//            if (plusImagePrefab != null)
+//                AddPlus();
+
+//            for (int i = 1; i < count; i++)
+//            {
+//                CreateSlot(recipe.ingredients[i], GetPlayerQuantity(recipe.ingredients[i]));
+
+//                if (plusImagePrefab != null && i < count - 1)
+//                    AddPlus();
+//            }
+//        }
+
+//        craftButton.onClick.RemoveAllListeners();
+//        craftButton.onClick.AddListener(OnCraftButtonClicked);
+//        craftButton.interactable = CraftManager.Instance?.CanCraft(_currentRecipe) ?? false;
+//    }
+
+//    void CreateSlot(CraftIngredient ingredient, int quantity)
+//    {
+//        var slotGO = Instantiate(ingredientSlotPrefab, ingredientsContainer);
+//        slotGO.SetActive(true);
+//        var slotUI = slotGO.GetComponent<IngredientSlotUI>();
+//        if (slotUI != null)
+//            slotUI.SetIngredient(ingredient, quantity);
+//        _ingredientSlots.Add(slotGO);
+//    }
+
+//    void AddPlus()
+//    {
+//        var plusGO = Instantiate(plusImagePrefab, ingredientsContainer);
+//        plusGO.SetActive(true);
+//        _ingredientSlots.Add(plusGO);
+//    }
+
+//    private void OnCraftButtonClicked()
+//    {
+//        if (_currentRecipe == null || CraftManager.Instance == null)
+//        {
+//            Debug.LogError("CraftManager ou recette manquant !");
+//            return;
+//        }
+
+//        if (CraftManager.Instance.Craft(_currentRecipe))
+//            Debug.Log("Craft terminé !");
+//        else
+//            Debug.LogWarning("Impossible de crafter : ressources ou niveau insuffisant !");
+
+//        craftButton.interactable = CraftManager.Instance.CanCraft(_currentRecipe);
+//    }
+//}
