@@ -9,6 +9,7 @@ using UnityEngine.EventSystems;
 /// - Vérifie PA, portée (Manhattan + PO), zone d'impact, limites par cible, application des effets
 /// - Déclenche un FX 2D (via Skill_Binding) sur la case ciblée, avec offset Y
 /// - Peut optionnellement attendre la fin de l'animation avant d'appliquer les effets
+/// - Met la case ciblée en rouge pendant le FX + calcul
 /// - Notifie la Timeline pour rafraîchir les PV immédiatement après un cast
 /// </summary>
 [AddComponentMenu("Combat/Entity Skill Caster")]
@@ -71,13 +72,20 @@ public class Entity_SkillCaster : MonoBehaviour
 
         // [FR] Au choix: on attend le FX, ou on applique tout de suite après avoir déclenché le FX
         if (waitFxBeforeApply)
-            StartCoroutine(CastAtTile_PlayFxThenApply(equippedSkill, tileGO));
+        {
+            StartCoroutine(CastAtTile_PlayFxThenApply_WithHighlight(equippedSkill, tileGO));
+        }
         else
         {
-            // [FR] Déclenche le FX immédiatement (fire-and-forget)
-            PlayFxFor(equippedSkill, tileGO);
-            // [FR] Applique le skill aussitôt (comme avant)
-            CastAtTile(equippedSkill, tileGO);
+            // [FR] Déclenche le FX immédiatement (fire-and-forget) + highlight pendant l'anim
+            var setup = tile.GetComponent<SetupTile>();
+            Tile_State prev = HighlightTile(setup, true); // rouge
+
+            var fxInst = PlayFxFor_GetInstance(equippedSkill, tileGO); // peut être null si pas de FX
+            CastAtTile(equippedSkill, tileGO);                         // calculs + dégâts maintenant
+
+            // [FR] On enlève le rouge quand le FX se termine (ou très vite si pas de FX)
+            StartCoroutine(UnhighlightAfterRunner(setup, prev, fxInst));
         }
     }
 
@@ -94,25 +102,29 @@ public class Entity_SkillCaster : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] API IA: lance un skill sur une tuile, en gérant le FX selon waitFxBeforeApply.
+    /// [FR] API IA: lance un skill sur une tuile, avec FX + highlight selon waitFxBeforeApply.
     ///      À utiliser avec: yield return caster.CastAtTileWithFx(skill, tile);
     /// </summary>
     public IEnumerator CastAtTileWithFx(Data_Skill skill, GameObject targetTile)
     {
+        if (targetTile == null || !targetTile.TryGetComponent(out SetupTile setup)) yield break;
+
         if (waitFxBeforeApply)
         {
-            yield return CastAtTile_PlayFxThenApply(skill, targetTile);
+            yield return CastAtTile_PlayFxThenApply_WithHighlight(skill, targetTile);
         }
         else
         {
-            PlayFxFor(skill, targetTile);
+            Tile_State prev = HighlightTile(setup, true);
+            var fxInst = PlayFxFor_GetInstance(skill, targetTile);
             CastAtTile(skill, targetTile);
-            yield break;
+            yield return UnhighlightAfterRunner(setup, prev, fxInst);
         }
     }
 
     /// <summary>
     /// [FR] Vérifie si 'skill' peut être lancé sur la tuile 'targetTile' (sans consommer).
+    /// [FR] Autorise désormais le cast sur case VIDE (mono et zone).
     /// </summary>
     public bool CanCastAtTile(Data_Skill skill, GameObject targetTile, out string reason)
     {
@@ -133,14 +145,20 @@ public class Entity_SkillCaster : MonoBehaviour
         if (dist < skill.rangeMin) { reason = "Trop proche."; return false; }
         if (dist > skill.rangeMax + stats.currentPO) { reason = "Trop loin."; return false; }
 
-        // [FR] Mono-cible -> nécessité d'une entité sur la tuile + quota par cible
+        // [FR] MONO-CIBLE :
+        // - On n'exige plus la présence d'une entité.
+        // - Si une entité est là, on applique la limite par cible, sinon on laisse passer.
         if (IsSingleTarget(skill))
         {
-            var target = tileGrid.GetEntityOnTile(targetTile);
-            if (!target) { reason = "Aucune cible sur la tuile."; return false; }
-            if (!CheckPerTargetLimit(skill, target)) { reason = "Limite par cible atteinte."; return false; }
+            var maybe = tileGrid.GetEntityOnTile(targetTile);
+            if (maybe != null)
+            {
+                if (!CheckPerTargetLimit(skill, maybe)) { reason = "Limite par cible atteinte."; return false; }
+            }
+            return true;
         }
 
+        // [FR] ZONE : plus de blocage si aucune entité n'est touchée (cast autorisé).
         return true;
     }
 
@@ -166,20 +184,21 @@ public class Entity_SkillCaster : MonoBehaviour
 
         if (isMono)
         {
+            // [FR] Case vide désormais acceptée : si pas d'entité, on consomme juste les PA (pas d'effet).
             var target = tileGrid.GetEntityOnTile(targetTile);
-            if (!target) { equippedSkill = saved; return false; }
-            if (!CheckPerTargetLimit(skill, target)) { equippedSkill = saved; return false; }
-
-            ApplySkillOnTarget(skill, target);
-            IncrementPerTarget(skill, target);
+            if (target)
+            {
+                if (!CheckPerTargetLimit(skill, target)) { equippedSkill = saved; return false; }
+                ApplySkillOnTarget(skill, target);
+                IncrementPerTarget(skill, target);
+            }
             stats.SetPA(stats.currentPA - skill.costPA);
         }
         else
         {
+            // [FR] Zone : même si aucun ennemi touché, on cast et on consomme les PA.
             Vector2Int center = new Vector2Int(setup.tileX, setup.tileY);
-            var targets = GetTargetsInImpactZone(skill, center);
-            if (targets.Count == 0) { equippedSkill = saved; return false; }
-
+            var targets = GetTargetsInImpactZone(skill, center); // peut être vide
             for (int i = 0; i < targets.Count; i++)
             {
                 var t = targets[i];
@@ -199,18 +218,25 @@ public class Entity_SkillCaster : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Coroutine: joue le FX puis applique le skill. Utilisée si waitFxBeforeApply = true.
+    /// [FR] Coroutine: met la tuile en rouge, joue le FX, attend la fin, applique le skill, restaure la tuile.
     /// </summary>
-    private IEnumerator CastAtTile_PlayFxThenApply(Data_Skill skill, GameObject targetTile)
+    private IEnumerator CastAtTile_PlayFxThenApply_WithHighlight(Data_Skill skill, GameObject targetTile)
     {
         // [FR] Vérif rapide (hors FX) pour ne pas jouer un FX si le cast est impossible
         if (!CanCastAtTile(skill, targetTile, out _)) yield break;
+        if (!targetTile.TryGetComponent(out SetupTile setup)) yield break;
 
-        // [FR] 1) FX et attente de fin
+        // [FR] 1) Tuile ciblée en rouge
+        Tile_State prev = HighlightTile(setup, true);
+
+        // [FR] 2) FX et attente de fin
         yield return PlayFxAndWaitFor(skill, targetTile);
 
-        // [FR] 2) Appliquer le skill (logique standard)
+        // [FR] 3) Appliquer le skill (logique standard)
         CastAtTile(skill, targetTile);
+
+        // [FR] 4) Restaure la tuile
+        HighlightTile(setup, false, prev);
     }
 
     /// <summary>
@@ -225,14 +251,14 @@ public class Entity_SkillCaster : MonoBehaviour
     // ============================  HELPERS  ===============================
     // =====================================================================
 
-    // [FR] Déclenche le FX (fire-and-forget). Ne fait rien si pas de binding ou pas de FX.
-    private void PlayFxFor(Data_Skill skill, GameObject targetTile)
+    // [FR] Déclenche le FX et retourne l'instance (ou null) pour pouvoir attendre sa fin.
+    private Sprite_AnimationRunner PlayFxFor_GetInstance(Data_Skill skill, GameObject targetTile)
     {
         var binding = FindBindingForSkill(skill);
-        if (binding == null) return;
+        if (binding == null) return null;
 
         Vector3 basePos = targetTile.transform.position;
-        Skill_FXHelper.PlayFx(binding, basePos, fxParent);
+        return Skill_FXHelper.PlayFx(binding, basePos, fxParent);
     }
 
     // [FR] Joue le FX et attend la fin (si présent).
@@ -336,30 +362,39 @@ public class Entity_SkillCaster : MonoBehaviour
     {
         if (skill == null || !target || !target.TryGetComponent(out Entity_StatistiqueCombat ts)) return;
 
-        // [FR] Critique : caster + skill
-        float critChance = Mathf.Clamp(stats.currentCritChance + skill.critChance, 0f, 100f);
-        bool isCrit = Random.value < (critChance / 100f);
+        // [FR] IMPORTANT : on ne s'inflige jamais de dégâts à soi-même
+        if (ts == stats)
+        {
+            // [FR] Les effets "applyToSelf" seront gérés plus bas. On saute le calcul de dégâts sur soi.
+            // Debug.Log("[Skill] Auto-dégâts ignorés pour le lanceur.");
+        }
+        else
+        {
+            // [FR] Critique : caster + skill
+            float critChance = Mathf.Clamp(stats.currentCritChance + skill.critChance, 0f, 100f);
+            bool isCrit = Random.value < (critChance / 100f);
 
-        // [FR] Jet dégâts
-        int jet = Random.Range(skill.damageMin, skill.damageMax + 1);
+            // [FR] Jet dégâts
+            int jet = Random.Range(skill.damageMin, skill.damageMax + 1);
 
-        // [FR] Multiplicateur selon stat élémentaire + résistance cible (en %)
-        float attackerStat = GetOffensiveStat(stats, skill.skillElement);
-        float statMult = (attackerStat + 100f) / 100f;
-        float res = GetResistanceFor(ts, skill.skillElement);
+            // [FR] Multiplicateur selon stat élémentaire + résistance cible (en %)
+            float attackerStat = GetOffensiveStat(stats, skill.skillElement);
+            float statMult = (attackerStat + 100f) / 100f;
+            float res = GetResistanceFor(ts, skill.skillElement);
 
-        float dmg = jet * statMult;
-        if (isCrit) dmg *= 1.5f;
-        dmg *= (100f - res) / 100f;
+            float dmg = jet * statMult;
+            if (isCrit) dmg *= 1.5f;
+            dmg *= (100f - res) / 100f;
 
-        int final = Mathf.Max(0, Mathf.RoundToInt(dmg));
+            int final = Mathf.Max(0, Mathf.RoundToInt(dmg));
 
-        // [FR] Pas de shield → applique directement aux PV
-        if (final > 0) ts.SetHP(ts.currentHP - final);
+            // [FR] Pas de shield → applique directement aux PV
+            if (final > 0) ts.SetHP(ts.currentHP - final);
 
-        Debug.Log($"[Skill] {name} → {target.name} : {final} dmg{(isCrit ? " (CRIT)" : "")}");
+            Debug.Log($"[Skill] {name} → {target.name} : {final} dmg{(isCrit ? " (CRIT)" : "")}");
+        }
 
-        // [FR] Effets non-crit
+        // [FR] Effets non-crit (les "applyToSelf" utilisent 'stats' comme receiver)
         if (skill.effects != null && skill.effects.Count > 0)
         {
             for (int i = 0; i < skill.effects.Count; i++)
@@ -367,7 +402,6 @@ public class Entity_SkillCaster : MonoBehaviour
                 var eff = skill.effects[i];
                 var receiver = eff.applyToSelf ? stats : ts;
 
-                // [FR] Durée > 0 → on empile pour application au début des tours
                 if (eff.duration > 0)
                 {
                     if (receiver.activeEffects == null) receiver.activeEffects = new List<Entity_StatistiqueCombat.ActiveEffect>();
@@ -380,8 +414,10 @@ public class Entity_SkillCaster : MonoBehaviour
             }
         }
 
-        // [FR] Effets critiques
-        if (isCrit && skill.critEffects != null && skill.critEffects.Count > 0)
+        // [FR] Effets critiques (si critique)
+        float critChanceCheck = Mathf.Clamp(stats.currentCritChance + skill.critChance, 0f, 100f);
+        bool wasCrit = Random.value < (critChanceCheck / 100f); // [FR] simple check indépendant (selon ton design tu peux partager le roll)
+        if (wasCrit && skill.critEffects != null && skill.critEffects.Count > 0)
         {
             for (int i = 0; i < skill.critEffects.Count; i++)
             {
@@ -446,6 +482,28 @@ public class Entity_SkillCaster : MonoBehaviour
 
     // ---------------------------------------------------------------------
     // Helpers internes
+
+    // [FR] Met/retire l'état rouge sur la tuile visée. Retourne l'état précédent.
+    private Tile_State HighlightTile(SetupTile setup, bool on, Tile_State restoreTo = Tile_State.None)
+    {
+        if (setup == null) return Tile_State.None;
+
+        Tile_State prev = setup.currentState;
+        if (on) setup.currentState = Tile_State.TeamRed;
+        else setup.currentState = restoreTo;
+
+        return prev;
+    }
+
+    private IEnumerator UnhighlightAfterRunner(SetupTile setup, Tile_State prev, Sprite_AnimationRunner inst)
+    {
+        if (inst != null)
+            yield return inst.WaitForCompletion();
+        else
+            yield return null; // [FR] pas de FX → état rétabli au tick suivant
+
+        HighlightTile(setup, false, prev);
+    }
 
     private float GetOffensiveStat(Entity_StatistiqueCombat s, SkillElement element)
     {
