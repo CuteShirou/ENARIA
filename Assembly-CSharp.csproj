@@ -593,6 +593,7 @@
     <None Include="Assets\_PoiyomiShaders\Shaders\7.3\Includes\CGI_PoiShadowIncludes.cginc" />
     <None Include="Assets\_PoiyomiShaders\Shaders\9.0\Pro\Poiyomi Pro.shader" />
     <None Include="Assets\_PoiyomiShaders\Shaders\Extras\MasterScanner.shader" />
+    <None Include="Assets\5 - Textures-Mats\SkySeries Freebie\Hdri setup.txt" />
     <None Include="Assets\_PoiyomiShaders\Shaders\7.3\Patreon\VoxelCubed\Includes\PoiMacros.cginc" />
     <None Include="Assets\_PoiyomiShaders\Shaders\7.3\Patreon\LocalParticles\Shaders\Includes\PoiClearCoat.cginc" />
     <None Include="Assets\_PoiyomiShaders\Shaders\9.0\Toon\Poiyomi Toon Grab Pass.shader" />
@@ -1660,6 +1661,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.TerrainTools.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.TerrainTools.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
       <Private>False</Private>
@@ -1680,8 +1685,8 @@
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.ShaderGraph.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
+    <Reference Include="Unity.TerrainTools">
+      <HintPath>Library\ScriptAssemblies\Unity.TerrainTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Timeline">
@@ -1696,12 +1701,16 @@
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.PlasticSCM.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
+    <Reference Include="Unity.ShaderGraph.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.PlasticSCM.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Splines">
@@ -1780,6 +1789,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Flow.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Postprocessing.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Postprocessing.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>
@@ -1816,12 +1829,16 @@
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.2D.Sprite.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+    <Reference Include="Unity.Postprocessing.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.Postprocessing.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
@@ -1870,17 +1887,21 @@
       <Project>{147A39AB-CFF7-FFEC-4D37-5A6590D8FF9B}</Project>
       <Name>Mirror</Name>
     </ProjectReference>
-    <ProjectReference Include="one.razgriz.rats.csproj">
-      <Project>{E3CFB991-EF43-B794-3E63-30370889976C}</Project>
-      <Name>one.razgriz.rats</Name>
-    </ProjectReference>
     <ProjectReference Include="SimpleWebTransport.csproj">
       <Project>{BD3BF026-52D2-6EA4-BF34-274AF1638FC6}</Project>
       <Name>SimpleWebTransport</Name>
     </ProjectReference>
+    <ProjectReference Include="one.razgriz.rats.csproj">
+      <Project>{E3CFB991-EF43-B794-3E63-30370889976C}</Project>
+      <Name>one.razgriz.rats</Name>
+    </ProjectReference>
     <ProjectReference Include="Mirror.CompilerSymbols.csproj">
       <Project>{AD327320-0AB5-BEFB-3C28-FC131553B823}</Project>
       <Name>Mirror.CompilerSymbols</Name>
+    </ProjectReference>
+    <ProjectReference Include="BakeryRuntimeAssembly.csproj">
+      <Project>{AB5706D3-372A-7724-BB60-7D368BBDB5E8}</Project>
+      <Name>BakeryRuntimeAssembly</Name>
     </ProjectReference>
     <ProjectReference Include="Poi.Tools.csproj">
       <Project>{0DB37373-4182-AA76-D9E4-635BE451F0A2}</Project>
@@ -1917,6 +1938,10 @@
     <ProjectReference Include="ThryAssemblyDefinition.csproj">
       <Project>{90555A8E-7068-41A7-A359-C707FBFCB144}</Project>
       <Name>ThryAssemblyDefinition</Name>
+    </ProjectReference>
+    <ProjectReference Include="BakeryEditorAssembly.csproj">
+      <Project>{1B1B4698-5D8F-EDEE-44E5-0679DD5FEB54}</Project>
+      <Name>BakeryEditorAssembly</Name>
     </ProjectReference>
     <ProjectReference Include="Naelstrof.JigglePhysics.csproj">
       <Project>{E7FBEA69-1316-4063-7EDB-526B2AF169CF}</Project>

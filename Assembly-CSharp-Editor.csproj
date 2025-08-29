@@ -111,8 +111,42 @@
     <Compile Include="Assets\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\VRCAutoAnchor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Editor\x64\Bakery\frender.dll" />
+    <None Include="Assets\Editor\x64\Bakery\optix.1.dll" />
+    <None Include="Assets\Editor\x64\Bakery\ftShowPreview.shader" />
+    <None Include="Assets\Editor\x64\Bakery\d3dcompiler_47.dll" />
+    <None Include="Assets\Editor\x64\Bakery\OpenImageDenoise_device_cuda.dll" />
+    <None Include="Assets\Editor\x64\Bakery\shaderSrc\ftrace.cginc" />
+    <None Include="Assets\Editor\x64\Bakery\cudnn64_7.dll" />
+    <None Include="Assets\Editor\x64\Bakery\shaderSrc\ftTransformFarSphere.compute" />
+    <None Include="Assets\Editor\x64\Bakery\uvrepack.dll" />
+    <None Include="Assets\Editor\x64\Bakery\tbb.dll" />
+    <None Include="Assets\Editor\x64\Bakery\alphabuffergen.dll" />
+    <None Include="Assets\Editor\x64\Bakery\cudart64_91.dll" />
+    <None Include="Assets\Editor\x64\Bakery\tbbbind_2_0.dll" />
+    <None Include="Assets\Editor\x64\Bakery\OIDN2.dll" />
+    <None Include="Assets\Editor\x64\Bakery\halffloat2vb.dll" />
+    <None Include="Assets\Editor\x64\Bakery\tbbbind_2_5.dll" />
+    <None Include="Assets\Editor\x64\Bakery\tbb12.dll" />
+    <None Include="Assets\Editor\x64\Bakery\ftAtlas.shader" />
     <None Include="Assets\_PoiyomiShaders\ModularShader\Editor\Poi_Passes_And_Programs\TODO.txt" />
+    <None Include="Assets\Editor\x64\Bakery\optix.51.dll" />
+    <None Include="Assets\Editor\x64\Bakery\tbbbind.dll" />
+    <None Include="Assets\Editor\x64\Bakery\shaderSrc\ftCullFarSphere.compute" />
+    <None Include="Assets\Editor\x64\Bakery\simpleProgressBar.dll" />
+    <None Include="Assets\Editor\x64\Bakery\ftChecker.shader" />
+    <None Include="Assets\Editor\x64\Bakery\optix_denoiser.6.0.0.dll" />
+    <None Include="Assets\Editor\x64\Bakery\lmrebake.dll" />
+    <None Include="Assets\Editor\x64\Bakery\optix_denoiser.51.dll" />
     <None Include="Assets\_PoiyomiShaders\ModularShader\Editor\Poi_HelperLibraries\RemovedHelpers.txt" />
+    <None Include="Assets\Editor\x64\Bakery\OpenImageDenoise.dll" />
+    <None Include="Assets\Editor\x64\Bakery\cudart64_90.dll" />
+    <None Include="Assets\Editor\x64\Bakery\OpenImageDenoise_core.dll" />
+    <None Include="Assets\Editor\x64\Bakery\optix.6.0.0.dll" />
+    <None Include="Assets\Editor\x64\Bakery\cudart32_91.dll" />
+    <None Include="Assets\Editor\x64\Bakery\uvgbuffergen.dll" />
+    <None Include="Assets\Editor\x64\Bakery\tbbmalloc.dll" />
+    <None Include="Assets\Editor\x64\Bakery\ftProjection.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1171,6 +1205,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.TerrainTools.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.TerrainTools.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
       <Private>False</Private>
@@ -1191,8 +1229,8 @@
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.ShaderGraph.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
+    <Reference Include="Unity.TerrainTools">
+      <HintPath>Library\ScriptAssemblies\Unity.TerrainTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Timeline">
@@ -1207,12 +1245,16 @@
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.PlasticSCM.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
+    <Reference Include="Unity.ShaderGraph.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.PlasticSCM.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Splines">
@@ -1331,12 +1373,16 @@
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.2D.Sprite.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+    <Reference Include="Unity.Postprocessing.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.Postprocessing.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
@@ -1353,10 +1399,6 @@
     </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>Library\ScriptAssemblies\Unity.Postprocessing.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
@@ -1393,17 +1435,21 @@
       <Project>{147A39AB-CFF7-FFEC-4D37-5A6590D8FF9B}</Project>
       <Name>Mirror</Name>
     </ProjectReference>
-    <ProjectReference Include="one.razgriz.rats.csproj">
-      <Project>{E3CFB991-EF43-B794-3E63-30370889976C}</Project>
-      <Name>one.razgriz.rats</Name>
-    </ProjectReference>
     <ProjectReference Include="SimpleWebTransport.csproj">
       <Project>{BD3BF026-52D2-6EA4-BF34-274AF1638FC6}</Project>
       <Name>SimpleWebTransport</Name>
     </ProjectReference>
+    <ProjectReference Include="one.razgriz.rats.csproj">
+      <Project>{E3CFB991-EF43-B794-3E63-30370889976C}</Project>
+      <Name>one.razgriz.rats</Name>
+    </ProjectReference>
     <ProjectReference Include="Mirror.CompilerSymbols.csproj">
       <Project>{AD327320-0AB5-BEFB-3C28-FC131553B823}</Project>
       <Name>Mirror.CompilerSymbols</Name>
+    </ProjectReference>
+    <ProjectReference Include="BakeryRuntimeAssembly.csproj">
+      <Project>{AB5706D3-372A-7724-BB60-7D368BBDB5E8}</Project>
+      <Name>BakeryRuntimeAssembly</Name>
     </ProjectReference>
     <ProjectReference Include="Poi.Tools.csproj">
       <Project>{0DB37373-4182-AA76-D9E4-635BE451F0A2}</Project>
@@ -1440,6 +1486,10 @@
     <ProjectReference Include="ThryAssemblyDefinition.csproj">
       <Project>{90555A8E-7068-41A7-A359-C707FBFCB144}</Project>
       <Name>ThryAssemblyDefinition</Name>
+    </ProjectReference>
+    <ProjectReference Include="BakeryEditorAssembly.csproj">
+      <Project>{1B1B4698-5D8F-EDEE-44E5-0679DD5FEB54}</Project>
+      <Name>BakeryEditorAssembly</Name>
     </ProjectReference>
     <ProjectReference Include="Naelstrof.JigglePhysics.csproj">
       <Project>{E7FBEA69-1316-4063-7EDB-526B2AF169CF}</Project>
