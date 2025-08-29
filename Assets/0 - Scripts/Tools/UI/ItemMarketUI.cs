@@ -24,7 +24,7 @@ public class ItemMarketUI : MonoBehaviour
         if (nameText != null && e.data != null) nameText.text = e.data.itemName;
         if (typeText != null && e.data != null) typeText.text = e.data.itemType.ToString();
         if (quantityText != null) quantityText.text = "x" + e.quantity;
-        if (priceText != null) priceText.text = e.totalPrice + " K";
+        if (priceText != null) priceText.text = e.totalPrice + "";
 
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(() => onBuy?.Invoke(entry));
