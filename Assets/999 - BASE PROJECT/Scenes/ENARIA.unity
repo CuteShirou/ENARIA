@@ -761,7 +761,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -116.50243, y: -0.00050566223}
+  m_AnchoredPosition: {x: -116.500145, y: -0.00050566223}
   m_SizeDelta: {x: 232, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &21806944
@@ -28338,7 +28338,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1298034286}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.99808156
+  m_Size: 0.99999493
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -52639,6 +52639,7 @@ MonoBehaviour:
   prefabLineWin: {fileID: 3208485482465304989, guid: 6740442b9a287234784c911112ba51d7, type: 3}
   prefabLineLose: {fileID: 5155307607797318414, guid: 20752a096f0ed8748b90b474ac9bf76c, type: 3}
   defaultIcon: {fileID: 0}
+  lastTotalXpGained: 0
 --- !u!114 &1657418458
 MonoBehaviour:
   m_ObjectHideFlags: 0

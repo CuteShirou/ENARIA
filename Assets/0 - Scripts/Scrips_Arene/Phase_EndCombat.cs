@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Animations;
+using System.Globalization; // Pour le formatage 3 par 3
 
 [AddComponentMenu("Combat/Phase - End Combat (Local)")]
 public class Phase_EndCombat : MonoBehaviour
@@ -28,13 +29,17 @@ public class Phase_EndCombat : MonoBehaviour
     [SerializeField] private GameObject prefabLineLose;    // Prefab_Ligne_EndFight_Lose
     [SerializeField] private Sprite defaultIcon;
 
+    [Header("Runtime")]
+    [SerializeField] private int lastTotalXpGained = 0;    // XP total gagné par l'équipe gagnante (mémorisé)
+    public int LastTotalXpGained => lastTotalXpGained;     // Getter public pour usage ultérieur
+
     private Combat_PhaseManager manager;
 
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
 
-        // Bascule d'UI
+        // Désactive l'UI combat et réactive l'UI exploration
         if (combatUIRoot) combatUIRoot.SetActive(false);
         if (explorationUIRoot) explorationUIRoot.SetActive(true);
 
@@ -74,14 +79,18 @@ public class Phase_EndCombat : MonoBehaviour
     // Construit Win/Lose avec répartition de drops PAR joueur gagnant
     private void BuildWinLosePanels_PerPlayerDistribution(CombatTeamId winner, List<GameObject> green, List<GameObject> red)
     {
+        // Vide les containers Win/Lose
         ClearContainer(contentWin);
         ClearContainer(contentLose);
 
-        // Gagnants / perdants
+        // Détermine gagnants / perdants
         List<GameObject> winners = winner == CombatTeamId.Green ? green : (winner == CombatTeamId.Red ? red : new List<GameObject>());
         List<GameObject> losers = winner == CombatTeamId.Green ? red : (winner == CombatTeamId.Red ? green : new List<GameObject>());
 
-        // WIN : une ligne par gagnant + tirages indépendants
+        // Calcule et mémorise l'XP total obtenu en battant la team perdante
+        lastTotalXpGained = ComputeTotalXpFromLosers(losers); // Somme des gainXp des perdants (arrondi à l'entier)
+
+        // WIN : une ligne par gagnant + tirages indépendants + affichage du gain d'XP
         if (contentWin && prefabLineWin)
         {
             foreach (var winnerEntity in winners)
@@ -97,6 +106,14 @@ public class Phase_EndCombat : MonoBehaviour
                 // 3) Affiche ces drops dans la ligne UI
                 var ui = lineGO ? lineGO.GetComponent<EndFight_LineUI>() : null;
                 if (ui != null) ui.SetDrops(dropsForThisWinner);
+
+                // 4) Met à jour le texte "Gain_XpBar" de la ligne avec le format + 1 500 xp
+                //    (On n’utilise pas de Find sur la scène, on cherche dans la hiérarchie du prefab instancié)
+                var xpText = lineGO ? lineGO.transform.Find("Gain_XpBar")?.GetComponent<TMP_Text>() : null;
+                if (xpText != null)
+                {
+                    xpText.text = $"+ {FormatNumberGrouped(lastTotalXpGained)} xp"; // ex: "+ 1 500 xp"
+                }
             }
         }
 
@@ -108,6 +125,36 @@ public class Phase_EndCombat : MonoBehaviour
                 CreateLineForEntity(loserEntity, contentLose, prefabLineLose, isWinner: false);
             }
         }
+    }
+
+    // Calcule l'XP total offert par tous les perdants
+    private int ComputeTotalXpFromLosers(List<GameObject> losers)
+    {
+        // Additionne les champs gainXp de chaque entité perdante
+        float sum = 0f;
+        if (losers != null)
+        {
+            foreach (var entity in losers)
+            {
+                if (!entity) continue;
+                var info = entity.GetComponent<Entity_Info>(); // Contient gainXp
+                if (info != null) sum += info.gainXp;
+            }
+        }
+
+        // Retourne un entier positif (arrondi)
+        int total = Mathf.RoundToInt(sum);
+        return Mathf.Max(0, total);
+    }
+
+    // Formatte un entier "3 par 3" avec espace comme séparateur (ex: 1500 -> "1 500")
+    private string FormatNumberGrouped(int value)
+    {
+        // On clone une culture invariante pour imposer l'espace comme séparateur de milliers.
+        var nfi = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+        nfi.NumberGroupSeparator = " ";
+        nfi.NumberGroupSizes = new[] { 3 };
+        return value.ToString("#,0", nfi);
     }
 
     // Calcule les drops pour UN gagnant à partir de tous les perdants
