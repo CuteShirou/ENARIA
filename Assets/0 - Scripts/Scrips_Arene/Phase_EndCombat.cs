@@ -35,23 +35,26 @@ public class Phase_EndCombat : MonoBehaviour
 
     private Combat_PhaseManager manager;
 
+    // ---------------------------------------------------------
+    // InitPhase : point d'entrée de la phase de fin de combat
+    // [FR] Bascule l'UI, construit la pop-up, nettoie l'arène, et renvoie les joueurs en exploration.
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
 
-        // Désactive l'UI combat et réactive l'UI exploration
+        // [FR] Désactive l'UI combat et réactive l'UI exploration
         if (combatUIRoot) combatUIRoot.SetActive(false);
         if (explorationUIRoot) explorationUIRoot.SetActive(true);
 
-        // Snapshot des équipes avant nettoyage
+        // [FR] Snapshot des équipes avant nettoyage
         var greenSnapshot = manager?.phaseEnter != null ? new List<GameObject>(manager.phaseEnter.greenTeam) : new List<GameObject>();
         var redSnapshot = manager?.phaseEnter != null ? new List<GameObject>(manager.phaseEnter.redTeam) : new List<GameObject>();
 
-        // Affiche la pop-up + construit les panels
+        // [FR] Affiche la pop-up + construit les panels
         ShowResultPopup(manager.lastCombatWinning);
         BuildWinLosePanels_PerPlayerDistribution(manager.winnerTeam, greenSnapshot, redSnapshot);
 
-        // Nettoyage arène / retour joueurs
+        // [FR] Nettoyage arène / retour joueurs
         if (manager.tileGrid != null)
             manager.tileGrid.UnregisterAllEntities();
 
@@ -76,21 +79,22 @@ public class Phase_EndCombat : MonoBehaviour
         Debug.Log($"[End] Combat terminé. Résultat: {(manager.lastCombatWinning ? "WIN" : "LOSE")}");
     }
 
-    // Construit Win/Lose avec répartition de drops PAR joueur gagnant
+    // ---------------------------------------------------------
+    // BuildWinLosePanels_PerPlayerDistribution : construit Win/Lose par joueur gagnant
     private void BuildWinLosePanels_PerPlayerDistribution(CombatTeamId winner, List<GameObject> green, List<GameObject> red)
     {
-        // Vide les containers Win/Lose
+        // [FR] Vide les containers Win/Lose
         ClearContainer(contentWin);
         ClearContainer(contentLose);
 
-        // Détermine gagnants / perdants
+        // [FR] Détermine gagnants / perdants
         List<GameObject> winners = winner == CombatTeamId.Green ? green : (winner == CombatTeamId.Red ? red : new List<GameObject>());
         List<GameObject> losers = winner == CombatTeamId.Green ? red : (winner == CombatTeamId.Red ? green : new List<GameObject>());
 
-        // Calcule et mémorise l'XP total obtenu en battant la team perdante
-        lastTotalXpGained = ComputeTotalXpFromLosers(losers); // Somme des gainXp des perdants (arrondi à l'entier)
+        // [FR] Calcule et mémorise l'XP total obtenu en battant la team perdante
+        lastTotalXpGained = ComputeTotalXpFromLosers(losers);
 
-        // WIN : une ligne par gagnant + tirages indépendants + affichage du gain d'XP
+        // [FR] WIN : une ligne par gagnant + tirages indépendants + affichage du gain d'XP
         if (contentWin && prefabLineWin)
         {
             foreach (var winnerEntity in winners)
@@ -108,16 +112,15 @@ public class Phase_EndCombat : MonoBehaviour
                 if (ui != null) ui.SetDrops(dropsForThisWinner);
 
                 // 4) Met à jour le texte "Gain_XpBar" de la ligne avec le format + 1 500 xp
-                //    (On n’utilise pas de Find sur la scène, on cherche dans la hiérarchie du prefab instancié)
                 var xpText = lineGO ? lineGO.transform.Find("Gain_XpBar")?.GetComponent<TMP_Text>() : null;
                 if (xpText != null)
                 {
-                    xpText.text = $"+ {FormatNumberGrouped(lastTotalXpGained)} xp"; // ex: "+ 1 500 xp"
+                    xpText.text = $"+ {FormatNumberGrouped(lastTotalXpGained)} xp";
                 }
             }
         }
 
-        // LOSE : lignes simples
+        // [FR] LOSE : lignes simples
         if (contentLose && prefabLineLose)
         {
             foreach (var loserEntity in losers)
@@ -127,37 +130,37 @@ public class Phase_EndCombat : MonoBehaviour
         }
     }
 
-    // Calcule l'XP total offert par tous les perdants
+    // ---------------------------------------------------------
+    // ComputeTotalXpFromLosers : somme des gainXp des perdants
     private int ComputeTotalXpFromLosers(List<GameObject> losers)
     {
-        // Additionne les champs gainXp de chaque entité perdante
         float sum = 0f;
         if (losers != null)
         {
             foreach (var entity in losers)
             {
                 if (!entity) continue;
-                var info = entity.GetComponent<Entity_Info>(); // Contient gainXp
+                var info = entity.GetComponent<Entity_Info>(); // [FR] Contient gainXp
                 if (info != null) sum += info.gainXp;
             }
         }
 
-        // Retourne un entier positif (arrondi)
         int total = Mathf.RoundToInt(sum);
         return Mathf.Max(0, total);
     }
 
-    // Formatte un entier "3 par 3" avec espace comme séparateur (ex: 1500 -> "1 500")
+    // ---------------------------------------------------------
+    // FormatNumberGrouped : format "1 500" etc.
     private string FormatNumberGrouped(int value)
     {
-        // On clone une culture invariante pour imposer l'espace comme séparateur de milliers.
         var nfi = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
         nfi.NumberGroupSeparator = " ";
         nfi.NumberGroupSizes = new[] { 3 };
         return value.ToString("#,0", nfi);
     }
 
-    // Calcule les drops pour UN gagnant à partir de tous les perdants
+    // ---------------------------------------------------------
+    // ComputeDropsForOneWinner : calcule les drops pour un gagnant
     private List<GameObject> ComputeDropsForOneWinner(List<GameObject> losers)
     {
         var drops = new List<GameObject>();
@@ -174,20 +177,21 @@ public class Phase_EndCombat : MonoBehaviour
             {
                 if (entry == null) continue;
 
-                GameObject prefab = entry.ressourcePrefab;   // Prefab_DropRessource spécifique
+                GameObject prefab = entry.ressourcePrefab;
                 float chance = Mathf.Clamp(entry.dropChance, 0f, 100f);
 
                 if (!prefab) continue;
 
                 if (RollChance(chance))
-                    drops.Add(prefab); // On garde le prefab (il contient l'Item via InventoryItemController)
+                    drops.Add(prefab);
             }
         }
 
         return drops;
     }
 
-    // Ajoute chaque drop dans l'inventaire joueur
+    // ---------------------------------------------------------
+    // GiveItemsToInventory : ajoute chaque drop à l'inventaire
     private void GiveItemsToInventory(List<GameObject> dropPrefabs)
     {
         if (dropPrefabs == null || dropPrefabs.Count == 0) return;
@@ -196,13 +200,11 @@ public class Phase_EndCombat : MonoBehaviour
         {
             if (!prefab) continue;
 
-            // Récupère l'Item depuis le prefab (via InventoryItemController)
             var ctrl = prefab.GetComponent<InventoryItemController>();
             Item item = ctrl != null ? ctrl.GetItem() : null;
 
             if (item != null)
             {
-                // Ajoute dans le premier slot vide (selon ton utilitaire)
                 InventoryUtil.AddItemToFirstEmpty(item);
             }
             else
@@ -212,13 +214,15 @@ public class Phase_EndCombat : MonoBehaviour
         }
     }
 
-    // Tirage sur un pourcentage [0..100]
+    // ---------------------------------------------------------
+    // RollChance : tirage pourcentage [0..100]
     private bool RollChance(float percent)
     {
         return Random.Range(0f, 100f) < percent;
     }
 
-    // Instancie une ligne et renseigne l'icône + le nom
+    // ---------------------------------------------------------
+    // CreateLineForEntity : instancie une ligne Win/Lose
     private GameObject CreateLineForEntity(GameObject entity, Transform parent, GameObject prefabLine, bool isWinner)
     {
         if (!entity || !parent || !prefabLine) return null;
@@ -243,7 +247,8 @@ public class Phase_EndCombat : MonoBehaviour
         return go;
     }
 
-    // Lit icône et nom depuis l'entité (Entity_Info prioritaire)
+    // ---------------------------------------------------------
+    // GetEntityDisplay : lit icône/nom depuis Entity_Info
     private void GetEntityDisplay(GameObject entity, out Sprite iconSprite, out string displayName)
     {
         iconSprite = null;
@@ -259,6 +264,8 @@ public class Phase_EndCombat : MonoBehaviour
         }
     }
 
+    // ---------------------------------------------------------
+    // ShowResultPopup : affiche la pop-up de résultat
     private void ShowResultPopup(bool win)
     {
         if (!resultPopupRoot) return;
@@ -266,23 +273,29 @@ public class Phase_EndCombat : MonoBehaviour
         if (resultPopupText) resultPopupText.text = win ? winText : loseText;
     }
 
+    // ---------------------------------------------------------
+    // OnClick_CloseResultPopup : ferme la pop-up
     public void OnClick_CloseResultPopup()
     {
         if (resultPopupRoot) resultPopupRoot.SetActive(false);
     }
 
-    // ----------------- Utilitaires -----------------
-
+    // ---------------------------------------------------------
+    // ReturnPlayerToExploration : renvoie un joueur en exploration
+    // [FR] Replace le joueur, restaure la caméra, remet l'état exploration,
+    //      puis RÉACTIVE visuels/collisions si le joueur avait été "éteint" par une mort en combat.
     private void ReturnPlayerToExploration(GameObject player)
     {
         if (!player) return;
 
+        // [FR] Détache du parent d'arène si besoin
         if (manager.phaseEnter != null && manager.phaseEnter.teamGreenParent != null &&
             player.transform.parent == manager.phaseEnter.teamGreenParent)
         {
             player.transform.SetParent(null, true);
         }
 
+        // [FR] Restaure position/caméra depuis Entity_Info
         var info = player.GetComponent<Entity_Info>();
         if (info != null)
         {
@@ -290,12 +303,23 @@ public class Phase_EndCombat : MonoBehaviour
             RestorePlayerCameraConstraint(player, info.saveCamEntity);
         }
 
+        // [FR] Repasse en mode exploration (gère les scripts côté joueur)
         var sm = player.GetComponent<Player_ScriptManager>();
         if (sm) sm.SetExploration();
 
+        // [FR] Réactive visuels/collisions si le joueur avait été masqué par HandleEntityDeath()
+        ReactivateVisualsAndColliders(player);
+
+        // [FR] Désactive le flag de mort pour éviter d'autres blocages logiques côté exploration
+        var stats = player.GetComponent<Entity_StatistiqueCombat>();
+        if (stats != null) stats.isDead = false;
+
+        // [FR] Notifie fin de combat
         player.SendMessage("OnCombatEnd", manager.lastCombatWinning, SendMessageOptions.DontRequireReceiver);
     }
 
+    // ---------------------------------------------------------
+    // RestorePlayerPosition : replace le joueur proprement (CharacterController off/on)
     private void RestorePlayerPosition(GameObject player, Vector3 savedPos)
     {
         var cc = player.GetComponent<CharacterController>();
@@ -304,6 +328,8 @@ public class Phase_EndCombat : MonoBehaviour
         if (cc != null) cc.enabled = true;
     }
 
+    // ---------------------------------------------------------
+    // RestorePlayerCameraConstraint : remet la source de ParentConstraint de la caméra du joueur
     private void RestorePlayerCameraConstraint(GameObject player, string targetSourceName)
     {
         if (string.IsNullOrWhiteSpace(targetSourceName)) return;
@@ -328,6 +354,33 @@ public class Phase_EndCombat : MonoBehaviour
             Debug.LogWarning($"[End] Source '{targetSourceName}' non trouvée dans le ParentConstraint de la caméra joueur.");
     }
 
+    // ---------------------------------------------------------
+    // ReactivateVisualsAndColliders : remet ON tous les Renderers/Colliders du joueur
+    // [FR] Pendant le combat, en cas de mort, on a fait r.enabled=false et c.enabled=false.
+    //      Ici on les remet à true pour l'exploration.
+    private void ReactivateVisualsAndColliders(GameObject player)
+    {
+        if (!player) return;
+
+        // [FR] Réactive tous les Renderers enfants (SkinnedMeshRenderer, MeshRenderer, etc.)
+        var renderers = player.GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (!renderers[i]) continue;
+            renderers[i].enabled = true;
+        }
+
+        // [FR] Réactive tous les Colliders enfants (y compris CharacterController qui hérite de Collider)
+        var colliders = player.GetComponentsInChildren<Collider>(true);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (!colliders[i]) continue;
+            colliders[i].enabled = true;
+        }
+    }
+
+    // ---------------------------------------------------------
+    // DestroyAllChildren : détruit les enfants d'un transform
     private void DestroyAllChildren(Transform root)
     {
         var toDestroy = new List<GameObject>();
@@ -348,6 +401,8 @@ public class Phase_EndCombat : MonoBehaviour
         }
     }
 
+    // ---------------------------------------------------------
+    // ClearContainer : vide un container UI
     private void ClearContainer(Transform container)
     {
         if (!container) return;
