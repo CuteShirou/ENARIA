@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("Combat/Player Combat Controller")]
 public class Player_CombatController : MonoBehaviour
 {
     [Header("References")]

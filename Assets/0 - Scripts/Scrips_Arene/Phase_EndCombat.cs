@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.Animations;
 using System.Globalization; // Pour le formatage 3 par 3
 
-[AddComponentMenu("Combat/Phase - End Combat (Local)")]
 public class Phase_EndCombat : MonoBehaviour
 {
     [Header("UI (références scène)")]

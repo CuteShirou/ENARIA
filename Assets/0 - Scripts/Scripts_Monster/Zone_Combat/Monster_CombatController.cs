@@ -8,7 +8,6 @@ using UnityEngine;
 ///      lancement de compétences via Entity_SkillCaster, et utilitaires IA.
 ///      Le "cerveau" (IA) est fourni par un composant séparé implémentant IMonsterAI.
 /// </summary>
-[AddComponentMenu("Combat/Monster Combat Controller")]
 public class Monster_CombatController : MonoBehaviour
 {
 

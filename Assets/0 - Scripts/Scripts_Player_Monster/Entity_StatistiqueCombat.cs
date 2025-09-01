@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("Combat/Entity Statistique Combat (Local)")]
 public class Entity_StatistiqueCombat : MonoBehaviour
 {
     // ─────────────────────────────────────────────────────────────────────

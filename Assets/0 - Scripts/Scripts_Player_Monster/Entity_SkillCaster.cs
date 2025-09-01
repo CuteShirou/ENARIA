@@ -12,7 +12,6 @@ using UnityEngine.EventSystems;
 /// - Met la case ciblée en rouge pendant le FX + calcul
 /// - Notifie la Timeline pour rafraîchir les PV immédiatement après un cast
 /// </summary>
-[AddComponentMenu("Combat/Entity Skill Caster")]
 public class Entity_SkillCaster : MonoBehaviour
 {
     [Header("References")]

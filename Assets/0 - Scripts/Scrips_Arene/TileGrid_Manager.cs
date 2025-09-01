@@ -5,12 +5,6 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-//------------------------------------------------------------
-// Gère les relations entité ↔ tuile pour une arène donnée
-// À attacher à TileGridRoot (un par arène)
-// Version locale (sans Mirror)
-//------------------------------------------------------------
-[AddComponentMenu("Combat/Tile Grid Manager (Local)")]
 public class TileGrid_Manager : MonoBehaviour
 {
     [Header("Liste des tuiles de la grille")]

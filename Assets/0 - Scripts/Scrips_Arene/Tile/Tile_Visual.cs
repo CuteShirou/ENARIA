@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-[AddComponentMenu("Combat/Tile Visual (Local)")]
 public class Tile_Visual : MonoBehaviour
 {
     [Header("Références")]

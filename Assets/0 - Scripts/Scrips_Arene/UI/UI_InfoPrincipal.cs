@@ -8,7 +8,6 @@ using TMPro;
 ///      Lit directement les valeurs sur Entity_StatistiqueCombat du joueur.
 ///      Aucune modification des autres systèmes.
 /// </summary>
-[AddComponentMenu("Combat/UI/HUD Principal")]
 public class UI_InfoPrincipal : MonoBehaviour
 {
     [Header("Target (drag & drop votre Player)")]

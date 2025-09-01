@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[AddComponentMenu("Combat/Phase - Enter Setup Combat (Local)")]
 public class Phase_EnterSetupCombat : MonoBehaviour
 {
     [Header("Carte utilisée pour ce combat")]

@@ -9,7 +9,6 @@ using UnityEngine;
 ///      - Sinon cherche une case LIBRE parmi les 4 autour de la cible et avance vers elle (un pas).
 ///      - Si aucune case adjacente libre ET/OU bloqué → tente un tir à distance si possible.
 /// </summary>
-[AddComponentMenu("Combat/Monster AI/Aggressif")]
 public class IA_Aggressif : MonoBehaviour, IMonsterAI
 {
     public IA_Aggressif() { }

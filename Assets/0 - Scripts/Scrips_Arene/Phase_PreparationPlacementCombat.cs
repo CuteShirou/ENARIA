@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("Combat/Phase - Preparation Placement (Local)")]
 public class Phase_PreparationPlacementCombat : MonoBehaviour
 {
     [Header("Paramètres de génération de la grille")]

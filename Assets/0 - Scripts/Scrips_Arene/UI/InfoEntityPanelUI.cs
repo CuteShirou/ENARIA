@@ -6,7 +6,6 @@ using TMPro;
 /// Panneau d'infos d'une entité (UI de combat).
 /// - Rafraîchit l'affichage HP en continu quand le panel est visible.
 /// </summary>
-[AddComponentMenu("Combat/UI/Info Entity Panel UI")]
 public class InfoEntityPanelUI : MonoBehaviour
 {
     [Header("Racine du panel (laisser vide = ce GO)")]

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("Combat/Phase - Turn By Turn Combat")]
 public class Phase_TurnByTurnCombat : MonoBehaviour
 {
     public Combat_PhaseManager manager; //   Référence vers le manager de phases
