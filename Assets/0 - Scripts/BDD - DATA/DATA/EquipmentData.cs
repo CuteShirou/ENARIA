@@ -16,7 +16,7 @@ public enum EquipmentType
 }
 
 [CreateAssetMenu(fileName = "New Equipment", menuName = "Game Creation Tool/Equipment")]
-public class EquipmentData : ScriptableObject
+public class EquipmentData : CollectibleData
 {
     public int ID;
 

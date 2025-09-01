@@ -9,24 +9,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e734b846e2090f7498272070c4c7dd99, type: 3}
+  m_Script: {fileID: 11500000, guid: b6598aad1a149174fa5d0b6d7aa35116, type: 3}
   m_Name: HDexterityBranch
   m_EditorClassIdentifier: 
-  branchName: Dexterite
+  branchName: "Dexterit\xE9"
   nodes:
-  - skillData: {fileID: 11400000, guid: 2bf2892a866915a46ac0c5130f88802d, type: 2}
+  - skillData: {fileID: 0}
     manualIcon: {fileID: 0}
     manualName: 
     manualDescription: 
-    cost: 1
-    isUnlocked: 1
+    cost: 0
+    isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
   - skillData: {fileID: 0}
-    manualIcon: {fileID: 21300000, guid: 7fc21d7992f4b27478be9274ee266d33, type: 3}
-    manualName: Lancer de couteau 2
-    manualDescription: 6-9 -> (6-9)X2
+    manualIcon: {fileID: 21300000, guid: eba7123b8caff954eac55a79d1425387, type: 3}
+    manualName: Lancer de couteau
+    manualDescription: "Lance un deuxi\xE8me couteau"
     cost: 1
     isUnlocked: 0
     onUnlock:
@@ -43,9 +43,9 @@ MonoBehaviour:
         m_Calls: []
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: 25fdb5402de1af4498a660dc7284f6f6, type: 3}
-    manualName: Dou Poison
-    manualDescription: "Ajoute poison \xE0 Lancer de couteau et Coup en traitre.
-      Le poison inflige (DMG skill)/3. Cumulable 3fois max. Dure un tour. "
+    manualName: Dou poison
+    manualDescription: "Lanc\xE9 de couteau et coup en traigne gagne poison. Le poison
+      inflige les d\xE9gats de la comp\xE9tences divis\xE9 par 3"
     cost: 1
     isUnlocked: 0
     onUnlock:

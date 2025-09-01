@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,3 +28,43 @@ public class CraftRecipeData : ScriptableObject
     [TextArea]
     public string description;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//using System;
+//using System.Collections.Generic;
+//using UnityEngine;
+
+//[CreateAssetMenu(fileName = "CraftRecipe", menuName = "Craft/Recipe")]
+//public class CraftRecipeData : ScriptableObject
+//{
+//    public enum CraftType { All, Weapon, Armor, Consumable }
+//    public enum IngredientType { Resource, Equipment }
+//    public enum ResultType { Resource, Equipment }
+
+//    [Serializable]
+//    public class Ingredient { public IngredientType ingredientType; public int dbId; public int quantity; }
+
+//    public int recipeId;
+//    public string recipeName;
+//    public CraftType craftType;
+//    public int requiredProfessionLevel = 1;
+//    public List<Ingredient> ingredients = new List<Ingredient>();
+
+//    [Header("Result")]
+//    public ResultType resultType;
+//    public int resultDbId;
+//    public int resultQuantity = 1;
+//}

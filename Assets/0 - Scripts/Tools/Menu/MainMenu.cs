@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,127 +7,41 @@ using UnityEngine.EventSystems;
 
 public class MainMenu : MonoBehaviour
 {
-    public TMP_InputField usernameField;
-    public TMP_InputField passwordField;
-
-    public TMP_InputField registerUsernameField;
-    public TMP_InputField registerPasswordField;
-    public TMP_InputField registerPasswordConfirmField;
-    public TMP_InputField registerEmailField;
-
+    [Header("Character creation")]
+    public TMP_InputField characterNameField;
     public Transform characterButtonContainer;
-
-    private string username;
-    private string password;
+    public Button createButton;                // le bouton "Créer" du UI (à assigner)
+    public TMP_Text feedbackText;              // optionnel : pour afficher warnings
 
     private string selectedSpecie = null;
     private Button selectedButton = null;
 
-    private List<string> registeredUsernames = new List<string>();
+    private NavigationManager nav;
 
-    private string input;
-
-    public void SceneGame()
+    private void Awake()
     {
-        SceneManager.LoadSceneAsync("World 1 - Hub");
-        Debug.Log("Scene jeu");
+        nav = FindNavigationManager();
     }
 
-    public void SceneCharacterSelection()
+    private void Start()
     {
-        SceneManager.LoadSceneAsync("CharSelection");
-        Debug.Log("Scene sélection perso");
-    }
-
-    public void SceneCharacterCreation()
-    {
-        SceneManager.LoadSceneAsync("CharCreation");
-        Debug.Log("Scene création perso");
-    }
-
-    public void SceneMenu()
-    {
-        SceneManager.LoadSceneAsync("ConexionMenu");
-        Debug.Log("Scene Menu");
-    }
-
-    public void TestButton()
-    {
-        Debug.Log("Bouton de test fonctionnel");
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-
-    public void ReadStringInput(string s)
-    {
-        input = s;
-        Debug.Log(input);
-    }
-
-    public void Connexion()
-    {
-        username = usernameField.text;
-        password = passwordField.text;
-
-        Debug.Log("Connexion : " + username);
-
-        if (string.IsNullOrWhiteSpace(username))
+        // On s'assure que le bouton Create appelle uniquement CreateCharacter()
+        if (createButton != null)
         {
-            Debug.LogWarning("Aucun nom d'utilisateur");
-            return;
+            createButton.onClick.RemoveAllListeners();
+            createButton.onClick.AddListener(CreateCharacter);
         }
 
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            Debug.LogWarning("Aucun mot de passe");
-            return;
-        }
+        // Écoute les changements de texte pour activer/désactiver le bouton
+        if (characterNameField != null)
+            characterNameField.onValueChanged.AddListener(_ => UpdateCreateButtonState());
 
-        if (username == "admin" && password == "1234")
-        {
-            SceneCharacterSelection();
-        }
-        else
-        {
-            Debug.LogWarning("Identifiants incorrects");
-        }
+        UpdateCreateButtonState();
     }
 
-    public void Register()
-    {
-        string regUsername = registerUsernameField.text;
-        string regPassword = registerPasswordField.text;
-        string regPasswordConfirm = registerPasswordConfirmField.text;
-        string regEmail = registerEmailField.text;
+    public void TestButton() => Debug.Log("Bouton de test fonctionnel");
 
-        if (string.IsNullOrWhiteSpace(regUsername) ||
-            string.IsNullOrWhiteSpace(regPassword) ||
-            string.IsNullOrWhiteSpace(regPasswordConfirm) ||
-            string.IsNullOrWhiteSpace(regEmail))
-        {
-            Debug.LogWarning("Tous les champs doivent être remplis.");
-            return;
-        }
-
-        if (regPassword != regPasswordConfirm)
-        {
-            Debug.LogWarning("Les mots de passe ne correspondent pas.");
-            return;
-        }
-
-        if (registeredUsernames.Contains(regUsername))
-        {
-            Debug.LogWarning("Nom d'utilisateur déjà utilisé.");
-            return;
-        }
-
-        registeredUsernames.Add(regUsername);
-        Debug.Log($"Compte enregistré : {regUsername}, Email : {regEmail}");
-    }
-
+    public void QuitGame() => Application.Quit();
 
     public void SelectSpecies(string specieName, Button button)
     {
@@ -138,6 +51,7 @@ public class MainMenu : MonoBehaviour
         Debug.Log("Espèce sélectionnée : " + selectedSpecie);
 
         RegisterSwap(button);
+        UpdateCreateButtonState();
     }
 
     public void SelectSpeciesFromUI(string specieName)
@@ -148,43 +62,57 @@ public class MainMenu : MonoBehaviour
 
     public void CreateCharacter()
     {
-        string characterName = usernameField.text;
+        string characterName = characterNameField != null ? characterNameField.text : "";
 
         if (string.IsNullOrWhiteSpace(characterName))
         {
-            Debug.LogWarning("Aucun nom de perso.");
+            ShowFeedback("Aucun nom de perso.");
             return;
         }
 
         if (string.IsNullOrWhiteSpace(selectedSpecie))
         {
-            Debug.LogWarning("Aucune espèce sélectionnée.");
+            ShowFeedback("Aucune espèce sélectionnée.");
             return;
         }
 
+        ClearFeedback();
         Debug.Log($"Personnage créé : Nom = {characterName}, Espèce = {selectedSpecie}");
 
-        SceneCharacterSelection();
+        if (nav != null)
+        {
+            nav.GoToCharSelection();
+        }
+        else
+        {
+            Debug.LogWarning("NavigationManager introuvable — fallback vers CharSelection.");
+            SceneManager.LoadSceneAsync("CharSelection");
+        }
     }
 
     public void PlaySelectedCharacter()
     {
         if (string.IsNullOrWhiteSpace(selectedSpecie))
         {
-            Debug.LogWarning("Perso non selectionner");
+            ShowFeedback("Perso non sélectionné");
             return;
         }
 
-        SceneGame();
+        if (nav != null)
+        {
+            nav.GoTo("World 1 - Hub");
+        }
+        else
+        {
+            Debug.LogWarning("NavigationManager introuvable — fallback vers World 1 - Hub.");
+            SceneManager.LoadSceneAsync("World 1 - Hub");
+        }
     }
-
 
     private void RegisterSwap(Button clickedButton)
     {
-        if (characterButtonContainer == null)
-        {
+        if (characterButtonContainer == null || clickedButton == null)
             return;
-        }
 
         float tolerance = 0.1f;
         Button centerButton = null;
@@ -200,19 +128,11 @@ public class MainMenu : MonoBehaviour
             }
         }
 
-        if (centerButton == null)
-        {
+        if (centerButton == null || clickedButton == centerButton)
             return;
-        }
-
-        if (clickedButton == centerButton)
-        {
-            return;
-        }
 
         SwapButtons(clickedButton, centerButton);
     }
-
 
     private void SwapButtons(Button buttonA, Button buttonB)
     {
@@ -224,7 +144,36 @@ public class MainMenu : MonoBehaviour
 
         t1.localPosition = pos2;
         t2.localPosition = pos1;
-
     }
 
+    // Active/désactive le bouton create selon la validité
+    private void UpdateCreateButtonState()
+    {
+        bool nameOk = !(characterNameField == null || string.IsNullOrWhiteSpace(characterNameField.text));
+        bool specieOk = !string.IsNullOrWhiteSpace(selectedSpecie);
+        if (createButton != null) createButton.interactable = nameOk && specieOk;
+    }
+
+    private void ShowFeedback(string msg)
+    {
+        if (feedbackText != null) feedbackText.text = $"<color=red>{msg}</color>";
+        else Debug.LogWarning(msg);
+    }
+
+    private void ClearFeedback()
+    {
+        if (feedbackText != null) feedbackText.text = "";
+    }
+
+    // Recherche NavigationManager (compatible versions Unity récentes/anciennes)
+    private NavigationManager FindNavigationManager()
+    {
+#if UNITY_2023_2_OR_NEWER
+        NavigationManager nm = UnityEngine.Object.FindFirstObjectByType<NavigationManager>();
+        if (nm != null) return nm;
+        return UnityEngine.Object.FindAnyObjectByType<NavigationManager>();
+#else
+        return FindObjectOfType<NavigationManager>();
+#endif
+    }
 }
