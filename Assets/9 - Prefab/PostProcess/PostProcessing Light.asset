@@ -106,7 +106,7 @@ MonoBehaviour:
     defaultState: 1
   intensity:
     overrideState: 0
-    value: 0
+    value: 0.118
   fastMode:
     overrideState: 0
     value: 0
@@ -128,11 +128,11 @@ MonoBehaviour:
   - {fileID: -6329556680431214034}
   - {fileID: 580924790016306366}
   - {fileID: 7095079458520787379}
-  - {fileID: 2867562761048527654}
+  - {fileID: 4823603987546791108}
   - {fileID: 5760664298600814224}
   - {fileID: -5262229075783210253}
   - {fileID: 1141744883234093329}
-  - {fileID: 4246119267940876859}
+  - {fileID: 6773675968246538322}
   - {fileID: -6290957365103949266}
 --- !u!114 &580924790016306366
 MonoBehaviour:
@@ -251,7 +251,7 @@ MonoBehaviour:
   kernelSize:
     overrideState: 1
     value: 1
---- !u!114 &2867562761048527654
+--- !u!114 &4823603987546791108
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b77c5407dc277943b591ade9e6b18c5, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   enabled:
     overrideState: 1
     value: 1
@@ -285,34 +285,6 @@ MonoBehaviour:
   scale:
     overrideState: 0
     value: 1
---- !u!114 &4246119267940876859
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d65e486e4de6e5448a8fbb43dc8756a0, type: 3}
-  m_Name: Grain
-  m_EditorClassIdentifier: 
-  active: 0
-  enabled:
-    overrideState: 1
-    value: 1
-  colored:
-    overrideState: 0
-    value: 1
-  intensity:
-    overrideState: 0
-    value: 0
-  size:
-    overrideState: 0
-    value: 1
-  lumContrib:
-    overrideState: 0
-    value: 0.8
 --- !u!114 &5760664298600814224
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -335,6 +307,34 @@ MonoBehaviour:
   sampleCount:
     overrideState: 0
     value: 10
+--- !u!114 &6773675968246538322
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d65e486e4de6e5448a8fbb43dc8756a0, type: 3}
+  m_Name: Grain
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  colored:
+    overrideState: 0
+    value: 1
+  intensity:
+    overrideState: 0
+    value: 0
+  size:
+    overrideState: 0
+    value: 1
+  lumContrib:
+    overrideState: 0
+    value: 0.8
 --- !u!114 &7095079458520787379
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -387,14 +387,14 @@ MonoBehaviour:
     overrideState: 0
     value: 1
   temperature:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: -30.9
   tint:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 35
   colorFilter:
     overrideState: 0
-    value: {r: 1, g: 1, b: 1, a: 1}
+    value: {r: 1.8160655, g: 1.8160655, b: 1.8160655, a: 1}
   hueShift:
     overrideState: 0
     value: 0
@@ -411,14 +411,14 @@ MonoBehaviour:
     overrideState: 0
     value: 0
   mixerRedOutRedIn:
-    overrideState: 0
-    value: 100
+    overrideState: 1
+    value: 149
   mixerRedOutGreenIn:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 14
   mixerRedOutBlueIn:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 1
   mixerGreenOutRedIn:
     overrideState: 0
     value: 0
