@@ -72,9 +72,11 @@
     <Compile Include="Assets\0 - Scripts\Tools\UI\FriendListItemUI.cs" />
     <Compile Include="Assets\0 - Scripts\Scripts_Player\UI_Controller.cs" />
     <Compile Include="Assets\0 - Scripts\System\Chat\ChatToggleController.cs" />
+    <Compile Include="Assets\Terrain\TerrainGenerator\Scripts\Generators\HeightsGenerator.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Options\KeybindingInputField.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\cereales\cereales target.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\UIToggle.cs" />
+    <Compile Include="Assets\Terrain\TerrainGenerator\Scripts\Generators\GrassGenerator.cs" />
     <Compile Include="Assets\0 - Scripts\System\Social\FriendData.cs" />
     <Compile Include="Assets\0 - Scripts\Scrips_Arene\Phase_EndCombat.cs" />
     <Compile Include="Assets\999 - BASE PROJECT\InputSystem_Actions.cs" />
@@ -90,7 +92,9 @@
     <Compile Include="Assets\0 - Scripts\System\Jobs\Peche\peche ammeçon.cs" />
     <Compile Include="Assets\0 - Scripts\Inventory\InventoryPageManager\UIPageManager.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\CanvasInputs\UICanvasControllerInput.cs" />
+    <Compile Include="Assets\Terrain\TerrainGenerator\Scripts\Generators\TreeGenerator.cs" />
     <Compile Include="Assets\0 - Scripts\System\SkillTree\SkillButtonUI.cs" />
+    <Compile Include="Assets\Terrain\TerrainGenerator\Scripts\Abstract\IMap.cs" />
     <Compile Include="Assets\0 - Scripts\Scripts_Player_Monster\Entity_SkillCaster.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Exploration GUI\ToggleActiveButton.cs" />
     <Compile Include="Assets\0 - Scripts\Inventory\InventoryDynamic\InventorySeeder.cs" />
@@ -168,6 +172,8 @@
     <Compile Include="Assets\0 - Scripts\Tools\Create_Skill\SkillType.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\IngredientSlotUI.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Options\AudioSettingsUI.cs" />
+    <Compile Include="Assets\Terrain\TerrainGenerator\Scripts\Generators\TexturesGenerator.cs" />
+    <Compile Include="Assets\Terrain\TerrainGenerator\Scripts\Maps\FalloffMap.cs" />
     <Compile Include="Assets\0 - Scripts\Scrips_Arene\TileGrid_Manager.cs" />
     <Compile Include="Assets\0 - Scripts\Scrips_Arene\UI\Combat_SkillBarUI.cs" />
     <Compile Include="Assets\0 - Scripts\Scrips_Arene\UI\Timeline_CombatUI.cs" />
@@ -176,6 +182,7 @@
     <Compile Include="Assets\0 - Scripts\Inventory\Item.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\SkillTooltipUI.cs" />
     <Compile Include="Assets\0 - Scripts\Scripts_Player_Monster\Entity_StatistiqueCombat.cs" />
+    <Compile Include="Assets\Terrain\TerrainGenerator\Scripts\Abstract\IGenerator.cs" />
     <Compile Include="Assets\0 - Scripts\Scripts_Monster\Zone_Exploration\Exploration_DisplayInfoGroupMonster.cs" />
     <Compile Include="Assets\0 - Scripts\System\MaterialSwapper.cs" />
     <Compile Include="Assets\0 - Scripts\Network\MyNetworkManager.cs" />
@@ -211,6 +218,7 @@
     <Compile Include="Assets\0 - Scripts\Tools\UI\RecipeItemUI.cs" />
     <Compile Include="Assets\0 - Scripts\Scrips_Arene\UI\AlphaHitButton.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\TooltipUI.cs" />
+    <Compile Include="Assets\Terrain\TerrainGenerator\Scripts\Maps\PerlinMap.cs" />
     <Compile Include="Assets\0 - Scripts\System\Quest\QuestObjectiveType.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Market\MarketBuyPanel.cs" />
     <Compile Include="Assets\0 - Scripts\Scrips_Arene\UI\CombatUI_ReadyButton.cs" />
@@ -658,6 +666,7 @@
     <None Include="Assets\6 - Tools\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\7 - Shader\Mochie\Standard Shader\Standard Lite.shader" />
     <None Include="Assets\7 - Shader\Mochie\Water Shader\WaterVert.cginc" />
+    <None Include="Assets\6 - Tools\TextMesh Pro\Fonts\License.txt" />
     <None Include="Assets\ScriptTemplates\54-Mirror__Custom Interest Management-CustomInterestManagement.cs.txt" />
     <None Include="Assets\_PoiyomiShaders\Shaders\9.0\Toon\Poiyomi Toon Two Pass.shader" />
     <None Include="Assets\7 - Shader\Mochie\LED Shader\LED Screen (Transparent).shader" />
