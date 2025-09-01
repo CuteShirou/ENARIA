@@ -9,7 +9,7 @@ using UnityEngine;
 public static class Skill_FXHelper
 {
     /// <summary>
-    /// [FR] Joue le FX du binding à "basePos" (+ offset Y). Retourne l'instance (ou null).
+    ///   Joue le FX du binding à "basePos" (+ offset Y). Retourne l'instance (ou null).
     /// </summary>
     public static Sprite_AnimationRunner PlayFx(Skill_Binding binding, Vector3 basePos, Transform parent = null, Action onFinished = null)
     {
@@ -37,7 +37,7 @@ public static class Skill_FXHelper
     }
 
     /// <summary>
-    /// [FR] Variante coroutine: joue le FX et attend la fin.
+    ///   Variante coroutine: joue le FX et attend la fin.
     /// </summary>
     public static IEnumerator PlayFxAndWait(Skill_Binding binding, Vector3 basePos, Transform parent = null)
     {
@@ -47,7 +47,7 @@ public static class Skill_FXHelper
     }
 
     /// <summary>
-    /// [FR] Variante avec rotation initiale (ex: orienter un slash).
+    ///   Variante avec rotation initiale (ex: orienter un slash).
     /// </summary>
     public static Sprite_AnimationRunner PlayFxWithRotation(Skill_Binding binding, Vector3 basePos, Quaternion rotation, Transform parent = null, Action onFinished = null)
     {

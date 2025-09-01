@@ -17,11 +17,11 @@ public class Tile_Visual : MonoBehaviour
     [SerializeField] private Material matFighterActif;
     [SerializeField] private Material matCursorIndicator;
 
-    // [FR] Injecté par la grille (pas sérialisé, aucune assignation sur le prefab)
+    //   Injecté par la grille (pas sérialisé, aucune assignation sur le prefab)
     private TileGrid_Manager tileGrid;           // AJOUT
     private InfoEntityPanelUI infoPanel;         // AJOUT
 
-    // [FR] Appelée par la grille pour injecter les refs de scène (AJOUT)
+    //   Appelée par la grille pour injecter les refs de scène (AJOUT)
     public void SetShared(TileGrid_Manager grid, InfoEntityPanelUI panel)
     {
         tileGrid = grid;
@@ -58,7 +58,7 @@ public class Tile_Visual : MonoBehaviour
         if (setup != null && !setup.isFighterActif && matCursorIndicator && tileRenderer)
             tileRenderer.material = matCursorIndicator;
 
-        // [FR] Si occupée → afficher la bulle, sinon cacher
+        //   Si occupée → afficher la bulle, sinon cacher
         if (tileGrid != null && infoPanel != null && setup != null)
         {
             GameObject occ = tileGrid.GetEntityOnTile(setup.gameObject);

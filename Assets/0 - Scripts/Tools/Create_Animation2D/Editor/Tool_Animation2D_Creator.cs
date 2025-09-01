@@ -53,11 +53,6 @@ public class Tool_Animation2D_Creator : EditorWindow
     // NOUVEAU: position du scroll global
     private Vector2 scrollPos = Vector2.zero;
 
-    // Constructeur
-    public Tool_Animation2D_Creator() { /* Unity gère l'instanciation */ }
-    // Destructeur
-    ~Tool_Animation2D_Creator() { /* Rien à nettoyer */ }
-
     // --------------------------------------------------------------------
     // Ouvre la fenêtre depuis le menu (sous Window pour cohérence)
     // --------------------------------------------------------------------

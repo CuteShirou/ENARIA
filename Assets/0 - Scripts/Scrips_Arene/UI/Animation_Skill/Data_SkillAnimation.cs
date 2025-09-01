@@ -53,12 +53,6 @@ public class Data_SkillAnimation : ScriptableObject
     // Prefab prêt à jouer (créé par ton Tool_Animation2D_Creator)
     public Sprite_AnimationRunner prefab;
 
-    // Constructeur
-    public Data_SkillAnimation() { /* Unity gère l'instanciation */ }
-
-    // Destructeur
-    ~Data_SkillAnimation() { /* Rien à libérer ici */ }
-
     private void OnValidate()
     {
         // Clamp des valeurs et sécurités simples à l'édition

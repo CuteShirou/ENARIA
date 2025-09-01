@@ -38,12 +38,6 @@ public class Sprite_AnimationRunner : MonoBehaviour
     private bool hasCompleted = false;             // Indique qu'une lecture vient de finir
     private Action onFinishedOnce;                 // Callback de fin one-shot
 
-    // Constructeur
-    public Sprite_AnimationRunner() { /* MonoBehaviour : instancié par Unity */ }
-
-    // Destructeur
-    ~Sprite_AnimationRunner() { /* Rien à libérer */ }
-
     // ------------------------------------------------------------------
     // Initialisation
     // ------------------------------------------------------------------

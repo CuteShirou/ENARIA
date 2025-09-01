@@ -7,21 +7,17 @@ using UnityEngine;
 [System.Serializable]
 public class Skill_Binding
 {
-    // [FR] Compétence liée à ce slot
+    //   Compétence liée à ce slot
     public Data_Skill skill;
 
-    // [FR] Deux façons de définir le FX (au choix) :
+    //   Deux façons de définir le FX (au choix) :
     //  1) Fiche d'animation (option A) → recommandé si tu catalogues tes FX
     public Data_SkillAnimation fxData;
 
     //  2) Ou directement un Prefab Sprite_AnimationRunner (créé par l'outil)
     public Sprite_AnimationRunner fxPrefabOverride;
 
-    // [FR] Ajustement vertical (axe Y) appliqué à la position de la case
+    //   Ajustement vertical (axe Y) appliqué à la position de la case
     public float fxYOffset = 0f;
 
-    // Constructeur
-    public Skill_Binding() { }
-    // Déconstructeur
-    ~Skill_Binding() { }
 }

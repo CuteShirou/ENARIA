@@ -35,7 +35,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     // ---------------------------------------------------------------------
 
     [Header("Compétences disponibles")]
-    // [FR] SkillBook : liste de couples (Skill + FX lié)
+    //   SkillBook : liste de couples (Skill + FX lié)
     public List<Skill_Binding> skillBook = new List<Skill_Binding>(); // Était: List<Data_Skill> ... :contentReference[oaicite:0]{index=0}
 
     // ─────────────────────────────────────────────────────────────────────
@@ -102,16 +102,8 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     public float currentResistanceMagie => _currentResistanceMagie;
     public float currentResistanceFoi => _currentResistanceFoi;
 
-    // ─────────────────────────────────────────────────────────────────────
-    // INITIALISATION / TOURS
-
-    /// <summary>Constructeur.</summary>
-    public Entity_StatistiqueCombat() { }
-    /// <summary>Déconstructeur.</summary>
-    ~Entity_StatistiqueCombat() { }
-
     /// <summary>
-    /// [FR] Copie toutes les bases vers les "current". À appeler à l'entrée en combat.
+    ///   Copie toutes les bases vers les "current". À appeler à l'entrée en combat.
     /// </summary>
     public void InitStatsFromBase()
     {
@@ -137,7 +129,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Réinitialise PA/PM à la fin d’un tour (nouvelle logique).
+    ///   Réinitialise PA/PM à la fin d’un tour (nouvelle logique).
     /// </summary>
     public void ResetTurnStats()
     {
@@ -145,7 +137,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         SetPM(basePM);
     }
 
-    /// <summary>[FR] Inverse le statut prêt (phase de préparation).</summary>
+    /// <summary>  Inverse le statut prêt (phase de préparation).</summary>
     public void ToggleReady()
     {
         isReady = !isReady;
@@ -221,14 +213,10 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     [System.Serializable]
     public class ActiveEffect
     {
-        // [FR] Copie minimale d’un SkillEffect pour runtime
+        //   Copie minimale d’un SkillEffect pour runtime
         public EffectType type;
         public int value;
         public int remainingTurns;
-
-        // Constructeur / Déconstructeur
-        public ActiveEffect() { }
-        ~ActiveEffect() { }
 
         public ActiveEffect(SkillEffect from)
         {
@@ -238,11 +226,11 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         }
     }
 
-    // [FR] Effets actifs sur cette entité
+    //   Effets actifs sur cette entité
     [HideInInspector] public List<ActiveEffect> activeEffects = new List<ActiveEffect>();
 
     /// <summary>
-    /// [FR] Applique IMMÉDIATEMENT un effet (durée 0) sur cette entité.
+    ///   Applique IMMÉDIATEMENT un effet (durée 0) sur cette entité.
     /// </summary>
     public void ApplyInstantEffect(SkillEffect eff)
     {
@@ -287,7 +275,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Début de MON tour : applique les effets à durée (PA/PM/PO/PV…).
+    ///   Début de MON tour : applique les effets à durée (PA/PM/PO/PV…).
     /// </summary>
     public void ApplyActiveEffectsAtTurnStart()
     {
@@ -312,7 +300,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Fin de MON tour : décrémente les durées et supprime les effets expirés.
+    ///   Fin de MON tour : décrémente les durées et supprime les effets expirés.
     /// </summary>
     public void TickActiveEffectsAtTurnEnd()
     {
@@ -327,7 +315,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Utilitaire : si HP <= 0, marque mort.
+    ///   Utilitaire : si HP <= 0, marque mort.
     /// </summary>
     public void VerifDead()
     {

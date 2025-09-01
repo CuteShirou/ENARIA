@@ -19,7 +19,7 @@ public class TileGrid_Manager : MonoBehaviour
     // ─────────────────────────────────────────────────────────
     // AJOUT — refs de scène à propager automatiquement aux tuiles
     [Header("Injection vers Tile_Visual")]
-    public InfoEntityPanelUI infoPanelForTiles; // [FR] Assigne ici ton Panel_Info_Bubble (InfoEntityPanelUI)
+    public InfoEntityPanelUI infoPanelForTiles; //   Assigne ici ton Panel_Info_Bubble (InfoEntityPanelUI)
     // ─────────────────────────────────────────────────────────
 
     // Dictionnaire entité → tuile
@@ -42,7 +42,7 @@ public class TileGrid_Manager : MonoBehaviour
 
         // ─────────────────────────────────────────────────────
         // AJOUT — Injection auto des refs sur cette tuile
-        // [FR] Pas d'auto-find : on passe "this" + le panel assigné dans l'inspector
+        //   Pas d'auto-find : on passe "this" + le panel assigné dans l'inspector
         var visual = tile.GetComponent<Tile_Visual>();
         if (visual != null)
             visual.SetShared(this, infoPanelForTiles);

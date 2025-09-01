@@ -8,13 +8,6 @@ using UnityEngine;
 
 public static class Animation2D_Utility
 {
-    // Constructeur statique (facultatif, ici juste pour cohérence)
-    static Animation2D_Utility() { }
-
-    // =======================================================================
-    // Instancier + jouer depuis une fiche (position monde)
-    // =======================================================================
-
     public static Sprite_AnimationRunner SpawnFromData(
         Data_SkillAnimation data,
         Vector3 position,

@@ -5,36 +5,31 @@ using TMPro;
 
 /// <summary>
 /// Combat_SkillBarUI
-/// [FR] Génère des boutons (icônes uniquement) à partir du SkillBook de l'entité
+///   Génère des boutons (icônes uniquement) à partir du SkillBook de l'entité
 ///      et équipe la compétence cliquée dans l'Entity_SkillCaster.
 ///      Le SkillBook est désormais une liste de Skill_Binding (Skill + FX).
 /// </summary>
 public class Combat_SkillBarUI : MonoBehaviour
 {
-    // =========================
-    // Constructor / Destructor
-    // =========================
-    public Combat_SkillBarUI() { /* Constructeur */ }
-    ~Combat_SkillBarUI() { /* Déconstructeur (non utilisé) */ }
 
     [Header("Références")]
-    public Entity_StatistiqueCombat ownerStats;   // [FR] L'entité qui possède le SkillBook (List<Skill_Binding>)
-    public Entity_SkillCaster ownerCaster;        // [FR] Le lanceur de sorts (reçoit equippedSkill)
+    public Entity_StatistiqueCombat ownerStats;   //   L'entité qui possède le SkillBook (List<Skill_Binding>)
+    public Entity_SkillCaster ownerCaster;        //   Le lanceur de sorts (reçoit equippedSkill)
 
     [Header("UI")]
-    public Transform buttonContainer;             // [FR] Parent (ton panel SkillBar avec un Layout Group)
-    public Button buttonPrefab;                   // [FR] Ton Prefab_ButtonSkill (Image + Button)
+    public Transform buttonContainer;             //   Parent (ton panel SkillBar avec un Layout Group)
+    public Button buttonPrefab;                   //   Ton Prefab_ButtonSkill (Image + Button)
 
-    // [FR] Boutons instanciés
+    //   Boutons instanciés
     private readonly List<Button> spawnedButtons = new List<Button>();
 
-    // [FR] Binding actuellement sélectionné (utilisable par les contrôleurs pour le FX)
+    //   Binding actuellement sélectionné (utilisable par les contrôleurs pour le FX)
     private Skill_Binding _selectedBinding = null;
     public Skill_Binding SelectedBinding => _selectedBinding;
 
     private void Awake()
     {
-        // [FR] Auto-bind si non assigné dans l’inspector
+        //   Auto-bind si non assigné dans l’inspector
         if (!ownerStats) ownerStats = GetComponentInParent<Entity_StatistiqueCombat>();
         if (!ownerCaster) ownerCaster = GetComponentInParent<Entity_SkillCaster>();
         if (!buttonContainer) buttonContainer = transform;
@@ -42,12 +37,12 @@ public class Combat_SkillBarUI : MonoBehaviour
 
     private void OnEnable()
     {
-        // [FR] Reconstruit la barre lorsque l’UI s’active
+        //   Reconstruit la barre lorsque l’UI s’active
         BuildFromOwner();
     }
 
     /// <summary>
-    /// [FR] Construit la barre depuis le SkillBook (List<Skill_Binding>) de l’entité.
+    ///   Construit la barre depuis le SkillBook (List<Skill_Binding>) de l’entité.
     /// </summary>
     public void BuildFromOwner()
     {
@@ -60,7 +55,7 @@ public class Combat_SkillBarUI : MonoBehaviour
             return;
         }
 
-        var book = ownerStats.skillBook; // [FR] List<Skill_Binding>
+        var book = ownerStats.skillBook; //   List<Skill_Binding>
         if (book == null || book.Count == 0)
         {
             Debug.Log("[SkillBarUI] Aucun skill dans le SkillBook.");
@@ -77,40 +72,40 @@ public class Combat_SkillBarUI : MonoBehaviour
             Button btn = Instantiate(buttonPrefab, buttonContainer);
             spawnedButtons.Add(btn);
 
-            // [FR] Image racine du bouton (icône)
+            //   Image racine du bouton (icône)
             var img = btn.GetComponent<Image>();
             if (img)
             {
-                img.sprite = data.icon;        // [FR] Icône du skill
-                img.preserveAspect = true;     // [FR] Conserve le ratio
-                // if (data.icon) img.SetNativeSize(); // [FR] Option : taille native
+                img.sprite = data.icon;        //   Icône du skill
+                img.preserveAspect = true;     //   Conserve le ratio
+                // if (data.icon) img.SetNativeSize(); //   Option : taille native
             }
 
-            // [FR] Désactive tout texte éventuel (UI Text ou TMP_Text) → image-only
+            //   Désactive tout texte éventuel (UI Text ou TMP_Text) → image-only
             var legacyText = btn.GetComponentInChildren<Text>(true);
             if (legacyText) legacyText.gameObject.SetActive(false);
             var tmpText = btn.GetComponentInChildren<TMP_Text>(true);
             if (tmpText) tmpText.gameObject.SetActive(false);
 
-            // [FR] Capture locale pour le listener
+            //   Capture locale pour le listener
             Skill_Binding captured = binding;
 
-            // [FR] Listener : équipe CE skill + mémorise le binding sélectionné
+            //   Listener : équipe CE skill + mémorise le binding sélectionné
             btn.onClick.AddListener(() =>
             {
-                ownerCaster.equippedSkill = captured.skill; // [FR] Compat : on ne change pas Entity_SkillCaster
-                _selectedBinding = captured;                // [FR] Le FX lié est maintenant accessible
-                Highlight(btn);                             // [FR] Feedback visuel simple
+                ownerCaster.equippedSkill = captured.skill; //   Compat : on ne change pas Entity_SkillCaster
+                _selectedBinding = captured;                //   Le FX lié est maintenant accessible
+                Highlight(btn);                             //   Feedback visuel simple
             });
         }
 
-        // [FR] Option : équipe automatiquement le premier binding/skill
+        //   Option : équipe automatiquement le premier binding/skill
         if (spawnedButtons.Count > 0)
             spawnedButtons[0].onClick.Invoke();
     }
 
     /// <summary>
-    /// [FR] Retourne le binding correspondant à un Data_Skill donné (utile si une autre
+    ///   Retourne le binding correspondant à un Data_Skill donné (utile si une autre
     ///      partie du code ne connaît que le skill et veut le FX associé).
     /// </summary>
     public Skill_Binding FindBindingForSkill(Data_Skill target)
@@ -125,7 +120,7 @@ public class Combat_SkillBarUI : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Nettoie les anciens boutons.
+    ///   Nettoie les anciens boutons.
     /// </summary>
     public void ClearButtons()
     {
@@ -138,7 +133,7 @@ public class Combat_SkillBarUI : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Feedback : assombrit le bouton actif.
+    ///   Feedback : assombrit le bouton actif.
     /// </summary>
     private void Highlight(Button active)
     {

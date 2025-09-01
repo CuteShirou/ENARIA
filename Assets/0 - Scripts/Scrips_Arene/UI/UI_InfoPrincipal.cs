@@ -4,7 +4,7 @@ using TMPro;
 
 /// <summary>
 /// UI_Principal_HUD
-/// [FR] Met à jour en temps réel l'UI principale : PA / PM / PO et la barre de PV (Image_CurrentHP).
+///   Met à jour en temps réel l'UI principale : PA / PM / PO et la barre de PV (Image_CurrentHP).
 ///      Lit directement les valeurs sur Entity_StatistiqueCombat du joueur.
 ///      Aucune modification des autres systèmes.
 /// </summary>
@@ -13,13 +13,13 @@ public class UI_InfoPrincipal : MonoBehaviour
 {
     [Header("Target (drag & drop votre Player)")]
     [SerializeField] private Entity_StatistiqueCombat statsTarget;
-    // [FR] Cible contenant les stats courantes (currentHP, baseHP, currentPA/PM/PO)
+    //   Cible contenant les stats courantes (currentHP, baseHP, currentPA/PM/PO)
 
     [Header("HP Bar (Image)")]
-    [SerializeField] private Image imageMaxHP;      // [FR] Optionnel (sert de largeur de référence si on n'utilise pas fillAmount)
-    [SerializeField] private Image imageCurrentHP;  // [FR] Doit être Image Type = Filled, Method = Horizontal, Origin = Left
+    [SerializeField] private Image imageMaxHP;      //   Optionnel (sert de largeur de référence si on n'utilise pas fillAmount)
+    [SerializeField] private Image imageCurrentHP;  //   Doit être Image Type = Filled, Method = Horizontal, Origin = Left
     [SerializeField] private bool useImageFillAmount = true;
-    // [FR] true = on pilote imageCurrentHP.fillAmount (recommandé)
+    //   true = on pilote imageCurrentHP.fillAmount (recommandé)
     //      false = on ajuste la largeur (RectTransform) de l'image
 
     [Header("Texts PA / PM / PO")]
@@ -37,36 +37,36 @@ public class UI_InfoPrincipal : MonoBehaviour
 
     private void Awake()
     {
-        // [FR] Si on n'utilise pas le fillAmount, on mémorise la largeur "pleine" de référence
+        //   Si on n'utilise pas le fillAmount, on mémorise la largeur "pleine" de référence
         if (!useImageFillAmount && imageCurrentHP != null)
         {
             RectTransform refRect = imageMaxHP ? imageMaxHP.rectTransform : imageCurrentHP.rectTransform;
             fullHpBarWidth = refRect.rect.width;
         }
 
-        // [FR] Force un premier rafraîchissement
+        //   Force un premier rafraîchissement
         ForceRefresh();
     }
 
     private void OnEnable()
     {
-        // [FR] Re-synchronise à l'activation
+        //   Re-synchronise à l'activation
         ForceRefresh();
     }
 
     private void Update()
     {
-        // [FR] Aucune mise à jour si la cible n'est pas assignée
+        //   Aucune mise à jour si la cible n'est pas assignée
         if (!statsTarget) return;
 
-        // [FR] Lecture des valeurs courantes (on suppose les noms suivants existent déjà dans votre script de stats)
+        //   Lecture des valeurs courantes (on suppose les noms suivants existent déjà dans votre script de stats)
         int hp = Mathf.RoundToInt(statsTarget.currentHP);
         int hpMax = Mathf.Max(1, Mathf.RoundToInt(statsTarget.baseHP));
         int pa = Mathf.Max(0, statsTarget.currentPA);
         int pm = Mathf.Max(0, statsTarget.currentPM);
         int po = Mathf.Max(0, statsTarget.currentPO);
 
-        // [FR] HP (barre)
+        //   HP (barre)
         if (hp != lastHP || hpMax != lastHPMax)
         {
             UpdateHpBar(hp, hpMax);
@@ -74,21 +74,21 @@ public class UI_InfoPrincipal : MonoBehaviour
             lastHPMax = hpMax;
         }
 
-        // [FR] PA
+        //   PA
         if (pa != lastPA)
         {
             if (valuePA) valuePA.text = pa.ToString();
             lastPA = pa;
         }
 
-        // [FR] PM
+        //   PM
         if (pm != lastPM)
         {
             if (valuePM) valuePM.text = pm.ToString();
             lastPM = pm;
         }
 
-        // [FR] PO
+        //   PO
         if (po != lastPO)
         {
             if (valuePO) valuePO.text = po.ToString();
@@ -98,7 +98,7 @@ public class UI_InfoPrincipal : MonoBehaviour
 
     /// <summary>
     /// ForceRefresh
-    /// [FR] Force la mise à jour immédiate (utile après assignation des références dans l'Inspector).
+    ///   Force la mise à jour immédiate (utile après assignation des références dans l'Inspector).
     /// </summary>
     public void ForceRefresh()
     {
@@ -112,7 +112,7 @@ public class UI_InfoPrincipal : MonoBehaviour
 
     /// <summary>
     /// UpdateHpBar
-    /// [FR] Met à jour visuellement la barre de PV.
+    ///   Met à jour visuellement la barre de PV.
     ///      Pour que la barre DIMINUE de la DROITE vers la GAUCHE :
     ///      - Mettre imageCurrentHP en Image Type = Filled
     ///      - Fill Method = Horizontal
@@ -124,14 +124,14 @@ public class UI_InfoPrincipal : MonoBehaviour
 
         float ratio = Mathf.Clamp01(hp / (float)hpMax);
 
-        // [FR] Méthode 1 : pilotage du fillAmount (recommandé)
+        //   Méthode 1 : pilotage du fillAmount (recommandé)
         if (useImageFillAmount && imageCurrentHP.type == Image.Type.Filled)
         {
             imageCurrentHP.fillAmount = ratio;
             return;
         }
 
-        // [FR] Méthode 2 : ajustement de la largeur si on ne veut pas utiliser le fill
+        //   Méthode 2 : ajustement de la largeur si on ne veut pas utiliser le fill
         if (fullHpBarWidth < 0f)
         {
             RectTransform refRect = imageMaxHP ? imageMaxHP.rectTransform : imageCurrentHP.rectTransform;
