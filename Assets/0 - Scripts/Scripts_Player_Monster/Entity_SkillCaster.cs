@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-/// <summary>
 ///   Lanceur de compétences pour une entité de combat.
 /// - Gère l'équipement et le lancement d'un Data_Skill (clic souris OU API publique pour l'IA)
 /// - Vérifie PA, portée (Manhattan + PO), zone d'impact, limites par cible, application des effets
@@ -11,7 +10,7 @@ using UnityEngine.EventSystems;
 /// - Peut optionnellement attendre la fin de l'animation avant d'appliquer les effets
 /// - Met la case ciblée en rouge pendant le FX + calcul
 /// - Notifie la Timeline pour rafraîchir les PV immédiatement après un cast
-/// </summary>
+
 public class Entity_SkillCaster : MonoBehaviour
 {
     [Header("References")]
@@ -25,16 +24,14 @@ public class Entity_SkillCaster : MonoBehaviour
     public bool waitFxBeforeApply = false;     //   Si vrai: on attend la fin du FX avant d'appliquer les effets
     public Transform fxParent;                 //   Parent optionnel pour les FX (ex: un "FXRoot" dans la scène)
 
+    [Header("Control")]
+    public bool acceptHumanInput = true;       //   Si false → ce caster ignore totalement la souris (idéal pour les monstres contrôlés par IA)
+
     private Entity_StatistiqueCombat stats;
 
     //   Limite "(skill, cible) par tour"
     private readonly Dictionary<(Data_Skill, GameObject), int> perTargetPerSkillThisTurn = new();
 
-    // =========================
-    // Constructor / Destructor
-    // =========================
-    public Entity_SkillCaster() { }
-    ~Entity_SkillCaster() { }
 
     private void Start()
     {
@@ -43,9 +40,15 @@ public class Entity_SkillCaster : MonoBehaviour
 
     private void Update()
     {
+        //   Garde: composant/phase/stat manquants
         if (!enabled || stats == null) return;
         if (phaseManager == null || phaseManager.phaseTurn == null) return;
+
+        //   Garde: uniquement au tour de CETTE entité
         if (!phaseManager.phaseTurn.IsMyTurn(gameObject)) return;
+
+        //   ignorer totalement la souris si interdit (monstres/IA)
+        if (!acceptHumanInput) return;
 
         //   Ne pas caster si la souris est sur une UI (boutons, etc.)
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -60,6 +63,7 @@ public class Entity_SkillCaster : MonoBehaviour
     // ========================  INTERACTION SOURIS  =======================
     // =====================================================================
 
+    //  Lance le skill équipé sur la tuile sous la souris (si valide)
     private void TryCastAtMouse()
     {
         if (!Camera.main || tileGrid == null) return;
@@ -123,7 +127,7 @@ public class Entity_SkillCaster : MonoBehaviour
 
     /// <summary>
     ///   Vérifie si 'skill' peut être lancé sur la tuile 'targetTile' (sans consommer).
-    ///   Autorise désormais le cast sur case VIDE (mono et zone).
+    ///   Autorise le cast sur case VIDE (mono et zone).
     /// </summary>
     public bool CanCastAtTile(Data_Skill skill, GameObject targetTile, out string reason)
     {
@@ -144,9 +148,7 @@ public class Entity_SkillCaster : MonoBehaviour
         if (dist < skill.rangeMin) { reason = "Trop proche."; return false; }
         if (dist > skill.rangeMax + stats.currentPO) { reason = "Trop loin."; return false; }
 
-        //   MONO-CIBLE :
-        // - On n'exige plus la présence d'une entité.
-        // - Si une entité est là, on applique la limite par cible, sinon on laisse passer.
+        //   MONO-CIBLE : case vide acceptée, limite par cible si entité présente
         if (IsSingleTarget(skill))
         {
             var maybe = tileGrid.GetEntityOnTile(targetTile);
@@ -157,7 +159,7 @@ public class Entity_SkillCaster : MonoBehaviour
             return true;
         }
 
-        //   ZONE : plus de blocage si aucune entité n'est touchée (cast autorisé).
+        //   ZONE : cast autorisé même si aucune entité touchée
         return true;
     }
 
@@ -183,7 +185,7 @@ public class Entity_SkillCaster : MonoBehaviour
 
         if (isMono)
         {
-            //   Case vide désormais acceptée : si pas d'entité, on consomme juste les PA (pas d'effet).
+            //   Case vide désormais acceptée
             var target = tileGrid.GetEntityOnTile(targetTile);
             if (target)
             {
@@ -195,7 +197,7 @@ public class Entity_SkillCaster : MonoBehaviour
         }
         else
         {
-            //   Zone : même si aucun ennemi touché, on cast et on consomme les PA.
+            //   Zone : applique à chaque entité touchée (peut être 0), consomme les PA
             Vector2Int center = new Vector2Int(setup.tileX, setup.tileY);
             var targets = GetTargetsInImpactZone(skill, center); // peut être vide
             for (int i = 0; i < targets.Count; i++)
@@ -365,7 +367,6 @@ public class Entity_SkillCaster : MonoBehaviour
         if (ts == stats)
         {
             //   Les effets "applyToSelf" seront gérés plus bas. On saute le calcul de dégâts sur soi.
-            // Debug.Log("[Skill] Auto-dégâts ignorés pour le lanceur.");
         }
         else
         {
@@ -393,7 +394,7 @@ public class Entity_SkillCaster : MonoBehaviour
             Debug.Log($"[Skill] {name} → {target.name} : {final} dmg{(isCrit ? " (CRIT)" : "")}");
         }
 
-        //   Effets non-crit (les "applyToSelf" utilisent 'stats' comme receiver)
+        //   Effets non-crit
         if (skill.effects != null && skill.effects.Count > 0)
         {
             for (int i = 0; i < skill.effects.Count; i++)
@@ -413,9 +414,9 @@ public class Entity_SkillCaster : MonoBehaviour
             }
         }
 
-        //   Effets critiques (si critique)
+        //   Effets critiques (check séparé)
         float critChanceCheck = Mathf.Clamp(stats.currentCritChance + skill.critChance, 0f, 100f);
-        bool wasCrit = Random.value < (critChanceCheck / 100f); //   simple check indépendant (selon ton design tu peux partager le roll)
+        bool wasCrit = Random.value < (critChanceCheck / 100f);
         if (wasCrit && skill.critEffects != null && skill.critEffects.Count > 0)
         {
             for (int i = 0; i < skill.critEffects.Count; i++)

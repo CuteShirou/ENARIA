@@ -26582,6 +26582,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 754467633}
+  - component: {fileID: 754467634}
   m_Layer: 5
   m_Name: Interface_Principale
   m_TagString: Untagged
@@ -26612,6 +26613,25 @@ RectTransform:
   m_AnchoredPosition: {x: -63.66002, y: -178.49146}
   m_SizeDelta: {x: 672.68, y: 95.0171}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &754467634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754467632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dd9d1e8905fc64f9d4dfb35be181c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statsTarget: {fileID: 8238287124760553548}
+  imageMaxHP: {fileID: 1295467627}
+  imageCurrentHP: {fileID: 1600270835}
+  useImageFillAmount: 1
+  valuePA: {fileID: 252350040}
+  valuePM: {fileID: 1693396704}
+  valuePO: {fileID: 470685249}
 --- !u!1 &759402669
 GameObject:
   m_ObjectHideFlags: 0
@@ -36764,8 +36784,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ownerStats: {fileID: 8238287124760553548}
   ownerCaster: {fileID: 8238287124760553550}
+  phaseManager: {fileID: 806924282}
+  tileGrid: {fileID: 821466463}
   buttonContainer: {fileID: 1056735325}
   buttonPrefab: {fileID: 9169417976608632392, guid: 9fc6af5a8d9850e4ca802b88f7d43864, type: 3}
+  cancelOnRightClick: 0
+  cancelOnEscapeKey: 1
 --- !u!114 &1056735330
 MonoBehaviour:
   m_ObjectHideFlags: 0
