@@ -17,7 +17,9 @@ public class pechepoisson : MonoBehaviour
     
     
    	public float timer = 0f;
+    public float timerloose = 0f;
     public float updateInterval; 
+    public static bool isGameOver = false;
 
 
     void Start()
@@ -49,10 +51,16 @@ public class pechepoisson : MonoBehaviour
     {
         
         timer += Time.deltaTime;
+        timerloose += Time.deltaTime;
         if (timer >= updateInterval)
         {
             timer = 0f;
             UpdateEveryInterval();
+        }
+        if (timerloose >= 10f)
+        {
+            isGameOver = true;
+            timerloose = 0f;
         }
 
         

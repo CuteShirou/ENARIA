@@ -21,6 +21,9 @@ public class minijeuplantes : MonoBehaviour
     public Sprite downSpriteE;
     public Sprite upSpriteE;
     public float move;
+
+    public float timerloose = 0f;
+    public static bool isGameOver = false;
     void Start()
     {
         RectTransform rt = gameObject.GetComponent<RectTransform>();
@@ -40,6 +43,13 @@ public class minijeuplantes : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        timerloose += Time.deltaTime;
+        if (timerloose >= 10f)
+        {
+            isGameOver = true;
+            timerloose = 0f;
+        }
         RectTransform rt = gameObject.GetComponent<RectTransform>();
         if (lastIsA == false && Input.GetKeyDown(KeyCode.Q))
         {

@@ -23,6 +23,9 @@ public class minagegameplay : MonoBehaviour
     public GameObject pepite15;
     
     
+    public float timerloose = 0f;
+    public static bool isGameOver = false;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -144,7 +147,12 @@ public class minagegameplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    
+        timerloose += Time.deltaTime;
+        if (timerloose >= 30f)
+        {
+            isGameOver = true;
+            timerloose = 0f;
+        }
         
     }
 }

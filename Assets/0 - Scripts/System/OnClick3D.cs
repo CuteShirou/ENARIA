@@ -61,6 +61,8 @@ public class OnClick3D : MonoBehaviour
             cerealesprogress.height = 0; 
             InventoryUtil.AddItemToFirstEmpty(bletoguive);
         }
+        
+        
         if (minijeuplantes.height >= 599)
         {
             plantes.SetActive(false);
@@ -70,6 +72,20 @@ public class OnClick3D : MonoBehaviour
             TPC.enabled = true;
             InventoryUtil.AddItemToFirstEmpty(tulipetoguive);
         }
+        if (minijeuplantes.isGameOver == true)
+        {
+            plantes.SetActive(false);
+            plantesIsActive = false;
+            Debug.Log("plantes defaite");
+            minijeuplantes.isGameOver = false;
+            minijeuplantes.height = 0;
+            TPC.enabled = true;
+        }
+        
+        
+        
+        
+        
         if (boisprogress.height >= 599)
         {
             bois.SetActive(false);
@@ -80,7 +96,21 @@ public class OnClick3D : MonoBehaviour
             TPC.enabled = true;
             InventoryUtil.AddItemToFirstEmpty(boistoguive);
         }
+        if (boisgameplay.isGameOver == true)
+        {
+            bois.SetActive(false);
+            boisIsActive = false;
+            Debug.Log("bois defaite");
+            boisgameplay.isGameOver = false;
+            boisprogress.height = 0;
+            TPC.enabled = true;
+        }
 
+        
+        
+        
+        
+        
         if (pecheprogress.height >= 599)
         {
             poisson.SetActive(false);
@@ -90,7 +120,20 @@ public class OnClick3D : MonoBehaviour
             TPC.enabled = true;
             InventoryUtil.AddItemToFirstEmpty(saumontoguive);
         }
-
+        if (pechepoisson.isGameOver == true)
+        {
+            poisson.SetActive(false);
+            poissonIsActive = false;
+            Debug.Log("poisson defaite");
+            pechepoisson.isGameOver = false;
+            pecheprogress.height = 0;
+            TPC.enabled = true;
+        }
+        
+        
+        
+        
+        
         if (minagebutton.Win == true)
         {
             minerai.SetActive(false);
@@ -99,6 +142,14 @@ public class OnClick3D : MonoBehaviour
             minagebutton.Win = false;
             TPC.enabled = true;
             InventoryUtil.AddItemToFirstEmpty(ortoguive);
+        }
+        if (minagegameplay.isGameOver == true)
+        {
+            minerai.SetActive(false);
+            mineraiIsActive = false;
+            Debug.Log("minerai defaite");
+            minagegameplay.isGameOver = false;
+            TPC.enabled = true;
         }
         
         if (ButtonEndDialogue.isclicked == true)
