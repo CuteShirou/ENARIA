@@ -12,38 +12,42 @@ public class Monster_CombatController : MonoBehaviour
 {
 
     [Header("Références (assignées au spawn / prefab)")]
-    public Combat_PhaseManager phaseManager;   //   Réf manager combat (injectée dans Phase_EnterSetupCombat)
-    public TileGrid_Manager tileGrid;          //   Grille (injectée)
-    public Entity_StatistiqueCombat stats;     //   Stats de l'entité (HP/PA/PM/PO/Team/skillBook)
-    public Entity_SkillCaster caster;          //   Lanceur de compétences (commun)
+    public Combat_PhaseManager phaseManager;   // Réf manager combat (injectée dans Phase_EnterSetupCombat)
+    public TileGrid_Manager tileGrid;          // Grille (injectée)
+    public Entity_StatistiqueCombat stats;     // Stats de l'entité (HP/PA/PM/PO/Team/skillBook)
+    public Entity_SkillCaster caster;          // Lanceur de compétences (commun)
 
     [Header("IA (plug-in)")]
     [Tooltip("Brancher ici le composant IA (ex: IA_Aggressif). Aucun auto-find.")]
-    public MonoBehaviour behaviorComponent;    //   Doit implémenter IMonsterAI
-    private IMonsterAI behavior;               //   Interface IA
-    public MonsterAIType typeIA;               //   Indicatif pour l’inspector
+    public MonoBehaviour behaviorComponent;    // Doit implémenter IMonsterAI
+    private IMonsterAI behavior;               // Interface IA
+    public MonsterAIType typeIA;               // Indicatif pour l’inspector
 
     [Header("Tempo")]
-    public float startDelaySec = 1.0f;         //   Attente en début de tour
-    public float afterMoveDelaySec = 0.1f;     //   Petite pause après un pas (lisibilité)
-    public float stepDuration = 0.2f;          //   Durée d’un pas (lerp court)
+    public float startDelaySec = 1.0f;         // Attente en début de tour
+    public float afterMoveDelaySec = 0.1f;     // Petite pause après un pas (lisibilité)
+    public float stepDuration = 0.2f;          // Durée d’un pas (lerp court)
 
     [Header("Debug")]
     public bool verboseLog = false;
 
-    //   Flag lu par la phase (elle bloque EndTurn si une entité bouge)
+    // Flag lu par la phase (elle bloque EndTurn si une entité bouge)
     public bool isMoving { get; private set; } = false;
 
-    //   Routine unique par tour
+    // Routine unique par tour
     private bool isPlayingTurn = false;
+
+    // Pop-up pour afficher la consommation de PM
+    private Popup_DisplayNumber popup;
 
     private void Awake()
     {
-        //   Réfs locales (jamais d'auto-find scène)
+        // Récupère les composants locaux si absents
         if (!stats) TryGetComponent(out stats);
         if (!caster) TryGetComponent(out caster);
+        if (!popup) TryGetComponent(out popup);
 
-        //   Vérifie le compos IA
+        // Vérifie le compos IA
         if (behaviorComponent != null)
         {
             behavior = behaviorComponent as IMonsterAI;
@@ -55,7 +59,7 @@ public class Monster_CombatController : MonoBehaviour
             Debug.LogWarning($"[{name}] Aucun composant IA assigné (IMonsterAI).");
         }
 
-        //   Le caster doit connaître ses refs (on push seulement si vides)
+        // Le caster doit connaître ses refs (on push seulement si vides)
         if (caster != null)
         {
             if (!caster.phaseManager) caster.phaseManager = phaseManager;
@@ -65,12 +69,12 @@ public class Monster_CombatController : MonoBehaviour
 
     private void Update()
     {
-        //   Sécurités
+        // Sécurités
         if (phaseManager == null || phaseManager.phaseTurn == null || tileGrid == null || stats == null || caster == null || behavior == null)
             return;
         if (!phaseManager.isInCombat || stats.isDead) return;
 
-        //   Déclenche un tour uniquement si c'est à lui
+        // Déclenche un tour uniquement si c'est à lui
         if (phaseManager.phaseTurn.IsMyTurn(gameObject) && !isPlayingTurn)
             StartCoroutine(PlayTurnRoutine());
     }
@@ -79,17 +83,17 @@ public class Monster_CombatController : MonoBehaviour
     {
         isPlayingTurn = true;
 
-        //   Tempo d'entrée de tour
+        // Tempo d'entrée de tour
         if (startDelaySec > 0f) yield return new WaitForSeconds(startDelaySec);
 
-        //   Construit le contexte partagé (références + utilitaires)
+        // Construit le contexte partagé (références + utilitaires)
         var ctx = new AIContext(this, phaseManager, tileGrid, stats, caster);
 
-        //   Hook IA début de tour
+        // Hook IA début de tour
         behavior.OnTurnStart(ctx);
 
-        //   Boucle de décision simple : on exécute les actions jusqu’à EndTurn
-        int guard = 16; //   Sécurité anti-boucles
+        // Boucle de décision simple : on exécute les actions jusqu’à EndTurn
+        int guard = 16; // Sécurité anti-boucles
         while (guard-- > 0)
         {
             AIAction action = behavior.DecideNextAction(ctx);
@@ -99,37 +103,41 @@ public class Monster_CombatController : MonoBehaviour
 
             if (action.type == AIActionType.MoveStep && action.targetTile != null)
             {
-                //   Un pas visuel vers la tuile (cases cardinales)
+                // Un pas visuel vers la tuile (cases cardinales)
                 yield return StepToTile(action.targetTile);
 
-                //   Consomme 1 PM si dispo
-                if (stats.currentPM > 0) stats.SetPM(stats.currentPM - 1);
+                // Consomme 1 PM si dispo et affiche la pop-up PM
+                if (stats.currentPM > 0)
+                {
+                    stats.SetPM(stats.currentPM - 1);
+                    if (popup != null) popup.ShowPM(1);
+                }
 
-                //   Petite pause lisible (évite téléport visuelle)
+                // Petite pause lisible (évite téléport visuelle)
                 if (afterMoveDelaySec > 0f) yield return new WaitForSeconds(afterMoveDelaySec);
                 continue;
             }
 
             if (action.type == AIActionType.Cast && action.skill != null && action.targetTile != null)
             {
-                //   Équipe et caste via l’API du caster (gère le FX selon waitFxBeforeApply)
+                // Équipe et caste via l’API du caster (gère le FX selon waitFxBeforeApply)
                 caster.EquipSkill(action.skill);
                 yield return caster.CastAtTileWithFx(action.skill, action.targetTile);
 
-                //   Micro-pause pour lisibilité (la timeline est rafraîchie dans le caster)
+                // Micro-pause pour lisibilité (la timeline est rafraîchie dans le caster)
                 yield return new WaitForSeconds(0.05f);
                 continue;
             }
 
-            //   Action invalide -> on coupe
+            // Action invalide -> on coupe
             if (verboseLog) Debug.LogWarning($"[{name}] Action IA invalide -> fin de tour.");
             break;
         }
 
-        //   Hook IA fin de tour
+        // Hook IA fin de tour
         behavior.OnTurnEnd(ctx);
 
-        //   Fin de tour: assure-toi de ne pas couper pendant un mouvement
+        // Fin de tour: assure-toi de ne pas couper pendant un mouvement
         if (!isMoving && phaseManager != null && phaseManager.phaseTurn != null)
             phaseManager.phaseTurn.EndTurn();
 
@@ -198,7 +206,7 @@ public class Monster_CombatController : MonoBehaviour
         bestMelee = null;
         bestRanged = null;
 
-        //   Construit une liste de Data_Skill à partir des Skill_Binding
+        // Construit une liste de Data_Skill à partir des Skill_Binding
         List<Data_Skill> book = new List<Data_Skill>();
         if (stats != null && stats.skillBook != null)
         {
@@ -209,7 +217,7 @@ public class Monster_CombatController : MonoBehaviour
             }
         }
 
-        //   Fallback: on utilise la skill équipée si jamais la liste est vide
+        // Fallback: on utilise la skill équipée si jamais la liste est vide
         if (book.Count == 0 && caster != null && caster.equippedSkill != null)
             book.Add(caster.equippedSkill);
 
@@ -263,7 +271,7 @@ public class Monster_CombatController : MonoBehaviour
             int d = Mathf.Abs(nx - tgS.tileX) + Mathf.Abs(ny - tgS.tileY);
             if (d < bestDist) { bestDist = d; best = n; }
         }
-        return best; //   peut être null (bloqué)
+        return best; // peut être null (bloqué)
     }
 
     /// <summary>
@@ -307,7 +315,7 @@ public class Monster_CombatController : MonoBehaviour
         Vector3 start = transform.position;
         Vector3 end = tile.transform.position;
 
-        //   Verrouillage axe vertical : on conserve le Y de départ (pas de mouvement en hauteur)
+        // Verrouillage axe vertical : on conserve le Y de départ (pas de mouvement en hauteur)
         end.y = start.y;
 
         float t = 0f;
@@ -316,7 +324,7 @@ public class Monster_CombatController : MonoBehaviour
         {
             t += Time.deltaTime / dur;
 
-            //   Interpolation lissée sur X/Z, Y reste constant
+            // Interpolation lissée sur X/Z, Y reste constant
             Vector3 pos = Vector3.Lerp(start, end, Mathf.Clamp01(t));
             pos.y = start.y;
             transform.position = pos;
@@ -324,10 +332,10 @@ public class Monster_CombatController : MonoBehaviour
             yield return null;
         }
 
-        //   Position finale (Y toujours verrouillé)
+        // Position finale (Y toujours verrouillé)
         transform.position = end;
 
-        //   Mise à jour mapping entité ↔ tuile
+        // Mise à jour mapping entité ↔ tuile
         tileGrid.RegisterEntity(gameObject, tile);
         isMoving = false;
     }
@@ -347,8 +355,8 @@ public enum AIActionType { None, MoveStep, Cast, EndTurn }
 public struct AIAction
 {
     public AIActionType type;
-    public Data_Skill skill;      //   pour Cast
-    public GameObject targetTile; //   pour MoveStep / Cast (mono)
+    public Data_Skill skill;      // pour Cast
+    public GameObject targetTile; // pour MoveStep / Cast (mono)
 
     public static AIAction End() => new AIAction { type = AIActionType.EndTurn };
     public static AIAction MoveTo(GameObject tile) => new AIAction { type = AIActionType.MoveStep, targetTile = tile };
@@ -366,7 +374,7 @@ public class AIContext
     public Entity_StatistiqueCombat stats;
     public Entity_SkillCaster caster;
 
-    //   Mémoire transitoire (ex: cible courante)
+    // Mémoire transitoire (ex: cible courante)
     public GameObject currentTarget;
 
     public AIContext(Monster_CombatController c, Combat_PhaseManager pm, TileGrid_Manager grid, Entity_StatistiqueCombat s, Entity_SkillCaster cast)
@@ -374,7 +382,7 @@ public class AIContext
         controller = c; phaseManager = pm; tileGrid = grid; stats = s; caster = cast;
     }
 
-    //   Helpers exposés aux IA (wrappers vers le contrôleur)
+    // Helpers exposés aux IA (wrappers vers le contrôleur)
     public GameObject GetNearestEnemy() => controller.GetNearestEnemy();
     public int GetDistanceTo(GameObject e) => controller.GetDistanceTo(e);
     public void GetBestAttackSkills(out Data_Skill melee, out Data_Skill ranged) => controller.GetBestAttackSkills(out melee, out ranged);
@@ -390,7 +398,7 @@ public class AIContext
 /// </summary>
 public interface IMonsterAI
 {
-    void OnTurnStart(AIContext ctx);          //   Init / choix de cible initial
-    AIAction DecideNextAction(AIContext ctx); //   Renvoie l'action suivante à exécuter
-    void OnTurnEnd(AIContext ctx);            //   Nettoyage si besoin
+    void OnTurnStart(AIContext ctx);          // Init / choix de cible initial
+    AIAction DecideNextAction(AIContext ctx); // Renvoie l'action suivante à exécuter
+    void OnTurnEnd(AIContext ctx);            // Nettoyage si besoin
 }
