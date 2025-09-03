@@ -98,6 +98,10 @@ public class Player_CombatController : MonoBehaviour
             //   Consomme les PM selon longueur du chemin
             stats.SetPM(stats.currentPM - path.Count);
 
+            //   Affiche la pop-up "- X PM"
+            var popup = GetComponent<Popup_DisplayNumber>();
+            if (popup != null) popup.ShowPM(path.Count);
+
             //   File des positions monde
             movementQueue.Clear();
             for (int i = 0; i < path.Count; i++)
@@ -181,10 +185,7 @@ public class Player_CombatController : MonoBehaviour
         isMoving = false;
 
         //   Demande à la phase de passer au prochain combattant.
-        //   Adapte le nom exact de la méthode selon ton Phase_TurnByTurn :
         phaseManager.phaseTurn.EndTurn();
-        // phaseManager.phaseTurn.EndTurnForCurrent();         // <- si ta méthode s'appelle comme ceci
-        // phaseManager.phaseTurn.RequestEndTurn(gameObject);  // <- si elle attend l'actor en paramètre
     }
 
 }
