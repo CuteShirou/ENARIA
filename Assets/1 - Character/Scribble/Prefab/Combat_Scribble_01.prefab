@@ -1300,14 +1300,14 @@ MonoBehaviour:
   basePO: 0
   baseCritChance: 0
   baseInitiative: 150
-  baseForce: 10
-  baseDexterite: 5
+  baseForce: 50
+  baseDexterite: 25
   baseMagie: 5
   baseFoi: 5
   baseResistanceForce: 0
-  baseResistanceDexterite: -10
-  baseResistanceMagie: 20
-  baseResistanceFoi: 20
+  baseResistanceDexterite: 0
+  baseResistanceMagie: 0
+  baseResistanceFoi: 0
   _currentHP: 0
   _currentPA: 0
   _currentPM: 0
@@ -1363,6 +1363,9 @@ MonoBehaviour:
   waitFxBeforeApply: 1
   fxParent: {fileID: 0}
   acceptHumanInput: 0
+  critMultiplier: 1.5
+  clampResist: 1
+  resistClamp: {x: -100, y: 100}
 --- !u!114 &3299852960925963550
 MonoBehaviour:
   m_ObjectHideFlags: 0
