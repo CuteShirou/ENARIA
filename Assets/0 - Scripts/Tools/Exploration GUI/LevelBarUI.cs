@@ -1,5 +1,3 @@
-using System;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7,45 +5,59 @@ using TMPro;
 public class LevelBarUI : MonoBehaviour
 {
     [Header("Références principales")]
-    [SerializeField] private PlayerStats playerStats;
-    [SerializeField] private Image xpFillBar; 
+    [SerializeField] private Entity_Info playerStats;                  // Référence obligatoire pour la barre d'XP
+    [SerializeField] private Entity_StatistiqueCombat combatStats;     // Référence obligatoire pour la barre de HP
+
+    [Header("Barre d'XP")]
+    [SerializeField] private Image xpFillBar;
     [SerializeField] private TMP_Text xpText;
 
     [Header("Barre de vie")]
     [SerializeField] private Image hpFillBar;
     [SerializeField] private TMP_Text hpText;
 
-    [Header("Source de HP (optionnel)")]
-    [Tooltip("Si tu as un component qui expose les champs/propriétés currentHP / maxHP, glisse-le ici.")]
-    [SerializeField] private MonoBehaviour hpProvider;
-    [Tooltip("Nom du champ/propriété 'current' sur hpProvider (ex: currentHP).")]
-    [SerializeField] private string hpCurrentName = "currentHP";
-    [Tooltip("Nom du champ/propriété 'max' sur hpProvider (ex: maxHP).")]
-    [SerializeField] private string hpMaxName = "maxHP";
+    [Header("Options d'initialisation HP")]
+    [Tooltip("Si actif, à l'ouverture de l'UI et si les HP semblent non initialisés, on appelle InitStatsFromBase().")]
+    [SerializeField] private bool autoInitHPOnEnable = true;
 
-    [Header("Fallback manuel (si pas de provider)")]
-    [SerializeField] private bool useManualHP = false;
-    [SerializeField] private int manualCurrentHP = 100;
-    [SerializeField] private int manualMaxHP = 100;
-
-    private void Start()
+    // ---------------------------------------------------------
+    // OnEnable : déclenché quand l'objet UI est activé (au lancement et à chaque ouverture)
+    private void OnEnable()
     {
-        if (playerStats == null)
-            playerStats = FindFirstObjectByType<PlayerStats>();
+        // Sécurise l'init HP uniquement si nécessaire (évite la barre vide au tout début)
+        TryAutoInitHPOnce();
+
+        // Rafraîchit immédiatement les deux barres à l'ouverture
+        UpdateXPBar();
+        UpdateHPBar();
     }
 
+    // ---------------------------------------------------------
+    // Update : met à jour en continu l'XP et les HP (si tu veux, on pourra passer en modèle à évènements)
     private void Update()
     {
         UpdateXPBar();
         UpdateHPBar();
     }
 
+    // ---------------------------------------------------------
+    // LinkTargets : permet de lier les références par code, sans utiliser de Find()
+    public void LinkTargets(Entity_Info info, Entity_StatistiqueCombat stats)
+    {
+        // Met à jour les références utilisées par l'UI
+        playerStats = info;
+        combatStats = stats;
+    }
+
+    // ---------------------------------------------------------
+    // UpdateXPBar : met à jour la barre d'expérience
     private void UpdateXPBar()
     {
         if (playerStats == null || xpFillBar == null) return;
 
         int xp = playerStats.experience;
-        int xpToNext = playerStats.ExperienceToNextLevel;
+        int xpToNext = playerStats.GetExperienceToNextLevel();
+
         float ratio = xpToNext > 0 ? (float)xp / xpToNext : 0f;
         xpFillBar.fillAmount = Mathf.Clamp01(ratio);
 
@@ -53,100 +65,49 @@ public class LevelBarUI : MonoBehaviour
             xpText.text = $"{xp} / {xpToNext}";
     }
 
+    // ---------------------------------------------------------
+    // UpdateHPBar : lit directement currentHP / baseHP depuis Entity_StatistiqueCombat
     private void UpdateHPBar()
     {
-        if (hpFillBar == null) return;
+        if (combatStats == null || hpFillBar == null) return;
 
-        int current = 0;
-        int max = 0;
-        bool got = false;
+        int max = Mathf.Max(1, combatStats.baseHP);
+        int current = Mathf.Clamp(combatStats.currentHP, 0, max);
 
-        if (hpProvider != null)
-        {
-            (got, current, max) = ReadIntsFromProvider(hpProvider, hpCurrentName, hpMaxName);
-        }
-
-        if (!got && playerStats != null)
-        {
-            (got, current, max) = ReadIntsFromProvider(playerStats, "currentHP", "maxHP");
-        }
-
-        if (!got && useManualHP)
-        {
-            current = manualCurrentHP;
-            max = manualMaxHP;
-            got = true;
-        }
-
-        if (!got)
-        {
-            hpFillBar.fillAmount = 0f;
-            if (hpText != null) hpText.text = "-";
-            return;
-        }
-
-        max = Mathf.Max(1, max);
-        current = Mathf.Clamp(current, 0, max);
         hpFillBar.fillAmount = (float)current / max;
 
         if (hpText != null)
             hpText.text = $"{current} / {max}";
     }
 
-    private (bool, int, int) ReadIntsFromProvider(object provider, string curName, string maxName)
+    // ---------------------------------------------------------
+    // TryAutoInitHPOnce : initialise les HP si on détecte un état non initialisé au moment d'ouvrir l'UI
+    private void TryAutoInitHPOnce()
     {
-        if (provider == null) return (false, 0, 0);
+        // On ne tente rien si l'option est désactivée ou si les refs sont manquantes
+        if (!autoInitHPOnEnable || combatStats == null) return;
 
-        Type t = provider.GetType();
+        // On évite de forcer une init si on a déjà des HP valides ou si le contexte ne s'y prête pas
+        if (!ShouldAutoInitHP()) return;
 
-        bool okCur = TryGetIntMember(t, provider, curName, out int curVal);
-        bool okMax = TryGetIntMember(t, provider, maxName, out int maxVal);
-
-        if (okCur && okMax) return (true, curVal, maxVal);
-
-        return (false, 0, 0);
+        // Appelle la méthode prévue par Entity_StatistiqueCombat pour copier les bases vers les current
+        combatStats.InitStatsFromBase();
     }
 
-    private bool TryGetIntMember(Type t, object instance, string name, out int value)
+    // ---------------------------------------------------------
+    // ShouldAutoInitHP : renvoie true si les HP semblent non initialisés et que l'entité peut être init
+    private bool ShouldAutoInitHP()
     {
-        value = 0;
-        if (string.IsNullOrEmpty(name)) return false;
+        // Conditions:
+        // - baseHP > 0
+        // - currentHP <= 0 (typiquement 0 au tout début si aucune init)
+        // - pas en combat (on n'override pas une logique de combat en cours)
+        // - pas morte (ne pas "réanimer" visuellement un mort)
+        if (combatStats.baseHP <= 0) return false;
+        if (combatStats.currentHP > 0) return false;
+        if (combatStats.isFight) return false;
+        if (combatStats.isDead) return false;
 
-        var prop = t.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        if (prop != null && (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(long)))
-        {
-            try
-            {
-                object v = prop.GetValue(instance);
-                value = Convert.ToInt32(v);
-                return true;
-            }
-            catch { return false; }
-        }
-
-        var field = t.GetField(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        if (field != null && (field.FieldType == typeof(int) || field.FieldType == typeof(long)))
-        {
-            try
-            {
-                object v = field.GetValue(instance);
-                value = Convert.ToInt32(v);
-                return true;
-            }
-            catch { return false; }
-        }
-
-        return false;
-    }
-
-    public void SetManualHP(int current, int max)
-    {
-        manualCurrentHP = current;
-        manualMaxHP = max;
-    }
-
-    public void SetUseManualHP(bool use)
-    {
-        useManualHP = use;
+        return true;
     }
 }

@@ -343,4 +343,73 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     private void OnTeamChanged(int oldVal, int newVal) => Debug.Log($"[Local] Team : {oldVal} → {newVal}");
     private void OnReadyChanged(bool oldVal, bool newVal) => Debug.Log($"[Local] Ready : {oldVal} → {newVal}");
     private void OnDeadChanged(bool oldVal, bool newVal) => Debug.Log($"[Local] isDead : {oldVal} → {newVal} ({name})");
+
+    //   Augmente les PV de base et rend aussi les PV actuels (+amount) pour refléter la nouvelle capacité
+    public void AddBaseHP(int amount, bool alsoHealCurrent)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseHP;
+        baseHP = Mathf.Max(1, baseHP + v);
+
+        if (alsoHealCurrent)
+            SetHP(currentHP + v);                // on "rend" la hausse immédiatement
+        else
+            SetHP(Mathf.Min(currentHP, baseHP)); // clamp si besoin
+
+        Debug.Log($"[Stats] BaseHP {oldBase} → {baseHP} (+{v})");
+    }
+
+    //   Augmente Force de base et ajuste l'actuel
+    public void AddBaseForce(int amount)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseForce;
+        baseForce = oldBase + v;
+        SetForce(currentForce + v);
+
+        Debug.Log($"[Stats] BaseForce {oldBase} → {baseForce} (+{v})");
+    }
+
+    //   Augmente Dextérité de base et ajuste l'actuel
+    public void AddBaseDex(int amount)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseDexterite;
+        baseDexterite = oldBase + v;
+        SetDex(currentDexterite + v);
+
+        Debug.Log($"[Stats] BaseDex {oldBase} → {baseDexterite} (+{v})");
+    }
+
+    //   Augmente Magie de base et ajuste l'actuel
+    public void AddBaseMagie(int amount)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseMagie;
+        baseMagie = oldBase + v;
+        SetMagie(currentMagie + v);
+
+        Debug.Log($"[Stats] BaseMagie {oldBase} → {baseMagie} (+{v})");
+    }
+
+    //   Augmente Foi de base et ajuste l'actuel
+    public void AddBaseFoi(int amount)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseFoi;
+        baseFoi = oldBase + v;
+        SetFoi(currentFoi + v);
+
+        Debug.Log($"[Stats] BaseFoi {oldBase} → {baseFoi} (+{v})");
+    }
 }

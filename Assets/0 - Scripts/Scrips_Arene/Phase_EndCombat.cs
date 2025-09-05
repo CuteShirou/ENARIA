@@ -41,19 +41,22 @@ public class Phase_EndCombat : MonoBehaviour
     {
         manager = phaseManager;
 
-        //   Désactive l'UI combat et réactive l'UI exploration
+        // Désactive l'UI combat et réactive l'UI exploration
         if (combatUIRoot) combatUIRoot.SetActive(false);
         if (explorationUIRoot) explorationUIRoot.SetActive(true);
 
-        //   Snapshot des équipes avant nettoyage
+        // Purge immédiate des pop-ups de nombres (dégâts/PA/PM) encore actives sur le Canvas
+        Popup_DisplayNumber.DestroyAllActivePopups();
+
+        // Snapshot des équipes avant nettoyage
         var greenSnapshot = manager?.phaseEnter != null ? new List<GameObject>(manager.phaseEnter.greenTeam) : new List<GameObject>();
         var redSnapshot = manager?.phaseEnter != null ? new List<GameObject>(manager.phaseEnter.redTeam) : new List<GameObject>();
 
-        //   Affiche la pop-up + construit les panels
+        // Affiche la pop-up + construit les panels
         ShowResultPopup(manager.lastCombatWinning);
         BuildWinLosePanels_PerPlayerDistribution(manager.winnerTeam, greenSnapshot, redSnapshot);
 
-        //   Nettoyage arène / retour joueurs
+        // Nettoyage arène / retour joueurs
         if (manager.tileGrid != null)
             manager.tileGrid.UnregisterAllEntities();
 
@@ -82,18 +85,24 @@ public class Phase_EndCombat : MonoBehaviour
     // BuildWinLosePanels_PerPlayerDistribution : construit Win/Lose par joueur gagnant
     private void BuildWinLosePanels_PerPlayerDistribution(CombatTeamId winner, List<GameObject> green, List<GameObject> red)
     {
-        //   Vide les containers Win/Lose
+        // Vide les containers Win/Lose
         ClearContainer(contentWin);
         ClearContainer(contentLose);
 
-        //   Détermine gagnants / perdants
+        // Détermine gagnants / perdants
         List<GameObject> winners = winner == CombatTeamId.Green ? green : (winner == CombatTeamId.Red ? red : new List<GameObject>());
         List<GameObject> losers = winner == CombatTeamId.Green ? red : (winner == CombatTeamId.Red ? green : new List<GameObject>());
 
-        //   Calcule et mémorise l'XP total obtenu en battant la team perdante
+        // Calcule et mémorise l'XP total obtenu en battant la team perdante
         lastTotalXpGained = ComputeTotalXpFromLosers(losers);
 
-        //   WIN : une ligne par gagnant + tirages indépendants + affichage du gain d'XP
+        // Si l'équipe verte gagne, on crédite l'XP à chaque joueur gagnant
+        if (winner == CombatTeamId.Green && lastTotalXpGained > 0)
+        {
+            AwardXpToWinners(winners, lastTotalXpGained);
+        }
+
+        // WIN : une ligne par gagnant + tirages indépendants + affichage du gain d'XP
         if (contentWin && prefabLineWin)
         {
             foreach (var winnerEntity in winners)
@@ -119,7 +128,7 @@ public class Phase_EndCombat : MonoBehaviour
             }
         }
 
-        //   LOSE : lignes simples
+        // LOSE : lignes simples
         if (contentLose && prefabLineLose)
         {
             foreach (var loserEntity in losers)
@@ -127,6 +136,36 @@ public class Phase_EndCombat : MonoBehaviour
                 CreateLineForEntity(loserEntity, contentLose, prefabLineLose, isWinner: false);
             }
         }
+    }
+
+    // ---------------------------------------------------------
+    // AwardXpToWinners : crédite l'XP aux gagnants qui sont des joueurs
+    private void AwardXpToWinners(List<GameObject> winners, int xpAmount)
+    {
+        if (winners == null || winners.Count == 0) return;
+        if (xpAmount <= 0) return;
+
+        for (int i = 0; i < winners.Count; i++)
+        {
+            var entity = winners[i];
+            if (!entity) continue;
+
+            if (!IsPlayer(entity)) continue;
+
+            var info = entity.GetComponent<Entity_Info>();
+            if (info != null)
+            {
+                info.GainExperience(xpAmount);
+                Debug.Log($"[End][XP] +{xpAmount} xp -> {entity.name} (niveau {info.entity_Level}, reste {info.experience} / {info.GetExperienceToNextLevel()}).");
+            }
+        }
+    }
+
+    // ---------------------------------------------------------
+    // IsPlayer : détermine si l'entité est un joueur (et non un monstre)
+    private bool IsPlayer(GameObject entity)
+    {
+        return entity != null && entity.GetComponent<Player_ScriptManager>() != null;
     }
 
     // ---------------------------------------------------------
@@ -139,7 +178,7 @@ public class Phase_EndCombat : MonoBehaviour
             foreach (var entity in losers)
             {
                 if (!entity) continue;
-                var info = entity.GetComponent<Entity_Info>(); //   Contient gainXp
+                var info = entity.GetComponent<Entity_Info>();
                 if (info != null) sum += info.gainXp;
             }
         }
@@ -281,20 +320,16 @@ public class Phase_EndCombat : MonoBehaviour
 
     // ---------------------------------------------------------
     // ReturnPlayerToExploration : renvoie un joueur en exploration
-    //   Replace le joueur, restaure la caméra, remet l'état exploration,
-    //      puis RÉACTIVE visuels/collisions si le joueur avait été "éteint" par une mort en combat.
     private void ReturnPlayerToExploration(GameObject player)
     {
         if (!player) return;
 
-        //   Détache du parent d'arène si besoin
         if (manager.phaseEnter != null && manager.phaseEnter.teamGreenParent != null &&
             player.transform.parent == manager.phaseEnter.teamGreenParent)
         {
             player.transform.SetParent(null, true);
         }
 
-        //   Restaure position/caméra depuis Entity_Info
         var info = player.GetComponent<Entity_Info>();
         if (info != null)
         {
@@ -302,18 +337,14 @@ public class Phase_EndCombat : MonoBehaviour
             RestorePlayerCameraConstraint(player, info.saveCamEntity);
         }
 
-        //   Repasse en mode exploration (gère les scripts côté joueur)
         var sm = player.GetComponent<Player_ScriptManager>();
         if (sm) sm.SetExploration();
 
-        //   Réactive visuels/collisions si le joueur avait été masqué par HandleEntityDeath()
         ReactivateVisualsAndColliders(player);
 
-        //   Désactive le flag de mort pour éviter d'autres blocages logiques côté exploration
         var stats = player.GetComponent<Entity_StatistiqueCombat>();
         if (stats != null) stats.isDead = false;
 
-        //   Notifie fin de combat
         player.SendMessage("OnCombatEnd", manager.lastCombatWinning, SendMessageOptions.DontRequireReceiver);
     }
 
@@ -355,13 +386,10 @@ public class Phase_EndCombat : MonoBehaviour
 
     // ---------------------------------------------------------
     // ReactivateVisualsAndColliders : remet ON tous les Renderers/Colliders du joueur
-    //   Pendant le combat, en cas de mort, on a fait r.enabled=false et c.enabled=false.
-    //      Ici on les remet à true pour l'exploration.
     private void ReactivateVisualsAndColliders(GameObject player)
     {
         if (!player) return;
 
-        //   Réactive tous les Renderers enfants (SkinnedMeshRenderer, MeshRenderer, etc.)
         var renderers = player.GetComponentsInChildren<Renderer>(true);
         for (int i = 0; i < renderers.Length; i++)
         {
@@ -369,7 +397,6 @@ public class Phase_EndCombat : MonoBehaviour
             renderers[i].enabled = true;
         }
 
-        //   Réactive tous les Colliders enfants (y compris CharacterController qui hérite de Collider)
         var colliders = player.GetComponentsInChildren<Collider>(true);
         for (int i = 0; i < colliders.Length; i++)
         {
