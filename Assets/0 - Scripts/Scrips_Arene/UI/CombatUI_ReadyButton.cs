@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using TMPro;
 
-[AddComponentMenu("Combat/UI/Ready Button (Preparation)")]
 public class CombatUI_ReadyButton : MonoBehaviour
 {
     [Header("Références")]

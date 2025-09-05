@@ -1,70 +1,113 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-/// <summary>
-/// [FR] Lanceur de compétences pour une entité de combat.
-/// - Gère l'équipement et le lancement d'un Data_Skill (clic souris OU API publique pour l'IA)
-/// - Vérifie PA, portée (Manhattan + PO), zone d'impact, limites par cible, application des effets
-/// - Notifie la Timeline pour rafraîchir les PV immédiatement après un cast
-/// </summary>
-[AddComponentMenu("Combat/Entity Skill Caster")]
 public class Entity_SkillCaster : MonoBehaviour
 {
     [Header("References")]
-    public Combat_PhaseManager phaseManager;   // [FR] Assigné/injecté (aucun auto-find)
-    public TileGrid_Manager tileGrid;          // [FR] Assigné/injecté (aucun auto-find)
+    public Combat_PhaseManager phaseManager;   // Assigné/injecté
+    public TileGrid_Manager tileGrid;          // Assigné/injecté
 
     [Header("Skill")]
-    public Data_Skill equippedSkill;           // [FR] Sort sélectionné (UI joueur ou IA via EquipSkill)
+    public Data_Skill equippedSkill;           // Sort sélectionné (UI/IA)
+
+    [Header("FX")]
+    public bool waitFxBeforeApply = false;     // Si vrai: attendre la fin du FX avant les effets
+    public Transform fxParent;                 // Parent optionnel pour les FX
+
+    [Header("Control")]
+    public bool acceptHumanInput = true;       // False pour IA
+
+    [Header("Damage Tuning")]
+    [SerializeField] private float critMultiplier = 1.5f;   // Multiplicateur critique
+    [SerializeField] private bool clampResist = true;        // Clamp des résistances
+    [SerializeField] private Vector2 resistClamp = new Vector2(-100f, 100f); // Min/Max en %
 
     private Entity_StatistiqueCombat stats;
+    private Popup_DisplayNumber popup;         // Pop-up PA du lanceur
 
-    // [FR] Limite "(skill, cible) par tour"
+    // Limite "(skill, cible) par tour"
     private readonly Dictionary<(Data_Skill, GameObject), int> perTargetPerSkillThisTurn = new();
-
-    // =========================
-    // Constructor / Destructor
-    // =========================
-    public Entity_SkillCaster() { }
-    ~Entity_SkillCaster() { }
 
     private void Start()
     {
+        // Récupérations locales
         stats = GetComponent<Entity_StatistiqueCombat>();
+        popup = GetComponent<Popup_DisplayNumber>();
     }
 
     private void Update()
     {
         if (!enabled || stats == null) return;
         if (phaseManager == null || phaseManager.phaseTurn == null) return;
+
+        // Uniquement au tour de CETTE entité
         if (!phaseManager.phaseTurn.IsMyTurn(gameObject)) return;
 
-        // [FR] Ne pas caster si la souris est sur une UI (boutons, etc.)
+        // Ignore la souris si IA
+        if (!acceptHumanInput) return;
+
+        // Pas de cast si on pointe une UI
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             return;
 
-        // [FR] CLIC DROIT = lancer le sort sur la tuile sous la souris
+        // Clic droit → tenter le cast sur la tuile sous la souris
         if (equippedSkill != null && Input.GetMouseButtonDown(1))
             TryCastAtMouse();
     }
 
+    // ========================  INTERACTION SOURIS  =======================
 
-    // =====================================================================
-    // =====================     API PUBLIQUE POUR IA     ===================
-    // =====================================================================
+    private void TryCastAtMouse()
+    {
+        if (!Camera.main || tileGrid == null) return;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out RaycastHit hit, 200f)) return;
+        if (!hit.collider.TryGetComponent(out SetupTile tile)) return;
 
-    /// <summary>
-    /// [FR] Équipe un skill (utilisé par l'UI joueur ou l'IA).
-    /// </summary>
+        GameObject tileGO = tile.gameObject;
+
+        if (waitFxBeforeApply)
+        {
+            StartCoroutine(CastAtTile_PlayFxThenApply_WithHighlight(equippedSkill, tileGO));
+        }
+        else
+        {
+            var setup = tile.GetComponent<SetupTile>();
+            Tile_State prev = HighlightTile(setup, true);         // rouge visuel
+
+            var fxInst = PlayFxFor_GetInstance(equippedSkill, tileGO);
+            CastAtTile(equippedSkill, tileGO);                    // calculs + dégâts
+
+            StartCoroutine(UnhighlightAfterRunner(setup, prev, fxInst));
+        }
+    }
+
+    // =====================     API PUBLIQUE POUR IA     ==================
+
     public void EquipSkill(Data_Skill skill)
     {
         equippedSkill = skill;
     }
 
-    /// <summary>
-    /// [FR] Vérifie si 'skill' peut être lancé sur la tuile 'targetTile' (sans consommer).
-    /// </summary>
+    public IEnumerator CastAtTileWithFx(Data_Skill skill, GameObject targetTile)
+    {
+        if (targetTile == null || !targetTile.TryGetComponent(out SetupTile setup)) yield break;
+
+        if (waitFxBeforeApply)
+        {
+            yield return CastAtTile_PlayFxThenApply_WithHighlight(skill, targetTile);
+        }
+        else
+        {
+            Tile_State prev = HighlightTile(setup, true);
+            var fxInst = PlayFxFor_GetInstance(skill, targetTile);
+            CastAtTile(skill, targetTile);
+            yield return UnhighlightAfterRunner(setup, prev, fxInst);
+        }
+    }
+
     public bool CanCastAtTile(Data_Skill skill, GameObject targetTile, out string reason)
     {
         reason = "";
@@ -73,10 +116,8 @@ public class Entity_SkillCaster : MonoBehaviour
         if (stats == null) { reason = "Stats null."; return false; }
         if (targetTile == null || !targetTile.TryGetComponent(out SetupTile setup)) { reason = "Tuile invalide."; return false; }
 
-        // [FR] PA suffisants ?
         if (stats.currentPA < skill.costPA) { reason = "PA insuffisants."; return false; }
 
-        // [FR] Portée (Manhattan) + bonus de PO
         Vector2Int from = GetCurrentCoord();
         Vector2Int to = new Vector2Int(setup.tileX, setup.tileY);
         int dist = Mathf.Abs(from.x - to.x) + Mathf.Abs(from.y - to.y);
@@ -84,20 +125,19 @@ public class Entity_SkillCaster : MonoBehaviour
         if (dist < skill.rangeMin) { reason = "Trop proche."; return false; }
         if (dist > skill.rangeMax + stats.currentPO) { reason = "Trop loin."; return false; }
 
-        // [FR] Mono-cible -> nécessité d'une entité sur la tuile + quota par cible
         if (IsSingleTarget(skill))
         {
-            var target = tileGrid.GetEntityOnTile(targetTile);
-            if (!target) { reason = "Aucune cible sur la tuile."; return false; }
-            if (!CheckPerTargetLimit(skill, target)) { reason = "Limite par cible atteinte."; return false; }
+            var maybe = tileGrid.GetEntityOnTile(targetTile);
+            if (maybe != null)
+            {
+                if (!CheckPerTargetLimit(skill, maybe)) { reason = "Limite par cible atteinte."; return false; }
+            }
+            return true;
         }
 
         return true;
     }
 
-    /// <summary>
-    /// [FR] Lance effectivement 'skill' sur la tuile 'targetTile' (si autorisé).
-    /// </summary>
     public bool CastAtTile(Data_Skill skill, GameObject targetTile)
     {
         if (!CanCastAtTile(skill, targetTile, out string why))
@@ -107,29 +147,32 @@ public class Entity_SkillCaster : MonoBehaviour
         }
 
         if (!targetTile.TryGetComponent(out SetupTile setup)) return false;
-
         bool isMono = IsSingleTarget(skill);
 
-        // [FR] Swap temporaire pour réutiliser les helpers basés sur 'equippedSkill'
+        // Swap temporaire pour réutiliser les helpers basés sur 'equippedSkill'
         var saved = equippedSkill;
         equippedSkill = skill;
 
         if (isMono)
         {
+            // Case vide autorisée
             var target = tileGrid.GetEntityOnTile(targetTile);
-            if (!target) { equippedSkill = saved; return false; }
-            if (!CheckPerTargetLimit(skill, target)) { equippedSkill = saved; return false; }
+            if (target)
+            {
+                if (!CheckPerTargetLimit(skill, target)) { equippedSkill = saved; return false; }
+                ApplySkillOnTarget(skill, target);
+                IncrementPerTarget(skill, target);
+            }
 
-            ApplySkillOnTarget(skill, target);
-            IncrementPerTarget(skill, target);
+            // Consomme PA + pop-up du lanceur
             stats.SetPA(stats.currentPA - skill.costPA);
+            if (popup != null) popup.ShowPA(skill.costPA);
         }
         else
         {
+            // Zone
             Vector2Int center = new Vector2Int(setup.tileX, setup.tileY);
             var targets = GetTargetsInImpactZone(skill, center);
-            if (targets.Count == 0) { equippedSkill = saved; return false; }
-
             for (int i = 0; i < targets.Count; i++)
             {
                 var t = targets[i];
@@ -138,52 +181,73 @@ public class Entity_SkillCaster : MonoBehaviour
                 ApplySkillOnTarget(skill, t);
                 IncrementPerTarget(skill, t);
             }
+
+            // Consomme PA + pop-up du lanceur
             stats.SetPA(stats.currentPA - skill.costPA);
+            if (popup != null) popup.ShowPA(skill.costPA);
         }
 
         equippedSkill = saved;
 
-        // [FR] UI: rafraîchit Timeline immédiatement
+        // UI: rafraîchit Timeline immédiatement
         RequestTimelineHpRefresh();
         return true;
     }
 
-    /// <summary>
-    /// [FR] À appeler en début de tour pour réinitialiser les limites par cible & skill.
-    /// </summary>
+    private IEnumerator CastAtTile_PlayFxThenApply_WithHighlight(Data_Skill skill, GameObject targetTile)
+    {
+        if (!CanCastAtTile(skill, targetTile, out _)) yield break;
+        if (!targetTile.TryGetComponent(out SetupTile setup)) yield break;
+
+        Tile_State prev = HighlightTile(setup, true);
+        yield return PlayFxAndWaitFor(skill, targetTile);
+        CastAtTile(skill, targetTile);
+        HighlightTile(setup, false, prev);
+    }
+
     public void ResetSkillTurnUsage()
     {
         perTargetPerSkillThisTurn.Clear();
     }
 
-    // =====================================================================
-    // ========================  INTERACTION SOURIS  =======================
-    // =====================================================================
+    // ============================  HELPERS  ===============================
 
-    private void TryCastAtMouse()
+    private Sprite_AnimationRunner PlayFxFor_GetInstance(Data_Skill skill, GameObject targetTile)
     {
-        if (!Camera.main || tileGrid == null) return;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, 200f)) return;
-        if (!hit.collider.TryGetComponent(out SetupTile tile)) return;
+        var binding = FindBindingForSkill(skill);
+        if (binding == null) return null;
 
-        CastAtTile(equippedSkill, tile.gameObject);
+        Vector3 basePos = targetTile.transform.position;
+        return Skill_FXHelper.PlayFx(binding, basePos, fxParent);
     }
 
-    // =====================================================================
-    // ============================  HELPERS  ===============================
-    // =====================================================================
+    private IEnumerator PlayFxAndWaitFor(Data_Skill skill, GameObject targetTile)
+    {
+        var binding = FindBindingForSkill(skill);
+        if (binding == null) yield break;
+
+        Vector3 basePos = targetTile.transform.position;
+        yield return Skill_FXHelper.PlayFxAndWait(binding, basePos, fxParent);
+    }
+
+    private Skill_Binding FindBindingForSkill(Data_Skill s)
+    {
+        if (stats == null || stats.skillBook == null || s == null) return null;
+        for (int i = 0; i < stats.skillBook.Count; i++)
+        {
+            var b = stats.skillBook[i];
+            if (b != null && b.skill == s) return b;
+        }
+        return null;
+    }
 
     private static bool IsSingleTarget(Data_Skill skill)
     {
-        // [FR] Mono-cible si:
-        //  - impactZone == null, ou zone == null, ou zone.Length == 0
-        //  - OU zone == [ (0,0) ]
         if (skill == null || skill.impactZone == null || skill.impactZone.zone == null) return true;
         var z = skill.impactZone.zone;
         if (z.Length == 0) return true;
         if (z.Length == 1 && z[0] == Vector2Int.zero) return true;
-        return z.Length == 1; // [FR] par sécurité : une seule case relative
+        return z.Length == 1;
     }
 
     private Vector2Int GetCurrentCoord()
@@ -194,7 +258,6 @@ public class Entity_SkillCaster : MonoBehaviour
         if (tileObj && tileObj.TryGetComponent(out SetupTile s))
             return new Vector2Int(s.tileX, s.tileY);
 
-        // [FR] Fallback : tuile la plus proche si dicos pas à jour
         Vector2Int best = Vector2Int.zero;
         float min = float.MaxValue;
         var tiles = tileGrid.GetAllTiles();
@@ -253,30 +316,26 @@ public class Entity_SkillCaster : MonoBehaviour
     {
         if (skill == null || !target || !target.TryGetComponent(out Entity_StatistiqueCombat ts)) return;
 
-        // [FR] Critique : caster + skill
-        float critChance = Mathf.Clamp(stats.currentCritChance + skill.critChance, 0f, 100f);
-        bool isCrit = Random.value < (critChance / 100f);
+        // On ne s'inflige jamais de dégâts à soi-même
+        if (ts != stats)
+        {
+            // Calcul complet des dégâts
+            bool isCrit;
+            int final = ComputeFinalDamage(skill, stats, ts, out isCrit);
 
-        // [FR] Jet dégâts
-        int jet = Random.Range(skill.damageMin, skill.damageMax + 1);
+            // Application directe (pas de bouclier ici)
+            if (final > 0)
+            {
+                ts.SetHP(ts.currentHP - final);
 
-        // [FR] Multiplicateur selon stat élémentaire + résistance cible (en %)
-        float attackerStat = GetOffensiveStat(stats, skill.skillElement);
-        float statMult = (attackerStat + 100f) / 100f;
-        float res = GetResistanceFor(ts, skill.skillElement);
+                var targetPopup = target.GetComponent<Popup_DisplayNumber>();
+                if (targetPopup != null) targetPopup.ShowDamage(final);
+            }
 
-        float dmg = jet * statMult;
-        if (isCrit) dmg *= 1.5f;
-        dmg *= (100f - res) / 100f;
+            Debug.Log($"[Skill] {name} → {target.name} : {final} dmg{(isCrit ? " (CRIT)" : "")}");
+        }
 
-        int final = Mathf.Max(0, Mathf.RoundToInt(dmg));
-
-        // [FR] Pas de shield → applique directement aux PV
-        if (final > 0) ts.SetHP(ts.currentHP - final);
-
-        Debug.Log($"[Skill] {name} → {target.name} : {final} dmg{(isCrit ? " (CRIT)" : "")}");
-
-        // [FR] Effets non-crit
+        // Effets non-critiques
         if (skill.effects != null && skill.effects.Count > 0)
         {
             for (int i = 0; i < skill.effects.Count; i++)
@@ -284,7 +343,6 @@ public class Entity_SkillCaster : MonoBehaviour
                 var eff = skill.effects[i];
                 var receiver = eff.applyToSelf ? stats : ts;
 
-                // [FR] Durée > 0 → on empile pour application au début des tours
                 if (eff.duration > 0)
                 {
                     if (receiver.activeEffects == null) receiver.activeEffects = new List<Entity_StatistiqueCombat.ActiveEffect>();
@@ -297,8 +355,10 @@ public class Entity_SkillCaster : MonoBehaviour
             }
         }
 
-        // [FR] Effets critiques
-        if (isCrit && skill.critEffects != null && skill.critEffects.Count > 0)
+        // Effets critiques
+        float critChanceCheck = Mathf.Clamp(stats.currentCritChance + skill.critChance, 0f, 100f);
+        bool wasCrit = Random.value < (critChanceCheck / 100f);
+        if (wasCrit && skill.critEffects != null && skill.critEffects.Count > 0)
         {
             for (int i = 0; i < skill.critEffects.Count; i++)
             {
@@ -318,6 +378,43 @@ public class Entity_SkillCaster : MonoBehaviour
         }
     }
 
+    // =======================  CALCUL DES DÉGÂTS  =========================
+
+    // Calcule les dégâts finaux en tenant compte de l'élément, de la stat attaquante, de la résistance et du critique
+    private int ComputeFinalDamage(Data_Skill skill, Entity_StatistiqueCombat attacker, Entity_StatistiqueCombat defender, out bool isCrit)
+    {
+        isCrit = false;
+        if (skill == null || attacker == null || defender == null) return 0;
+
+        // Jet de base
+        int roll = Random.Range(skill.damageMin, skill.damageMax + 1);
+
+        // Stat offensive selon l'élément
+        float offStat = GetOffensiveStat(attacker, skill.skillElement);     // ex: Force/Dex/Magie/Foi
+        float multStat = (100f + Mathf.Max(0f, offStat)) / 100f;
+
+        // Résistance de la cible selon l'élément
+        float res = GetResistanceFor(defender, skill.skillElement);         // en %
+        if (clampResist) res = Mathf.Clamp(res, resistClamp.x, resistClamp.y);
+        float multRes = (100f - res) / 100f;
+
+        // Critique
+        float critChance = Mathf.Clamp(attacker.currentCritChance + skill.critChance, 0f, 100f);
+        if (Random.value < (critChance / 100f))
+        {
+            isCrit = true;
+        }
+
+        // Dégâts
+        float dmg = roll * multStat * multRes;
+        if (isCrit) dmg *= Mathf.Max(1f, critMultiplier);
+
+        int final = Mathf.Max(0, Mathf.RoundToInt(dmg));
+        return final;
+    }
+
+    // ========================  EFFETS IMMÉDIATS  =========================
+
     private void ApplyImmediateEffect(SkillEffect eff, Entity_StatistiqueCombat to)
     {
         if (eff == null || to == null) return;
@@ -326,7 +423,7 @@ public class Entity_SkillCaster : MonoBehaviour
 
         switch (eff.effectType)
         {
-            // [FR] Vitalité / PA / PM / PO (instantanés)
+            // Vitalité / PA / PM / PO
             case EffectType.BonusPV: to.SetHP(to.currentHP + v); break;
             case EffectType.BonusPA: to.SetPA(to.currentPA + v); break;
             case EffectType.MalusPA: to.SetPA(to.currentPA - v); break;
@@ -335,7 +432,7 @@ public class Entity_SkillCaster : MonoBehaviour
             case EffectType.BonusPO: to.SetPO(to.currentPO + v); break;
             case EffectType.MalusPO: to.SetPO(to.currentPO - v); break;
 
-            // [FR] Caractéristiques
+            // Caractéristiques
             case EffectType.BonusFor: to.SetForce(to.currentForce + v); break;
             case EffectType.MalusFor: to.SetForce(to.currentForce - v); break;
             case EffectType.BonusDex: to.SetDex(to.currentDexterite + v); break;
@@ -345,7 +442,7 @@ public class Entity_SkillCaster : MonoBehaviour
             case EffectType.BonusFoi: to.SetFoi(to.currentFoi + v); break;
             case EffectType.MalusFoi: to.SetFoi(to.currentFoi - v); break;
 
-            // [FR] Résistances
+            // Résistances
             case EffectType.BonusResFor: to.SetResForce(to.currentResistanceForce + v); break;
             case EffectType.MalusResFor: to.SetResForce(to.currentResistanceForce - v); break;
             case EffectType.BonusResDex: to.SetResDex(to.currentResistanceDexterite + v); break;
@@ -361,8 +458,23 @@ public class Entity_SkillCaster : MonoBehaviour
         }
     }
 
-    // ---------------------------------------------------------------------
-    // Helpers internes
+    // =============================  UTILS  ===============================
+
+    private Tile_State HighlightTile(SetupTile setup, bool on, Tile_State restoreTo = Tile_State.None)
+    {
+        if (setup == null) return Tile_State.None;
+        Tile_State prev = setup.currentState;
+        if (on) setup.currentState = Tile_State.TeamRed;
+        else setup.currentState = restoreTo;
+        return prev;
+    }
+
+    private IEnumerator UnhighlightAfterRunner(SetupTile setup, Tile_State prev, Sprite_AnimationRunner inst)
+    {
+        if (inst != null) yield return inst.WaitForCompletion();
+        else yield return null;
+        HighlightTile(setup, false, prev);
+    }
 
     private float GetOffensiveStat(Entity_StatistiqueCombat s, SkillElement element)
     {

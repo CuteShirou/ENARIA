@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("Combat/Phase - Preparation Placement (Local)")]
 public class Phase_PreparationPlacementCombat : MonoBehaviour
 {
     [Header("Paramètres de génération de la grille")]
@@ -19,10 +18,6 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
     private Combat_PhaseManager manager;
     private Data_FightMap mapData;
     private TileGrid_Manager tileGrid;
-
-    // Constructeur (non utilisé par Unity pour l'init MonoBehaviour, présent pour respecter la convention)
-    public Phase_PreparationPlacementCombat() { }
-    ~Phase_PreparationPlacementCombat() { }
 
     // Appelée par Combat_PhaseManager.StartPhase(Preparation)
     public void InitPhase(Combat_PhaseManager phaseManager)

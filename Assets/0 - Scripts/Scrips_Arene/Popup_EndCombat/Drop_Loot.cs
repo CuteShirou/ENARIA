@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-[AddComponentMenu("UI/Drop Loot (EndFight)")]
 public class Drop_Loot : MonoBehaviour, IPointerEnterHandler
 {
     [Header("Source de l'Item")]
@@ -17,13 +16,6 @@ public class Drop_Loot : MonoBehaviour, IPointerEnterHandler
 
     // Cache local de l'item (non sérialisé)
     private Item currentItem;
-
-    private void Awake()
-    {
-        // Auto-référence si non assigné
-        if (inventory == null)
-            inventory = GetComponent<InventoryItemController>();
-    }
 
     private void Start()
     {

@@ -5,12 +5,6 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-//------------------------------------------------------------
-// Gère les relations entité ↔ tuile pour une arène donnée
-// À attacher à TileGridRoot (un par arène)
-// Version locale (sans Mirror)
-//------------------------------------------------------------
-[AddComponentMenu("Combat/Tile Grid Manager (Local)")]
 public class TileGrid_Manager : MonoBehaviour
 {
     [Header("Liste des tuiles de la grille")]
@@ -19,7 +13,7 @@ public class TileGrid_Manager : MonoBehaviour
     // ─────────────────────────────────────────────────────────
     // AJOUT — refs de scène à propager automatiquement aux tuiles
     [Header("Injection vers Tile_Visual")]
-    public InfoEntityPanelUI infoPanelForTiles; // [FR] Assigne ici ton Panel_Info_Bubble (InfoEntityPanelUI)
+    public InfoEntityPanelUI infoPanelForTiles; //   Assigne ici ton Panel_Info_Bubble (InfoEntityPanelUI)
     // ─────────────────────────────────────────────────────────
 
     // Dictionnaire entité → tuile
@@ -42,7 +36,7 @@ public class TileGrid_Manager : MonoBehaviour
 
         // ─────────────────────────────────────────────────────
         // AJOUT — Injection auto des refs sur cette tuile
-        // [FR] Pas d'auto-find : on passe "this" + le panel assigné dans l'inspector
+        //   Pas d'auto-find : on passe "this" + le panel assigné dans l'inspector
         var visual = tile.GetComponent<Tile_Visual>();
         if (visual != null)
             visual.SetShared(this, infoPanelForTiles);

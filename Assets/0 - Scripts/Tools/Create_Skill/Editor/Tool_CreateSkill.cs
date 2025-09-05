@@ -7,62 +7,56 @@ using System.Collections.Generic;
 /// </summary>
 public class Tool_CreateSkill : EditorWindow
 {
-    // =========================
-    // Constructor / Destructor
-    // =========================
-    public Tool_CreateSkill() { /* Constructeur - rien de spécial ici */ }
-    ~Tool_CreateSkill() { /* Déconstructeur - non utilisé, présent pour respecter la convention */ }
-
     // ---------- State général ----------
-    private Vector2 scrollPos;                 // [FR] Scroll principal de la fenêtre
-    private const int gridSize = 11;           // [FR] Taille de la grille (11x11)
-    private const int cellSize = 20;           // [FR] Taille visuelle de chaque case
-    private Vector2Int center => new Vector2Int(gridSize / 2, gridSize / 2); // [FR] Centre (0,0)
+    private Vector2 scrollPos;                 //   Scroll principal de la fenêtre
+    private const int gridSize = 11;           //   Taille de la grille (11x11)
+    private const int cellSize = 20;           //   Taille visuelle de chaque case
+    private Vector2Int center => new Vector2Int(gridSize / 2, gridSize / 2); //   Centre (0,0)
 
     // ---------- Données temporaires de saisie ----------
-    private int id = 0;                        // [FR] ID unique
-    private string skillName = "NewSkill";     // [FR] Nom de la compétence
-    private string description = "";           // [FR] Description
+    private int id = 0;                        //   ID unique
+    private string skillName = "NewSkill";     //   Nom de la compétence
+    private string description = "";           //   Description
 
-    private SkillType skillType = SkillType.Attack;       // [FR] Type
-    private SkillElement skillElement = SkillElement.None; // [FR] Élément
+    private SkillType skillType = SkillType.Attack;       //   Type
+    private SkillElement skillElement = SkillElement.None; //   Élément
 
-    private int damageMin = 0;                 // [FR] Dégâts min
-    private int damageMax = 0;                 // [FR] Dégâts max
-    private int costPA = 3;                    // [FR] Coût PA
-    private int rangeMin = 1;                  // [FR] Portée min
-    private int rangeMax = 5;                  // [FR] Portée max
-    private int cooldown = 0;                  // [FR] Cooldown (tours)
-    private int maxPerTargetPerTurn = 99;      // [FR] Lancers max par cible/tour
+    private int damageMin = 0;                 //   Dégâts min
+    private int damageMax = 0;                 //   Dégâts max
+    private int costPA = 3;                    //   Coût PA
+    private int rangeMin = 1;                  //   Portée min
+    private int rangeMax = 5;                  //   Portée max
+    private int cooldown = 0;                  //   Cooldown (tours)
+    private int maxPerTargetPerTurn = 99;      //   Lancers max par cible/tour
 
-    private float critChance = 0f;             // [FR] % critique
-    private Sprite icon = null;                // [FR] Icône
+    private float critChance = 0f;             //   % critique
+    private Sprite icon = null;                //   Icône
 
-    // [FR] Effets normaux / critiques (édition dans l’outil)
+    //   Effets normaux / critiques (édition dans l’outil)
     private List<SkillEffect> effects = new List<SkillEffect>();
     private List<SkillEffect> critEffects = new List<SkillEffect>();
 
-    // [FR] Grille de zone d’impact (sélection utilisateur)
+    //   Grille de zone d’impact (sélection utilisateur)
     private bool[,] gridSelection = new bool[gridSize, gridSize];
 
     // ====== Menu ======
     [MenuItem("Window/Skill Creator")]
     public static void ShowWindow()
     {
-        // [FR] Ouvre/affiche la fenêtre d’édition
+        //   Ouvre/affiche la fenêtre d’édition
         GetWindow<Tool_CreateSkill>("Skill Creator");
     }
 
     // ====== Cycle Unity Editor ======
     private void OnEnable()
     {
-        // [FR] Initialisation quand la fenêtre s’ouvre
+        //   Initialisation quand la fenêtre s’ouvre
         ResetGrid();
     }
 
     private void OnGUI()
     {
-        // [FR] UI principale : configuration + grille + sauvegarde
+        //   UI principale : configuration + grille + sauvegarde
         EditorGUILayout.LabelField("Configuration de la compétence", EditorStyles.boldLabel);
 
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
@@ -78,7 +72,7 @@ public class Tool_CreateSkill : EditorWindow
 
         if (GUILayout.Button("Réinitialiser la grille"))
         {
-            // [FR] Remet toutes les cases à faux
+            //   Remet toutes les cases à faux
             ResetGrid();
         }
 
@@ -94,7 +88,7 @@ public class Tool_CreateSkill : EditorWindow
     // ====== Sections UI ======
     private void DrawIdentitySection()
     {
-        // [FR] Saisie des infos d’identification de la compétence
+        //   Saisie des infos d’identification de la compétence
         id = EditorGUILayout.IntField("ID", id);
         skillName = EditorGUILayout.TextField("Nom", skillName);
         EditorGUILayout.LabelField("Description");
@@ -103,14 +97,14 @@ public class Tool_CreateSkill : EditorWindow
 
     private void DrawClassificationSection()
     {
-        // [FR] Sélection du type et de l’élément de la compétence
+        //   Sélection du type et de l’élément de la compétence
         skillType = (SkillType)EditorGUILayout.EnumPopup("Type", skillType);
         skillElement = (SkillElement)EditorGUILayout.EnumPopup("Élément", skillElement);
     }
 
     private void DrawStatsSection()
     {
-        // [FR] Statistiques numériques principales (+ garde-fous simples)
+        //   Statistiques numériques principales (+ garde-fous simples)
         EditorGUILayout.LabelField("Statistiques", EditorStyles.boldLabel);
         damageMin = Mathf.Max(0, EditorGUILayout.IntField("Dégâts min", damageMin));
         damageMax = Mathf.Max(damageMin, EditorGUILayout.IntField("Dégâts max", damageMax));
@@ -123,13 +117,13 @@ public class Tool_CreateSkill : EditorWindow
 
     private void DrawEffectsSection()
     {
-        // [FR] Effets non-critiques
+        //   Effets non-critiques
         EditorGUILayout.LabelField("Effets (non-critique)", EditorStyles.boldLabel);
         DrawEffectList(effects);
 
         EditorGUILayout.Space(6);
 
-        // [FR] Chance de critique + Effets critiques
+        //   Chance de critique + Effets critiques
         critChance = EditorGUILayout.Slider("Chance critique (%)", critChance, 0f, 100f);
         EditorGUILayout.LabelField("Effets bonus si critique", EditorStyles.boldLabel);
         DrawEffectList(critEffects);
@@ -137,13 +131,13 @@ public class Tool_CreateSkill : EditorWindow
 
     private void DrawIconSection()
     {
-        // [FR] Sélection de l’icône de la compétence
+        //   Sélection de l’icône de la compétence
         icon = (Sprite)EditorGUILayout.ObjectField("Icône", icon, typeof(Sprite), false);
     }
 
     private void DrawEffectList(List<SkillEffect> list)
     {
-        // [FR] Petite UI pour ajouter/éditer/supprimer des effets
+        //   Petite UI pour ajouter/éditer/supprimer des effets
         int removeIndex = -1;
 
         for (int i = 0; i < list.Count; i++)
@@ -173,7 +167,7 @@ public class Tool_CreateSkill : EditorWindow
     // ====== Grille d’impact ======
     private void DrawGrid()
     {
-        // [FR] Dessine une grille 11x11 de toggles ; centre en rouge
+        //   Dessine une grille 11x11 de toggles ; centre en rouge
         for (int y = 0; y < gridSize; y++)
         {
             EditorGUILayout.BeginHorizontal();
@@ -196,14 +190,14 @@ public class Tool_CreateSkill : EditorWindow
 
     private void ResetGrid()
     {
-        // [FR] Réinitialise la grille (toutes les cases à faux)
+        //   Réinitialise la grille (toutes les cases à faux)
         gridSelection = new bool[gridSize, gridSize];
     }
 
     // ====== Sauvegarde ======
     private void SaveSkillAsset()
     {
-        // [FR] Construit un Data_Skill et enregistre un asset
+        //   Construit un Data_Skill et enregistre un asset
         var newSkill = CreateInstance<Data_Skill>();
 
         // -- Remplissage des champs --
@@ -233,7 +227,7 @@ public class Tool_CreateSkill : EditorWindow
             {
                 if (gridSelection[x, y])
                 {
-                    // [FR] Coordonnées relatives autour de (0,0)
+                    //   Coordonnées relatives autour de (0,0)
                     Vector2Int relativePos = new Vector2Int(x, y) - center;
                     positions.Add(relativePos);
                 }
@@ -241,7 +235,7 @@ public class Tool_CreateSkill : EditorWindow
         }
         if (newSkill.impactZone == null)
             newSkill.impactZone = new ImpactZone();
-        newSkill.impactZone.zone = positions.ToArray(); // [FR] tableau, comme dans SkillType.cs
+        newSkill.impactZone.zone = positions.ToArray(); //   tableau, comme dans SkillType.cs
 
         // -- Effets --
         newSkill.effects = new List<SkillEffect>(effects);

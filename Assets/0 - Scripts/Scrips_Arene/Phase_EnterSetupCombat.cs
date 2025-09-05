@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[AddComponentMenu("Combat/Phase - Enter Setup Combat (Local)")]
 public class Phase_EnterSetupCombat : MonoBehaviour
 {
     [Header("Carte utilisée pour ce combat")]
@@ -29,6 +28,12 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     [Header("Timeline (référence directe, pas d'auto-find)")]
     [SerializeField] private Timeline_CombatUI timelineUI;
 
+    [Header("Popup DisplayNumber (injection)")]
+    [SerializeField] private Canvas popupUiCanvas;                 // Canvas qui affiche les pop-ups
+    [SerializeField] private RectTransform popupPanelPrefab;       // Prefab Panel_DisplayNumber (RectTransform)
+    [SerializeField] private Vector3 popupWorldOffset = new Vector3(0f, 2f, 0f); // Décalage au-dessus de l'entité
+    [SerializeField] private float popupDisplayDuration = 1.5f;    // Durée d'affichage par défaut
+
     private Exploration_InfoGroupMonster currentGroup;
     private Combat_PhaseManager manager;
     private readonly List<GameObject> pendingPlayers = new();
@@ -43,7 +48,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
         }
     }
 
-    // Démarrage de la phase d'entrée (appelée par Combat_PhaseManager)
+    // Lance l'initialisation de la phase d'entrée
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
@@ -99,7 +104,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             Debug.LogError("[Enter] teamGreenParent manquant. Assigne la référence dans l'Inspector.", this);
     }
 
-    // Instancie ou réorganise les monstres localement et injecte les références nécessaires
+    // Instancie/réorganise les monstres et injecte les références nécessaires (Phase, Grid, PopUp)
     private void SpawnMonstersInScene_Local()
     {
         if (teamRedParent == null) return;
@@ -115,12 +120,14 @@ public class Phase_EnterSetupCombat : MonoBehaviour
 
             if (isPrefab)
             {
+                // Instantiation du prefab de monstre
                 monsterInstance = Instantiate(entry, teamRedParent.position, Quaternion.identity);
                 monsterInstance.name = entry.name;
                 Debug.Log($"[Enter] Monstre instancié depuis prefab : {monsterInstance.name}");
             }
             else
             {
+                // Déjà présent en scène
                 monsterInstance = entry;
                 Debug.Log($"[Enter] Monstre déjà en scène : {monsterInstance.name}");
             }
@@ -139,7 +146,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             if (forceReparentOnInit || monsterInstance.transform.parent != teamRedParent)
                 monsterInstance.transform.SetParent(teamRedParent, true);
 
-            // Injection : fournit Phase & Grid aux scripts runtime
+            // Injection Phase & Grid
             if (monsterInstance.TryGetComponent(out Monster_CombatController ai))
             {
                 ai.phaseManager = manager;
@@ -150,6 +157,13 @@ public class Phase_EnterSetupCombat : MonoBehaviour
             {
                 caster.phaseManager = manager;
                 caster.tileGrid = manager != null ? manager.tileGrid : null;
+            }
+
+            // Injection des références de pop-up (Canvas + Prefab + Offset + Durée)
+            if (monsterInstance.TryGetComponent(out Popup_DisplayNumber popup))
+            {
+                // Fournit les références si présentes dans cette phase
+                popup.SetupPopupReferences(popupUiCanvas, popupPanelPrefab, popupWorldOffset, popupDisplayDuration);
             }
 
             monstersSpawned.Add(monsterInstance);

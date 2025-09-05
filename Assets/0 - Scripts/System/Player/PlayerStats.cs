@@ -1,10 +1,5 @@
 using UnityEngine;
 
-public enum SpecieType
-{
-    Humain,
-    Elfe
-}
 
 [System.Serializable]
 public class PlayerStats : MonoBehaviour

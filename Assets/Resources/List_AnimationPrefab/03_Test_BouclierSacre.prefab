@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2574060854046850049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7542377301855257977}
+  - component: {fileID: 4279718597990792570}
+  - component: {fileID: 7242400975893400116}
+  m_Layer: 0
+  m_Name: 03_Test_BouclierSacre
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7542377301855257977
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2574060854046850049}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &4279718597990792570
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2574060854046850049}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: ce42ee227956c684a842967e21bb97d0, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 38.399998, y: 21.599998}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &7242400975893400116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2574060854046850049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be8394fa0aca1840b280d6481ac19c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 03
+  displayName: Test_BouclierSacre
+  frames:
+  - {fileID: 21300000, guid: ce42ee227956c684a842967e21bb97d0, type: 3}
+  - {fileID: 21300000, guid: 10b6a6b3d58a837489b67e8502bfbcb2, type: 3}
+  - {fileID: 21300000, guid: c24c44893856491408290f9a1cb4e7c0, type: 3}
+  - {fileID: 21300000, guid: 17b426338967d8f41996f59d37665039, type: 3}
+  - {fileID: 21300000, guid: 85a9b0c2348794946a74c4d3a0656411, type: 3}
+  - {fileID: 21300000, guid: b3ee629a10f031e41a2674190a55bc06, type: 3}
+  - {fileID: 21300000, guid: 043a73311d77269498f40320fe2b7227, type: 3}
+  - {fileID: 21300000, guid: 239a5a84a1ac7d84a8687da17a3d7a60, type: 3}
+  - {fileID: 21300000, guid: 9d1a93bcdf1934e409997a903d4c80e5, type: 3}
+  - {fileID: 21300000, guid: f06d9df39a2d6b24aa612de8c3235968, type: 3}
+  - {fileID: 21300000, guid: b41fb0c181fdff247bb87b60e9def7f7, type: 3}
+  - {fileID: 21300000, guid: a7a1a13b705f4f441bbc2865da0f2912, type: 3}
+  - {fileID: 21300000, guid: cb34194b002e78a4bb56c9fa79c3dca7, type: 3}
+  - {fileID: 21300000, guid: 2248dfeac12a8604ab658d46240fba24, type: 3}
+  - {fileID: 21300000, guid: e0373cfc280f191488652e257b8eee22, type: 3}
+  - {fileID: 21300000, guid: 302a1ab2ed13d3647bec0d46e629e28f, type: 3}
+  - {fileID: 21300000, guid: 712ca4a70cc6bf54a983ddc3aac09d93, type: 3}
+  - {fileID: 21300000, guid: 3710d3546fce90c4087fcd03dda048e5, type: 3}
+  - {fileID: 21300000, guid: 7bde9b4e6721a284eb0736926cff1eab, type: 3}
+  - {fileID: 21300000, guid: 6ac1438da4b83454385b3d14f8b0d2be, type: 3}
+  - {fileID: 21300000, guid: d7673eaa240126c40a4f03e5f9051b9b, type: 3}
+  - {fileID: 21300000, guid: f0a63ace4f6adf545acd445a5cf45af0, type: 3}
+  - {fileID: 21300000, guid: b0b60f2848184774bb7adaba14789008, type: 3}
+  - {fileID: 21300000, guid: e42f72623f67ba747863505c8ddc67e0, type: 3}
+  - {fileID: 21300000, guid: dcd4cbb12a2e0ef42b171ecbca83b74e, type: 3}
+  - {fileID: 21300000, guid: 6aa11ddd713bc6e4d917838693f5a961, type: 3}
+  - {fileID: 21300000, guid: bb810aae427dd5749a7268f708ad734f, type: 3}
+  - {fileID: 21300000, guid: 9ccf2b04dc8f4f548a34655bb774accb, type: 3}
+  - {fileID: 21300000, guid: 198e6dd56602af94ea2fa690b518e814, type: 3}
+  - {fileID: 21300000, guid: f701700a24331c34aaeb262e5783fccc, type: 3}
+  - {fileID: 21300000, guid: eb4edd9e2b137ab4095d2448fbf17ea3, type: 3}
+  - {fileID: 21300000, guid: 53e57b454b6cdb243b0ffa49edc9c592, type: 3}
+  - {fileID: 21300000, guid: 2efc3af309c5a6543a6b974866be9176, type: 3}
+  - {fileID: 21300000, guid: fb27bc3a2ebe7134285b2914364a7cba, type: 3}
+  - {fileID: 21300000, guid: 84715fdbe8ee6254c99cdcbac2e61510, type: 3}
+  - {fileID: 21300000, guid: 3eb48ede462e3de4b8958aa1d48d7571, type: 3}
+  - {fileID: 21300000, guid: 0d0741403338e634782053fdcdcf4141, type: 3}
+  framesPerSecond: 30
+  loop: 0
+  playOnAwake: 1
+  autoDestroyOnEnd: 1
+  useUnscaledTime: 0
+  randomStartFrame: 0
+  startDelay: 0.2
+  onCompleted:
+    m_PersistentCalls:
+      m_Calls: []

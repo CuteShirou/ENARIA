@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-[AddComponentMenu("Combat/UI/Exit Button")]
 public class CombatUI_ExitButton : MonoBehaviour
 {
     [SerializeField] private Combat_PhaseManager combatManager;

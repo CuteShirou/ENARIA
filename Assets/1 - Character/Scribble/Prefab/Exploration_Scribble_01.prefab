@@ -2049,7 +2049,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7475973318726940488}
-  - component: {fileID: 3968570201644155131}
+  - component: {fileID: 2855510110615309934}
   - component: {fileID: 8603005607324451735}
   - component: {fileID: 5149198275122037761}
   - component: {fileID: 7324949175042444655}
@@ -2075,8 +2075,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4269534614231185692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &3968570201644155131
-CapsuleCollider:
+--- !u!65 &2855510110615309934
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2093,11 +2093,9 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 3
+  m_Size: {x: 2.4980354, y: 0.9999999, z: 3.2413006}
+  m_Center: {x: 0.054818783, y: 0, z: -0.15077038}
 --- !u!114 &8603005607324451735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2110,8 +2108,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c499a6482ad2cb4cb290383ddce4ece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textDisplay: {fileID: 0}
+  textDisplay: {fileID: 2458247417429308786}
   offset: {x: 0, y: 2, z: 0}
+  basicMaterial: {fileID: 2100000, guid: e793935729eb25446832fe6056eca7c4, type: 2}
+  displayMaterial: {fileID: 2100000, guid: ae7d1f60136b70447acfb277e7596162, type: 2}
+  targetRenderers:
+  - {fileID: 7061638994719134932}
 --- !u!114 &5149198275122037761
 MonoBehaviour:
   m_ObjectHideFlags: 0

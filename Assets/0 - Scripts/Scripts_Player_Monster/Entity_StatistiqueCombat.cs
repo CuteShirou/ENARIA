@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("Combat/Entity Statistique Combat (Local)")]
 public class Entity_StatistiqueCombat : MonoBehaviour
 {
     // ─────────────────────────────────────────────────────────────────────
@@ -35,7 +34,8 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     // ---------------------------------------------------------------------
 
     [Header("Compétences disponibles")]
-    public List<Data_Skill> skillBook = new List<Data_Skill>(); // [FR] Liste des compétences que possède cette entité
+    //   SkillBook : liste de couples (Skill + FX lié)
+    public List<Skill_Binding> skillBook = new List<Skill_Binding>(); // Était: List<Data_Skill> ... :contentReference[oaicite:0]{index=0}
 
     // ─────────────────────────────────────────────────────────────────────
     // STATS BASE (Design)
@@ -101,16 +101,8 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     public float currentResistanceMagie => _currentResistanceMagie;
     public float currentResistanceFoi => _currentResistanceFoi;
 
-    // ─────────────────────────────────────────────────────────────────────
-    // INITIALISATION / TOURS
-
-    /// <summary>Constructeur.</summary>
-    public Entity_StatistiqueCombat() { }
-    /// <summary>Déconstructeur.</summary>
-    ~Entity_StatistiqueCombat() { }
-
     /// <summary>
-    /// [FR] Copie toutes les bases vers les "current". À appeler à l'entrée en combat.
+    ///   Copie toutes les bases vers les "current". À appeler à l'entrée en combat.
     /// </summary>
     public void InitStatsFromBase()
     {
@@ -136,7 +128,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Réinitialise PA/PM à la fin d’un tour (nouvelle logique).
+    ///   Réinitialise PA/PM à la fin d’un tour (nouvelle logique).
     /// </summary>
     public void ResetTurnStats()
     {
@@ -144,7 +136,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         SetPM(basePM);
     }
 
-    /// <summary>[FR] Inverse le statut prêt (phase de préparation).</summary>
+    /// <summary>  Inverse le statut prêt (phase de préparation).</summary>
     public void ToggleReady()
     {
         isReady = !isReady;
@@ -220,14 +212,10 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     [System.Serializable]
     public class ActiveEffect
     {
-        // [FR] Copie minimale d’un SkillEffect pour runtime
+        //   Copie minimale d’un SkillEffect pour runtime
         public EffectType type;
         public int value;
         public int remainingTurns;
-
-        // Constructeur / Déconstructeur
-        public ActiveEffect() { }
-        ~ActiveEffect() { }
 
         public ActiveEffect(SkillEffect from)
         {
@@ -237,11 +225,11 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         }
     }
 
-    // [FR] Effets actifs sur cette entité
+    //   Effets actifs sur cette entité
     [HideInInspector] public List<ActiveEffect> activeEffects = new List<ActiveEffect>();
 
     /// <summary>
-    /// [FR] Applique IMMÉDIATEMENT un effet (durée 0) sur cette entité.
+    ///   Applique IMMÉDIATEMENT un effet (durée 0) sur cette entité.
     /// </summary>
     public void ApplyInstantEffect(SkillEffect eff)
     {
@@ -286,7 +274,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Début de MON tour : applique les effets à durée (PA/PM/PO/PV…).
+    ///   Début de MON tour : applique les effets à durée (PA/PM/PO/PV…).
     /// </summary>
     public void ApplyActiveEffectsAtTurnStart()
     {
@@ -311,7 +299,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Fin de MON tour : décrémente les durées et supprime les effets expirés.
+    ///   Fin de MON tour : décrémente les durées et supprime les effets expirés.
     /// </summary>
     public void TickActiveEffectsAtTurnEnd()
     {
@@ -326,7 +314,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Utilitaire : si HP <= 0, marque mort.
+    ///   Utilitaire : si HP <= 0, marque mort.
     /// </summary>
     public void VerifDead()
     {
@@ -355,4 +343,73 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     private void OnTeamChanged(int oldVal, int newVal) => Debug.Log($"[Local] Team : {oldVal} → {newVal}");
     private void OnReadyChanged(bool oldVal, bool newVal) => Debug.Log($"[Local] Ready : {oldVal} → {newVal}");
     private void OnDeadChanged(bool oldVal, bool newVal) => Debug.Log($"[Local] isDead : {oldVal} → {newVal} ({name})");
+
+    //   Augmente les PV de base et rend aussi les PV actuels (+amount) pour refléter la nouvelle capacité
+    public void AddBaseHP(int amount, bool alsoHealCurrent)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseHP;
+        baseHP = Mathf.Max(1, baseHP + v);
+
+        if (alsoHealCurrent)
+            SetHP(currentHP + v);                // on "rend" la hausse immédiatement
+        else
+            SetHP(Mathf.Min(currentHP, baseHP)); // clamp si besoin
+
+        Debug.Log($"[Stats] BaseHP {oldBase} → {baseHP} (+{v})");
+    }
+
+    //   Augmente Force de base et ajuste l'actuel
+    public void AddBaseForce(int amount)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseForce;
+        baseForce = oldBase + v;
+        SetForce(currentForce + v);
+
+        Debug.Log($"[Stats] BaseForce {oldBase} → {baseForce} (+{v})");
+    }
+
+    //   Augmente Dextérité de base et ajuste l'actuel
+    public void AddBaseDex(int amount)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseDexterite;
+        baseDexterite = oldBase + v;
+        SetDex(currentDexterite + v);
+
+        Debug.Log($"[Stats] BaseDex {oldBase} → {baseDexterite} (+{v})");
+    }
+
+    //   Augmente Magie de base et ajuste l'actuel
+    public void AddBaseMagie(int amount)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseMagie;
+        baseMagie = oldBase + v;
+        SetMagie(currentMagie + v);
+
+        Debug.Log($"[Stats] BaseMagie {oldBase} → {baseMagie} (+{v})");
+    }
+
+    //   Augmente Foi de base et ajuste l'actuel
+    public void AddBaseFoi(int amount)
+    {
+        int v = Mathf.Max(0, amount);
+        if (v <= 0) return;
+
+        int oldBase = baseFoi;
+        baseFoi = oldBase + v;
+        SetFoi(currentFoi + v);
+
+        Debug.Log($"[Stats] BaseFoi {oldBase} → {baseFoi} (+{v})");
+    }
 }

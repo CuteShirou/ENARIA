@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-[AddComponentMenu("Combat/Tile Visual (Local)")]
 public class Tile_Visual : MonoBehaviour
 {
     [Header("Références")]
@@ -15,23 +14,34 @@ public class Tile_Visual : MonoBehaviour
     [SerializeField] private Material matTeamRed;
     [SerializeField] private Material matObstacle;
     [SerializeField] private Material matFighterActif;
+    [SerializeField] private Material matZoneImpact;      // Matériau pour l’aperçu de zone d’impact
     [SerializeField] private Material matCursorIndicator;
 
-    // [FR] Injecté par la grille (pas sérialisé, aucune assignation sur le prefab)
-    private TileGrid_Manager tileGrid;           // AJOUT
-    private InfoEntityPanelUI infoPanel;         // AJOUT
+    // Injecté par la grille (pas sérialisé)
+    private TileGrid_Manager tileGrid;     // Référence vers la grille
+    private InfoEntityPanelUI infoPanel;   // Référence vers la bulle d’info
 
-    // [FR] Appelée par la grille pour injecter les refs de scène (AJOUT)
+    private bool isMouseOver = false;
+
+    // AJOUT : état local pour savoir si la tuile fait partie de l’aperçu d’impact
+    private bool isImpactPreview = false;
+
+    // --- SetShared ---------------------------------------------------------
+    // Appelée par la grille pour injecter les références de scène.
     public void SetShared(TileGrid_Manager grid, InfoEntityPanelUI panel)
     {
         tileGrid = grid;
         infoPanel = panel;
     }
 
-    private bool isMouseOver = false;
-
-    public Tile_Visual() { }
-    ~Tile_Visual() { }
+    // --- SetImpactPreview --------------------------------------------------
+    // Active/désactive le mode “zone d’impact” sur cette tuile.
+    // Prioritaire par rapport au curseur de survol.
+    public void SetImpactPreview(bool enabled)
+    {
+        isImpactPreview = enabled; // Mémorise l’état
+        UpdateMaterial();          // Rafraîchit le rendu
+    }
 
     private void Reset()
     {
@@ -48,6 +58,7 @@ public class Tile_Visual : MonoBehaviour
 
     private void Update()
     {
+        // Si la souris n’est pas dessus, on laisse l’état visuel “vivre”.
         if (!isMouseOver) UpdateMaterial();
     }
 
@@ -55,10 +66,14 @@ public class Tile_Visual : MonoBehaviour
     {
         isMouseOver = true;
 
-        if (setup != null && !setup.isFighterActif && matCursorIndicator && tileRenderer)
-            tileRenderer.material = matCursorIndicator;
+        // IMPORTANT : si la tuile est en aperçu d’impact, on NE remplace pas le matériau.
+        if (!isImpactPreview)
+        {
+            if (setup != null && !setup.isFighterActif && matCursorIndicator && tileRenderer)
+                tileRenderer.material = matCursorIndicator;
+        }
 
-        // [FR] Si occupée → afficher la bulle, sinon cacher
+        // Affiche la bulle si occupée
         if (tileGrid != null && infoPanel != null && setup != null)
         {
             GameObject occ = tileGrid.GetEntityOnTile(setup.gameObject);
@@ -75,16 +90,27 @@ public class Tile_Visual : MonoBehaviour
         if (infoPanel != null) infoPanel.Hide();
     }
 
+    // --- UpdateMaterial ----------------------------------------------------
+    // Choisit le matériau selon l’état actuel (aperçu -> actif -> état logique -> damier).
     private void UpdateMaterial()
     {
         if (tileRenderer == null || setup == null) return;
 
+        // Priorité absolue : aperçu de zone d’impact
+        if (isImpactPreview && matZoneImpact)
+        {
+            tileRenderer.material = matZoneImpact;
+            return;
+        }
+
+        // Surbrillance combattant actif
         if (setup.isFighterActif && matFighterActif)
         {
             tileRenderer.material = matFighterActif;
             return;
         }
 
+        // État logique
         switch (setup.currentState)
         {
             case Tile_State.TeamGreen: if (matTeamGreen) tileRenderer.material = matTeamGreen; break;
@@ -93,6 +119,7 @@ public class Tile_Visual : MonoBehaviour
             default: if (matNone) tileRenderer.material = matNone; break;
         }
 
+        // Damier neutre si None
         if (setup.currentState == Tile_State.None)
         {
             bool even = ((setup.tileX + setup.tileY) % 2) == 0;
