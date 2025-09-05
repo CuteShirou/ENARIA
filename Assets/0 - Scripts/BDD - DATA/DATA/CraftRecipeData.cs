@@ -10,8 +10,8 @@ public class CraftRecipeData : ScriptableObject
         All,
         Armor,
         Accessories,
-        Ressources,
-        Consomable
+        Resources,
+        Consumable
     }
 
     public int requiredProfessionLevel;

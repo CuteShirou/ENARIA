@@ -19,7 +19,8 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 0
-    isUnlocked: 0
+    requiredLevel: 1
+    isUnlocked: 1
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
@@ -28,6 +29,7 @@ MonoBehaviour:
     manualName: Lancer de couteau
     manualDescription: "Lance un deuxi\xE8me couteau"
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -37,6 +39,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -47,6 +50,7 @@ MonoBehaviour:
     manualDescription: "Lanc\xE9 de couteau et coup en traigne gagne poison. Le poison
       inflige les d\xE9gats de la comp\xE9tences divis\xE9 par 3"
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -56,6 +60,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:

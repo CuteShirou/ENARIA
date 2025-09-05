@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 
 [System.Serializable]
@@ -18,10 +19,23 @@ public class PlayerStats : MonoBehaviour
 
     public int ExperienceToNextLevel => Mathf.RoundToInt(baseXPToLevelUp * Mathf.Pow(xpGrowthFactor, level - 1));
 
+    [Header("Monnaie")]
+    [Tooltip("Montant d'argent courant du joueur.")]
+    public long gold;
+    [Tooltip("Optionnel : nom de la devise affichée dans les UI.")]
+    public string currencyLabel = "";
+
+    public UnityEvent<long> OnGoldChanged;
+
     private void Start()
     {
         RecalculateLevelFromXP();
         remainingPoints = (level - 1) * 10;
+
+        if (OnGoldChanged == null)
+            OnGoldChanged = new UnityEvent<long>();
+
+        OnGoldChanged.Invoke(gold);
     }
 
     public void GainExperience(int amount)
@@ -33,6 +47,7 @@ public class PlayerStats : MonoBehaviour
             LevelUp();
         }
     }
+
     public void RecalculateLevelFromXP()
     {
         int tempLevel = 1;
@@ -49,10 +64,37 @@ public class PlayerStats : MonoBehaviour
         remainingPoints = (level - 1) * 10;
     }
 
-
     private void LevelUp()
     {
         level++;
         remainingPoints += 10;
+    }
+
+    public bool CanAfford(long amount)
+    {
+        return amount <= gold;
+    }
+
+    public bool TrySpend(long amount)
+    {
+        if (amount <= 0) return true;
+        if (!CanAfford(amount)) return false;
+        gold -= amount;
+        OnGoldChanged.Invoke(gold);
+        return true;
+    }
+
+    public void AddGold(long amount)
+    {
+        if (amount <= 0) return;
+        gold += amount;
+        OnGoldChanged.Invoke(gold);
+    }
+
+    public void Refund(long amount) => AddGold(amount);
+
+    public string GetGoldDisplay()
+    {
+        return gold.ToString() + " " + currencyLabel;
     }
 }
