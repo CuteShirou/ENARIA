@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44227cb443cec2540ac17066fe1c8234, type: 3}
+  m_Name: CChestplate
+  m_EditorClassIdentifier: 
+  requiredProfessionLevel: 0
+  recipeName: Plastron
+  craftType: 1
+  ingredients:
+  - item: {fileID: 11400000, guid: 4a61fc93902f0734dbe4d4f8ee70cd98, type: 2}
+    quantity: 5
+  - item: {fileID: 11400000, guid: c1078a3fe5167ec4a8115829f2922bdd, type: 2}
+    quantity: 5
+  - item: {fileID: 11400000, guid: 281c1057606589442b2d8ebaf497a51d, type: 2}
+    quantity: 2
+  - item: {fileID: 11400000, guid: e395d6c6e5a461d4aaf1a90d5ab907ef, type: 2}
+    quantity: 2
+  - item: {fileID: 11400000, guid: e1d5b80d384d9e747b80b17f1e2f3a20, type: 2}
+    quantity: 3
+  - item: {fileID: 11400000, guid: 8c2fa6a02402c254aa88c1cb3f85c8c4, type: 2}
+    quantity: 7
+  result:
+    item: {fileID: 11400000, guid: 1839f815b552ea2438a9c8dd11926345, type: 2}
+    quantity: 1
+  description: 

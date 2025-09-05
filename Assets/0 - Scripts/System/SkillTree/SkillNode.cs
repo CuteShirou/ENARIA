@@ -11,6 +11,9 @@ public class SkillNode
     public string manualName;
     public string manualDescription;
     public int cost;
+    [Header("Requirements")]
+    [Min(1)]
+    public int requiredLevel = 1;
     public bool isUnlocked;
     public UnityEngine.Events.UnityEvent onUnlock;
 

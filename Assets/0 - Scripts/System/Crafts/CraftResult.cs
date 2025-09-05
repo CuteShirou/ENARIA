@@ -9,17 +9,12 @@ public enum ResultType
 [System.Serializable]
 public class CraftResult
 {
-    public ResultType resultType;
-
-    public ResourceData resource;
-    public EquipmentData equipment;
+    public Item item;
 
     public int quantity = 1;
 
     public string GetName()
     {
-        return resultType == ResultType.Resource
-            ? (resource != null ? resource.resourceName : "Invalide")
-            : (equipment != null ? equipment.equipmentName : "Invalide");
+        return item != null ? item.itemName : "Invalide";
     }
 }

@@ -89,7 +89,9 @@ public class MarketBuyPanel : MonoBehaviour
             Item.ItemType.Sword,
             Item.ItemType.Accessory,
             Item.ItemType.Ring,
-            Item.ItemType.Gloves
+            Item.ItemType.Gloves,
+            Item.ItemType.Consumable,
+            Item.ItemType.Ressource
         };
 
         foreach (var ttype in order)
@@ -227,6 +229,13 @@ public class MarketBuyPanel : MonoBehaviour
         ShowItems(currentFilter);
 
         if (buyPreviewPanel != null) buyPreviewPanel.SetActive(false);
+    }
+
+    public void AddEntry(MarketEntry entry)
+    {
+        if (entry == null) return;
+        marketItems.Add(entry);
+        ShowItems(currentFilter); // réaffiche immédiatement avec le filtre courant
     }
 
     void ClearChildren(Transform t)
