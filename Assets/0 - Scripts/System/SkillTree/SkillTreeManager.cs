@@ -12,14 +12,14 @@ public class SkillTreeManager : MonoBehaviour
     public Transform skillListParent;
 
     [Tooltip("Reference to the player's stats (used to check level). Assign in inspector or it will auto-find on Start).")]
-    public PlayerStats playerStats;
+    public Entity_Info playerStats;
 
     private List<SkillButtonUI> allSkillButtons = new List<SkillButtonUI>();
 
     void Awake()
     {
         if (playerStats == null)
-            playerStats = FindObjectOfType<PlayerStats>();
+            playerStats = FindObjectOfType<Entity_Info>();
     }
 
     public void UnlockSkill(SkillNode node)
@@ -28,9 +28,9 @@ public class SkillTreeManager : MonoBehaviour
         if (node.isUnlocked) return;
         if (!ArePrerequisitesMet(node)) return;
 
-        if (playerStats != null && playerStats.level < node.requiredLevel)
+        if (playerStats != null && playerStats.entity_Level < node.requiredLevel)
         {
-            Debug.Log($"Niveau insuffisant (requis {node.requiredLevel}, actuel {playerStats.level}) pour {node.SkillName}");
+            Debug.Log($"Niveau insuffisant (requis {node.requiredLevel}, actuel {playerStats.entity_Level}) pour {node.SkillName}");
             return;
         }
 
@@ -67,7 +67,7 @@ public class SkillTreeManager : MonoBehaviour
         if (node.isUnlocked) return false;
         if (!ArePrerequisitesMet(node)) return false;
         if (availablePoints < node.cost) return false;
-        if (playerStats != null && playerStats.level < node.requiredLevel) return false;
+        if (playerStats != null && playerStats.entity_Level < node.requiredLevel) return false;
         return true;
     }
 
