@@ -7,23 +7,23 @@ public class GoldDisplay : MonoBehaviour
     [Header("Référence UI")]
     [SerializeField] private TMP_Text goldText;
 
-    private PlayerStats playerStats;
+    [Header("Sources possibles")]
+    [SerializeField] private Entity_Info entityInfo;
 
-    private void Start()
+    private void Awake()
     {
-        playerStats = FindObjectOfType<PlayerStats>();
-
-        if (goldText == null)
-        {
-            Debug.LogError("Aucun TMP_Text assigné dans l'inspecteur pour GoldDisplay !");
-        }
+        if (entityInfo == null) entityInfo = FindObjectOfType<Entity_Info>();
     }
 
     private void Update()
     {
-        if (playerStats != null && goldText != null)
-        {
-            goldText.text = playerStats.gold.ToString("N0", new CultureInfo("de-DE"));
-        }
+        if (goldText == null) return;
+
+        long goldValue = 0;
+
+        if (entityInfo != null)
+            goldValue = entityInfo.gold;
+
+        goldText.text = goldValue.ToString("N0", new CultureInfo("de-DE"));
     }
 }

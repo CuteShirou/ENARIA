@@ -28,7 +28,7 @@ MonoBehaviour:
     manualIcon: {fileID: 21300000, guid: eba7123b8caff954eac55a79d1425387, type: 3}
     manualName: Lancer de couteau
     manualDescription: "Lance un deuxi\xE8me couteau"
-    cost: 1
+    cost: 5
     requiredLevel: 1
     isUnlocked: 0
     onUnlock:
@@ -39,7 +39,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
-    requiredLevel: 1
+    requiredLevel: 10
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -50,7 +50,7 @@ MonoBehaviour:
     manualDescription: "Lanc\xE9 de couteau et coup en traigne gagne poison. Le poison
       inflige les d\xE9gats de la comp\xE9tences divis\xE9 par 3"
     cost: 1
-    requiredLevel: 1
+    requiredLevel: 15
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -60,7 +60,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
-    requiredLevel: 1
+    requiredLevel: 20
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:

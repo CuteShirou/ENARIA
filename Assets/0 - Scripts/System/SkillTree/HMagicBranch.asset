@@ -19,6 +19,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 0
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -28,6 +29,7 @@ MonoBehaviour:
     manualName: Orbe Magique
     manualDescription: 'Zone: 1 case > cerlce 1'
     cost: 1
+    requiredLevel: 5
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -37,6 +39,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 10
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -47,6 +50,7 @@ MonoBehaviour:
     manualDescription: 'Orbe magique: 10-20 DPC MAGIE. Glyphe Magique: 12-24 DPC
       MAGIE'
     cost: 1
+    requiredLevel: 15
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -56,6 +60,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 20
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:

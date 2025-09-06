@@ -36,7 +36,7 @@ public class MarketBuyPanel : MonoBehaviour
     public Button previewConfirmButton;
 
     [Header("Player / Money")]
-    public PlayerStats playerStats;
+    public Entity_Info entityInfo;
     public string currencySuffix = "";
 
     private TypeTabButton currentSelectedTab;
@@ -52,9 +52,8 @@ public class MarketBuyPanel : MonoBehaviour
         if (sortByQuantityButton != null) sortByQuantityButton.onClick.AddListener(() => ToggleSort("quantity"));
         if (sortByPriceButton != null) sortByPriceButton.onClick.AddListener(() => ToggleSort("price"));
 
-
-        if (playerStats == null)
-            playerStats = FindObjectOfType<PlayerStats>();
+        if (entityInfo == null)
+            entityInfo = FindObjectOfType<Entity_Info>();
 
         ShowItems(null);
         if (buyPreviewPanel != null) buyPreviewPanel.SetActive(false);
@@ -147,53 +146,53 @@ public class MarketBuyPanel : MonoBehaviour
         }
     }
 
-   void OnBuyEntry(MarketEntry entry)
-{
-    if (!firstClickDone.ContainsKey(entry) || !firstClickDone[entry])
+    void OnBuyEntry(MarketEntry entry)
     {
-        firstClickDone[entry] = true;
-        Debug.Log($"Premier clic : sélection de {entry.data.itemName}");
-        return;
+        if (!firstClickDone.ContainsKey(entry) || !firstClickDone[entry])
+        {
+            firstClickDone[entry] = true;
+            Debug.Log($"Premier clic : sélection de {entry.data.itemName}");
+            return;
+        }
+
+        firstClickDone[entry] = false;
+        if (buyPreviewPanel == null)
+        {
+            Debug.Log($"Achat demandé (pas de preview) : {entry.data.itemName} x{entry.quantity} total={entry.totalPrice}");
+            ConfirmBuy(entry);
+            return;
+        }
+
+        buyPreviewPanel.SetActive(true);
+        if (previewName != null) previewName.text = entry.data.itemName;
+        if (previewType != null) previewType.text = entry.data.itemType.ToString();
+
+        var formattedTotal = entry.totalPrice.ToString("N0", new CultureInfo("de-DE"));
+        var suffix = (entityInfo != null) ? (" " + entityInfo.currencyLabel) : currencySuffix;
+        if (previewPrice != null) previewPrice.text = formattedTotal + suffix;
+        if (previewIcon != null) previewIcon.sprite = entry.data.icon;
+
+        previewConfirmButton.onClick.RemoveAllListeners();
+        previewConfirmButton.onClick.AddListener(() => ConfirmBuy(entry));
     }
-
-    firstClickDone[entry] = false;
-    if (buyPreviewPanel == null)
-    {
-        Debug.Log($"Achat demandé (pas de preview) : {entry.data.itemName} x{entry.quantity} total={entry.totalPrice}");
-        ConfirmBuy(entry);
-        return;
-    }
-
-    buyPreviewPanel.SetActive(true);
-    if (previewName != null) previewName.text = entry.data.itemName;
-    if (previewType != null) previewType.text = entry.data.itemType.ToString();
-
-    var formattedTotal = entry.totalPrice.ToString("N0", new CultureInfo("de-DE"));
-    var suffix = (playerStats != null) ? (" " + playerStats.currencyLabel) : currencySuffix;
-    if (previewPrice != null) previewPrice.text = formattedTotal + suffix;
-    if (previewIcon != null) previewIcon.sprite = entry.data.icon;
-
-    previewConfirmButton.onClick.RemoveAllListeners();
-    previewConfirmButton.onClick.AddListener(() => ConfirmBuy(entry));
-}
 
     void ConfirmBuy(MarketEntry entry)
     {
         Debug.Log($"Confirm achat: {entry.data.itemName} x{entry.quantity} total={entry.totalPrice}");
 
-        if (playerStats == null)
+        if (entityInfo == null)
         {
-            playerStats = FindObjectOfType<PlayerStats>();
-            if (playerStats == null)
+            entityInfo = FindObjectOfType<Entity_Info>();
+            if (entityInfo == null)
             {
-                Debug.LogWarning("PlayerStats introuvable — achat annulé.");
+                Debug.LogWarning("Entity_Info introuvable — achat annulé.");
                 return;
             }
         }
 
         long totalPrice = (long)entry.totalPrice;
 
-        if (!playerStats.TrySpend(totalPrice))
+        if (!entityInfo.TrySpend(totalPrice))
         {
             Debug.LogWarning("Fonds insuffisants — achat annulé.");
             return;
@@ -207,7 +206,7 @@ public class MarketBuyPanel : MonoBehaviour
         if (remaining > 0)
         {
             long refundAmount = (long)remaining * entry.unitPrice;
-            playerStats.Refund(refundAmount);
+            entityInfo.Refund(refundAmount);
             Debug.Log($"Remboursé {refundAmount} au joueur pour les {remaining} items non ajoutés.");
         }
 
@@ -235,7 +234,7 @@ public class MarketBuyPanel : MonoBehaviour
     {
         if (entry == null) return;
         marketItems.Add(entry);
-        ShowItems(currentFilter); // réaffiche immédiatement avec le filtre courant
+        ShowItems(currentFilter);
     }
 
     void ClearChildren(Transform t)
