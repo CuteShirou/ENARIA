@@ -15,38 +15,72 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         this.node = node;
         this.manager = manager;
 
-        iconImage = transform.Find("Icon").GetComponent<Image>();
+        // Cherche l'image "Icon" dans la hiérarchie (protégé)
+        Transform iconT = transform.Find("Icon");
+        if (iconT != null)
+            iconImage = iconT.GetComponent<Image>();
+        else
+            iconImage = GetComponentInChildren<Image>(); // fallback
 
         if (iconImage != null)
         {
-            iconImage.sprite = node.Icon;
+            iconImage.sprite = node?.Icon;
         }
 
-        tooltip = FindFirstObjectByType<SkillTooltipUI>();
+        // FindFirstObjectByType existe sur les versions récentes d'Unity (2023+). Si tu as une version plus vieille,
+        // remplace par FindObjectOfType<SkillTooltipUI>().
+        tooltip = FindObjectOfType<SkillTooltipUI>();
 
         UpdateVisual();
 
         Button btn = GetComponent<Button>();
-        btn.onClick.RemoveAllListeners();
-        btn.onClick.AddListener(OnClick);
+        if (btn != null)
+        {
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(OnClick);
+        }
     }
 
     public void UpdateVisual()
     {
+        if (node == null || manager == null)
+            return;
+
         Button btn = GetComponent<Button>();
-        btn.interactable = manager.CanUnlock(node);
-        iconImage.color = node.isUnlocked ? Color.white : Color.gray;
+
+        bool unlocked = node.IsUnlocked;           // UTILISER la propriété IsUnlocked
+        bool canUnlock = manager.CanUnlock(node);  // conditions pour rendre le bouton cliquable
+
+        if (btn != null)
+        {
+            // si déjà déverrouillé -> non interactif
+            btn.interactable = !unlocked && canUnlock;
+        }
+
+        if (iconImage != null)
+        {
+            // couleur blanche si déverrouillé, gris sinon
+            iconImage.color = unlocked ? Color.white : Color.gray;
+        }
+
+        // TODO: afficher un visuel supplémentaire pour "déverrouillé" (check, overlay, etc.)
     }
 
     private void OnClick()
     {
-        manager.UnlockSkill(node);
-        manager.UpdateAllSkillButtons();
+        if (node == null || manager == null) return;
+
+        // Protection: n'essaye d'unlock que si possible
+        if (manager.CanUnlock(node))
+        {
+            manager.UnlockSkill(node);
+            manager.UpdateAllSkillButtons();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (tooltip != null)
+        if (tooltip != null && node != null)
         {
             Vector2 screenPos = Input.mousePosition;
             tooltip.Show(node.SkillName, node.Description, node.Specifications, screenPos);
@@ -58,6 +92,7 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         tooltip?.Hide();
     }
 }
+
 
 
 

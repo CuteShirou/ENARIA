@@ -12,32 +12,32 @@ public class SkillTreeManager : MonoBehaviour
     public Transform skillListParent;
 
     [Tooltip("Reference to the player's stats (used to check level). Assign in inspector or it will auto-find on Start).")]
-    public Entity_Info playerStats;
+    public Entity_Info entityInfo;
 
     private List<SkillButtonUI> allSkillButtons = new List<SkillButtonUI>();
 
     void Awake()
     {
-        if (playerStats == null)
-            playerStats = FindObjectOfType<Entity_Info>();
+        if (entityInfo == null)
+            entityInfo = FindObjectOfType<Entity_Info>();
     }
 
     public void UnlockSkill(SkillNode node)
     {
         if (node == null) return;
-        if (node.isUnlocked) return;
+        if (node.IsUnlocked) return; // utilise la propriété
         if (!ArePrerequisitesMet(node)) return;
 
-        if (playerStats != null && playerStats.entity_Level < node.requiredLevel)
+        if (entityInfo != null && entityInfo.entity_Level < node.requiredLevel)
         {
-            Debug.Log($"Niveau insuffisant (requis {node.requiredLevel}, actuel {playerStats.entity_Level}) pour {node.SkillName}");
+            Debug.Log($"Niveau insuffisant (requis {node.requiredLevel}, actuel {entityInfo.entity_Level}) pour {node.SkillName}");
             return;
         }
 
         if (availablePoints >= node.cost)
         {
             availablePoints -= node.cost;
-            node.isUnlocked = true;
+            node.isUnlockedRuntime = true; // runtime only
             node.onUnlock?.Invoke();
             UpdateAllSkillButtons();
         }
@@ -56,18 +56,18 @@ public class SkillTreeManager : MonoBehaviour
         if (index == 0)
             return true;
 
-        // Sinon vérifier la node précédente
+        // Sinon vérifier la node précédente (utiliser IsUnlocked)
         SkillNode previous = branch.nodes[index - 1];
-        return previous != null && previous.isUnlocked;
+        return previous != null && previous.IsUnlocked;
     }
 
     public bool CanUnlock(SkillNode node)
     {
         if (node == null) return false;
-        if (node.isUnlocked) return false;
+        if (node.IsUnlocked) return false;
         if (!ArePrerequisitesMet(node)) return false;
         if (availablePoints < node.cost) return false;
-        if (playerStats != null && playerStats.entity_Level < node.requiredLevel) return false;
+        if (entityInfo != null && entityInfo.entity_Level < node.requiredLevel) return false;
         return true;
     }
 
@@ -82,10 +82,11 @@ public class SkillTreeManager : MonoBehaviour
 
     void Start()
     {
-        // ton code existant pour générer l'UI — inchangé
+        // NE PAS écraser le flag serialisé 'isUnlocked' — il indique ce qu'on veut démarrer déverrouillé dans l'asset.
+        // Initialiser explicitement l'état runtime à false (facultatif, par clarté).
         foreach (var branch in branches)
             foreach (var node in branch.nodes)
-                node.isUnlocked = false;
+                node.isUnlockedRuntime = false;
 
         allSkillButtons.Clear();
 
@@ -132,10 +133,15 @@ public class SkillTreeManager : MonoBehaviour
                 SkillButtonUI btnUI = go.GetComponent<SkillButtonUI>();
                 btnUI.Initialize(node, this);
                 allSkillButtons.Add(btnUI);
+
+                // Optionnel : si tu veux déclencher onUnlock pour les skills qui démarrent "isUnlocked" dans l'asset,
+                // tu peux appeler node.onUnlock?.Invoke() ici. (décommenter si nécessaire)
+                // if (node.isUnlocked) node.onUnlock?.Invoke();
             }
         }
     }
 }
+
 
 
 
