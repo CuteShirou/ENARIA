@@ -34,19 +34,24 @@ public class SkillTooltipUI : MonoBehaviour
 
         Vector2 anchoredPos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            canvasRect, position, parentCanvas.worldCamera, out anchoredPos);
+            canvasRect, position,
+            parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : parentCanvas.worldCamera,
+            out anchoredPos);
 
         float halfWidth = backgroundRect.rect.width * 0.5f;
-        anchoredPos.x = Mathf.Clamp(anchoredPos.x,
-            canvasRect.rect.xMin + halfWidth,
-            canvasRect.rect.xMax - halfWidth);
-
         float halfHeight = backgroundRect.rect.height * 0.5f;
-        anchoredPos.y = Mathf.Clamp(anchoredPos.y,
-            canvasRect.rect.yMin + halfHeight,
-            canvasRect.rect.yMax - halfHeight);
 
+        anchoredPos.x = Mathf.Clamp(anchoredPos.x,
+            -canvasRect.rect.width / 2f + halfWidth,
+             canvasRect.rect.width / 2f - halfWidth);
+
+        anchoredPos.y = Mathf.Clamp(anchoredPos.y,
+            -canvasRect.rect.height / 2f + halfHeight,
+             canvasRect.rect.height / 2f - halfHeight);
+
+        backgroundRect.pivot = new Vector2(0.5f, 0.5f);
         backgroundRect.anchoredPosition = anchoredPos;
+
     }
 
     public void Hide()
