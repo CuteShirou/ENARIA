@@ -117,43 +117,9 @@
     <Compile Include="Assets\_PoiyomiShaders\Scripts\ThryEditor\External\Editor\VRCAutoAnchor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Editor\x64\Bakery\frender.dll" />
-    <None Include="Assets\Editor\x64\Bakery\optix.1.dll" />
-    <None Include="Assets\Editor\x64\Bakery\ftShowPreview.shader" />
-    <None Include="Assets\Editor\x64\Bakery\d3dcompiler_47.dll" />
-    <None Include="Assets\Editor\x64\Bakery\OpenImageDenoise_device_cuda.dll" />
-    <None Include="Assets\Editor\x64\Bakery\shaderSrc\ftrace.cginc" />
-    <None Include="Assets\Editor\x64\Bakery\cudnn64_7.dll" />
-    <None Include="Assets\Editor\x64\Bakery\shaderSrc\ftTransformFarSphere.compute" />
-    <None Include="Assets\Editor\x64\Bakery\uvrepack.dll" />
     <None Include="Assets\5 - Textures-Mats\Editor\collider\OptimizedShaders\ColiderTeleport\Poiyomi Toon.shader" />
-    <None Include="Assets\Editor\x64\Bakery\tbb.dll" />
-    <None Include="Assets\Editor\x64\Bakery\alphabuffergen.dll" />
-    <None Include="Assets\Editor\x64\Bakery\cudart64_91.dll" />
-    <None Include="Assets\Editor\x64\Bakery\tbbbind_2_0.dll" />
-    <None Include="Assets\Editor\x64\Bakery\OIDN2.dll" />
-    <None Include="Assets\Editor\x64\Bakery\halffloat2vb.dll" />
-    <None Include="Assets\Editor\x64\Bakery\tbbbind_2_5.dll" />
-    <None Include="Assets\Editor\x64\Bakery\tbb12.dll" />
-    <None Include="Assets\Editor\x64\Bakery\ftAtlas.shader" />
     <None Include="Assets\_PoiyomiShaders\ModularShader\Editor\Poi_Passes_And_Programs\TODO.txt" />
-    <None Include="Assets\Editor\x64\Bakery\optix.51.dll" />
-    <None Include="Assets\Editor\x64\Bakery\tbbbind.dll" />
-    <None Include="Assets\Editor\x64\Bakery\shaderSrc\ftCullFarSphere.compute" />
-    <None Include="Assets\Editor\x64\Bakery\simpleProgressBar.dll" />
-    <None Include="Assets\Editor\x64\Bakery\ftChecker.shader" />
-    <None Include="Assets\Editor\x64\Bakery\optix_denoiser.6.0.0.dll" />
-    <None Include="Assets\Editor\x64\Bakery\lmrebake.dll" />
-    <None Include="Assets\Editor\x64\Bakery\optix_denoiser.51.dll" />
     <None Include="Assets\_PoiyomiShaders\ModularShader\Editor\Poi_HelperLibraries\RemovedHelpers.txt" />
-    <None Include="Assets\Editor\x64\Bakery\OpenImageDenoise.dll" />
-    <None Include="Assets\Editor\x64\Bakery\cudart64_90.dll" />
-    <None Include="Assets\Editor\x64\Bakery\OpenImageDenoise_core.dll" />
-    <None Include="Assets\Editor\x64\Bakery\optix.6.0.0.dll" />
-    <None Include="Assets\Editor\x64\Bakery\cudart32_91.dll" />
-    <None Include="Assets\Editor\x64\Bakery\uvgbuffergen.dll" />
-    <None Include="Assets\Editor\x64\Bakery\tbbmalloc.dll" />
-    <None Include="Assets\Editor\x64\Bakery\ftProjection.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1442,10 +1408,6 @@
       <Project>{147A39AB-CFF7-FFEC-4D37-5A6590D8FF9B}</Project>
       <Name>Mirror</Name>
     </ProjectReference>
-    <ProjectReference Include="BakeryRuntimeAssembly.csproj">
-      <Project>{AB5706D3-372A-7724-BB60-7D368BBDB5E8}</Project>
-      <Name>BakeryRuntimeAssembly</Name>
-    </ProjectReference>
     <ProjectReference Include="SimpleWebTransport.csproj">
       <Project>{BD3BF026-52D2-6EA4-BF34-274AF1638FC6}</Project>
       <Name>SimpleWebTransport</Name>
@@ -1493,10 +1455,6 @@
     <ProjectReference Include="ThryAssemblyDefinition.csproj">
       <Project>{90555A8E-7068-41A7-A359-C707FBFCB144}</Project>
       <Name>ThryAssemblyDefinition</Name>
-    </ProjectReference>
-    <ProjectReference Include="BakeryEditorAssembly.csproj">
-      <Project>{1B1B4698-5D8F-EDEE-44E5-0679DD5FEB54}</Project>
-      <Name>BakeryEditorAssembly</Name>
     </ProjectReference>
     <ProjectReference Include="Naelstrof.JigglePhysics.csproj">
       <Project>{E7FBEA69-1316-4063-7EDB-526B2AF169CF}</Project>
