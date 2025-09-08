@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[AddComponentMenu("Combat/UI/Timeline Combat UI")]
 public class Timeline_CombatUI : MonoBehaviour
 {
     [Header("Scroll View refs")]

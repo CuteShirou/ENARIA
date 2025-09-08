@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-[AddComponentMenu("Combat/UI/Timeline Profil UI")]
 public class Timeline_ProfilUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Réfs UI (Drag & Drop depuis le prefab)")]

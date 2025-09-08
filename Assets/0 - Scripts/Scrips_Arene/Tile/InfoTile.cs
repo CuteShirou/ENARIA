@@ -11,7 +11,6 @@ public enum TileOccupation
 }
 
 //------------------------------------------------------------
-[AddComponentMenu("Combat/Info Tile (Local)")]
 public class InfoTile : MonoBehaviour
 {
     [Header("État logique de la case (local)")]

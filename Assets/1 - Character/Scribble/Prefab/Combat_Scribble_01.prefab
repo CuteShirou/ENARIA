@@ -1222,6 +1222,7 @@ GameObject:
   - component: {fileID: 8527171880832732203}
   - component: {fileID: -735355414354322416}
   - component: {fileID: 3299852960925963550}
+  - component: {fileID: -5377396738926930315}
   m_Layer: 0
   m_Name: Combat_Scribble_01
   m_TagString: Monster
@@ -1285,22 +1286,28 @@ MonoBehaviour:
   _team: 0
   _isReady: 0
   skillBook:
-  - {fileID: 11400000, guid: a44936334b9a6614bb27489fed9cd8d1, type: 2}
-  - {fileID: 11400000, guid: ca0a5bbc81314de4ab7349fbde97e9cc, type: 2}
+  - skill: {fileID: 11400000, guid: a44936334b9a6614bb27489fed9cd8d1, type: 2}
+    fxData: {fileID: 0}
+    fxPrefabOverride: {fileID: 2508534576828202260, guid: f4a8808f03601a94ba74290847bba2eb, type: 3}
+    fxYOffset: 1
+  - skill: {fileID: 11400000, guid: ca0a5bbc81314de4ab7349fbde97e9cc, type: 2}
+    fxData: {fileID: 0}
+    fxPrefabOverride: {fileID: 7622290928582153062, guid: 84609a41e7abc69469ce6e7dcb44d5a3, type: 3}
+    fxYOffset: 1
   baseHP: 120
   basePA: 6
   basePM: 3
   basePO: 0
   baseCritChance: 0
   baseInitiative: 150
-  baseForce: 10
-  baseDexterite: 5
+  baseForce: 50
+  baseDexterite: 25
   baseMagie: 5
   baseFoi: 5
   baseResistanceForce: 0
-  baseResistanceDexterite: -10
-  baseResistanceMagie: 20
-  baseResistanceFoi: 20
+  baseResistanceDexterite: 0
+  baseResistanceMagie: 0
+  baseResistanceFoi: 0
   _currentHP: 0
   _currentPA: 0
   _currentPM: 0
@@ -1315,6 +1322,7 @@ MonoBehaviour:
   _currentResistanceDexterite: 0
   _currentResistanceMagie: 0
   _currentResistanceFoi: 0
+  activeEffects: []
 --- !u!114 &8527171880832732203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1352,6 +1360,12 @@ MonoBehaviour:
   phaseManager: {fileID: 0}
   tileGrid: {fileID: 0}
   equippedSkill: {fileID: 0}
+  waitFxBeforeApply: 1
+  fxParent: {fileID: 0}
+  acceptHumanInput: 0
+  critMultiplier: 1.5
+  clampResist: 1
+  resistClamp: {x: -100, y: 100}
 --- !u!114 &3299852960925963550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1364,6 +1378,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9b0f2b62dece1246bcf1435df8c3320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-5377396738926930315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3498709505535415068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4e3e07cfb3d944e8bbbc8e05ec7c8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiCanvas: {fileID: 0}
+  panelDisplayNumber: {fileID: 0}
+  worldOffset: {x: 0, y: 3, z: 0}
+  displayDuration: 1.5
+  colorPA: {r: 0.25, g: 0.6, b: 1, a: 1}
+  colorPM: {r: 0.2, g: 0.85, b: 0.4, a: 1}
+  colorPV: {r: 1, g: 0.25, b: 0.25, a: 1}
 --- !u!1 &3521687495318982046
 GameObject:
   m_ObjectHideFlags: 0

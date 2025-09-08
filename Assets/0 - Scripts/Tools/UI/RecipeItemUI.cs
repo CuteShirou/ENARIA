@@ -16,26 +16,14 @@ public class RecipeItemUI : MonoBehaviour
         recipe = recipeData;
         manager = mgr;
 
-        if (recipe == null || recipe.result == null)
+        if (recipe == null || recipe.result == null || recipe.result.item == null)
         {
             SetInvalid();
             return;
         }
 
-        if (recipe.result.resultType == ResultType.Resource && recipe.result.resource != null)
-        {
-            iconImage.sprite = recipe.result.resource.icon;
-            nameText.text = recipe.result.resource.resourceName;
-        }
-        else if (recipe.result.resultType == ResultType.Equipment && recipe.result.equipment != null)
-        {
-            iconImage.sprite = recipe.result.equipment.icon;
-            nameText.text = recipe.result.equipment.equipmentName;
-        }
-        else
-        {
-            SetInvalid();
-        }
+        iconImage.sprite = recipe.result.item.icon;
+        nameText.text = recipe.result.item.itemName;
 
         if (levelText != null)
             levelText.text = $"Niv {recipeData.requiredProfessionLevel}";
@@ -43,12 +31,13 @@ public class RecipeItemUI : MonoBehaviour
 
     private void SetInvalid()
     {
-        iconImage.sprite = null;
-        nameText.text = "Invalide";
+        if (iconImage != null) iconImage.sprite = null;
+        if (nameText != null) nameText.text = "Invalide";
     }
 
     public void OnClick()
     {
-        manager.SelectRecipe(recipe);
+        if (manager != null)
+            manager.SelectRecipe(recipe);
     }
 }

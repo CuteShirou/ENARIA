@@ -17,7 +17,6 @@ public enum CombatTeamId
     Red = 2
 }
 
-[AddComponentMenu("Combat/Combat Phase Manager (Local)")]
 public class Combat_PhaseManager : MonoBehaviour
 {
     [Header("Index unique de cette arène")]

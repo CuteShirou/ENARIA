@@ -3029,7 +3029,7 @@ Shader "Hidden/Locked/.poiyomi/Poiyomi Pro/ae7d1f60136b70447acfb277e7596162"
 				{
 					distanceOffset *= lerp(1.0, clamp((distance(_WorldSpaceCameraPos, mul(unity_ObjectToWorld, o.localPos).xyz)), 0.0f, 1.0), 0.5);
 				}
-				float lineWidth = 1.0;
+				float lineWidth = 3.0;
 				#ifdef POI_AUDIOLINK
 				if (1.0)
 				{
@@ -6098,7 +6098,7 @@ Shader "Hidden/Locked/.poiyomi/Poiyomi Pro/ae7d1f60136b70447acfb277e7596162"
 				{
 					distanceOffset *= lerp(1.0, clamp((distance(_WorldSpaceCameraPos, mul(unity_ObjectToWorld, o.localPos).xyz)), 0.0f, 1.0), 0.5);
 				}
-				float lineWidth = 1.0;
+				float lineWidth = 3.0;
 				#ifdef POI_AUDIOLINK
 				if (1.0)
 				{
@@ -9816,7 +9816,7 @@ Shader "Hidden/Locked/.poiyomi/Poiyomi Pro/ae7d1f60136b70447acfb277e7596162"
 				{
 					distanceOffset *= lerp(1.0, clamp((distance(_WorldSpaceCameraPos, mul(unity_ObjectToWorld, o.localPos).xyz)), 0.0f, 1.0), 0.5);
 				}
-				float lineWidth = 1.0;
+				float lineWidth = 3.0;
 				#ifdef POI_AUDIOLINK
 				if (1.0)
 				{
@@ -9958,7 +9958,7 @@ Shader "Hidden/Locked/.poiyomi/Poiyomi Pro/ae7d1f60136b70447acfb277e7596162"
 				}
 				if (0.0)
 				{
-					float lineWidth = 1.0;
+					float lineWidth = 3.0;
 					#ifdef POI_AUDIOLINK
 					if (poiMods.audioLinkAvailable)
 					{
@@ -10001,7 +10001,7 @@ Shader "Hidden/Locked/.poiyomi/Poiyomi Pro/ae7d1f60136b70447acfb277e7596162"
 					float3 position = 1.0 ? poiMesh.worldPos : poiMesh.objectPosition;
 					poiFragData.alpha *= lerp(0.0, 1.0, smoothstep(0.0, 0.0, distance(position, poiCam.worldPos)));
 				}
-				float emission = 1.0;
+				float emission = 14.0;
 				#ifdef POI_AUDIOLINK
 				if (poiMods.audioLinkAvailable)
 				{
@@ -12825,7 +12825,7 @@ Shader "Hidden/Locked/.poiyomi/Poiyomi Pro/ae7d1f60136b70447acfb277e7596162"
 				{
 					distanceOffset *= lerp(1.0, clamp((distance(_WorldSpaceCameraPos, mul(unity_ObjectToWorld, o.localPos).xyz)), 0.0f, 1.0), 0.5);
 				}
-				float lineWidth = 1.0;
+				float lineWidth = 3.0;
 				#ifdef POI_AUDIOLINK
 				if (1.0)
 				{

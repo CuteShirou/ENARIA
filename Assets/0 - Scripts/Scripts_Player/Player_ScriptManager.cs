@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-[AddComponentMenu("Player/Player Script Manager")]
 public class Player_ScriptManager : MonoBehaviour
 {
     public enum Mode

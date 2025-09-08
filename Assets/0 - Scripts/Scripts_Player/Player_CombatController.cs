@@ -1,23 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("Combat/Player Combat Controller")]
 public class Player_CombatController : MonoBehaviour
 {
     [Header("References")]
-    public Combat_PhaseManager phaseManager;   // [FR] pour tester IsMyTurn()
-    public TileGrid_Manager tileGrid;          // [FR] ta grille de combat
+    public Combat_PhaseManager phaseManager;   //   pour tester IsMyTurn()
+    public TileGrid_Manager tileGrid;          //   ta grille de combat
 
     [Header("Movement")]
-    public float moveSpeed = 6f;               // [FR] vitesse visuelle
-    public bool isMoving = false;              // [FR] flag public lu par la phase (anti EndTurn)
+    public float moveSpeed = 6f;               //   vitesse visuelle
+    public bool isMoving = false;              //   flag public lu par la phase (anti EndTurn)
 
     private readonly Queue<Vector3> movementQueue = new();
     private Entity_StatistiqueCombat stats;
-
-    // Constructeur / Déconstructeur
-    public Player_CombatController() { }
-    ~Player_CombatController() { }
 
     private void Awake()
     {
@@ -32,7 +27,7 @@ public class Player_CombatController : MonoBehaviour
 
     private void Update()
     {
-        // [FR] Ignore hors-tour
+        //   Ignore hors-tour
         if (phaseManager == null || phaseManager.phaseTurn == null) return;
         if (!phaseManager.phaseTurn.IsMyTurn(gameObject)) return;
 
@@ -91,7 +86,7 @@ public class Player_CombatController : MonoBehaviour
                 return;
             }
 
-            // [FR] Utilise ton pathfinder si dispo (remplace la ligne ci-dessous)
+            //   Utilise ton pathfinder si dispo (remplace la ligne ci-dessous)
             List<Vector2Int> path = TryFindPath(from, to, stats.currentPM);
 
             if (path == null || path.Count == 0)
@@ -100,10 +95,14 @@ public class Player_CombatController : MonoBehaviour
                 return;
             }
 
-            // [FR] Consomme les PM selon longueur du chemin
+            //   Consomme les PM selon longueur du chemin
             stats.SetPM(stats.currentPM - path.Count);
 
-            // [FR] File des positions monde
+            //   Affiche la pop-up "- X PM"
+            var popup = GetComponent<Popup_DisplayNumber>();
+            if (popup != null) popup.ShowPM(path.Count);
+
+            //   File des positions monde
             movementQueue.Clear();
             for (int i = 0; i < path.Count; i++)
             {
@@ -120,9 +119,9 @@ public class Player_CombatController : MonoBehaviour
     // ---------------------------------------------------------------------
     private List<Vector2Int> TryFindPath(Vector2Int from, Vector2Int to, int maxSteps)
     {
-        // [FR] Exemple si tu as un utilitaire : return TileGrid_Pathfinder.FindPath(tileGrid, from, to, maxSteps);
+        //   Exemple si tu as un utilitaire : return TileGrid_Pathfinder.FindPath(tileGrid, from, to, maxSteps);
 
-        // [FR] Fallback simple Manhattan
+        //   Fallback simple Manhattan
         var result = new List<Vector2Int>();
         Vector2Int cursor = from;
 
@@ -169,27 +168,24 @@ public class Player_CombatController : MonoBehaviour
         return best;
     }
 
-    // [FR] À lier au bouton "Passe Tour" (OnClick)
+    //   À lier au bouton "Passe Tour" (OnClick)
     public void OnClickPassTurn()
     {
-        // [FR] Sécurité : on ne fait rien si la phase n'est pas prête
+        //   Sécurité : on ne fait rien si la phase n'est pas prête
         if (phaseManager == null || phaseManager.phaseTurn == null) return;
 
-        // [FR] On ne peut passer le tour que si c'est bien mon tour
+        //   On ne peut passer le tour que si c'est bien mon tour
         if (!phaseManager.phaseTurn.IsMyTurn(gameObject)) return;
 
-        // [FR] On évite de couper un déplacement en cours
+        //   On évite de couper un déplacement en cours
         if (isMoving) return;
 
-        // [FR] Nettoie toute file de déplacement résiduelle (visuel propre)
+        //   Nettoie toute file de déplacement résiduelle (visuel propre)
         movementQueue.Clear();
         isMoving = false;
 
-        // [FR] Demande à la phase de passer au prochain combattant.
-        // [FR] Adapte le nom exact de la méthode selon ton Phase_TurnByTurn :
+        //   Demande à la phase de passer au prochain combattant.
         phaseManager.phaseTurn.EndTurn();
-        // phaseManager.phaseTurn.EndTurnForCurrent();         // <- si ta méthode s'appelle comme ceci
-        // phaseManager.phaseTurn.RequestEndTurn(gameObject);  // <- si elle attend l'actor en paramètre
     }
 
 }

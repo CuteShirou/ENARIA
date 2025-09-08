@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44227cb443cec2540ac17066fe1c8234, type: 3}
+  m_Name: CHolyAmulette
+  m_EditorClassIdentifier: 
+  requiredProfessionLevel: 0
+  recipeName: "Amulette sacr\xE9e"
+  craftType: 2
+  ingredients:
+  - item: {fileID: 11400000, guid: 8c2fa6a02402c254aa88c1cb3f85c8c4, type: 2}
+    quantity: 7
+  - item: {fileID: 11400000, guid: c1078a3fe5167ec4a8115829f2922bdd, type: 2}
+    quantity: 5
+  - item: {fileID: 11400000, guid: 75b2265603cd8be43b923c216d97a58d, type: 2}
+    quantity: 1
+  - item: {fileID: 11400000, guid: e1d5b80d384d9e747b80b17f1e2f3a20, type: 2}
+    quantity: 3
+  result:
+    item: {fileID: 11400000, guid: ca3303288d21d39469638a8fe5975a82, type: 2}
+    quantity: 1
+  description: 

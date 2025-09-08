@@ -1,29 +1,24 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("Combat/Phase - Turn By Turn Combat")]
 public class Phase_TurnByTurnCombat : MonoBehaviour
 {
-    public Combat_PhaseManager manager; // [FR] Référence vers le manager de phases
+    public Combat_PhaseManager manager; //   Référence vers le manager de phases
 
-    // [FR] Index courant dans l'ordre d'initiative
+    //   Index courant dans l'ordre d'initiative
     private int turnIndex = -1;
 
-    // [FR] Surbrillance de la tuile de l’entité active
+    //   Surbrillance de la tuile de l’entité active
     private SetupTile lastActiveTile = null;
 
-    // [FR] (Optionnel) Timeline si présente dans la scène
+    //   (Optionnel) Timeline si présente dans la scène
     private Timeline_CombatUI timeline;
 
-    // [FR] Tuile actuellement connue pour l'entité active (pour détecter les changements en déplacement)
+    //   Tuile actuellement connue pour l'entité active (pour détecter les changements en déplacement)
     private GameObject lastTileForCurrent = null;
 
-    // [FR] Morts déjà traités (évite un double-traitement)
+    //   Morts déjà traités (évite un double-traitement)
     private readonly HashSet<GameObject> removedDead = new();
-
-    // Constructeur / Déconstructeur
-    public Phase_TurnByTurnCombat() { }
-    ~Phase_TurnByTurnCombat() { }
 
     // ---------------------------------------------------------------------
     // InitPhase : appelée par Combat_PhaseManager au passage en phase TurnByTurn
@@ -38,7 +33,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             return;
         }
 
-        // [FR] Passe tous les joueurs en mode combat + init début de phase
+        //   Passe tous les joueurs en mode combat + init début de phase
         for (int i = 0; i < manager.phaseEnter.AllFighters.Count; i++)
         {
             GameObject e = manager.phaseEnter.AllFighters[i];
@@ -50,18 +45,18 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             if (e.TryGetComponent(out Entity_StatistiqueCombat s))
             {
                 s.isReady = false;
-                // [FR] IMPORTANT : on ne remet PAS les PA/PM ici.
+                //   IMPORTANT : on ne remet PAS les PA/PM ici.
                 // On suppose que l'entrée en phase a déjà mis les "current" égaux aux "base".
             }
         }
 
-        // [FR] Damier logique neutre côté data
+        //   Damier logique neutre côté data
         ApplyCheckerboardToTiles();
 
-        // [FR] Timeline (optionnel)
+        //   Timeline (optionnel)
         timeline = FindAnyObjectByType<Timeline_CombatUI>(FindObjectsInactive.Include);
 
-        // [FR] Premier tour
+        //   Premier tour
         turnIndex = manager.phaseEnter.AllFighters.Count > 0 ? 0 : -1;
         if (turnIndex >= 0) StartTurnForCurrent();
     }
@@ -72,7 +67,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
         if (manager == null || manager.phaseEnter == null || manager.phaseEnter.AllFighters == null) return;
         if (turnIndex < 0 || turnIndex >= manager.phaseEnter.AllFighters.Count) return;
 
-        // [FR] Raccourcis debug / test
+        //   Raccourcis debug / test
         if (Input.GetKeyDown(KeyCode.Space)) EndTurn();
         else if (Input.GetKeyDown(KeyCode.X))
         {
@@ -109,13 +104,13 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             if (timeline) timeline.RefreshAllHP();
         }
 
-        // [FR] Tient à jour mapping + surbrillance de l’entité active quand elle bouge
+        //   Tient à jour mapping + surbrillance de l’entité active quand elle bouge
         TrackActiveEntityTileChange();
 
-        // [FR] Nouveau : traite les "morts" (libère case + retire du tour)
+        //   Nouveau : traite les "morts" (libère case + retire du tour)
         ProcessDeathsIfAny();
 
-        // [FR] Détection de fin de combat centralisée dans le manager
+        //   Détection de fin de combat centralisée dans le manager
         if (manager.TryEvaluateEndOfCombat()) return;
     }
 
@@ -145,14 +140,14 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             return;
         }
 
-        // [FR] Fin de tour : reset PA/PM + décrémente la durée des effets (nouvelle logique)
+        //   Fin de tour : reset PA/PM + décrémente la durée des effets (nouvelle logique)
         if (current && current.TryGetComponent(out Entity_StatistiqueCombat sEnd))
         {
-            sEnd.ResetTurnStats();          // [FR] on remonte PA/PM maintenant
-            sEnd.TickActiveEffectsAtTurnEnd(); // [FR] on consomme 1 tour de durée
+            sEnd.ResetTurnStats();          //   on remonte PA/PM maintenant
+            sEnd.TickActiveEffectsAtTurnEnd(); //   on consomme 1 tour de durée
         }
 
-        // [FR] Enchaîner sur le suivant
+        //   Enchaîner sur le suivant
         turnIndex = (turnIndex + 1) % list.Count;
         StartTurnForCurrent();
     }
@@ -166,13 +161,13 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
 
         var current = list[turnIndex];
 
-        // [FR] IMPORTANT : on NE reset plus PA/PM ici.
-        // [FR] Applique les effets temporisés pour CE tour (ex: –10 PA, –10 PM, etc.)
+        //   IMPORTANT : on NE reset plus PA/PM ici.
+        //   Applique les effets temporisés pour CE tour (ex: –10 PA, –10 PM, etc.)
         if (current && current.TryGetComponent(out Entity_StatistiqueCombat sTurn))
             sTurn.ApplyActiveEffectsAtTurnStart();
 
         if (current && current.TryGetComponent(out Entity_SkillCaster caster))
-            caster.ResetSkillTurnUsage(); // [FR] quotas de sorts (par cible) remis à zéro au début du tour
+            caster.ResetSkillTurnUsage(); //   quotas de sorts (par cible) remis à zéro au début du tour
 
         if (timeline)
         {
@@ -180,7 +175,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             timeline.RefreshAllHP();
         }
 
-        // [FR] Assure la cohérence initiale (mapping + surbrillance) en début de tour
+        //   Assure la cohérence initiale (mapping + surbrillance) en début de tour
         EnsureCurrentEntityMappingAndHighlight(current);
 
         Debug.Log($"[Turn] Début → {current?.name} (index {turnIndex})");
@@ -271,7 +266,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     // =====================================================================
 
     /// <summary>
-    /// [FR] Appelée chaque frame : si l'entité active change de tuile (en se déplaçant),
+    ///   Appelée chaque frame : si l'entité active change de tuile (en se déplaçant),
     /// met à jour les dictionnaires de placement + l'InfoTile + la surbrillance.
     /// </summary>
     private void TrackActiveEntityTileChange()
@@ -281,11 +276,11 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
         var current = GetCurrentEntity();
         if (current == null) return;
 
-        // [FR] Détermine la tuile la plus proche de la position actuelle (robuste quand les dicos ne sont pas à jour)
+        //   Détermine la tuile la plus proche de la position actuelle (robuste quand les dicos ne sont pas à jour)
         GameObject nearest = FindNearestTileTo(current.transform.position);
         if (!nearest) return;
 
-        // [FR] Si on a changé de tuile → on met à jour les structures et la surbrillance
+        //   Si on a changé de tuile → on met à jour les structures et la surbrillance
         if (lastTileForCurrent != nearest)
         {
             // Libère l'ancienne tuile (si connue)
@@ -305,7 +300,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] En début de tour, assure la cohérence des dicos et de la surbrillance
+    ///   En début de tour, assure la cohérence des dicos et de la surbrillance
     /// avec la position réelle de l'entité active.
     /// </summary>
     private void EnsureCurrentEntityMappingAndHighlight(GameObject current)
@@ -333,7 +328,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Renvoie la tuile la plus proche d'une position monde.
+    ///   Renvoie la tuile la plus proche d'une position monde.
     /// </summary>
     private GameObject FindNearestTileTo(Vector3 worldPos)
     {
@@ -350,7 +345,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             var t = tiles[i];
             if (!t) continue;
 
-            float d = (t.transform.position - worldPos).sqrMagnitude; // [FR] sqrDist = plus léger
+            float d = (t.transform.position - worldPos).sqrMagnitude; //   sqrDist = plus léger
             if (d < bestDist)
             {
                 bestDist = d;
@@ -382,7 +377,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Libère la case, cache visuel, retire l'entité de AllFighters, et met la timeline à jour.
+    ///   Libère la case, cache visuel, retire l'entité de AllFighters, et met la timeline à jour.
     /// </summary>
     private void HandleEntityDeath(GameObject entity, Entity_StatistiqueCombat stats)
     {
@@ -406,7 +401,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// [FR] Retire l'entité de AllFighters en ajustant turnIndex proprement.
+    ///   Retire l'entité de AllFighters en ajustant turnIndex proprement.
     /// </summary>
     private void RemoveFromInitiative(GameObject entity)
     {
@@ -436,7 +431,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
         }
     }
 
-    // [FR] Appelé par le caster après un sort : force la mise à jour des PV dans la Timeline
+    //   Appelé par le caster après un sort : force la mise à jour des PV dans la Timeline
     public void RefreshTimelineHP()
     {
         if (timeline) timeline.RefreshAllHP();

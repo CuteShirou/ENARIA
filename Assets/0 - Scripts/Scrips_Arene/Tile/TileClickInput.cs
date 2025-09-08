@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [DefaultExecutionOrder(-500)]
-[AddComponentMenu("Combat/Global/Tile Click Input (Singleton)")]
 public class TileClickInput : MonoBehaviour
 {
     public static TileClickInput Instance { get; private set; }

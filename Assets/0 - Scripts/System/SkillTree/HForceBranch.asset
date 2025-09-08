@@ -19,7 +19,8 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 0
-    isUnlocked: 0
+    requiredLevel: 1
+    isUnlocked: 1
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
@@ -28,6 +29,7 @@ MonoBehaviour:
     manualName: Frappe lourde 2
     manualDescription: 15-18 DPC FORCE
     cost: 1
+    requiredLevel: 5
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -37,6 +39,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 10
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -47,6 +50,7 @@ MonoBehaviour:
     manualDescription: "Lanc\xE9 surpuissant: 15-22 DPC FORCE, +Traverse les entit\xE9s
       jusqu'\xE0 la cible"
     cost: 1
+    requiredLevel: 15
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -56,6 +60,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 20
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:

@@ -1,0 +1,155 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3992345469263325030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5299239001118033376}
+  - component: {fileID: 841252965291004569}
+  - component: {fileID: 9120369696128885661}
+  m_Layer: 0
+  m_Name: 08_Test_TirPrecis
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5299239001118033376
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3992345469263325030}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &841252965291004569
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3992345469263325030}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 7022ae6e5dfbbe24eb8296cd8d916824, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 38.399998, y: 21.599998}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &9120369696128885661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3992345469263325030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be8394fa0aca1840b280d6481ac19c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 08
+  displayName: Test_TirPrecis
+  frames:
+  - {fileID: 21300000, guid: 7022ae6e5dfbbe24eb8296cd8d916824, type: 3}
+  - {fileID: 21300000, guid: 974edc1921db4a146af9c25fa979bd95, type: 3}
+  - {fileID: 21300000, guid: 7a9564f302cf19a4da4ac57a821b6a6d, type: 3}
+  - {fileID: 21300000, guid: 349067dca6fa0a74d95eebbfc1bef432, type: 3}
+  - {fileID: 21300000, guid: 7dc4cae3626d4e148b975edf7ca22660, type: 3}
+  - {fileID: 21300000, guid: 0dd9da7c38d3b1744aeaa2112e09b0f8, type: 3}
+  - {fileID: 21300000, guid: f02b20601a3e18344a4322f028bae551, type: 3}
+  - {fileID: 21300000, guid: 0ac2377e96f42b94caf9d2911d4ca13f, type: 3}
+  - {fileID: 21300000, guid: 3d51cb0008fd09047863746c5304640f, type: 3}
+  - {fileID: 21300000, guid: 06716ba8304ed924cbd704f28c25657f, type: 3}
+  - {fileID: 21300000, guid: f6a7d1f7bf85d9d44b957c735081bb85, type: 3}
+  - {fileID: 21300000, guid: 77cf34d9899e74e498a2e85e98968cee, type: 3}
+  - {fileID: 21300000, guid: 50501fcfc7e83714aa96a7e9c4f0d676, type: 3}
+  - {fileID: 21300000, guid: 8a0ca99593395034cb32ce717d3fd577, type: 3}
+  - {fileID: 21300000, guid: 93350e22356d6ac45a6ae2e3d3d6f445, type: 3}
+  - {fileID: 21300000, guid: 9faf3f6a16d03354999776d2770ca576, type: 3}
+  - {fileID: 21300000, guid: b9bf454c9e61ed94aa3a1de6144c89ee, type: 3}
+  - {fileID: 21300000, guid: ef8e2a5ecfede664196c7e13464a610b, type: 3}
+  - {fileID: 21300000, guid: c5cae3fc9617f654994cdbbaf39ee598, type: 3}
+  - {fileID: 21300000, guid: 600258e26d7899c4e96175934440a407, type: 3}
+  - {fileID: 21300000, guid: f547806a15ce75d4eb222b115ed6126b, type: 3}
+  - {fileID: 21300000, guid: 982dcaf0d0740844a8def49789f40ba9, type: 3}
+  - {fileID: 21300000, guid: be3c5490e188abf4aaed301f6439094d, type: 3}
+  - {fileID: 21300000, guid: bdefa5d2dc067fc4b9d2c545e2aa054c, type: 3}
+  - {fileID: 21300000, guid: 308053a3b5e585d4fb1db236e532d47e, type: 3}
+  - {fileID: 21300000, guid: c5d7f8bfdf125b54483cbfba1a04b207, type: 3}
+  - {fileID: 21300000, guid: 73d10b684555ab447af3701561cde243, type: 3}
+  - {fileID: 21300000, guid: 92d0f5be034a27545951990b1c95a010, type: 3}
+  - {fileID: 21300000, guid: b1f2970b1d460dd418072730d476bca6, type: 3}
+  - {fileID: 21300000, guid: 3d914d77cc8c5b34ab6e1b31fb41ac50, type: 3}
+  - {fileID: 21300000, guid: 2a839969a5fdc60479a53d12951a2ca2, type: 3}
+  - {fileID: 21300000, guid: 2824172c876730c48b4401df889594c2, type: 3}
+  - {fileID: 21300000, guid: c2a0ccd9719801f4cbed98e412eaed0a, type: 3}
+  - {fileID: 21300000, guid: 97cbb796a0ab4934aacd4d0bce6df04b, type: 3}
+  - {fileID: 21300000, guid: 3a720698a42d42749a867e2fbd629df9, type: 3}
+  - {fileID: 21300000, guid: 10dc7612f4268944f9a6db2efed1b3ba, type: 3}
+  - {fileID: 21300000, guid: 81e293a59e047e44c8d3115a93b00441, type: 3}
+  - {fileID: 21300000, guid: be59b75796b36b24684838c012a2fae8, type: 3}
+  - {fileID: 21300000, guid: b3b230eca46010e459d89380011ca419, type: 3}
+  - {fileID: 21300000, guid: fd7f0aed18847514bb6d60f612d2235a, type: 3}
+  - {fileID: 21300000, guid: efaed472766e66c4182924419c0b9e14, type: 3}
+  framesPerSecond: 40
+  loop: 0
+  playOnAwake: 1
+  autoDestroyOnEnd: 1
+  useUnscaledTime: 0
+  randomStartFrame: 0
+  startDelay: 0.2
+  onCompleted:
+    m_PersistentCalls:
+      m_Calls: []

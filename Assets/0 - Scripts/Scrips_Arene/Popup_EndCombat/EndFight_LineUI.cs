@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("UI/EndFight Line UI")]
 public class EndFight_LineUI : MonoBehaviour
 {
     [Header("Drop Container")]

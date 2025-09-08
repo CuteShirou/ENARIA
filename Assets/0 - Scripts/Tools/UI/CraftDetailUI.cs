@@ -19,15 +19,19 @@ public class CraftDetailUI : MonoBehaviour
 
     public void ShowRecipe(CraftRecipeData recipe)
     {
+        if (recipe == null)
+        {
+            Debug.LogWarning("ShowRecipe appelé avec une recette nulle.");
+            return;
+        }
+
         _currentRecipe = recipe;
 
-        craftNameText.text = recipe.recipeName;
-        professionLevelText.text = $"Lv : {recipe.requiredProfessionLevel}";
+        if (craftNameText != null) craftNameText.text = recipe.recipeName;
+        if (professionLevelText != null) professionLevelText.text = $"Lv : {recipe.requiredProfessionLevel}";
 
-        if (recipe.result.resultType == ResultType.Resource && recipe.result.resource != null)
-            resultImage.sprite = recipe.result.resource.icon;
-        else if (recipe.result.resultType == ResultType.Equipment && recipe.result.equipment != null)
-            resultImage.sprite = recipe.result.equipment.icon;
+        if (recipe.result != null && recipe.result.item != null)
+            resultImage.sprite = recipe.result.item.icon;
         else
             resultImage.sprite = null;
 
@@ -35,20 +39,21 @@ public class CraftDetailUI : MonoBehaviour
             Destroy(slot);
         _ingredientSlots.Clear();
 
-        ingredientSlotPrefab.SetActive(false);
+        if (ingredientSlotPrefab != null)
+            ingredientSlotPrefab.SetActive(false);
+
+        if (recipe.ingredients == null || recipe.ingredients.Count == 0)
+            return;
 
         int count = recipe.ingredients.Count;
 
-        if (count == 0)
-            return;
-
         int GetPlayerQuantity(CraftIngredient ing)
         {
-            if (CraftManager.Instance == null)
-                return 0;
+            if (ing == null || ing.item == null) return 0;
+            if (CraftManager.Instance == null) return 0;
 
-            Object item = ing.ingredientType == IngredientType.Resource ? (Object)ing.resource : (Object)ing.equipment;
-            return CraftManager.Instance.GetItemQuantity(item);
+            Object itemObj = (Object)ing.item;
+            return CraftManager.Instance.GetItemQuantity(itemObj);
         }
 
         if (count == 1)
@@ -125,13 +130,46 @@ public class CraftDetailUI : MonoBehaviour
         }
 
         if (CraftManager.Instance.Craft(_currentRecipe))
+        {
             Debug.Log("Craft terminé !");
+            RefreshIngredientDisplay();
+        }
         else
+        {
             Debug.LogWarning("Impossible de crafter : ressources ou niveau insuffisant !");
+        }
 
-        craftButton.interactable = CraftManager.Instance.CanCraft(_currentRecipe);
+        if (CraftManager.Instance != null)
+            craftButton.interactable = CraftManager.Instance.CanCraft(_currentRecipe);
+    }
+
+    /// Met à jour les quantités affichées dans les IngredientSlotUI existants.
+    /// On parcourt _ingredientSlots et on associe dans l'ordre chaque IngredientSlotUI
+    /// à l'ingrédient correspondant dans _currentRecipe.ingredients.
+    private void RefreshIngredientDisplay()
+    {
+        if (_currentRecipe == null || _currentRecipe.ingredients == null) return;
+        if (_ingredientSlots == null || _ingredientSlots.Count == 0) return;
+
+        int ingIndex = 0;
+        for (int i = 0; i < _ingredientSlots.Count && ingIndex < _currentRecipe.ingredients.Count; i++)
+        {
+            var go = _ingredientSlots[i];
+            if (go == null) continue;
+
+            var slotUI = go.GetComponent<IngredientSlotUI>();
+            if (slotUI == null) continue;
+
+            var ing = _currentRecipe.ingredients[ingIndex];
+            int playerQty = CraftManager.Instance != null ? CraftManager.Instance.GetItemQuantity((Object)ing.item) : 0;
+            slotUI.SetIngredient(ing, playerQty);
+            ingIndex++;
+        }
     }
 }
+
+
+
 
 
 

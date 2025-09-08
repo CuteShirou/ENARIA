@@ -489,7 +489,8 @@ GameObject:
   - component: {fileID: 7617385559733632425}
   - component: {fileID: 8706713602849420479}
   - component: {fileID: 1735019720032600096}
-  - component: {fileID: 8176122170389527062}
+  - component: {fileID: 449726177747119347}
+  - component: {fileID: 6062208456664273753}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -555,7 +556,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8176122170389527062
+--- !u!114 &449726177747119347
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -599,6 +600,23 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6062208456664273753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4944177346253749895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d9cc9623b3eb6c468fd663fcf744f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 1735019720032600096}
+  normalSprite: {fileID: 21300000, guid: f6ed5d8c51e041943b40ebe82dc47ef8, type: 3}
+  selectedSprite: {fileID: 21300000, guid: 979d15b244dbc72448822356a7eada8f, type: 3}
+  useCustomSize: 0
+  customSize: {x: 100, y: 100}
 --- !u!1 &5563521997387711320
 GameObject:
   m_ObjectHideFlags: 0
@@ -857,6 +875,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5540746966037819026}
   - component: {fileID: 7264294909741949646}
+  - component: {fileID: 7819110751726325225}
   m_Layer: 5
   m_Name: ItemMarketPrefab
   m_TagString: Untagged
@@ -902,7 +921,24 @@ MonoBehaviour:
   typeText: {fileID: 0}
   quantityText: {fileID: 4536395311345813233}
   priceText: {fileID: 4629287064406078788}
-  buyButton: {fileID: 8176122170389527062}
+  buyButton: {fileID: 449726177747119347}
+--- !u!114 &7819110751726325225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7946734647997165921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d9cc9623b3eb6c468fd663fcf744f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 5997551798546501149}
+  normalSprite: {fileID: 21300000, guid: 2500ee04f64e56d40bab43579064909e, type: 3}
+  selectedSprite: {fileID: 21300000, guid: 0de736fe647742d459249cc7cfccecf4, type: 3}
+  useCustomSize: 1
+  customSize: {x: 725, y: 90}
 --- !u!1 &8570605120259332576
 GameObject:
   m_ObjectHideFlags: 0

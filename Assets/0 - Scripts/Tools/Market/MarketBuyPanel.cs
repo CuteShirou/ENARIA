@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 
 public class MarketBuyPanel : MonoBehaviour
 {
@@ -34,8 +35,13 @@ public class MarketBuyPanel : MonoBehaviour
     public Image previewIcon;
     public Button previewConfirmButton;
 
+    [Header("Player / Money")]
+    public Entity_Info entityInfo;
+    public string currencySuffix = "";
+
     private TypeTabButton currentSelectedTab;
     private Item.ItemType? currentFilter = null;
+    private Dictionary<MarketEntry, bool> firstClickDone = new Dictionary<MarketEntry, bool>();
 
     void Start()
     {
@@ -45,6 +51,9 @@ public class MarketBuyPanel : MonoBehaviour
         if (sortByValueButton != null) sortByValueButton.onClick.AddListener(() => ToggleSort("value"));
         if (sortByQuantityButton != null) sortByQuantityButton.onClick.AddListener(() => ToggleSort("quantity"));
         if (sortByPriceButton != null) sortByPriceButton.onClick.AddListener(() => ToggleSort("price"));
+
+        if (entityInfo == null)
+            entityInfo = FindObjectOfType<Entity_Info>();
 
         ShowItems(null);
         if (buyPreviewPanel != null) buyPreviewPanel.SetActive(false);
@@ -79,7 +88,9 @@ public class MarketBuyPanel : MonoBehaviour
             Item.ItemType.Sword,
             Item.ItemType.Accessory,
             Item.ItemType.Ring,
-            Item.ItemType.Gloves
+            Item.ItemType.Gloves,
+            Item.ItemType.Consumable,
+            Item.ItemType.Ressource
         };
 
         foreach (var ttype in order)
@@ -137,6 +148,14 @@ public class MarketBuyPanel : MonoBehaviour
 
     void OnBuyEntry(MarketEntry entry)
     {
+        if (!firstClickDone.ContainsKey(entry) || !firstClickDone[entry])
+        {
+            firstClickDone[entry] = true;
+            Debug.Log($"Premier clic : sélection de {entry.data.itemName}");
+            return;
+        }
+
+        firstClickDone[entry] = false;
         if (buyPreviewPanel == null)
         {
             Debug.Log($"Achat demandé (pas de preview) : {entry.data.itemName} x{entry.quantity} total={entry.totalPrice}");
@@ -147,7 +166,10 @@ public class MarketBuyPanel : MonoBehaviour
         buyPreviewPanel.SetActive(true);
         if (previewName != null) previewName.text = entry.data.itemName;
         if (previewType != null) previewType.text = entry.data.itemType.ToString();
-        if (previewPrice != null) previewPrice.text = entry.totalPrice.ToString() + " K";
+
+        var formattedTotal = entry.totalPrice.ToString("N0", new CultureInfo("de-DE"));
+        var suffix = (entityInfo != null) ? (" " + entityInfo.currencyLabel) : currencySuffix;
+        if (previewPrice != null) previewPrice.text = formattedTotal + suffix;
         if (previewIcon != null) previewIcon.sprite = entry.data.icon;
 
         previewConfirmButton.onClick.RemoveAllListeners();
@@ -158,11 +180,35 @@ public class MarketBuyPanel : MonoBehaviour
     {
         Debug.Log($"Confirm achat: {entry.data.itemName} x{entry.quantity} total={entry.totalPrice}");
 
-        // utilise InventoryUtilEx.AddAmount qui gère l'ajout en lot
+        if (entityInfo == null)
+        {
+            entityInfo = FindObjectOfType<Entity_Info>();
+            if (entityInfo == null)
+            {
+                Debug.LogWarning("Entity_Info introuvable — achat annulé.");
+                return;
+            }
+        }
+
+        long totalPrice = (long)entry.totalPrice;
+
+        if (!entityInfo.TrySpend(totalPrice))
+        {
+            Debug.LogWarning("Fonds insuffisants — achat annulé.");
+            return;
+        }
+
         int remaining = InventoryUtilEx.AddAmount(entry.data, entry.quantity);
         int added = entry.quantity - remaining;
 
         Debug.Log($"InventoryUtilEx.AddAmount returned remaining={remaining}, added={added}");
+
+        if (remaining > 0)
+        {
+            long refundAmount = (long)remaining * entry.unitPrice;
+            entityInfo.Refund(refundAmount);
+            Debug.Log($"Remboursé {refundAmount} au joueur pour les {remaining} items non ajoutés.");
+        }
 
         if (added == entry.quantity)
         {
@@ -182,6 +228,13 @@ public class MarketBuyPanel : MonoBehaviour
         ShowItems(currentFilter);
 
         if (buyPreviewPanel != null) buyPreviewPanel.SetActive(false);
+    }
+
+    public void AddEntry(MarketEntry entry)
+    {
+        if (entry == null) return;
+        marketItems.Add(entry);
+        ShowItems(currentFilter);
     }
 
     void ClearChildren(Transform t)

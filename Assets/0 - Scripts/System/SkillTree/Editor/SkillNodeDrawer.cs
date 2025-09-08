@@ -13,127 +13,133 @@ public class SkillNodeDrawer : PropertyDrawer
     public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
     {
         bool foldout = GetFoldoutState(prop);
-
+        // closed foldout = single line
         if (!foldout)
-        {
             return lineHeight;
-        }
 
-        var iconProp = prop.FindPropertyRelative("manualIcon");
-        bool hasIcon = iconProp.objectReferenceValue != null;
+        float total = 0f;
+        // We'll accumulate height from each property using EditorGUI.GetPropertyHeight
+        SerializedProperty p;
 
-        var onUnlockProp = prop.FindPropertyRelative("onUnlock");
+        // skillData
+        p = prop.FindPropertyRelative("skillData");
+        total += EditorGUI.GetPropertyHeight(p, true) + spacing;
 
-        int lines = 4; 
-        if (hasIcon) lines += 2;
+        // manualIcon
+        p = prop.FindPropertyRelative("manualIcon");
+        total += EditorGUI.GetPropertyHeight(p, true) + spacing;
 
-        float height = lines * lineHeight + (lines - 1) * spacing;
-
-        if (hasIcon)
+        // if icon assigned, manualName + manualDescription
+        if (p != null && p.objectReferenceValue != null)
         {
-            height += lineHeight + spacing;
+            var nameProp = prop.FindPropertyRelative("manualName");
+            total += EditorGUI.GetPropertyHeight(nameProp, true) + spacing;
+
+            var descProp = prop.FindPropertyRelative("manualDescription");
+            total += EditorGUI.GetPropertyHeight(descProp, true) + spacing;
         }
 
-        height += spacing + EditorGUI.GetPropertyHeight(onUnlockProp, true);
-        height += spacing;
+        // cost
+        p = prop.FindPropertyRelative("cost");
+        total += EditorGUI.GetPropertyHeight(p, true) + spacing;
 
-        return height;
+        // requiredLevel (optional)
+        var requiredProp = prop.FindPropertyRelative("requiredLevel");
+        if (requiredProp != null)
+            total += EditorGUI.GetPropertyHeight(requiredProp, true) + spacing;
+
+        // isUnlocked
+        p = prop.FindPropertyRelative("isUnlocked");
+        total += EditorGUI.GetPropertyHeight(p, true) + spacing;
+
+        // onUnlock (UnityEvent peut être multi-line)
+        p = prop.FindPropertyRelative("onUnlock");
+        total += EditorGUI.GetPropertyHeight(p, true) + spacing;
+
+        // small padding
+        total += spacing;
+
+        return total;
     }
 
     public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
     {
+        EditorGUI.BeginProperty(pos, label, prop);
+
+        float x = pos.x;
         float y = pos.y;
         float w = pos.width;
 
         bool foldout = GetFoldoutState(prop);
 
-        string foldoutLabel = "Skill Node";
-
+        // build display name like before
+        string displayName = "???";
         var skillDataProp = prop.FindPropertyRelative("skillData");
         var manualNameProp = prop.FindPropertyRelative("manualName");
-        string displayName = "???";
 
-        if (skillDataProp.objectReferenceValue != null)
+        if (skillDataProp != null && skillDataProp.objectReferenceValue != null)
         {
-            var skillData = skillDataProp.objectReferenceValue as SkillData;
+            var skillData = skillDataProp.objectReferenceValue as Object; // avoid direct type dependency
             if (skillData != null)
-                displayName = skillData.skillName;
+                displayName = skillData.name;
         }
-        else if (!string.IsNullOrEmpty(manualNameProp.stringValue))
+        else if (manualNameProp != null && !string.IsNullOrEmpty(manualNameProp.stringValue))
         {
             displayName = manualNameProp.stringValue;
         }
 
-        foldoutLabel += " : " + displayName;
+        string foldoutLabel = "Skill Node : " + displayName;
 
-        Rect foldoutRect = new Rect(pos.x, y, w, lineHeight);
+        Rect foldoutRect = new Rect(x, y, w, lineHeight);
         foldout = EditorGUI.Foldout(foldoutRect, foldout, foldoutLabel, true);
         SetFoldoutState(prop, foldout);
         y += lineHeight + spacing;
 
         if (!foldout)
         {
+            EditorGUI.EndProperty();
             return;
         }
 
-        EditorGUI.PropertyField(
-            new Rect(pos.x, y, w, lineHeight),
-            skillDataProp,
-            new GUIContent("Skill Data")
-        );
-        y += lineHeight + spacing;
+        int prevIndent = EditorGUI.indentLevel;
+        EditorGUI.indentLevel = 0; // we draw full width fields; Unity will still draw labels
 
-        var iconProp = prop.FindPropertyRelative("manualIcon");
-        EditorGUI.PropertyField(
-            new Rect(pos.x, y, w, lineHeight),
-            iconProp,
-            new GUIContent("Manual Icon")
-        );
-        y += lineHeight + spacing;
-
-        if (iconProp.objectReferenceValue != null)
+        // Helper local to draw a property and advance y by its actual height + spacing
+        System.Action<string, GUIContent> DrawProp = (relativeName, guiContent) =>
         {
-            var nameProp = prop.FindPropertyRelative("manualName");
-            EditorGUI.PropertyField(
-                new Rect(pos.x, y, w, lineHeight),
-                nameProp,
-                new GUIContent("Manual Name")
-            );
-            y += lineHeight + spacing;
+            var p = prop.FindPropertyRelative(relativeName);
+            if (p == null) return;
+            float h = EditorGUI.GetPropertyHeight(p, true);
+            Rect r = new Rect(x, y, w, h);
+            EditorGUI.PropertyField(r, p, guiContent ?? GUIContent.none, true);
+            y += h + spacing;
+        };
 
-            var descProp = prop.FindPropertyRelative("manualDescription");
-            float descHeight = lineHeight * 2 + spacing;
-            EditorGUI.PropertyField(
-                new Rect(pos.x, y, w, descHeight),
-                descProp,
-                new GUIContent("Manual Desc")
-            );
-            y += descHeight;
+        // Draw fields in order
+        DrawProp("skillData", new GUIContent("Skill Data"));
+        DrawProp("manualIcon", new GUIContent("Manual Icon"));
+
+        // If manual icon exists, show manualName + manualDescription
+        var iconProp = prop.FindPropertyRelative("manualIcon");
+        if (iconProp != null && iconProp.objectReferenceValue != null)
+        {
+            DrawProp("manualName", new GUIContent("Manual Name"));
+            DrawProp("manualDescription", new GUIContent("Manual Desc"));
         }
 
-        var costProp = prop.FindPropertyRelative("cost");
-        EditorGUI.PropertyField(
-            new Rect(pos.x, y, w, lineHeight),
-            costProp
-        );
-        y += lineHeight + spacing;
+        DrawProp("cost", new GUIContent("Cost"));
 
-        var unlockedProp = prop.FindPropertyRelative("isUnlocked");
-        EditorGUI.PropertyField(
-            new Rect(pos.x, y, w, lineHeight),
-            unlockedProp,
-            new GUIContent("Is Unlocked")
-        );
-        y += lineHeight + spacing;
+        // requiredLevel if present
+        var requiredProp = prop.FindPropertyRelative("requiredLevel");
+        if (requiredProp != null)
+            DrawProp("requiredLevel", new GUIContent("Required Level"));
 
-        var onUnlockProp = prop.FindPropertyRelative("onUnlock");
-        float onUnlockHeight = EditorGUI.GetPropertyHeight(onUnlockProp, true);
-        EditorGUI.PropertyField(
-            new Rect(pos.x, y, w, onUnlockHeight),
-            onUnlockProp,
-            new GUIContent("On Unlock"),
-            true
-        );
+        DrawProp("isUnlocked", new GUIContent("Is Unlocked"));
+
+        DrawProp("onUnlock", new GUIContent("On Unlock"));
+
+        EditorGUI.indentLevel = prevIndent;
+        EditorGUI.EndProperty();
     }
 
     private bool GetFoldoutState(SerializedProperty prop)

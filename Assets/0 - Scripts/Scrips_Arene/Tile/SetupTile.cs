@@ -11,10 +11,6 @@ public enum Tile_State
     Obstacle
 }
 
-//------------------------------------------------------------
-// Composant LOCAL : état de base de la case (sans réseau)
-//------------------------------------------------------------
-[AddComponentMenu("Combat/Setup Tile (Local)")]
 public class SetupTile : MonoBehaviour
 {
     [Header("Position de la tuile dans la grille")]
