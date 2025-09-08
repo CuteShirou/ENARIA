@@ -91,6 +91,25 @@ public class InventorySlotDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
     {
         if (eventData.button != PointerEventData.InputButton.Right) return;
         TrySplitHalf();
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            var menu = InventoryContextMenu.Instance;
+            if (menu != null)
+            {
+                var sv = GetComponent<InventorySlotView>();
+                var item = sv ? sv.Get() : null;
+                var idx  = sv ? sv.Index : -1;
+
+                // Optionnel : détection "équipé" via ton EquipmentController
+                var eq = FindObjectOfType<EquipmentController>();
+                System.Func<Item, int, bool> pred = (it, _) => eq != null && eq.IsEquipped(it);
+
+                menu.ShowFor(item, idx, eventData.position, pred);
+
+                eventData.Use();   // <- bloque la suite (split)
+                return;
+            }
+        }
     }
 
 
