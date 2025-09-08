@@ -5,7 +5,7 @@ using UnityEngine.Events;
 [Serializable]
 public class SkillNode
 {
-    public SkillData skillData;
+    public Data_Skill skillData;
     public Sprite manualIcon;
     public string manualName;
     public string manualDescription;

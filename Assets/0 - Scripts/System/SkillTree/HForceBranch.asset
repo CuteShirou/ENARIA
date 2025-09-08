@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   branchName: Force
   nodes:
-  - skillData: {fileID: 0}
+  - skillData: {fileID: 11400000, guid: a3bcab2ef9a6939479dead52c81b5627, type: 2}
     manualIcon: {fileID: 0}
     manualName: 
     manualDescription: 
@@ -28,8 +28,8 @@ MonoBehaviour:
     manualIcon: {fileID: 21300000, guid: c4ef24637f7514540b33fb5662302878, type: 3}
     manualName: Frappe lourde 2
     manualDescription: 15-18 DPC FORCE
-    cost: 1
-    requiredLevel: 5
+    cost: 5
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:

@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   branchName: Magie
   nodes:
-  - skillData: {fileID: 0}
+  - skillData: {fileID: 11400000, guid: 4b0eb013e759a6042a2c65f8513cd178, type: 2}
     manualIcon: {fileID: 0}
     manualName: 
     manualDescription: 
     cost: 0
+    requiredLevel: 1
     isUnlocked: 1
     onUnlock:
       m_PersistentCalls:
@@ -28,6 +29,7 @@ MonoBehaviour:
     manualName: Ronce Magique 2
     manualDescription: 17-22 DPC MAGIE
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -37,6 +39,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -47,6 +50,7 @@ MonoBehaviour:
     manualDescription: 'Ronce Magique : + 15% retrait PM. Marai de ronce: 5% retait
       1PM'
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -56,6 +60,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:

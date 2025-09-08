@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   branchName: "Dexterit\xE9"
   nodes:
-  - skillData: {fileID: 0}
+  - skillData: {fileID: 11400000, guid: ec31b25c1e9b66149a3d7ad36f4c16ec, type: 2}
     manualIcon: {fileID: 0}
     manualName: 
     manualDescription: 
     cost: 0
+    requiredLevel: 1
     isUnlocked: 1
     onUnlock:
       m_PersistentCalls:
@@ -28,6 +29,7 @@ MonoBehaviour:
     manualName: Tir Precis 2
     manualDescription: 'Zone: 1 case > cercle 1'
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -37,6 +39,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -47,6 +50,7 @@ MonoBehaviour:
     manualDescription: "Tir pr\xE9cis: 7-11 DPC DEX. Bolas: zone 1 case > 2 c\xF4ne,
       relance max 1/tour "
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
@@ -56,6 +60,7 @@ MonoBehaviour:
     manualName: 
     manualDescription: 
     cost: 1
+    requiredLevel: 1
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:

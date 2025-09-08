@@ -10,6 +10,8 @@ public class SkillTreeManager : MonoBehaviour
     public List<SkillTreeBranch> branches;
     public GameObject skillButtonPrefab;
     public Transform skillListParent;
+    public SkillPointsUI skillPointsUI;
+
 
     [Tooltip("Reference to the player's stats (used to check level). Assign in inspector or it will auto-find on Start).")]
     public Entity_Info entityInfo;
@@ -25,7 +27,7 @@ public class SkillTreeManager : MonoBehaviour
     public void UnlockSkill(SkillNode node)
     {
         if (node == null) return;
-        if (node.IsUnlocked) return; // utilise la propriété
+        if (node.IsUnlocked) return;
         if (!ArePrerequisitesMet(node)) return;
 
         if (entityInfo != null && entityInfo.entity_Level < node.requiredLevel)
@@ -37,11 +39,55 @@ public class SkillTreeManager : MonoBehaviour
         if (availablePoints >= node.cost)
         {
             availablePoints -= node.cost;
+            if (skillPointsUI != null)
+                skillPointsUI.UpdatePointsDisplay();
+
             node.isUnlockedRuntime = true; // runtime only
             node.onUnlock?.Invoke();
+
+            // --- Ajout dans le SkillBook de l'entité de combat ---
+            if (node.skillData != null)
+            {
+                // Essaye d'abord de récupérer les stats de combat sur le même GameObject que Entity_Info
+                Entity_StatistiqueCombat combatStats = null;
+                if (entityInfo != null)
+                    combatStats = entityInfo.GetComponent<Entity_StatistiqueCombat>();
+
+                // Fallback : trouve une instance dans la scène si on n'a rien sur entityInfo
+                if (combatStats == null)
+                    combatStats = FindObjectOfType<Entity_StatistiqueCombat>();
+
+                if (combatStats != null)
+                {
+                    // Eviter les doublons
+                    bool alreadyInBook = combatStats.skillBook.Exists(b => b.skill == node.skillData);
+                    if (!alreadyInBook)
+                    {
+                        Skill_Binding binding = new Skill_Binding
+                        {
+                            skill = node.skillData,
+                            fxData = null,              // régler si tu veux un FX par défaut
+                            fxPrefabOverride = null,
+                            fxYOffset = 0f
+                        };
+                        combatStats.skillBook.Add(binding);
+                        Debug.Log($"Skill '{node.SkillName}' ajouté au SkillBook de {combatStats.name}");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"Aucun Entity_StatistiqueCombat trouvé pour ajouter la skill '{node.SkillName}'.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Impossible d'ajouter au SkillBook: node.skillData est null pour '{node.SkillName}'.");
+            }
+
             UpdateAllSkillButtons();
         }
     }
+
 
     bool ArePrerequisitesMet(SkillNode node)
     {
@@ -82,6 +128,7 @@ public class SkillTreeManager : MonoBehaviour
 
     void Start()
     {
+
         // NE PAS écraser le flag serialisé 'isUnlocked' — il indique ce qu'on veut démarrer déverrouillé dans l'asset.
         // Initialiser explicitement l'état runtime à false (facultatif, par clarté).
         foreach (var branch in branches)
@@ -139,7 +186,54 @@ public class SkillTreeManager : MonoBehaviour
                 // if (node.isUnlocked) node.onUnlock?.Invoke();
             }
         }
+        Entity_StatistiqueCombat combatStats = null;
+        if (entityInfo != null) combatStats = entityInfo.GetComponent<Entity_StatistiqueCombat>();
+        if (combatStats == null) combatStats = FindObjectOfType<Entity_StatistiqueCombat>();
+        SyncUnlockedSkillsToCombatBook(combatStats);
     }
+
+    private void SyncUnlockedSkillsToCombatBook(Entity_StatistiqueCombat combatStats)
+    {
+        if (combatStats == null) return;
+
+        foreach (var branch in branches)
+        {
+            if (branch == null || branch.nodes == null) continue;
+            foreach (var node in branch.nodes)
+            {
+                if (node == null || node.skillData == null) continue;
+
+                if (!node.IsUnlocked) continue; // prend en compte isUnlocked (asset) ET isUnlockedRuntime (session)
+
+                bool alreadyInBook = combatStats.skillBook.Exists(b => b.skill == node.skillData);
+                if (!alreadyInBook)
+                {
+                    Skill_Binding binding = new Skill_Binding
+                    {
+                        skill = node.skillData,
+                        fxData = null,
+                        fxPrefabOverride = null,
+                        fxYOffset = 0f
+                    };
+                    combatStats.skillBook.Add(binding);
+                    Debug.Log($"[Sync] Skill '{node.SkillName}' ajoutée au SkillBook de {combatStats.name}");
+                }
+            }
+        }
+    }
+
+    public void EnsureSyncedToCombatBook()
+    {
+        Entity_StatistiqueCombat combatStats = null;
+        if (entityInfo != null)
+            combatStats = entityInfo.GetComponent<Entity_StatistiqueCombat>();
+
+        if (combatStats == null)
+            combatStats = FindObjectOfType<Entity_StatistiqueCombat>();
+
+        SyncUnlockedSkillsToCombatBook(combatStats);
+    }
+
 }
 
 
