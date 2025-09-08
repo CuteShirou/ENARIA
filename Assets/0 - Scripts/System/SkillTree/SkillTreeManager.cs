@@ -83,8 +83,9 @@ public class SkillTreeManager : MonoBehaviour
     void Start()
     {
         // ton code existant pour générer l'UI — inchangé
-        foreach (Transform child in skillListParent)
-            Destroy(child.gameObject);
+        foreach (var branch in branches)
+            foreach (var node in branch.nodes)
+                node.isUnlocked = false;
 
         allSkillButtons.Clear();
 
