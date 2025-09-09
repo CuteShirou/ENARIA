@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,7 +26,16 @@ public class EquipmentController : MonoBehaviour
     private readonly Dictionary<Item.ItemType, Item> equipped = new Dictionary<Item.ItemType, Item>();
     private HashSet<Item.ItemType> _equipableSet;
 
-    void Awake() { _equipableSet = new HashSet<Item.ItemType>(equipableTypes); }
+    // Public Methodes
+    public event Action<Item.ItemType, Item> OnEquippedChanged;
+    public static EquipmentController Instance { get; private set; }
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+        _equipableSet = new HashSet<Item.ItemType>(equipableTypes);
+    }
 
     public bool IsEquipped(Item item)
     {
@@ -37,13 +47,18 @@ public class EquipmentController : MonoBehaviour
     {
         if (!inventory || item == null || !_equipableSet.Contains(item.itemType)) return;
 
+        // Rendre l'ancien
         if (equipped.TryGetValue(item.itemType, out var prev) && prev && prev != item)
             inventory.AddItem(prev, 1);
 
+        // Retirer de l'inventaire
         if (fromSlotIndex >= 0) inventory.ClearItemAt(fromSlotIndex);
 
+        // Enregistrer
         equipped[item.itemType] = item;
         Debug.Log($"[EquipmentController] Equipped {item.itemName} in slot {item.itemType}.");
+
+        OnEquippedChanged?.Invoke(item.itemType, item);
     }
 
     public void Unequip(Item item, int fromSlotIndex)
@@ -55,6 +70,7 @@ public class EquipmentController : MonoBehaviour
             equipped[item.itemType] = null;
             inventory.AddItem(item, 1);
             Debug.Log($"[EquipmentController] Un-equipped {item.itemName} from slot {item.itemType}.");
+            OnEquippedChanged?.Invoke(item.itemType, null);
         }
     }
 

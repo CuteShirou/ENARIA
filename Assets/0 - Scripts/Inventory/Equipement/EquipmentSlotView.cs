@@ -18,21 +18,34 @@ public class EquipmentSlotView : MonoBehaviour, IDropHandler, IPointerClickHandl
 
     void Awake()
     {
-        if (!equipment) equipment = FindObjectOfType<EquipmentController>();
+        if (!equipment) equipment = EquipmentController.Instance ?? FindObjectOfType<EquipmentController>();
         Refresh();
     }
 
-    void OnEnable() { Refresh(); }
-    void Update()   { Refresh(); } // simple polling; peut être remplacé par des events
+    void OnEnable()
+    {
+        if (!equipment) equipment = EquipmentController.Instance ?? FindObjectOfType<EquipmentController>();
+        if (equipment != null) equipment.OnEquippedChanged += HandleEquippedChanged;
+        Refresh();
+    }
+
+    void OnDisable()
+    {
+        if (equipment != null) equipment.OnEquippedChanged -= HandleEquippedChanged;
+    }
+
+    void HandleEquippedChanged(Item.ItemType type, Item item)
+    {
+        if (type == slotType) Refresh();
+    }
 
     public void Refresh()
     {
         if (!iconImage && !nameText) return;
-        Item cur = equipment ? equipment.GetEquipped(slotType) : null;
+        var cur = equipment ? equipment.GetEquipped(slotType) : null;
 
-        if (iconImage) iconImage.sprite = cur ? cur.icon : emptySprite;
-        if (iconImage) iconImage.enabled = (cur ? cur.icon != null : (emptySprite != null));
-        if (nameText)  nameText.text = cur ? cur.itemName : string.Empty;
+        if (iconImage) { iconImage.sprite = cur ? cur.icon : emptySprite; iconImage.enabled = (cur ? cur.icon != null : (emptySprite != null)); }
+        if (nameText)  { nameText.text = cur ? cur.itemName : string.Empty; }
     }
 
     // Drag depuis inventaire -> équipe si compatible
@@ -45,7 +58,7 @@ public class EquipmentSlotView : MonoBehaviour, IDropHandler, IPointerClickHandl
         var sourceView = go.GetComponentInParent<InventorySlotView>();
         if (!sourceView) return;
 
-        var mgr = InventoryManager.Instance;
+        var mgr = InventoryManager.Instance; // présent dans ton projet
         if (!mgr) return;
 
         var item = mgr.GetItemAt(sourceView.Index);
@@ -53,10 +66,10 @@ public class EquipmentSlotView : MonoBehaviour, IDropHandler, IPointerClickHandl
         if (item.itemType != slotType) return;
 
         equipment.Equip(item, sourceView.Index);
-        Refresh();
+        // Refresh() sera appelé via l’événement
     }
 
-    // Clic droit sur la case d’équipement -> déséquiper
+    // Clic droit -> déséquiper
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button != PointerEventData.InputButton.Right) return;
