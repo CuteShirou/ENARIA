@@ -25,16 +25,14 @@ public class InventoryManager : MonoBehaviour
     public static InventoryManager Instance;
     public List<Item> items = new List<Item>();
     public static Sprite EmptySlotSprite => Instance != null ? Instance.emptySlotSprite : null;
-
+    public int SlotCapacity => initialSlotCount;
+    
     // PRIVATE VARIABLES
     private Item[] slots;
     private int[] counts;
     private InventorySlotView[] slotViews;
     private bool suppressAutoSave = false;
-
     private const int DEFAULT_MAX_STACK_CONSUMABLE = 99;
-    
-    public int SlotCapacity => initialSlotCount;
 
     private void Awake() => Instance = this;
 
