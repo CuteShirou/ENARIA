@@ -12,7 +12,7 @@ public class peche : MonoBehaviour
     public float speed; 
     public RectTransform poissonRect; // Assigne le RectTransform du poisson dans l’inspecteur
     public pecheprogress progressBarScript;
-    public float gainParSeconde = 80f; // Ajuste cette valeur selon le gameplay
+    public float gainParSeconde = 800f; // Ajuste cette valeur selon le gameplay
     void Start()
     {
         RectTransform rt = gameObject.GetComponent<RectTransform>();
@@ -43,7 +43,7 @@ public class peche : MonoBehaviour
         
         if (RectsOverlap(rt, poissonRect))
         {
-            progressBarScript.AugmenterHauteur(gainParSeconde * Time.deltaTime * 10); // Multiplie par 100 pour ajuster la vitesse de progression
+            progressBarScript.AugmenterHauteur(gainParSeconde * Time.deltaTime ); // Multiplie par 100 pour ajuster la vitesse de progression
         }
     }
 

@@ -8,7 +8,7 @@ public class minijeuplantes : MonoBehaviour
     // Start is called before the first frame update
     
     public float x;
-    public float y;
+    public static float y;
     public static float height;
     public float gain;
     public bool lastIsA;
@@ -21,8 +21,10 @@ public class minijeuplantes : MonoBehaviour
     public Sprite downSpriteE;
     public Sprite upSpriteE;
     public float move;
+    public GameObject timing;
+    public float timingheight;
 
-    public float timerloose = 0f;
+    public static float timerloose = 0f;
     public static bool isGameOver = false;
     void Start()
     {
@@ -31,11 +33,10 @@ public class minijeuplantes : MonoBehaviour
         y = rt.anchoredPosition.y;
         x = rt.anchoredPosition.x;
         lastIsA = false;
-        gain = 20f;
-        height = 0;
+        gain = 10f;
         KeyAImage = KeyA.GetComponent<Image>();
         KeyEImage = KeyE.GetComponent<Image>();
-        move = 50f;
+        move = 10f;
 
 
     }
@@ -54,8 +55,8 @@ public class minijeuplantes : MonoBehaviour
         if (lastIsA == false && Input.GetKeyDown(KeyCode.Q))
         {
             lastIsA = true;
-            height += gain;
-            if (height >= 600) height = 600; 
+            y += gain;
+            if (height >= 20) height = 20; 
             if (KeyAImage != null && downSpriteA != null)
                 KeyAImage.sprite = downSpriteA;
 
@@ -65,8 +66,8 @@ public class minijeuplantes : MonoBehaviour
         else if (lastIsA == true && Input.GetKeyDown(KeyCode.E))
         {
             lastIsA = false;
-            height += gain;
-            if (height >= 600) height = 600; 
+            y += gain;
+            if (height >= 20) height = 20; 
             
             if (KeyAImage != null && upSpriteA != null)
                 KeyAImage.sprite = upSpriteA;
@@ -74,9 +75,17 @@ public class minijeuplantes : MonoBehaviour
             if (KeyEImage != null && downSpriteE != null)
                 KeyEImage.sprite = downSpriteE;
         }
-        height -= move * Time.deltaTime;
-        rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, -300 + height / 2);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+        y -= move * Time.deltaTime;
+        rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
+        
+        
+        
+        RectTransform rtTiming = timing.GetComponent<RectTransform>();
+        timingheight = 600 * (timerloose / 10);
+        if (timingheight>= 600) timingheight = 600; 
+        rtTiming.anchoredPosition = new Vector2(rtTiming.anchoredPosition.x, -300 + timingheight / 2);
+        rtTiming.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, timingheight);
+      
         
     }
 }

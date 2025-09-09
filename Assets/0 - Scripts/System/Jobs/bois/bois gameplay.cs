@@ -18,7 +18,7 @@ public class boisgameplay : MonoBehaviour
     public  float speed;
     public  bool goup;
     public  float b;
-    public int life;
+    public static int life;
     public static bool isGameOver = false;
     public Sprite fullHeart;
     public Sprite emptyHeart;
@@ -138,8 +138,18 @@ public class boisgameplay : MonoBehaviour
         {
             life -= 1;
         }
-
-        if (life == 4)
+        if (life == 5)
+        {
+            if (imgHeart2 != null && fullHeart != null)
+                imgHeart2.sprite = fullHeart;
+            if (imgHeart3 != null && fullHeart != null)
+                imgHeart3.sprite = fullHeart;
+            if (imgHeart4 != null && fullHeart != null)
+                imgHeart4.sprite = fullHeart;
+            if (imgHeart5 != null && fullHeart != null)
+                imgHeart5.sprite = fullHeart;
+        }
+        else if (life == 4)
         {
             if (imgHeart5 != null && emptyHeart != null)
                 imgHeart5.sprite = emptyHeart;

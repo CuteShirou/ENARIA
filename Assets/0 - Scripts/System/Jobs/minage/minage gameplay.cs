@@ -21,9 +21,11 @@ public class minagegameplay : MonoBehaviour
     public GameObject pepite13;
     public GameObject pepite14;
     public GameObject pepite15;
+    public GameObject timing;
+    public float timingheight;
     
     
-    public float timerloose = 0f;
+    public static float timerloose = 0f;
     public static bool isGameOver = false;
     
     // Start is called before the first frame update
@@ -153,6 +155,11 @@ public class minagegameplay : MonoBehaviour
             isGameOver = true;
             timerloose = 0f;
         }
+        RectTransform rtTiming = timing.GetComponent<RectTransform>();
+        timingheight = (timerloose / 30)*600;
+        if (timingheight>= 600) timingheight = 600; 
+        rtTiming.anchoredPosition = new Vector2(rtTiming.anchoredPosition.x, -300 + timingheight / 2);
+        rtTiming.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, timingheight);
         
     }
 }
