@@ -24,6 +24,41 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: b1d402e08f3e21d42b34bb45f22fee73, type: 3}
     manualName: "Bouclier Sacr\xE9"
@@ -34,6 +69,46 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 11400000, guid: af9699871ab2d2c48a87c1e3e391583f, type: 2}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 1
+      description: "Donne un bouclier de 15% des PV max du lanceur + 5-10 DPC FOI
+        \xE0 la cible qui dure 2tours."
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 1
+      effects:
+      - effectType: 2
+        value: 15
+        duration: 2
+        applyToSelf: 0
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 0}
     manualName: 
@@ -44,6 +119,41 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: 0770760c43265f74a96ea5113fcc109f, type: 3}
     manualName: "Foi sacr\xE9"
@@ -55,6 +165,41 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 0}
     manualName: 
@@ -65,3 +210,38 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}

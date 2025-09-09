@@ -24,16 +24,87 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: 1f57d7e147a2a3e45a28a3e8937fc3d3, type: 3}
     manualName: Frappe Verticale 2
     manualDescription: 18 - 24 DPC FORCE
     cost: 1
-    requiredLevel: 1
+    requiredLevel: 5
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 11400000, guid: b8213375bfc34fa4b983a6f959ee16ff, type: 2}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 1
+      description: "Inflige des d\xE9gats 18 - 24 DPC FORCE et vous vous positionnez
+        \xE0 c\xF4t\xE9 de la cible"
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 1
+      damageMin: 18
+      overrideDamageMax: 1
+      damageMax: 24
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 0}
     manualName: 
@@ -44,6 +115,41 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: 1009992b9624df04d98a40860b356114, type: 3}
     manualName: "Attaques pr\xE9cis"
@@ -55,6 +161,41 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 0}
     manualName: 
@@ -65,3 +206,38 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}

@@ -24,16 +24,86 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: 3970b47afba824d449a05059a089c11b, type: 3}
     manualName: Ronce Magique 2
     manualDescription: 17-22 DPC MAGIE
     cost: 1
-    requiredLevel: 1
+    requiredLevel: 5
     isUnlocked: 0
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 11400000, guid: 4b0eb013e759a6042a2c65f8513cd178, type: 2}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 1
+      description: "Inflige des d\xE9gats 17-22 DPC MAGIE"
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 1
+      damageMin: 17
+      overrideDamageMax: 1
+      damageMax: 22
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 0}
     manualName: 
@@ -44,6 +114,41 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 21300000, guid: 7d30844ab26c7644aa26554bed0dac7c, type: 3}
     manualName: "Ronces g\xE9nante"
@@ -55,6 +160,41 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}
   - skillData: {fileID: 0}
     manualIcon: {fileID: 0}
     manualName: 
@@ -65,3 +205,38 @@ MonoBehaviour:
     onUnlock:
       m_PersistentCalls:
         m_Calls: []
+    targetSkill: {fileID: 0}
+    upgrade:
+      overrideName: 0
+      skillName: 
+      overrideDescription: 0
+      description: 
+      overrideSkillType: 0
+      skillType: 0
+      overrideSkillElement: 0
+      skillElement: 0
+      overrideDamageMin: 0
+      damageMin: 0
+      overrideDamageMax: 0
+      damageMax: 0
+      overrideCostPA: 0
+      costPA: 0
+      overrideRangeMin: 0
+      rangeMin: 0
+      overrideRangeMax: 0
+      rangeMax: 0
+      overrideCooldown: 0
+      cooldown: 0
+      overrideMaxPerTargetPerTurn: 0
+      maxPerTargetPerTurn: 0
+      overrideImpactZone: 0
+      impactZone:
+        zone: []
+      overrideEffects: 0
+      effects: []
+      overrideCritChance: 0
+      critChance: 0
+      overrideCritEffects: 0
+      critEffects: []
+      overrideIcon: 0
+      icon: {fileID: 0}

@@ -15,13 +15,11 @@ MonoBehaviour:
   ID: 4
   skillName: Bouclier Sacre
   description: "Donne un bouclier de 10% des PV max du lanceur + 5-10 DPC FOI \xE0
-    la cible qui dure 2tours.\nDonne l\u2019\xE9tat PROTECTION pour 1 tour.\nInflige
-    5-10 DPC FOI \xE0 l\u2019adversaire qui inflige des d\xE9gats \xE0 la cible quand
-    il est en \xE9tat PROTECTION.\n"
+    la cible qui dure 2tours."
   skillType: 2
   skillElement: 4
-  damageMin: 5
-  damageMax: 10
+  damageMin: 0
+  damageMax: 0
   costPA: 2
   rangeMin: 0
   rangeMax: 3
@@ -29,7 +27,11 @@ MonoBehaviour:
   maxPerTargetPerTurn: 1
   impactZone:
     zone: []
-  effects: []
+  effects:
+  - effectType: 2
+    value: 10
+    duration: 2
+    applyToSelf: 0
   critChance: 20
   critEffects: []
   icon: {fileID: 21300000, guid: b1d402e08f3e21d42b34bb45f22fee73, type: 3}
