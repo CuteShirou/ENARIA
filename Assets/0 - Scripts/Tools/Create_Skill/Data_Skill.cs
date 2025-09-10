@@ -39,6 +39,11 @@ public class Data_Skill : ScriptableObject
     public float critChance;                //   Chance de critique en %
     public List<SkillEffect> critEffects = new List<SkillEffect>();  //   Effets bonus si critique
 
+    [Header("Animation/FX")]
+    public Data_SkillAnimation fxData;   // ScriptableObject décrivant l'anim
+    public GameObject fxPrefab;         // Prefab d'FX (particules, animator...)
+    public float fxYOffset = 0f;
+
     [Header("Icon")]
     public Sprite icon;                     //   Icône UI
 }

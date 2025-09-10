@@ -176,6 +176,10 @@ public class SkillTreeManager : MonoBehaviour
             clone.critEffects.Add(cloneCe);
         }
 
+        clone.fxData = TryClone(original.fxData);      // TryClone gère UnityObject / ScriptableObject
+        clone.fxPrefab = original.fxPrefab;            // on garde le prefab de base (instancier à l'usage)
+        clone.fxYOffset = original.fxYOffset;
+
         clone.icon = original.icon;
 
         Debug.Log($"[SkillTreeManager] Cloned skill '{original.skillName}' -> instanceID {clone.GetInstanceID()}, ID {clone.ID}");
@@ -294,8 +298,10 @@ public class SkillTreeManager : MonoBehaviour
                     {
                         skill = runtimeSkill,
                         fxData = null,
-                        fxPrefabOverride = null,
-                        fxYOffset = 0f
+                        fxPrefabOverride = runtimeSkill.fxPrefab != null
+    ? runtimeSkill.fxPrefab.GetComponent<Sprite_AnimationRunner>()
+    : null,
+                        fxYOffset = runtimeSkill.fxYOffset
                     });
                     Debug.Log($"[SkillTreeManager] Skill '{runtimeSkill.skillName}' ajoutée au SkillBook de {combatStats.name} (base ID {baseSkill.ID})");
                 }
@@ -348,8 +354,11 @@ public class SkillTreeManager : MonoBehaviour
                         {
                             skill = runtimeSkill,
                             fxData = null,
-                            fxPrefabOverride = null,
-                            fxYOffset = 0f
+                            fxPrefabOverride = baseSkill.fxPrefab != null
+    ? baseSkill.fxPrefab.GetComponent<Sprite_AnimationRunner>()
+    : null,
+                            fxYOffset = baseSkill.fxYOffset,
+                            //fxYOffset = 0f
                         });
                         Debug.Log($"[SkillTreeManager] Skill '{runtimeSkill.skillName}' ajoutée (unlock) au SkillBook de {combatStats.name} (base ID {baseSkill.ID})");
                     }
