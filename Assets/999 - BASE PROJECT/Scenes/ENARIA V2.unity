@@ -761,7 +761,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -116.49991, y: -0.00050566223}
+  m_AnchoredPosition: {x: -116.49953, y: -0.00050566223}
   m_SizeDelta: {x: 232, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &21806944
@@ -38256,8 +38256,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1456800541}
   m_HandleRect: {fileID: 1456800540}
   m_Direction: 2
-  m_Value: 1.0000305
-  m_Size: 0.9433332
+  m_Value: 1.0000287
+  m_Size: 0.9433333
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -39919,7 +39919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade1beca8eb2fd143881b9e4d656dd77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStats: {fileID: 0}
+  playerStats: {fileID: 8238287124760553542}
   playerProfessions:
     pecheurLevel: 1
     paysanLevel: 1
@@ -41698,6 +41698,10 @@ PrefabInstance:
     - target: {fileID: 2204790032045997232, guid: 9c606e66c2e786d418c082499deaf59d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169517514756010291, guid: 9c606e66c2e786d418c082499deaf59d, type: 3}
+      propertyPath: availablePoints
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6169517514756010291, guid: 9c606e66c2e786d418c082499deaf59d, type: 3}
       propertyPath: branches.Array.size
@@ -53952,7 +53956,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1298034286}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9987642
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -84730,11 +84734,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b92a411d353fc4ea06011c0b12cd9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStats: {fileID: 0}
-  combatStats: {fileID: 0}
+  playerStats: {fileID: 8238287124760553542}
+  combatStats: {fileID: 8238287124760553548}
   xpFillBar: {fileID: 598424714}
   xpText: {fileID: 0}
-  hpFillBar: {fileID: 0}
+  hpFillBar: {fileID: 1490134676}
   hpText: {fileID: 0}
   autoInitHPOnEnable: 1
 --- !u!1 &961873694
@@ -90935,6 +90939,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6986147211118374062}
     m_Modifications:
+    - target: {fileID: 1238903771999755322, guid: 365b5da440b41434e9835276d03ba922, type: 3}
+      propertyPath: availablePoints
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1238903771999755322, guid: 365b5da440b41434e9835276d03ba922, type: 3}
       propertyPath: branches.Array.size
       value: 4
@@ -132446,7 +132454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b0785add72460479fb4839d2a6daea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 2068777188}
 --- !u!1 &1929310005
 GameObject:
   m_ObjectHideFlags: 0
@@ -161290,7 +161298,7 @@ MonoBehaviour:
   _team: 0
   _isReady: 1
   skillBook:
-  - skill: {fileID: 0}
+  - skill: {fileID: 11400000, guid: a16a90a539bf20f48aa53626dbef51d0, type: 2}
     fxData: {fileID: 0}
     fxPrefabOverride: {fileID: 0}
     fxYOffset: 0
