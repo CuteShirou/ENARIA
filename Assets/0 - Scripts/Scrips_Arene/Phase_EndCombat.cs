@@ -95,8 +95,6 @@ public class Phase_EndCombat : MonoBehaviour
     // GetActivePopupCount : compte les pop-ups encore présentes et actives
     private int GetActivePopupCount()
     {
-        // On compte les instances actives en scène.
-        // Astuce simple et robuste sans dépendre d'un compteur statique.
         var all = FindObjectsOfType<Popup_DisplayNumber>(true);
         int count = 0;
         for (int i = 0; i < all.Length; i++)
@@ -112,7 +110,6 @@ public class Phase_EndCombat : MonoBehaviour
     // Co_WaitEntityAnimations : attend que les anims Hit/Death soient finies
     private IEnumerator Co_WaitEntityAnimations()
     {
-        // On collecte les Animator des entités encore connues du combat
         List<Animator> animators = CollectAnimatorsFromFighters();
 
         float elapsed = 0f;
@@ -154,7 +151,6 @@ public class Phase_EndCombat : MonoBehaviour
                 var go = fighters[i];
                 if (!go) continue;
 
-                // On prend l'Animator sur l'entité (ou ses enfants)
                 var animator = go.GetComponentInChildren<Animator>(true);
                 if (animator != null && !list.Contains(animator))
                     list.Add(animator);
@@ -170,13 +166,11 @@ public class Phase_EndCombat : MonoBehaviour
     {
         if (!animator) return false;
 
-        // Si en transition, on considère que l'anim n'est pas totalement finie
         if (animator.IsInTransition(0))
             return true;
 
         var st = animator.GetCurrentAnimatorStateInfo(0);
 
-        // Par tags d'abord (plus robuste si tes states sont taggés)
         for (int i = 0; i < animatorBusyTags.Length; i++)
         {
             string tag = animatorBusyTags[i];
@@ -184,18 +178,15 @@ public class Phase_EndCombat : MonoBehaviour
                 return true;
         }
 
-        // Par nom d'état (souvent "Hit", "Death", etc.)
         for (int i = 0; i < animatorBusyStateNames.Length; i++)
         {
             string name = animatorBusyStateNames[i];
             if (string.IsNullOrEmpty(name)) continue;
 
-            // On teste le nom simple et avec "Base Layer." par sécurité
             if (st.IsName(name) || st.IsName("Base Layer." + name))
                 return true;
         }
 
-        // Sinon on considère l'anim OK (Idle/Locomotion/etc.)
         return false;
     }
 
@@ -493,9 +484,26 @@ public class Phase_EndCombat : MonoBehaviour
         ReactivateVisualsAndColliders(player);
 
         var stats = player.GetComponent<Entity_StatistiqueCombat>();
-        if (stats != null) stats.isDead = false;
+        if (stats != null)
+        {
+            stats.isDead = false;                 // S'assure que le flag mort est levé
+            ResetPlayerTurnResourcesAfterCombat(stats); // Reset PA/PM et état de tour pour le prochain combat
+        }
 
         player.SendMessage("OnCombatEnd", manager.lastCombatWinning, SendMessageOptions.DontRequireReceiver);
+    }
+
+    // ---------------------------------------------------------
+    // ResetPlayerTurnResourcesAfterCombat : remet les ressources de tour (pas les PV)
+    private void ResetPlayerTurnResourcesAfterCombat(Entity_StatistiqueCombat stats)
+    {
+        if (stats == null) return;
+
+        // Remet les ressources de tour à leur valeur de base (PA/PM) pour éviter d'hériter du combat précédent
+        stats.ResetTurnStats();
+
+        // Assure que le joueur ne démarre pas "prêt" au prochain combat
+        stats.isReady = false;
     }
 
     // ---------------------------------------------------------
