@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Phase_TurnByTurnCombat : MonoBehaviour
@@ -25,8 +26,14 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     [SerializeField] private float greenTeamY = 4.3f;      // Hauteur des joueurs (équipe Verte)
     [SerializeField] private float redTeamY = 3.8f;        // Hauteur des monstres (équipe Rouge)
 
-    [Header("Mort : options de masquage")]
-    [SerializeField] private bool deactivateRootOnDeath = true; // Désactive entièrement l'objet tué
+    [Header("Mort : animation")]
+    [SerializeField] private string deathStateTag = "Death";   // Tag ou nom du state de mort
+    [SerializeField] private float deathDetectTimeout = 1.0f;  // Temps max pour détecter l'entrée dans Death
+    [SerializeField] private float deathFallbackTimeout = 0.5f; // Durée de secours si le state n'est jamais détecté
+    [SerializeField, Range(0f, 0.1f)]
+    private float deathEndEpsilon = 0.01f;                     // Marge pour sortir dès la fin du state
+    [SerializeField] private bool deactivateRootOnDeath = true; // Si true, on désactive la racine après les pop-ups
+
 
     // Appelée par les contrôleurs pour construire une cible XZ vers une tuile donnée
     public Vector3 GetMoveTargetForTileXZ(GameObject entity, SetupTile setup)
@@ -118,16 +125,6 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
                 s.SetResFoi(s.currentResistanceFoi - 5f);
                 RefreshUIForCurrent(e, false);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            KillTeamForDebug(manager.phaseEnter.greenTeam);
-            if (timeline) timeline.RefreshAllHP();
-        }
-        else if (Input.GetKeyDown(KeyCode.P))
-        {
-            KillTeamForDebug(manager.phaseEnter.redTeam);
-            if (timeline) timeline.RefreshAllHP();
         }
 
         // Tient à jour mapping + surbrillance de l’entité active quand elle bouge
@@ -293,8 +290,6 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     // ============   LOGIQUE : suivi de déplacement actif   ===============
     // =====================================================================
 
-    // Appelée chaque frame : si l'entité active change de tuile (en se déplaçant),
-    // met à jour les dictionnaires de placement + l'InfoTile + la surbrillance.
     private void TrackActiveEntityTileChange()
     {
         if (manager == null || manager.tileGrid == null) return;
@@ -302,43 +297,32 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
         var current = GetCurrentEntity();
         if (current == null) return;
 
-        // Détermine la tuile la plus proche de la position actuelle
         GameObject nearest = FindNearestTileTo(current.transform.position);
         if (!nearest) return;
 
-        // Si on a changé de tuile → on met à jour les structures et la surbrillance
         if (lastTileForCurrent != nearest)
         {
-            // Libère l'ancienne tuile (si connue)
             var prev = manager.tileGrid.GetTileOfEntity(current);
             if (prev && prev.TryGetComponent(out InfoTile prevInfo)) prevInfo.SetFree();
 
-            // Enregistre la nouvelle (maj dicos)
             manager.tileGrid.RegisterEntity(current, nearest);
             if (nearest.TryGetComponent(out InfoTile newInfo)) newInfo.SetOccupied();
 
-            // Surbrillance visuelle
             HighlightEntityTile(current);
 
-            // Harmonise la hauteur Y sur la nouvelle tuile (uniquement si immobile)
             if (clampYDuringTurn) ClampYFor(current);
 
-            // Mémorise
             lastTileForCurrent = nearest;
         }
     }
 
-    // En début de tour, assure la cohérence des dicos et de la surbrillance
-    // avec la position réelle de l'entité active.
     private void EnsureCurrentEntityMappingAndHighlight(GameObject current)
     {
         if (current == null || manager == null || manager.tileGrid == null) return;
 
-        // Tuile détectée par proximité (source de vérité)
         GameObject nearest = FindNearestTileTo(current.transform.position);
         if (!nearest) return;
 
-        // Tuile référencée dans les dicos (peut être obsolète)
         GameObject mapped = manager.tileGrid.GetTileOfEntity(current);
 
         if (mapped != nearest)
@@ -350,14 +334,11 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
 
         lastTileForCurrent = nearest;
 
-        // Surbrillance
         HighlightEntityTile(current);
 
-        // Harmonise la hauteur Y dès le début de tour (si immobile)
         if (clampYDuringTurn) ClampYFor(current);
     }
 
-    // Renvoie la tuile la plus proche d'une position monde.
     private GameObject FindNearestTileTo(Vector3 worldPos)
     {
         if (manager == null || manager.tileGrid == null) return null;
@@ -373,7 +354,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             var t = tiles[i];
             if (!t) continue;
 
-            float d = (t.transform.position - worldPos).sqrMagnitude; // sqrDist = plus léger
+            float d = (t.transform.position - worldPos).sqrMagnitude;
             if (d < bestDist)
             {
                 bestDist = d;
@@ -404,53 +385,143 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
         }
     }
 
-    // Libère la case, cache visuel, retire l'entité de AllFighters, et met la timeline à jour.
+    // Libère la case, joue l'animation de mort, masque le visuel à la fin, puis désactive la racine après pop-ups.
     private void HandleEntityDeath(GameObject entity, Entity_StatistiqueCombat stats)
     {
         removedDead.Add(entity);
-
         stats.isDead = true;
 
+        // Libère la tuile et les dicos
         var tile = manager.tileGrid.GetTileOfEntity(entity);
         if (tile && tile.TryGetComponent(out InfoTile ti)) ti.SetFree();
         manager.tileGrid.UnregisterEntity(entity);
 
-        // Désactive tous les rendus et colliders trouvés sous l'entité
-        foreach (var r in entity.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
-        foreach (var c in entity.GetComponentsInChildren<Collider>(true)) c.enabled = false;
-
-        // Coupe les contrôleurs éventuels
+        // Coupe les contrôleurs de déplacement/IA pour éviter toute action post-mortem
         var pc = entity.GetComponent<Player_CombatController>(); if (pc) pc.enabled = false;
         var mc = entity.GetComponent<Monster_CombatController>(); if (mc) mc.enabled = false;
 
-        // Coupe l'Animator si présent (évite une réactivation de rendus par effet de bord)
-        var an = entity.GetComponentInChildren<Animator>(true); if (an) an.enabled = false;
+        // Désactive les colliders immédiatement (laisse le visuel actif pour l'animation de mort)
+        foreach (var c in entity.GetComponentsInChildren<Collider>(true)) c.enabled = false;
 
-        // NEW: attendre la fin des pop-ups du damage avant la désactivation racine
-        if (deactivateRootOnDeath)
-            StartCoroutine(Co_FinalizeDeathAfterPopups(entity));
-        else
-            RemoveFromInitiative(entity);
+        // NE PAS désactiver ici l'Animator ni les renderers : on veut voir l'animation de mort
+        // Ancien code (désactivé) : foreach (var r in ...) r.enabled = false; an.enabled = false;  (on ne fait plus ça ici)
+
+        // Lance la séquence de mort : animation → hide visuel → désactivation racine après popups
+        StartCoroutine(Co_PlayDeathThenHideVisual(entity));
 
         if (timeline) timeline.RefreshAllHP();
     }
 
+    // Joue l'anim "Death" via Entity_Animations, attend la fin, puis masque les renderers et passe à la désactivation root
+    private IEnumerator Co_PlayDeathThenHideVisual(GameObject entity)
+    {
+        if (!entity) yield break;
+
+        // Récupère le contrôleur d'animations (pour PlayDeath)
+        var anim = entity.GetComponent<Entity_Animations>();
+
+        // Déclenche l'animation de mort si possible
+        if (anim != null && anim.isActiveAndEnabled)
+        {
+            anim.PlayDeath(); // Lance l'animation "Death"
+            yield return WaitForDeathAnimation(entity, deathFallbackTimeout); // Attend la fin exacte, sinon petit fallback
+
+        }
+        else
+        {
+            // Si pas d'anim disponible, micro-pause pour éviter un "cut" trop sec
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        // Masque le visuel : coupe tous les Renderers (le son/FX restent possibles)
+        foreach (var r in entity.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
+
+        // Termine le processus (désactivation racine après pop-ups) ou retire directement de l'initiative
+        if (deactivateRootOnDeath)
+            yield return Co_FinalizeDeathAfterPopups(entity);
+        else
+            RemoveFromInitiative(entity);
+    }
+
+    // Attend la fin de l'animation de mort sur l'Animator (state "Death" recommandé, tag "Death" si possible)
+    // Attend précisément la fin du state "Death" (par tag ou nom), sans délai superflu.
+    // - On attend d'abord que l'Animator ENTRE dans le state Death (timeout court).
+    // - Puis on sort dès que ce MÊME state est terminé (normalizedTime >= 1f - epsilon et hors transition).
+    private IEnumerator WaitForDeathAnimation(GameObject entity, float fallbackTimeoutSeconds)
+    {
+        var animator = entity ? entity.GetComponentInChildren<Animator>(true) : null;
+        if (animator == null)
+        {
+            // Pas d'Animator : on ne peut pas synchroniser -> petit fallback minimal
+            yield return new WaitForSeconds(0.05f);
+            yield break;
+        }
+
+        // Laisse 1 frame pour que PlayDeath() déclenche le state
+        yield return null;
+
+        // 1) Attendre l'entrée dans le state/tag "Death" (timeout court)
+        bool enteredDeath = false;
+        int deathStateHash = 0;
+        float tDetect = 0f;
+
+        while (tDetect < Mathf.Max(0.02f, deathDetectTimeout))
+        {
+            if (!animator.isActiveAndEnabled) break;
+
+            var st = animator.GetCurrentAnimatorStateInfo(0);
+
+            // Correspondance par TAG ou par NOM (au choix selon ton Animator)
+            if (st.IsTag(deathStateTag) || st.IsName(deathStateTag))
+            {
+                enteredDeath = true;
+                deathStateHash = st.fullPathHash; // on capture le state exact
+                break;
+            }
+
+            tDetect += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!enteredDeath)
+        {
+            // Si on n'a pas détecté l'entrée du state Death, on évite d'attendre trop longtemps
+            yield return new WaitForSeconds(Mathf.Min(0.2f, fallbackTimeoutSeconds));
+            yield break;
+        }
+
+        // 2) Attendre la fin de CE state précis (pas celui d’après)
+        while (true)
+        {
+            if (!animator.isActiveAndEnabled) break;
+
+            var st = animator.GetCurrentAnimatorStateInfo(0);
+
+            // Si on a quitté ce state (changement de hash), on considère la mort jouée
+            if (st.fullPathHash != deathStateHash)
+                break;
+
+            // Fin propre : hors transition et lecture terminée
+            if (!animator.IsInTransition(0) && st.normalizedTime >= (1f - deathEndEpsilon))
+                break;
+
+            yield return null;
+        }
+    }
+
+
     // NEW : attend la fin des pop-ups de l'entité puis désactive la racine et retire de l'initiative
     private System.Collections.IEnumerator Co_FinalizeDeathAfterPopups(GameObject entity)
     {
-        // Récupère le composant pop-up sur l'entité (si présent)
         Popup_DisplayNumber pop = entity ? entity.GetComponent<Popup_DisplayNumber>() : null;
 
-        // Si présent, attend proprement la fin des pop-ups
         if (pop != null)
             yield return pop.WaitMyPopupsToFinish();
         else
-            yield return null; // Une frame pour laisser finir d'éventuelles instanciations
+            yield return null;
 
-        // Désactive finalement la racine
         if (entity != null) entity.SetActive(false);
 
-        // Retire de l'initiative après la désactivation visuelle
         RemoveFromInitiative(entity);
     }
 
@@ -493,18 +564,15 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     // ============   UTILITAIRES : gestion de la hauteur Y   ==============
     // =====================================================================
 
-    // Retourne la hauteur cible selon la team
     private float GetTeamY(int team)
     {
         return (team == 0) ? greenTeamY : redTeamY;
     }
 
-    // Force la position Y de l'entité sans toucher X/Z, uniquement si elle est immobile
     private void ClampYFor(GameObject entity)
     {
         if (!entity) return;
 
-        // Ne rien faire si l'entité est en déplacement (évite de casser sa cible)
         if (IsEntityMoving(entity)) return;
 
         if (!entity.TryGetComponent(out Entity_StatistiqueCombat s)) return;

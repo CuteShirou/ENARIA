@@ -17,6 +17,12 @@ public class Player_CombatController : MonoBehaviour
     [Header("Animation")]
     public Entity_Animations entityAnim;       // contrôleur d'animations 3D (Player/Monstre)
 
+    [Header("Orientation")]
+    public bool rotateTowardsTarget = true;        // Active/désactive la rotation vers la tuile de destination
+    public bool instantTurnAtStepStart = true;     // Si true, pivot instantané au début de chaque étape
+    public float rotateSpeedDeg = 540f;            // Vitesse de rotation si non instantané (degrés/seconde)
+    public float rotationOffsetY = 0f;             // Offset Y pour corriger un prefab mal orienté
+
     void Awake()
     {
         // Récupère les refs si non assignées
@@ -60,12 +66,25 @@ public class Player_CombatController : MonoBehaviour
         if (entityAnim != null && entityAnim.isActiveAndEnabled)
             entityAnim.SetWalk(true);
 
+        // Pendant le mouvement, si on ne pivote pas instantanément, on oriente progressivement vers la cible
+        if (rotateTowardsTarget && !instantTurnAtStepStart)
+            RotateTowards(target, false);
+
         // Test d'arrivée en XZ uniquement (ignore toute variation de Y)
         Vector2 curXZ = new Vector2(transform.position.x, transform.position.z);
         Vector2 tgtXZ = new Vector2(target.x, target.z);
         if ((curXZ - tgtXZ).sqrMagnitude <= 0.0004f) // ~2cm^2
         {
             movementQueue.Dequeue();
+
+            // Si une nouvelle étape existe, et qu'on souhaite pivoter instantanément au début d'étape, on l'applique ici
+            if (movementQueue.Count > 0 && rotateTowardsTarget && instantTurnAtStepStart)
+            {
+                Vector3 next = movementQueue.Peek();
+                next = new Vector3(next.x, transform.position.y, next.z);
+                RotateTowards(next, true);
+            }
+
             if (movementQueue.Count == 0)
             {
                 isMoving = false;
@@ -151,6 +170,14 @@ public class Player_CombatController : MonoBehaviour
             // Démarre immédiatement l'animation Walk si un déplacement commence
             if (isMoving && entityAnim != null && entityAnim.isActiveAndEnabled)
                 entityAnim.PlayWalk();
+
+            // Oriente immédiatement vers la première cible si demandé
+            if (isMoving && rotateTowardsTarget && instantTurnAtStepStart)
+            {
+                Vector3 first = movementQueue.Peek();
+                first = new Vector3(first.x, transform.position.y, first.z);
+                RotateTowards(first, true);
+            }
         }
     }
 
@@ -220,5 +247,36 @@ public class Player_CombatController : MonoBehaviour
             entityAnim.StopWalk();
 
         phaseManager.phaseTurn.EndTurn();
+    }
+
+    // Oriente le GameObject vers une position monde cible (Y ignoré), avec option instantanée
+    // - Calcul du yaw sur le plan XZ
+    // - Ajout d'un offset Y pour corriger l'orientation de base du prefab
+    void RotateTowards(Vector3 worldTarget, bool instant)
+    {
+        if (!rotateTowardsTarget) return;
+
+        Vector3 dir = worldTarget - transform.position;
+        dir.y = 0f; // ignore la pente verticale
+
+        if (dir.sqrMagnitude < 0.000001f) return; // évite les NaN
+
+        float yaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        yaw += rotationOffsetY;
+
+        Quaternion targetRot = Quaternion.Euler(0f, yaw, 0f);
+
+        if (instant || rotateSpeedDeg <= 0f)
+        {
+            transform.rotation = targetRot; // pivot franc immédiat
+        }
+        else
+        {
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRot,
+                rotateSpeedDeg * Time.deltaTime
+            );
+        }
     }
 }

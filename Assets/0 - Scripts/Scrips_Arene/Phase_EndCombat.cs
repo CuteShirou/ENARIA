@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -32,20 +33,181 @@ public class Phase_EndCombat : MonoBehaviour
     [SerializeField] private int lastTotalXpGained = 0;    // XP total gagné par l'équipe gagnante (mémorisé)
     public int LastTotalXpGained => lastTotalXpGained;     // Getter public pour usage ultérieur
 
+    [Header("Timing d'attente (VFX/Animations)")]
+    [SerializeField] private float graceDelayBeforeCheck = 0.05f;   // Petit délai pour laisser partir les derniers triggers
+    [SerializeField] private float maxWaitPopups = 3f;               // Timeout pour les pop-ups de dégâts
+    [SerializeField] private float maxWaitAnimations = 5f;           // Timeout pour les anims Hit/Death
+    [SerializeField] private string[] animatorBusyStateNames = new[] { "Hit", "Death", "PlayHit", "PlayDeath" }; // Noms d'états considérés "occupés"
+    [SerializeField] private string[] animatorBusyTags = new[] { "Hit", "Death" };                                // Tags d'états considérés "occupés"
+    [SerializeField] private bool debugLogs = false;                  // Active quelques logs de debug
+
     private Combat_PhaseManager manager;
 
     // ---------------------------------------------------------
     // InitPhase : point d'entrée de la phase de fin de combat
-    //   Bascule l'UI, construit la pop-up, nettoie l'arène, et renvoie les joueurs en exploration.
+    //   Désormais lance une coroutine qui attend la fin des VFX/animations,
+    //   puis exécute le traitement existant (UI, résultats, nettoyage).
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
         manager = phaseManager;
 
+        // Lancement asynchrone pour laisser finir visuels et animations
+        StopAllCoroutines();
+        StartCoroutine(Co_InitPhase());
+    }
+
+    // ---------------------------------------------------------
+    // Co_InitPhase : pipeline d'attente puis finalisation
+    private IEnumerator Co_InitPhase()
+    {
+        // Petit délai de grâce pour laisser partir le dernier frame d'impact
+        if (graceDelayBeforeCheck > 0f)
+            yield return new WaitForSecondsRealtime(graceDelayBeforeCheck);
+
+        // 1) Attendre la fin des pop-ups (dégâts/PA/PM)
+        yield return StartCoroutine(Co_WaitDamagePopups());
+
+        // 2) Attendre la fin des animations Hit/Death en cours
+        yield return StartCoroutine(Co_WaitEntityAnimations());
+
+        // 3) Exécuter ensuite l'ancienne logique de fin (inchangée dans son intention)
+        FinalizeEndCombat();
+    }
+
+    // ---------------------------------------------------------
+    // Co_WaitDamagePopups : attend qu'il n'y ait plus de pop-ups actives
+    private IEnumerator Co_WaitDamagePopups()
+    {
+        float elapsed = 0f;
+
+        while (elapsed < maxWaitPopups)
+        {
+            int active = GetActivePopupCount();
+            if (active <= 0) break;
+
+            if (debugLogs) Debug.Log($"[End][WaitPopups] Actives={active} (t={elapsed:0.00}s)");
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+
+    // ---------------------------------------------------------
+    // GetActivePopupCount : compte les pop-ups encore présentes et actives
+    private int GetActivePopupCount()
+    {
+        // On compte les instances actives en scène.
+        // Astuce simple et robuste sans dépendre d'un compteur statique.
+        var all = FindObjectsOfType<Popup_DisplayNumber>(true);
+        int count = 0;
+        for (int i = 0; i < all.Length; i++)
+        {
+            var p = all[i];
+            if (p != null && p.gameObject.activeInHierarchy)
+                count++;
+        }
+        return count;
+    }
+
+    // ---------------------------------------------------------
+    // Co_WaitEntityAnimations : attend que les anims Hit/Death soient finies
+    private IEnumerator Co_WaitEntityAnimations()
+    {
+        // On collecte les Animator des entités encore connues du combat
+        List<Animator> animators = CollectAnimatorsFromFighters();
+
+        float elapsed = 0f;
+        while (elapsed < maxWaitAnimations)
+        {
+            bool anyBusy = false;
+
+            for (int i = 0; i < animators.Count; i++)
+            {
+                var a = animators[i];
+                if (!a || !a.gameObject.activeInHierarchy) continue;
+
+                if (IsAnimatorBusy(a))
+                {
+                    anyBusy = true;
+                    break;
+                }
+            }
+
+            if (!anyBusy) break;
+
+            if (debugLogs) Debug.Log($"[End][WaitAnims] Animations en cours (t={elapsed:0.00}s)");
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+
+    // ---------------------------------------------------------
+    // CollectAnimatorsFromFighters : récupère les Animator de toutes les entités listées côté phaseEnter
+    private List<Animator> CollectAnimatorsFromFighters()
+    {
+        var list = new List<Animator>();
+
+        var fighters = manager != null && manager.phaseEnter != null ? manager.phaseEnter.AllFighters : null;
+        if (fighters != null)
+        {
+            for (int i = 0; i < fighters.Count; i++)
+            {
+                var go = fighters[i];
+                if (!go) continue;
+
+                // On prend l'Animator sur l'entité (ou ses enfants)
+                var animator = go.GetComponentInChildren<Animator>(true);
+                if (animator != null && !list.Contains(animator))
+                    list.Add(animator);
+            }
+        }
+
+        return list;
+    }
+
+    // ---------------------------------------------------------
+    // IsAnimatorBusy : détecte un état "occupé" (Hit/Death) par nom ou tag
+    private bool IsAnimatorBusy(Animator animator)
+    {
+        if (!animator) return false;
+
+        // Si en transition, on considère que l'anim n'est pas totalement finie
+        if (animator.IsInTransition(0))
+            return true;
+
+        var st = animator.GetCurrentAnimatorStateInfo(0);
+
+        // Par tags d'abord (plus robuste si tes states sont taggés)
+        for (int i = 0; i < animatorBusyTags.Length; i++)
+        {
+            string tag = animatorBusyTags[i];
+            if (!string.IsNullOrEmpty(tag) && st.IsTag(tag))
+                return true;
+        }
+
+        // Par nom d'état (souvent "Hit", "Death", etc.)
+        for (int i = 0; i < animatorBusyStateNames.Length; i++)
+        {
+            string name = animatorBusyStateNames[i];
+            if (string.IsNullOrEmpty(name)) continue;
+
+            // On teste le nom simple et avec "Base Layer." par sécurité
+            if (st.IsName(name) || st.IsName("Base Layer." + name))
+                return true;
+        }
+
+        // Sinon on considère l'anim OK (Idle/Locomotion/etc.)
+        return false;
+    }
+
+    // ---------------------------------------------------------
+    // FinalizeEndCombat : reprend ton traitement initial de fin de combat
+    private void FinalizeEndCombat()
+    {
         // Désactive l'UI combat et réactive l'UI exploration
         if (combatUIRoot) combatUIRoot.SetActive(false);
         if (explorationUIRoot) explorationUIRoot.SetActive(true);
 
-        // Purge immédiate des pop-ups de nombres (dégâts/PA/PM) encore actives sur le Canvas
+        // Par sécurité, si des pop-ups résiduelles existent encore, on purge
         Popup_DisplayNumber.DestroyAllActivePopups();
 
         // Snapshot des équipes avant nettoyage
@@ -66,8 +228,8 @@ public class Phase_EndCombat : MonoBehaviour
         if (manager.phaseEnter != null)
         {
             var players = new List<GameObject>(manager.phaseEnter.greenTeam);
-            foreach (var player in players)
-                ReturnPlayerToExploration(player);
+            for (int i = 0; i < players.Count; i++)
+                ReturnPlayerToExploration(players[i]);
 
             manager.phaseEnter.redTeam.Clear();
             manager.phaseEnter.greenTeam.Clear();
@@ -85,56 +247,42 @@ public class Phase_EndCombat : MonoBehaviour
     // BuildWinLosePanels_PerPlayerDistribution : construit Win/Lose par joueur gagnant
     private void BuildWinLosePanels_PerPlayerDistribution(CombatTeamId winner, List<GameObject> green, List<GameObject> red)
     {
-        // Vide les containers Win/Lose
         ClearContainer(contentWin);
         ClearContainer(contentLose);
 
-        // Détermine gagnants / perdants
         List<GameObject> winners = winner == CombatTeamId.Green ? green : (winner == CombatTeamId.Red ? red : new List<GameObject>());
         List<GameObject> losers = winner == CombatTeamId.Green ? red : (winner == CombatTeamId.Red ? green : new List<GameObject>());
 
-        // Calcule et mémorise l'XP total obtenu en battant la team perdante
         lastTotalXpGained = ComputeTotalXpFromLosers(losers);
 
-        // Si l'équipe verte gagne, on crédite l'XP à chaque joueur gagnant
         if (winner == CombatTeamId.Green && lastTotalXpGained > 0)
         {
             AwardXpToWinners(winners, lastTotalXpGained);
         }
 
-        // WIN : une ligne par gagnant + tirages indépendants + affichage du gain d'XP
         if (contentWin && prefabLineWin)
         {
-            foreach (var winnerEntity in winners)
+            for (int i = 0; i < winners.Count; i++)
             {
-                var lineGO = CreateLineForEntity(winnerEntity, contentWin, prefabLineWin, isWinner: true);
+                var winnerEntity = winners[i];
+                var lineGO = CreateLineForEntity(winnerEntity, contentWin, prefabLineWin, true);
 
-                // 1) Calcule les drops pour CE joueur
                 List<GameObject> dropsForThisWinner = ComputeDropsForOneWinner(losers);
-
-                // 2) Ajoute les items correspondants à l'inventaire
                 GiveItemsToInventory(dropsForThisWinner);
 
-                // 3) Affiche ces drops dans la ligne UI
                 var ui = lineGO ? lineGO.GetComponent<EndFight_LineUI>() : null;
                 if (ui != null) ui.SetDrops(dropsForThisWinner);
 
-                // 4) Met à jour le texte "Gain_XpBar" de la ligne avec le format + 1 500 xp
                 var xpText = lineGO ? lineGO.transform.Find("Gain_XpBar")?.GetComponent<TMP_Text>() : null;
                 if (xpText != null)
-                {
                     xpText.text = $"+ {FormatNumberGrouped(lastTotalXpGained)} xp";
-                }
             }
         }
 
-        // LOSE : lignes simples
         if (contentLose && prefabLineLose)
         {
-            foreach (var loserEntity in losers)
-            {
-                CreateLineForEntity(loserEntity, contentLose, prefabLineLose, isWinner: false);
-            }
+            for (int i = 0; i < losers.Count; i++)
+                CreateLineForEntity(losers[i], contentLose, prefabLineLose, false);
         }
     }
 
@@ -175,14 +323,14 @@ public class Phase_EndCombat : MonoBehaviour
         float sum = 0f;
         if (losers != null)
         {
-            foreach (var entity in losers)
+            for (int i = 0; i < losers.Count; i++)
             {
+                var entity = losers[i];
                 if (!entity) continue;
                 var info = entity.GetComponent<Entity_Info>();
                 if (info != null) sum += info.gainXp;
             }
         }
-
         int total = Mathf.RoundToInt(sum);
         return Mathf.Max(0, total);
     }
@@ -204,8 +352,9 @@ public class Phase_EndCombat : MonoBehaviour
         var drops = new List<GameObject>();
         if (losers == null || losers.Count == 0) return drops;
 
-        foreach (var entity in losers)
+        for (int i = 0; i < losers.Count; i++)
         {
+            var entity = losers[i];
             if (!entity) continue;
 
             var info = entity.GetComponent<Entity_Info>();
@@ -234,8 +383,9 @@ public class Phase_EndCombat : MonoBehaviour
     {
         if (dropPrefabs == null || dropPrefabs.Count == 0) return;
 
-        foreach (var prefab in dropPrefabs)
+        for (int i = 0; i < dropPrefabs.Count; i++)
         {
+            var prefab = dropPrefabs[i];
             if (!prefab) continue;
 
             var ctrl = prefab.GetComponent<InventoryItemController>();
@@ -416,8 +566,9 @@ public class Phase_EndCombat : MonoBehaviour
 #if UNITY_EDITOR
         bool immediate = !Application.isPlaying;
 #endif
-        foreach (var go in toDestroy)
+        for (int i = 0; i < toDestroy.Count; i++)
         {
+            var go = toDestroy[i];
             if (!go) continue;
 #if UNITY_EDITOR
             if (immediate) DestroyImmediate(go);

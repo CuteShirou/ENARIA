@@ -88309,6 +88309,10 @@ MonoBehaviour:
   moveSpeed: 6
   isMoving: 0
   entityAnim: {fileID: 1479340412}
+  rotateTowardsTarget: 1
+  instantTurnAtStepStart: 1
+  rotateSpeedDeg: 540
+  rotationOffsetY: 0
 --- !u!114 &1479340399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88339,6 +88343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   phaseManager: {fileID: 806924282}
   tileGrid: {fileID: 821466463}
+  anim: {fileID: 1479340412}
   equippedSkill: {fileID: 0}
   waitFxBeforeApply: 0
   fxParent: {fileID: 0}
@@ -88346,7 +88351,10 @@ MonoBehaviour:
   critMultiplier: 1.5
   clampResist: 1
   resistClamp: {x: -100, y: 100}
-  anim: {fileID: 1479340412}
+  rotateTowardsTarget: 1
+  instantTurnOnCast: 1
+  rotateSpeedDeg: 540
+  rotationOffsetY: 0
 --- !u!114 &1479340401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93133,6 +93141,18 @@ MonoBehaviour:
   prefabLineLose: {fileID: 5155307607797318414, guid: 20752a096f0ed8748b90b474ac9bf76c, type: 3}
   defaultIcon: {fileID: 0}
   lastTotalXpGained: 0
+  graceDelayBeforeCheck: 0.05
+  maxWaitPopups: 1.5
+  maxWaitAnimations: 1.5
+  animatorBusyStateNames:
+  - Hit
+  - Death
+  - PlayHit
+  - PlayDeath
+  animatorBusyTags:
+  - Hit
+  - Death
+  debugLogs: 0
 --- !u!114 &1657418458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93149,6 +93169,10 @@ MonoBehaviour:
   clampYDuringTurn: 1
   greenTeamY: 4.3
   redTeamY: 3.8
+  deathStateTag: Death
+  deathDetectTimeout: 0.2
+  deathFallbackTimeout: 0.2
+  deathEndEpsilon: 0.1
   deactivateRootOnDeath: 1
 --- !u!114 &1657418459
 MonoBehaviour:
@@ -137594,7 +137618,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3781998662280502870, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -116.50091
+      value: -116.50006
       objectReference: {fileID: 0}
     - target: {fileID: 3781998662280502870, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -139085,8 +139109,7 @@ MonoBehaviour:
   monstersInGroup:
   - {fileID: 2117173663941964778, guid: 0174e2149c0181446b37fce4eae7060b, type: 3}
   - {fileID: 2117173663941964778, guid: 0174e2149c0181446b37fce4eae7060b, type: 3}
-  - {fileID: 3498709505535415068, guid: 99a85a0c7de50904aa15354e3831b2e9, type: 3}
-  - {fileID: 3498709505535415068, guid: 99a85a0c7de50904aa15354e3831b2e9, type: 3}
+  - {fileID: 2117173663941964778, guid: 0174e2149c0181446b37fce4eae7060b, type: 3}
   combatMap: {fileID: 11400000, guid: 985b8e9f3106ffd4cb3e79b8fb653fc7, type: 2}
   arenaIndex: 1
   cameraExplo: HUB Camera Position

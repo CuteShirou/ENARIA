@@ -2,52 +2,56 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Monster_CombatController
-///   Contrôleur commun des monstres : tempo de tour, déplacement pas-à-pas,
-///      lancement de compétences via Entity_SkillCaster, et utilitaires IA.
-///      Le "cerveau" (IA) est fourni par un composant séparé implémentant IMonsterAI.
-/// </summary>
+// Monster_CombatController
+//  Contrôle le tour du monstre, les déplacements pas-à-pas, le déclenchement des compétences,
+//  et expose des helpers pour l'IA. Ajout ici : orientation vers la case ciblée pendant le déplacement.
 public class Monster_CombatController : MonoBehaviour
 {
-
     [Header("Références (assignées au spawn / prefab)")]
-    public Combat_PhaseManager phaseManager;   // Réf manager combat (injectée dans Phase_EnterSetupCombat)
-    public TileGrid_Manager tileGrid;          // Grille (injectée)
-    public Entity_StatistiqueCombat stats;     // Stats de l'entité (HP/PA/PM/PO/Team/skillBook)
-    public Entity_SkillCaster caster;          // Lanceur de compétences (commun)
+    public Combat_PhaseManager phaseManager;   // Référence vers le gestionnaire de phases de combat
+    public TileGrid_Manager tileGrid;          // Référence vers la grille de combat
+    public Entity_StatistiqueCombat stats;     // Statistiques de l'entité (HP/PA/PM/Team/skillBook)
+    public Entity_SkillCaster caster;          // Lanceur de compétences commun
+    public Entity_Animations anim;             // Contrôleur d’animations 3D (PlayWalk/StopWalk/etc.)
 
     [Header("IA (plug-in)")]
-    [Tooltip("Brancher ici le composant IA (ex: IA_Aggressif). Aucun auto-find.")]
+    [Tooltip("Assigner un composant qui implémente IMonsterAI (ex: IA_Aggressif).")]
     public MonoBehaviour behaviorComponent;    // Doit implémenter IMonsterAI
     private IMonsterAI behavior;               // Interface IA
-    public MonsterAIType typeIA;               // Indicatif pour l’inspector
+    public MonsterAIType typeIA;               // Indication dans l'inspector
 
     [Header("Tempo")]
-    public float startDelaySec = 1.0f;         // Attente en début de tour
-    public float afterMoveDelaySec = 0.1f;     // Petite pause après un pas (lisibilité)
-    public float stepDuration = 0.2f;          // Durée d’un pas (lerp court)
+    public float startDelaySec = 1.0f;         // Délai au début du tour (lisibilité)
+    public float afterMoveDelaySec = 0.1f;     // Petite pause après un pas
+    public float stepDuration = 0.2f;          // Durée d’un pas (lerp d'une tuile)
+
+    [Header("Orientation")]
+    public bool rotateTowardsTarget = true;    // Si true, on oriente le monstre vers la tuile visée
+    public bool instantTurnAtStepStart = true; // Si true, on pivote instantanément au début du pas
+    public float rotateSpeedDeg = 540f;        // Vitesse de rotation si pivot non instantané (degrés/s)
+    public float rotationOffsetY = 0f;         // Offset Y pour corriger un prefab mal orienté
 
     [Header("Debug")]
     public bool verboseLog = false;
 
-    // Flag lu par la phase (elle bloque EndTurn si une entité bouge)
+    // Flag utilisé par la phase (évite de finir le tour pendant un déplacement)
     public bool isMoving { get; private set; } = false;
 
     // Routine unique par tour
     private bool isPlayingTurn = false;
 
-    // Pop-up pour afficher la consommation de PM
+    // Pop-up (affichage PM consommés, etc.)
     private Popup_DisplayNumber popup;
 
     private void Awake()
     {
-        // Récupère les composants locaux si absents
+        // Récupération de composants locaux si non assignés
         if (!stats) TryGetComponent(out stats);
         if (!caster) TryGetComponent(out caster);
         if (!popup) TryGetComponent(out popup);
+        if (!anim) TryGetComponent(out anim); // Permet d'utiliser PlayWalk/StopWalk sans NullRef
 
-        // Vérifie le compos IA
+        // Vérification du composant IA
         if (behaviorComponent != null)
         {
             behavior = behaviorComponent as IMonsterAI;
@@ -59,7 +63,7 @@ public class Monster_CombatController : MonoBehaviour
             Debug.LogWarning($"[{name}] Aucun composant IA assigné (IMonsterAI).");
         }
 
-        // Le caster doit connaître ses refs (on push seulement si vides)
+        // Injection douce des références côté caster si elles sont vides
         if (caster != null)
         {
             if (!caster.phaseManager) caster.phaseManager = phaseManager;
@@ -69,12 +73,12 @@ public class Monster_CombatController : MonoBehaviour
 
     private void Update()
     {
-        // Sécurités
+        // Sécurités d'usage
         if (phaseManager == null || phaseManager.phaseTurn == null || tileGrid == null || stats == null || caster == null || behavior == null)
             return;
         if (!phaseManager.isInCombat || stats.isDead) return;
 
-        // Déclenche un tour uniquement si c'est à lui
+        // Déclencher un tour uniquement si c'est à moi et que je ne joue pas déjà
         if (phaseManager.phaseTurn.IsMyTurn(gameObject) && !isPlayingTurn)
             StartCoroutine(PlayTurnRoutine());
     }
@@ -83,17 +87,17 @@ public class Monster_CombatController : MonoBehaviour
     {
         isPlayingTurn = true;
 
-        // Tempo d'entrée de tour
+        // Délai d'entrée de tour (lisibilité)
         if (startDelaySec > 0f) yield return new WaitForSeconds(startDelaySec);
 
-        // Construit le contexte partagé (références + utilitaires)
+        // Prépare le contexte IA
         var ctx = new AIContext(this, phaseManager, tileGrid, stats, caster);
 
         // Hook IA début de tour
         behavior.OnTurnStart(ctx);
 
-        // Boucle de décision simple : on exécute les actions jusqu’à EndTurn
-        int guard = 16; // Sécurité anti-boucles
+        // Boucle de décisions
+        int guard = 16; // sécurité
         while (guard-- > 0)
         {
             AIAction action = behavior.DecideNextAction(ctx);
@@ -103,33 +107,33 @@ public class Monster_CombatController : MonoBehaviour
 
             if (action.type == AIActionType.MoveStep && action.targetTile != null)
             {
-                // Un pas visuel vers la tuile (cases cardinales)
+                // Un pas vers la tuile
                 yield return StepToTile(action.targetTile);
 
-                // Consomme 1 PM si dispo et affiche la pop-up PM
+                // Consommation d'1 PM et feedback
                 if (stats.currentPM > 0)
                 {
                     stats.SetPM(stats.currentPM - 1);
                     if (popup != null) popup.ShowPM(1);
                 }
 
-                // Petite pause lisible (évite téléport visuelle)
+                // Petite pause lisible
                 if (afterMoveDelaySec > 0f) yield return new WaitForSeconds(afterMoveDelaySec);
                 continue;
             }
 
             if (action.type == AIActionType.Cast && action.skill != null && action.targetTile != null)
             {
-                // Équipe et caste via l’API du caster (gère le FX selon waitFxBeforeApply)
+                // Lancement de sort via le caster (gère ses tempos/fx)
                 caster.EquipSkill(action.skill);
                 yield return caster.CastAtTileWithFx(action.skill, action.targetTile);
 
-                // Micro-pause pour lisibilité (la timeline est rafraîchie dans le caster)
+                // Micro-pause pour lisibilité
                 yield return new WaitForSeconds(0.05f);
                 continue;
             }
 
-            // Action invalide -> on coupe
+            // Action invalide -> fin
             if (verboseLog) Debug.LogWarning($"[{name}] Action IA invalide -> fin de tour.");
             break;
         }
@@ -137,7 +141,11 @@ public class Monster_CombatController : MonoBehaviour
         // Hook IA fin de tour
         behavior.OnTurnEnd(ctx);
 
-        // Fin de tour: assure-toi de ne pas couper pendant un mouvement
+        // Sécurité animation : s'assurer que la marche est stoppée
+        if (anim != null && anim.isActiveAndEnabled)
+            anim.StopWalk();
+
+        // Fin de tour si pas de mouvement en cours
         if (!isMoving && phaseManager != null && phaseManager.phaseTurn != null)
             phaseManager.phaseTurn.EndTurn();
 
@@ -145,10 +153,10 @@ public class Monster_CombatController : MonoBehaviour
     }
 
     // =====================================================================
-    // ==============         UTILITAIRES COMMUNS IA         ===============
+    // =====================    HELPERS ET OUTILS IA    ====================
     // =====================================================================
 
-    /// <summary>  Renvoie l’ennemi vivant le plus proche (distance Manhattan).</summary>
+    // Renvoie l’ennemi vivant le plus proche en distance Manhattan
     public GameObject GetNearestEnemy()
     {
         var enemies = GetOpponents();
@@ -156,7 +164,7 @@ public class Monster_CombatController : MonoBehaviour
 
         var myTile = tileGrid.GetTileOfEntity(gameObject);
         if (!myTile || !myTile.TryGetComponent(out SetupTile myS)) return null;
-        Vector2Int my = new(myS.tileX, myS.tileY);
+        Vector2Int my = new Vector2Int(myS.tileX, myS.tileY);
 
         GameObject best = null;
         int bestDist = int.MaxValue;
@@ -173,7 +181,7 @@ public class Monster_CombatController : MonoBehaviour
         return best;
     }
 
-    /// <summary>  Retourne la distance Manhattan entre soi et la cible.</summary>
+    // Distance Manhattan jusqu'à une entité cible
     public int GetDistanceTo(GameObject entity)
     {
         var a = tileGrid.GetTileOfEntity(gameObject);
@@ -184,7 +192,7 @@ public class Monster_CombatController : MonoBehaviour
         return Mathf.Abs(sa.tileX - sb.tileX) + Mathf.Abs(sa.tileY - sb.tileY);
     }
 
-    /// <summary>  Liste des adversaires dynamiquement, selon ma team (aucun hardcode Rouge/Verte).</summary>
+    // Liste des adversaires selon ma team
     public List<GameObject> GetOpponents()
     {
         return (stats != null && stats.team == 0)
@@ -192,7 +200,7 @@ public class Monster_CombatController : MonoBehaviour
             : phaseManager.phaseEnter.greenTeam;
     }
 
-    /// <summary>  Liste des alliés dynamiquement, selon ma team.</summary>
+    // Liste des alliés selon ma team
     public List<GameObject> GetAllies()
     {
         return (stats != null && stats.team == 0)
@@ -200,13 +208,12 @@ public class Monster_CombatController : MonoBehaviour
             : phaseManager.phaseEnter.redTeam;
     }
 
-    /// <summary>  Sélectionne les meilleurs skills d'attaque (mêlée et distance) depuis le skillBook.</summary>
+    // Sélectionne des skills d'attaque : meilleur mêlée et meilleur distance
     public void GetBestAttackSkills(out Data_Skill bestMelee, out Data_Skill bestRanged)
     {
         bestMelee = null;
         bestRanged = null;
 
-        // Construit une liste de Data_Skill à partir des Skill_Binding
         List<Data_Skill> book = new List<Data_Skill>();
         if (stats != null && stats.skillBook != null)
         {
@@ -217,7 +224,6 @@ public class Monster_CombatController : MonoBehaviour
             }
         }
 
-        // Fallback: on utilise la skill équipée si jamais la liste est vide
         if (book.Count == 0 && caster != null && caster.equippedSkill != null)
             book.Add(caster.equippedSkill);
 
@@ -237,7 +243,7 @@ public class Monster_CombatController : MonoBehaviour
         }
     }
 
-    /// <summary>  Teste si un skill peut être lancé sur la tuile de l'entité 'target' (mono-cible).</summary>
+    // Teste si un skill peut être lancé sur la tuile d'une entité cible
     public bool CanCastOnEntity(Data_Skill skill, GameObject target)
     {
         if (!skill || !target) return false;
@@ -246,7 +252,7 @@ public class Monster_CombatController : MonoBehaviour
         return caster.CanCastAtTile(skill, tile, out _);
     }
 
-    /// <summary>  Renvoie la "meilleure" tuile voisine libre qui rapproche de 'target'. Null si bloqué.</summary>
+    // Renvoie la meilleure tuile voisine libre qui rapproche d'une entité cible
     public GameObject GetBestNeighborTowards(GameObject target)
     {
         var myT = tileGrid.GetTileOfEntity(gameObject);
@@ -271,13 +277,10 @@ public class Monster_CombatController : MonoBehaviour
             int d = Mathf.Abs(nx - tgS.tileX) + Mathf.Abs(ny - tgS.tileY);
             if (d < bestDist) { bestDist = d; best = n; }
         }
-        return best; // peut être null (bloqué)
+        return best;
     }
 
-    /// <summary>
-    ///   Choisit, parmi MES 4 voisins libres, la tuile qui RAPPROCHE le plus d'une tuile cible 'goalTile'.
-    /// Retourne null si bloqué.
-    /// </summary>
+    // Choisit la meilleure tuile voisine libre pour se rapprocher d'une tuile objectif
     public GameObject GetBestNeighborTowardsTile(GameObject goalTile)
     {
         var myT = tileGrid.GetTileOfEntity(gameObject);
@@ -305,18 +308,28 @@ public class Monster_CombatController : MonoBehaviour
         return best;
     }
 
-    // ---------------------------------------------------------------------
-    /// <summary>  Un pas visuel vers 'tile' + mise à jour de la grille (verrou Y).</summary>
+    // Un pas visuel vers la tuile donnée + mise à jour de la grille + rotation vers la cible
     public IEnumerator StepToTile(GameObject tile)
     {
         if (!tile) yield break;
+
         isMoving = true;
+
+        // Lance l'animation de marche au début du pas
+        if (anim != null && anim.isActiveAndEnabled)
+            anim.PlayWalk();
 
         Vector3 start = transform.position;
         Vector3 end = tile.transform.position;
 
-        // Verrouillage axe vertical : on conserve le Y de départ (pas de mouvement en hauteur)
+        // Verrouillage vertical : on conserve le Y de départ
         end.y = start.y;
+
+        // Orientation initiale (instantanée ou non) vers la tuile cible
+        if (rotateTowardsTarget)
+        {
+            RotateTowards(end, instantTurnAtStepStart);
+        }
 
         float t = 0f;
         float dur = Mathf.Max(0.01f, stepDuration);
@@ -324,48 +337,87 @@ public class Monster_CombatController : MonoBehaviour
         {
             t += Time.deltaTime / dur;
 
-            // Interpolation lissée sur X/Z, Y reste constant
+            // Interpolation lissée sur X/Z
             Vector3 pos = Vector3.Lerp(start, end, Mathf.Clamp01(t));
             pos.y = start.y;
             transform.position = pos;
 
+            // Maintient l'état de marche tant que l'on se déplace
+            if (anim != null && anim.isActiveAndEnabled)
+                anim.SetWalk(true);
+
+            // Si on n'a pas pivoté instantanément, on continue de tourner progressivement vers la cible
+            if (rotateTowardsTarget && !instantTurnAtStepStart)
+            {
+                RotateTowards(end, false);
+            }
+
             yield return null;
         }
 
-        // Position finale (Y toujours verrouillé)
+        // Position finale
         transform.position = end;
 
         // Mise à jour mapping entité ↔ tuile
         tileGrid.RegisterEntity(gameObject, tile);
+
         isMoving = false;
+
+        // Stoppe l'animation de marche une fois la case atteinte
+        if (anim != null && anim.isActiveAndEnabled)
+            anim.StopWalk();
+    }
+
+    // Oriente le GameObject vers une position monde cible (Y ignoré), avec option instantanée
+    // - Calcul du yaw sur le plan XZ
+    // - Ajout d'un offset Y pour corriger l'orientation de base du prefab
+    private void RotateTowards(Vector3 worldTarget, bool instant)
+    {
+        Vector3 dir = worldTarget - transform.position;
+        dir.y = 0f; // ignore la pente verticale
+
+        // Si la direction est trop faible, on évite les NaN
+        if (dir.sqrMagnitude < 0.000001f) return;
+
+        float yaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        yaw += rotationOffsetY;
+
+        Quaternion targetRot = Quaternion.Euler(0f, yaw, 0f);
+
+        if (instant || rotateSpeedDeg <= 0f)
+        {
+            // Pivot franc immédiat
+            transform.rotation = targetRot;
+        }
+        else
+        {
+            // Rotation progressive
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRot,
+                rotateSpeedDeg * Time.deltaTime
+            );
+        }
     }
 }
 
-// ========================================================================
-// ======================   CONTRAT & CONTEXTE IA   =======================
-// ========================================================================
-
+// Types et interfaces liés à l'IA
 public enum MonsterAIType { Agressif, Passif, Fuyard }
-
 public enum AIActionType { None, MoveStep, Cast, EndTurn }
 
-/// <summary>
-///   Action renvoyée par une IA : un pas, un cast, ou fin de tour.
-/// </summary>
+// Action retournée par l'IA
 public struct AIAction
 {
     public AIActionType type;
     public Data_Skill skill;      // pour Cast
-    public GameObject targetTile; // pour MoveStep / Cast (mono)
+    public GameObject targetTile; // pour MoveStep / Cast
 
     public static AIAction End() => new AIAction { type = AIActionType.EndTurn };
     public static AIAction MoveTo(GameObject tile) => new AIAction { type = AIActionType.MoveStep, targetTile = tile };
     public static AIAction Cast(Data_Skill s, GameObject tile) => new AIAction { type = AIActionType.Cast, skill = s, targetTile = tile };
 }
 
-/// <summary>
-///   Contexte fourni à l'IA (réfs + helpers via le contrôleur).
-/// </summary>
+// Contexte fourni à l'IA (références + helpers)
 public class AIContext
 {
     public Monster_CombatController controller;
@@ -374,15 +426,13 @@ public class AIContext
     public Entity_StatistiqueCombat stats;
     public Entity_SkillCaster caster;
 
-    // Mémoire transitoire (ex: cible courante)
-    public GameObject currentTarget;
+    public GameObject currentTarget; // mémoire transitoire IA
 
     public AIContext(Monster_CombatController c, Combat_PhaseManager pm, TileGrid_Manager grid, Entity_StatistiqueCombat s, Entity_SkillCaster cast)
     {
         controller = c; phaseManager = pm; tileGrid = grid; stats = s; caster = cast;
     }
 
-    // Helpers exposés aux IA (wrappers vers le contrôleur)
     public GameObject GetNearestEnemy() => controller.GetNearestEnemy();
     public int GetDistanceTo(GameObject e) => controller.GetDistanceTo(e);
     public void GetBestAttackSkills(out Data_Skill melee, out Data_Skill ranged) => controller.GetBestAttackSkills(out melee, out ranged);
@@ -393,12 +443,10 @@ public class AIContext
     public List<GameObject> GetAllies() => controller.GetAllies();
 }
 
-/// <summary>
-///   Contrat minimal d’une IA de monstre.
-/// </summary>
+// Interface minimale pour une IA de monstre
 public interface IMonsterAI
 {
-    void OnTurnStart(AIContext ctx);          // Init / choix de cible initial
-    AIAction DecideNextAction(AIContext ctx); // Renvoie l'action suivante à exécuter
-    void OnTurnEnd(AIContext ctx);            // Nettoyage si besoin
+    void OnTurnStart(AIContext ctx);          // Initialisation du tour
+    AIAction DecideNextAction(AIContext ctx); // Choix de l'action suivante
+    void OnTurnEnd(AIContext ctx);            // Nettoyage de fin de tour
 }

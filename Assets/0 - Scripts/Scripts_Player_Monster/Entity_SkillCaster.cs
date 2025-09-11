@@ -8,6 +8,7 @@ public class Entity_SkillCaster : MonoBehaviour
     [Header("References")]
     public Combat_PhaseManager phaseManager;   // Assigné/injecté
     public TileGrid_Manager tileGrid;          // Assigné/injecté
+    public Entity_Animations anim;             // Référence vers le contrôleur d’animations 3D
 
     [Header("Skill")]
     public Data_Skill equippedSkill;           // Sort sélectionné (UI/IA)
@@ -24,8 +25,11 @@ public class Entity_SkillCaster : MonoBehaviour
     [SerializeField] private bool clampResist = true;        // Clamp des résistances
     [SerializeField] private Vector2 resistClamp = new Vector2(-100f, 100f); // Min/Max en %
 
-    [Header("Animation")]
-    public Entity_Animations anim;             // Référence vers le contrôleur d’animations 3D
+    [Header("Orientation")]
+    public bool rotateTowardsTarget = true;    // Si true, on oriente l’entité vers la tuile ciblée lors d’un cast
+    public bool instantTurnOnCast = true;      // Si true, pivot instantané au lancement du sort
+    public float rotateSpeedDeg = 540f;        // Vitesse de rotation si pivot non instantané (degrés/s)
+    public float rotationOffsetY = 0f;         // Offset pour corriger un prefab mal orienté (ex: 90, -90, 180)
 
     private Entity_StatistiqueCombat stats;
     private Popup_DisplayNumber popup;         // Pop-up PA du lanceur
@@ -74,14 +78,17 @@ public class Entity_SkillCaster : MonoBehaviour
 
         GameObject tileGO = tile.gameObject;
 
+        // Oriente l’entité vers la tuile ciblée juste avant de jouer l’animation
+        OrientTowardsTile(tileGO);
+
         if (waitFxBeforeApply)
         {
-            // Avec attente: l’animation est déclenchée dans la coroutine (au début)
+            // Avec attente: l’animation sera déclenchée dans la coroutine
             StartCoroutine(CastAtTile_PlayFxThenApply_WithHighlight(equippedSkill, tileGO));
         }
         else
         {
-            // Sans attente: on joue l’animation d’attaque avant les FX et les effets
+            // Sans attente: on joue l’animation d’attaque avant FX/effets
             PlayAttackAnimationForSkill(equippedSkill);
 
             var setup = tile.GetComponent<SetupTile>();
@@ -104,6 +111,9 @@ public class Entity_SkillCaster : MonoBehaviour
     public IEnumerator CastAtTileWithFx(Data_Skill skill, GameObject targetTile)
     {
         if (targetTile == null || !targetTile.TryGetComponent(out SetupTile setup)) yield break;
+
+        // Oriente l’entité vers la tuile ciblée avant l’animation
+        OrientTowardsTile(targetTile);
 
         if (waitFxBeforeApply)
         {
@@ -212,6 +222,9 @@ public class Entity_SkillCaster : MonoBehaviour
     {
         if (!CanCastAtTile(skill, targetTile, out _)) yield break;
         if (!targetTile.TryGetComponent(out SetupTile setup)) yield break;
+
+        // Oriente l’entité vers la tuile ciblée avant de jouer l’animation
+        OrientTowardsTile(targetTile);
 
         // Avec attente: déclencher l’animation d’attaque AVANT les FX
         PlayAttackAnimationForSkill(skill);
@@ -466,6 +479,49 @@ public class Entity_SkillCaster : MonoBehaviour
             default:
                 Debug.Log($"[Skill] Immediate effect not handled: {eff.effectType}");
                 break;
+        }
+    }
+
+    // =============================  ORIENTATION  =========================
+
+    // Oriente l'entité vers la tuile ciblée (Y verrouillé), selon la configuration instant/progressif
+    private void OrientTowardsTile(GameObject tileGO)
+    {
+        if (!rotateTowardsTarget || tileGO == null) return;
+
+        Vector3 target = tileGO.transform.position;
+        target.y = transform.position.y; // on reste à la même altitude
+
+        RotateTowards(target, instantTurnOnCast);
+    }
+
+    // Oriente vers une position monde cible (plan XZ), offset appliqué pour corriger l'orientation du prefab
+    private void RotateTowards(Vector3 worldTarget, bool instant)
+    {
+        if (!rotateTowardsTarget) return;
+
+        Vector3 dir = worldTarget - transform.position;
+        dir.y = 0f; // ignore toute pente verticale
+        if (dir.sqrMagnitude < 0.000001f) return;
+
+        float yaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        yaw += rotationOffsetY;
+
+        Quaternion targetRot = Quaternion.Euler(0f, yaw, 0f);
+
+        if (instant || rotateSpeedDeg <= 0f)
+        {
+            // Pivot immédiat
+            transform.rotation = targetRot;
+        }
+        else
+        {
+            // Rotation progressive (appelée une fois ici, utile si la vitesse est élevée)
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRot,
+                rotateSpeedDeg * Time.deltaTime
+            );
         }
     }
 
