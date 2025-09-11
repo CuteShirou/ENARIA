@@ -81288,6 +81288,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 184597aec4fa87846aad452682902a81, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1479340412}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 184597aec4fa87846aad452682902a81, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1479340413}
   m_SourcePrefab: {fileID: 100100000, guid: 184597aec4fa87846aad452682902a81, type: 3}
 --- !u!1 &1135295348
 GameObject:
@@ -88269,7 +88272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldText: {fileID: 6476581292405792021}
-  entityInfo: {fileID: 0}
+  entityInfo: {fileID: 1479340402}
 --- !u!114 &1479340395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88645,17 +88648,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66b9bbd5b00766b43b96d6c37a9f9e36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkBoolName: Walk
-  hitTriggerName: Hit
-  deathTriggerName: Death
-  castPhysicTriggerName: CastPhysicSpell
-  castMagicTriggerName: CastMagicSpell
-  enableTestInputs: 1
-  testToggleWalkKey: 119
-  testHitKey: 114
-  testDeathKey: 116
-  testCastPhysicKey: 113
-  testCastMagicKey: 101
+  castMagicParamName: CastMagicSpell
+  castPhysicParamName: CastPhysicSpell
+  deathParamName: Death
+  walkParamName: Walk
+  hitParamName: Hit
+  castMagicDuration: 0.8
+  castPhysicDuration: 0.7
+  hitDuration: 0.4
+  deathDuration: 1.2
+  blockWalkDuringOneShot: 1
+  enableDebugInput: 0
+--- !u!114 &1479340413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479340392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7eae243a3d838f4baba154bcff477d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startupMode: 0
+  applyModeOnAwake: 1
+  reapplyOnStart: 1
+  explorationScripts: []
+  preparationScripts:
+  - {fileID: 1479340399}
+  combatScripts:
+  - {fileID: 1479340397}
+  - {fileID: 1479340400}
+  - {fileID: 1479340395}
+  explorationObjects: []
+  preparationObjects: []
+  combatObjects: []
 --- !u!1 &1479505413
 GameObject:
   m_ObjectHideFlags: 0
@@ -137566,7 +137594,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3781998662280502870, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -116.499985
+      value: -116.50091
       objectReference: {fileID: 0}
     - target: {fileID: 3781998662280502870, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -138372,6 +138400,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -85
       objectReference: {fileID: 0}
+    - target: {fileID: 6895297924956488977, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
+      propertyPath: m_Color.b
+      value: 0.04099851
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895297924956488977, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7924528
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895297924956488977, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
+      propertyPath: m_Color.r
+      value: 0.011213934
+      objectReference: {fileID: 0}
     - target: {fileID: 6898011483128789708, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -138659,6 +138699,18 @@ PrefabInstance:
     - target: {fileID: 8124054381184136496, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -55
+      objectReference: {fileID: 0}
+    - target: {fileID: 8222199701662214694, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
+      propertyPath: m_Color.b
+      value: 0.764151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8222199701662214694, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5582383
+      objectReference: {fileID: 0}
+    - target: {fileID: 8222199701662214694, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
+      propertyPath: m_Color.r
+      value: 0.09011213
       objectReference: {fileID: 0}
     - target: {fileID: 8258045865799079243, guid: 4a1ea130135b0d34ea5c71d47cc47e91, type: 3}
       propertyPath: m_AnchorMax.y

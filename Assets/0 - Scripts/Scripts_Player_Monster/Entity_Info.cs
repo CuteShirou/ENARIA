@@ -5,7 +5,8 @@ using UnityEngine.Events;
 public enum SpecieType
 {
     Humain,
-    Elfe
+    Elfe,
+    Monster
 }
 
 public class Entity_Info : MonoBehaviour
