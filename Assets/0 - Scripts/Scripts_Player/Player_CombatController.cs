@@ -1,78 +1,109 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Player_CombatController : MonoBehaviour
 {
     [Header("References")]
-    public Combat_PhaseManager phaseManager;   //   pour tester IsMyTurn()
-    public TileGrid_Manager tileGrid;          //   ta grille de combat
+    public Combat_PhaseManager phaseManager;   // pour tester IsMyTurn()
+    public TileGrid_Manager tileGrid;          // grille de combat
 
     [Header("Movement")]
-    public float moveSpeed = 6f;               //   vitesse visuelle
-    public bool isMoving = false;              //   flag public lu par la phase (anti EndTurn)
+    public float moveSpeed = 6f;               // vitesse visuelle
+    public bool isMoving = false;              // flag public lu par la phase (anti EndTurn)
 
     private readonly Queue<Vector3> movementQueue = new();
     private Entity_StatistiqueCombat stats;
 
-    private void Awake()
+    [Header("Animation")]
+    public Entity_Animations entityAnim;       // contrôleur d'animations 3D (Player/Monstre)
+
+    void Awake()
     {
+        // Récupère les refs si non assignées
         if (!phaseManager) phaseManager = FindAnyObjectByType<Combat_PhaseManager>();
         if (!tileGrid && phaseManager) tileGrid = phaseManager.tileGrid;
     }
 
-    private void Start()
+    void Start()
     {
+        // Récupère le composant de stats
         stats = GetComponent<Entity_StatistiqueCombat>();
+
+        // Récupère l'anim s'il n'est pas déjà assigné dans l'Inspector
+        if (entityAnim == null) TryGetComponent(out entityAnim);
     }
 
-    private void Update()
+    void Update()
     {
-        //   Ignore hors-tour
+        // Ne réagit que si c'est le tour de ce joueur
         if (phaseManager == null || phaseManager.phaseTurn == null) return;
         if (!phaseManager.phaseTurn.IsMyTurn(gameObject)) return;
 
-        HandleMovement();
-        HandleClick();
+        HandleMovement(); // Gère la progression vers la prochaine cible
+        HandleClick();    // Gère le clic pour empiler un nouveau chemin
     }
 
-    // ---------------------------------------------------------------------
-    private void HandleMovement()
+    // Avance vers la cible courante, sans jamais viser un Y différent du Y actuel
+    void HandleMovement()
     {
         if (!isMoving || movementQueue.Count == 0) return;
 
         Vector3 target = movementQueue.Peek();
-        float step = moveSpeed * Time.deltaTime;
 
+        // Sécurité : impose le Y courant du joueur à la cible, pour ne bouger qu'en X/Z
+        target = new Vector3(target.x, transform.position.y, target.z);
+
+        float step = moveSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, target, step);
 
-        if (Vector3.Distance(transform.position, target) <= 0.01f)
+        // Tant qu'on est en déplacement, s'assurer que l'animation Walk reste active
+        if (entityAnim != null && entityAnim.isActiveAndEnabled)
+            entityAnim.SetWalk(true);
+
+        // Test d'arrivée en XZ uniquement (ignore toute variation de Y)
+        Vector2 curXZ = new Vector2(transform.position.x, transform.position.z);
+        Vector2 tgtXZ = new Vector2(target.x, target.z);
+        if ((curXZ - tgtXZ).sqrMagnitude <= 0.0004f) // ~2cm^2
         {
             movementQueue.Dequeue();
-            if (movementQueue.Count == 0) isMoving = false;
+            if (movementQueue.Count == 0)
+            {
+                isMoving = false;
+
+                // Arrêt de l'animation Walk à l'arrivée
+                if (entityAnim != null && entityAnim.isActiveAndEnabled)
+                    entityAnim.StopWalk();
+            }
         }
     }
 
-    private void HandleClick()
+    // Sur clic gauche, calcule un chemin puis empile des cibles monde "(tile.x, player.y, tile.z)"
+    void HandleClick()
     {
+        // Ignore pendant un mouvement ou si pas de PM
         if (isMoving) return;
         if (stats == null || stats.currentPM <= 0) return;
         if (!Camera.main || tileGrid == null) return;
 
         if (Input.GetMouseButtonDown(0))
         {
+            // Raycast souris vers la scène
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (!Physics.Raycast(ray, out RaycastHit hit, 200f)) return;
             if (!hit.collider.TryGetComponent(out SetupTile targetTile)) return;
 
+            // Coordonnées de départ/arrivée
             Vector2Int from = GetCurrentCoord();
             Vector2Int to = new Vector2Int(targetTile.tileX, targetTile.tileY);
 
+            // Déjà sur place
             if (from == to)
             {
-                Debug.Log("D�j� sur cette case.");
+                Debug.Log("Déjà sur cette case.");
                 return;
             }
 
+            // Validité et occupation de la case cible
             var destObj = tileGrid.GetTileAtCoordinates(to.x, to.y);
             if (!destObj)
             {
@@ -82,46 +113,50 @@ public class Player_CombatController : MonoBehaviour
             var occ = tileGrid.GetEntityOnTile(destObj);
             if (occ && occ != gameObject)
             {
-                Debug.Log("Case occup�e.");
+                Debug.Log("Case occupée.");
                 return;
             }
 
-            //   Utilise ton pathfinder si dispo (remplace la ligne ci-dessous)
+            // Calcule un chemin borné par le nombre de PM disponibles
             List<Vector2Int> path = TryFindPath(from, to, stats.currentPM);
-
             if (path == null || path.Count == 0)
             {
                 Debug.Log("Aucun chemin possible ou PM insuffisants.");
                 return;
             }
 
-            //   Consomme les PM selon longueur du chemin
+            // Consomme les PM selon la longueur du chemin
             stats.SetPM(stats.currentPM - path.Count);
 
-            //   Affiche la pop-up "- X PM"
+            // Affiche la pop-up "- X PM" si présente
             var popup = GetComponent<Popup_DisplayNumber>();
             if (popup != null) popup.ShowPM(path.Count);
 
-            //   File des positions monde
+            // Prépare la file de cibles monde en conservant le Y courant
             movementQueue.Clear();
+            float y = transform.position.y; // altitude actuelle à conserver pour tout le trajet
             for (int i = 0; i < path.Count; i++)
             {
                 var stepTile = tileGrid.GetTileAtCoordinates(path[i].x, path[i].y);
                 if (!stepTile) continue;
-                Vector3 wp = stepTile.transform.position; wp.y += 0.1f;
+
+                Vector3 tilePos = stepTile.transform.position;
+                Vector3 wp = new Vector3(tilePos.x, y, tilePos.z); // cible en XZ uniquement
                 movementQueue.Enqueue(wp);
             }
 
+            // Lance le mouvement si au moins une étape
             isMoving = movementQueue.Count > 0;
+
+            // Démarre immédiatement l'animation Walk si un déplacement commence
+            if (isMoving && entityAnim != null && entityAnim.isActiveAndEnabled)
+                entityAnim.PlayWalk();
         }
     }
 
-    // ---------------------------------------------------------------------
-    private List<Vector2Int> TryFindPath(Vector2Int from, Vector2Int to, int maxSteps)
+    // Fallback Manhattan borné par maxSteps (remplace si tu as un pathfinder)
+    List<Vector2Int> TryFindPath(Vector2Int from, Vector2Int to, int maxSteps)
     {
-        //   Exemple si tu as un utilitaire : return TileGrid_Pathfinder.FindPath(tileGrid, from, to, maxSteps);
-
-        //   Fallback simple Manhattan
         var result = new List<Vector2Int>();
         Vector2Int cursor = from;
 
@@ -146,7 +181,8 @@ public class Player_CombatController : MonoBehaviour
         return result;
     }
 
-    private Vector2Int GetCurrentCoord()
+    // Détermine la coordonnée tuile actuelle du joueur (dico ou plus proche)
+    Vector2Int GetCurrentCoord()
     {
         if (tileGrid == null) return Vector2Int.zero;
 
@@ -154,7 +190,7 @@ public class Player_CombatController : MonoBehaviour
         if (tileObj && tileObj.TryGetComponent(out SetupTile st))
             return new Vector2Int(st.tileX, st.tileY);
 
-        // fallback : plus proche
+        // Fallback : recherche de la tuile la plus proche
         Vector2Int best = Vector2Int.zero;
         float min = float.MaxValue;
         var tiles = tileGrid.GetAllTiles();
@@ -168,24 +204,21 @@ public class Player_CombatController : MonoBehaviour
         return best;
     }
 
-    //   � lier au bouton "Passe Tour" (OnClick)
+    // À lier au bouton "Passe Tour" (OnClick)
     public void OnClickPassTurn()
     {
-        //   S�curit� : on ne fait rien si la phase n'est pas pr�te
+        // Sécurité basique
         if (phaseManager == null || phaseManager.phaseTurn == null) return;
-
-        //   On ne peut passer le tour que si c'est bien mon tour
         if (!phaseManager.phaseTurn.IsMyTurn(gameObject)) return;
+        if (isMoving) return; // on évite de couper un mouvement en cours
 
-        //   On �vite de couper un d�placement en cours
-        if (isMoving) return;
-
-        //   Nettoie toute file de d�placement r�siduelle (visuel propre)
         movementQueue.Clear();
         isMoving = false;
 
-        //   Demande � la phase de passer au prochain combattant.
+        // S'assure d'arrêter l'animation Walk si besoin
+        if (entityAnim != null && entityAnim.isActiveAndEnabled)
+            entityAnim.StopWalk();
+
         phaseManager.phaseTurn.EndTurn();
     }
-
 }

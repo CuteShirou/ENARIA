@@ -24,6 +24,9 @@ public class Entity_SkillCaster : MonoBehaviour
     [SerializeField] private bool clampResist = true;        // Clamp des résistances
     [SerializeField] private Vector2 resistClamp = new Vector2(-100f, 100f); // Min/Max en %
 
+    [Header("Animation")]
+    public Entity_Animations anim;             // Référence vers le contrôleur d’animations 3D
+
     private Entity_StatistiqueCombat stats;
     private Popup_DisplayNumber popup;         // Pop-up PA du lanceur
 
@@ -35,6 +38,9 @@ public class Entity_SkillCaster : MonoBehaviour
         // Récupérations locales
         stats = GetComponent<Entity_StatistiqueCombat>();
         popup = GetComponent<Popup_DisplayNumber>();
+
+        // Récupération de sécurité si non assigné dans l’Inspector
+        if (anim == null) TryGetComponent(out anim);
     }
 
     private void Update()
@@ -70,10 +76,14 @@ public class Entity_SkillCaster : MonoBehaviour
 
         if (waitFxBeforeApply)
         {
+            // Avec attente: l’animation est déclenchée dans la coroutine (au début)
             StartCoroutine(CastAtTile_PlayFxThenApply_WithHighlight(equippedSkill, tileGO));
         }
         else
         {
+            // Sans attente: on joue l’animation d’attaque avant les FX et les effets
+            PlayAttackAnimationForSkill(equippedSkill);
+
             var setup = tile.GetComponent<SetupTile>();
             Tile_State prev = HighlightTile(setup, true);         // rouge visuel
 
@@ -97,10 +107,14 @@ public class Entity_SkillCaster : MonoBehaviour
 
         if (waitFxBeforeApply)
         {
+            // Avec attente: l’animation est déclenchée dans la coroutine appelée
             yield return CastAtTile_PlayFxThenApply_WithHighlight(skill, targetTile);
         }
         else
         {
+            // Sans attente: jouer l’animation d’attaque maintenant
+            PlayAttackAnimationForSkill(skill);
+
             Tile_State prev = HighlightTile(setup, true);
             var fxInst = PlayFxFor_GetInstance(skill, targetTile);
             CastAtTile(skill, targetTile);
@@ -198,6 +212,9 @@ public class Entity_SkillCaster : MonoBehaviour
     {
         if (!CanCastAtTile(skill, targetTile, out _)) yield break;
         if (!targetTile.TryGetComponent(out SetupTile setup)) yield break;
+
+        // Avec attente: déclencher l’animation d’attaque AVANT les FX
+        PlayAttackAnimationForSkill(skill);
 
         Tile_State prev = HighlightTile(setup, true);
         yield return PlayFxAndWaitFor(skill, targetTile);
@@ -380,32 +397,26 @@ public class Entity_SkillCaster : MonoBehaviour
 
     // =======================  CALCUL DES DÉGÂTS  =========================
 
-    // Calcule les dégâts finaux en tenant compte de l'élément, de la stat attaquante, de la résistance et du critique
     private int ComputeFinalDamage(Data_Skill skill, Entity_StatistiqueCombat attacker, Entity_StatistiqueCombat defender, out bool isCrit)
     {
         isCrit = false;
         if (skill == null || attacker == null || defender == null) return 0;
 
-        // Jet de base
         int roll = Random.Range(skill.damageMin, skill.damageMax + 1);
 
-        // Stat offensive selon l'élément
-        float offStat = GetOffensiveStat(attacker, skill.skillElement);     // ex: Force/Dex/Magie/Foi
+        float offStat = GetOffensiveStat(attacker, skill.skillElement);
         float multStat = (100f + Mathf.Max(0f, offStat)) / 100f;
 
-        // Résistance de la cible selon l'élément
-        float res = GetResistanceFor(defender, skill.skillElement);         // en %
+        float res = GetResistanceFor(defender, skill.skillElement);
         if (clampResist) res = Mathf.Clamp(res, resistClamp.x, resistClamp.y);
         float multRes = (100f - res) / 100f;
 
-        // Critique
         float critChance = Mathf.Clamp(attacker.currentCritChance + skill.critChance, 0f, 100f);
         if (Random.value < (critChance / 100f))
         {
             isCrit = true;
         }
 
-        // Dégâts
         float dmg = roll * multStat * multRes;
         if (isCrit) dmg *= Mathf.Max(1f, critMultiplier);
 
@@ -504,5 +515,32 @@ public class Entity_SkillCaster : MonoBehaviour
     {
         if (phaseManager != null && phaseManager.phaseTurn != null)
             phaseManager.phaseTurn.RefreshTimelineHP();
+    }
+
+    // =========================  ANIMATIONS 3D  ===========================
+
+    // Déclenche l’animation d’attaque en fonction de l’élément du sort
+    private void PlayAttackAnimationForSkill(Data_Skill skill)
+    {
+        // Vérifie que l’anim est disponible
+        if (anim == null || !anim.isActiveAndEnabled || skill == null) return;
+
+        // Force/Dexterité => Physique ; Magie/Foi => Magique
+        switch (skill.skillElement)
+        {
+            case SkillElement.Force:
+            case SkillElement.Dexterité:
+                anim.PlayCastPhysic();
+                break;
+
+            case SkillElement.Magie:
+            case SkillElement.Foi:
+                anim.PlayCastMagic();
+                break;
+
+            default:
+                anim.PlayCastPhysic(); // Sécurité par défaut
+                break;
+        }
     }
 }

@@ -38,7 +38,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     private Combat_PhaseManager manager;
     private readonly List<GameObject> pendingPlayers = new();
 
-    private void Awake()
+    void Awake()
     {
         // Active/désactive les Canvas selon l'état initial demandé
         if (setInitialUIOnAwake)
@@ -95,7 +95,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     }
 
     // Vérifie que teamRedParent et teamGreenParent sont présents
-    private void ValidateParentsOrLog()
+    void ValidateParentsOrLog()
     {
         if (teamRedParent == null)
             Debug.LogError("[Enter] teamRedParent manquant. Assigne la référence dans l'Inspector.", this);
@@ -105,7 +105,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     }
 
     // Instancie/réorganise les monstres et injecte les références nécessaires (Phase, Grid, PopUp)
-    private void SpawnMonstersInScene_Local()
+    void SpawnMonstersInScene_Local()
     {
         if (teamRedParent == null) return;
 
@@ -173,7 +173,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     }
 
     // Reparent les joueurs verts et force leur statut de combat
-    private void ReparentAllGreenPlayers()
+    void ReparentAllGreenPlayers()
     {
         if (teamGreenParent == null) return;
 
@@ -196,7 +196,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     }
 
     // Reconstruit la liste globale AllFighters
-    private void RebuildAllFighters()
+    void RebuildAllFighters()
     {
         AllFighters.Clear();
         AllFighters.AddRange(redTeam);
@@ -243,9 +243,14 @@ public class Phase_EnterSetupCombat : MonoBehaviour
                 player.transform.SetParent(teamGreenParent, true);
 
             if (manager.phasePrepa && manager.phasePrepa.isActiveAndEnabled)
+            {
+                // Place le joueur sur une tuile de l'équipe Verte
                 manager.phasePrepa.PlaceEntity(player);
+            }
             else
+            {
                 Debug.Log("[Enter] Phase Prépa non active : placement différé.");
+            }
         }
         else
         {
@@ -261,7 +266,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     }
 
     // Construit un ordre d'initiative alterné (Vert/Rouge) à partir des initiatives
-    private List<GameObject> BuildInitiativeOrderInterleaved(List<GameObject> source)
+    List<GameObject> BuildInitiativeOrderInterleaved(List<GameObject> source)
     {
         var greens = new List<GameObject>();
         var reds = new List<GameObject>();
@@ -329,7 +334,7 @@ public class Phase_EnterSetupCombat : MonoBehaviour
     }
 
     // Initialise les stats de combat si l'entité n'a pas encore été préparée
-    private void EnsureCombatStatsInitialized()
+    void EnsureCombatStatsInitialized()
     {
         if (AllFighters == null) return;
 

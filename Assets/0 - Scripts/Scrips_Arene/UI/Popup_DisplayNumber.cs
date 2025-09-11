@@ -6,25 +6,47 @@ using TMPro;
 public class Popup_DisplayNumber : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Canvas uiCanvas;                     // Canvas (Screen Space - Overlay recommandé)
+    [SerializeField] private Canvas uiCanvas;                     // Canvas d'affichage UI
     [SerializeField] private RectTransform panelDisplayNumber;    // Prefab Panel_DisplayNumber (RectTransform avec un enfant Text_InfoNumber TMP)
 
     [Header("Placement")]
-    [SerializeField] private Vector3 worldOffset = new Vector3(0f, 2f, 0f); // Décalage monde (X, Y, Z) au-dessus de l’entité
+    [SerializeField] private Vector3 worldOffset = new Vector3(0f, 2f, 0f); // Décalage monde au-dessus de l’entité
 
     [Header("Timing")]
     [SerializeField] private float displayDuration = 1.5f;        // Durée d’affichage avant destruction
 
     [Header("Colors")]
-    [SerializeField] private Color colorPA = new Color(0.25f, 0.6f, 1f); // Bleu PA
+    [SerializeField] private Color colorPA = new Color(0.25f, 0.6f, 1f);  // Bleu PA
     [SerializeField] private Color colorPM = new Color(0.2f, 0.85f, 0.4f); // Vert PM
     [SerializeField] private Color colorPV = new Color(1f, 0.25f, 0.25f);  // Rouge PV (dégâts)
 
-    // Registre global des instances UI créées, pour pouvoir tout nettoyer à la fin d’un combat
+    // Registre global des instances UI créées (nettoyage fin de combat)
     private static readonly List<GameObject> activePopupInstances = new List<GameObject>();
 
+    // Registre PAR ENTITÉ des popups issues de CE composant (pour attendre/forcer la fermeture)
+    private readonly List<GameObject> myPopupInstances = new List<GameObject>();
+
+    // Runner global pour faire tourner les coroutines indépendamment de l'état de l'entité
+    private static PopupRunner runner;
+    private static PopupRunner Runner
+    {
+        get
+        {
+            if (runner == null)
+            {
+                var go = new GameObject("__PopupRunner");
+                Object.DontDestroyOnLoad(go);
+                runner = go.AddComponent<PopupRunner>();
+            }
+            return runner;
+        }
+    }
+
+    // Composant vide servant uniquement d'hôte aux coroutines
+    private sealed class PopupRunner : MonoBehaviour { }
+
     // ---------------------------------------------------------
-    // DestroyAllActivePopups : détruit immédiatement toutes les pop-ups encore actives
+    // DestroyAllActivePopups : détruit immédiatement toutes les pop-ups encore actives (global)
     public static void DestroyAllActivePopups()
     {
         for (int i = 0; i < activePopupInstances.Count; i++)
@@ -36,7 +58,7 @@ public class Popup_DisplayNumber : MonoBehaviour
     }
 
     // ---------------------------------------------------------
-    // SetupPopupReferences : permet d'injecter les références depuis Phase_EnterSetupCombat
+    // SetupPopupReferences : injection depuis l'extérieur si besoin
     public void SetupPopupReferences(Canvas canvas, RectTransform prefab, Vector3 offset, float duration)
     {
         // Met à jour le Canvas si fourni
@@ -81,11 +103,12 @@ public class Popup_DisplayNumber : MonoBehaviour
         if (uiCanvas == null || panelDisplayNumber == null) return;
 
         // Instancie sous le Canvas (UI)
-        RectTransform inst = Instantiate(panelDisplayNumber, uiCanvas.transform);
+        RectTransform inst = Object.Instantiate(panelDisplayNumber, uiCanvas.transform);
         inst.gameObject.SetActive(true);
 
-        // Enregistre dans le registre global pour suppression groupée
+        // Registres global + local
         activePopupInstances.Add(inst.gameObject);
+        myPopupInstances.Add(inst.gameObject);
 
         // Récupère le TMP enfant nommé Text_InfoNumber
         TMP_Text txt = inst.GetComponentInChildren<TMP_Text>(true);
@@ -95,8 +118,8 @@ public class Popup_DisplayNumber : MonoBehaviour
             txt.color = color;
         }
 
-        // Lance le suivi position + destruction auto
-        StartCoroutine(Co_DisplayAndFollow(inst));
+        // Lance le suivi position + destruction auto via le runner global
+        Runner.StartCoroutine(Co_DisplayAndFollow(inst));
     }
 
     // ---------------------------------------------------------
@@ -113,11 +136,12 @@ public class Popup_DisplayNumber : MonoBehaviour
             yield return null;
         }
 
-        // Retire du registre (si pas déjà détruite par un nettoyage global)
+        // Retire des registres et détruit l'instance si encore présente
         if (uiInstance != null)
         {
             activePopupInstances.Remove(uiInstance.gameObject);
-            Destroy(uiInstance.gameObject);
+            myPopupInstances.Remove(uiInstance.gameObject);
+            Object.Destroy(uiInstance.gameObject);
         }
     }
 
@@ -134,6 +158,71 @@ public class Popup_DisplayNumber : MonoBehaviour
         RectTransform canvasRect = uiCanvas.transform as RectTransform;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPos, null, out Vector2 local);
         uiInstance.anchoredPosition = local;
+    }
+
+    // ---------------------------------------------------------
+    // HasActivePopups : indique si CE lanceur a encore des popups visibles
+    public bool HasActivePopups()
+    {
+        // Nettoie les entrées nulles au passage
+        for (int i = myPopupInstances.Count - 1; i >= 0; i--)
+        {
+            if (myPopupInstances[i] == null) myPopupInstances.RemoveAt(i);
+        }
+        return myPopupInstances.Count > 0;
+    }
+
+    // ---------------------------------------------------------
+    // WaitMyPopupsToFinish : attend que TOUTES les popups de CE lanceur soient détruites
+    public IEnumerator WaitMyPopupsToFinish()
+    {
+        // Boucle jusqu'à ce que toutes mes popups soient parties
+        while (HasActivePopups())
+            yield return null;
+    }
+
+    // ---------------------------------------------------------
+    // ForceCloseMyPopups : détruit immédiatement TOUTES les popups de CE lanceur
+    public void ForceCloseMyPopups()
+    {
+        for (int i = 0; i < myPopupInstances.Count; i++)
+        {
+            var go = myPopupInstances[i];
+            if (go != null) Object.Destroy(go);
+        }
+        myPopupInstances.Clear();
+    }
+
+    // ---------------------------------------------------------
+    // WaitAllPopupsToFinish : (optionnel) attend la fin de toutes les popups globales
+    public static IEnumerator WaitAllPopupsToFinish()
+    {
+        // Nettoie global de temps en temps
+        while (true)
+        {
+            for (int i = activePopupInstances.Count - 1; i >= 0; i--)
+            {
+                if (activePopupInstances[i] == null) activePopupInstances.RemoveAt(i);
+            }
+            if (activePopupInstances.Count == 0) yield break;
+            yield return null;
+        }
+    }
+
+    // ---------------------------------------------------------
+    // RunDisableAfterPopups : utilitaire prêt-à-l'emploi
+    // Désactive 'toDisable' après la fin de toutes les popups du 'owner' (utilise le runner global)
+    public static void RunDisableAfterPopups(Popup_DisplayNumber owner, GameObject toDisable)
+    {
+        if (toDisable == null) return;
+
+        Runner.StartCoroutine(Co_RunDisable(owner, toDisable));
+
+        IEnumerator Co_RunDisable(Popup_DisplayNumber o, GameObject go)
+        {
+            if (o != null) yield return o.WaitMyPopupsToFinish();
+            if (go != null) go.SetActive(false);
+        }
     }
 
     // ---------------------------------------------------------

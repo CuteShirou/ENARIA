@@ -8,6 +8,9 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     [Header("État")]
     public bool isFight = false;
 
+    [Header("Animation")]
+    [SerializeField] private Entity_Animations anim;
+
     [SerializeField] private bool _isDead = false;
     public bool isDead
     {
@@ -148,10 +151,31 @@ public class Entity_StatistiqueCombat : MonoBehaviour
 
     public void SetHP(int value)
     {
+        // Clamp dans [0 .. baseHP] pour rester cohérent
         value = Mathf.Clamp(value, 0, Mathf.Max(1, baseHP));
+
+        // Si inchangé → rien à faire
         if (value == _currentHP) return;
-        int old = _currentHP; _currentHP = value; OnHPChanged(old, _currentHP);
+
+        // Conserve l'ancien HP pour savoir si on a perdu des PV
+        int old = _currentHP;
+
+        // Applique la nouvelle valeur
+        _currentHP = value;
+
+        // Si perte de PV ET pas tombé à 0 → jouer l'animation de "Hit"
+        // (isFight évite des hits visuels hors combat si tu utilises SetHP ailleurs)
+        if (value < old && value > 0 && isFight)
+        {
+            // Joue le "Hit" si le composant d'animation est présent et actif
+            if (anim != null && anim.isActiveAndEnabled)
+                anim.PlayHit();
+        }
+
+        // Log/Hook existant
+        OnHPChanged(old, _currentHP);
     }
+
 
     public void SetPA(int value) { value = Mathf.Max(0, value); if (value == _currentPA) return; int old = _currentPA; _currentPA = value; OnPAChanged(old, _currentPA); }
     public void SetPM(int value) { value = Mathf.Max(0, value); if (value == _currentPM) return; int old = _currentPM; _currentPM = value; OnPMChanged(old, _currentPM); }

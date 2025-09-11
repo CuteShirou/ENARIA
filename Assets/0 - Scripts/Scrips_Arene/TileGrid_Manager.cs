@@ -10,11 +10,9 @@ public class TileGrid_Manager : MonoBehaviour
     [Header("Liste des tuiles de la grille")]
     [SerializeField] private List<GameObject> allTiles = new();
 
-    // ─────────────────────────────────────────────────────────
     // AJOUT — refs de scène à propager automatiquement aux tuiles
     [Header("Injection vers Tile_Visual")]
-    public InfoEntityPanelUI infoPanelForTiles; //   Assigne ici ton Panel_Info_Bubble (InfoEntityPanelUI)
-    // ─────────────────────────────────────────────────────────
+    public InfoEntityPanelUI infoPanelForTiles; // Assigne ici ton Panel_Info_Bubble (InfoEntityPanelUI)
 
     // Dictionnaire entité → tuile
     private readonly Dictionary<GameObject, GameObject> entityToTile = new();
@@ -22,7 +20,6 @@ public class TileGrid_Manager : MonoBehaviour
     // Dictionnaire tuile → entité
     private readonly Dictionary<GameObject, GameObject> tileToEntity = new();
 
-    //------------------------------------------------------------
     // Enregistre une tuile dans la grille
     public void RegisterTile(GameObject tile)
     {
@@ -34,16 +31,12 @@ public class TileGrid_Manager : MonoBehaviour
         if (!tileToEntity.ContainsKey(tile))
             tileToEntity[tile] = null; // libre par défaut
 
-        // ─────────────────────────────────────────────────────
-        // AJOUT — Injection auto des refs sur cette tuile
-        //   Pas d'auto-find : on passe "this" + le panel assigné dans l'inspector
+        // Injection auto des refs sur cette tuile
         var visual = tile.GetComponent<Tile_Visual>();
         if (visual != null)
             visual.SetShared(this, infoPanelForTiles);
-        // ─────────────────────────────────────────────────────
     }
 
-    //------------------------------------------------------------
     // Associe une entité à une tuile (libère l’ancienne si besoin)
     public void RegisterEntity(GameObject entity, GameObject tile)
     {
@@ -61,7 +54,6 @@ public class TileGrid_Manager : MonoBehaviour
         tileToEntity[tile] = entity;
     }
 
-    //------------------------------------------------------------
     // Libère la tuile occupée par l’entité
     public void UnregisterEntity(GameObject entity)
     {
@@ -73,7 +65,6 @@ public class TileGrid_Manager : MonoBehaviour
         entityToTile.Remove(entity);
     }
 
-    //------------------------------------------------------------
     // Libère toutes les entités (ne détruit rien)
     public void UnregisterAllEntities()
     {
@@ -82,7 +73,6 @@ public class TileGrid_Manager : MonoBehaviour
             UnregisterEntity(e);
     }
 
-    //------------------------------------------------------------
     // Vérifie si une tuile est libre
     public bool IsTileFree(GameObject tile)
     {
@@ -90,7 +80,6 @@ public class TileGrid_Manager : MonoBehaviour
         return !tileToEntity.TryGetValue(tile, out GameObject occupant) || occupant == null;
     }
 
-    //------------------------------------------------------------
     // Retourne la tuile actuelle d’une entité
     public GameObject GetTileOfEntity(GameObject entity)
     {
@@ -98,7 +87,6 @@ public class TileGrid_Manager : MonoBehaviour
         return entityToTile.TryGetValue(entity, out GameObject tile) ? tile : null;
     }
 
-    //------------------------------------------------------------
     // Retourne l’entité placée sur une tuile
     public GameObject GetEntityOnTile(GameObject tile)
     {
@@ -106,11 +94,9 @@ public class TileGrid_Manager : MonoBehaviour
         return tileToEntity.TryGetValue(tile, out GameObject occupant) ? occupant : null;
     }
 
-    //------------------------------------------------------------
     // Retourne toutes les tuiles de la grille
     public List<GameObject> GetAllTiles() => allTiles;
 
-    //------------------------------------------------------------
     // Retourne la tuile aux coordonnées X/Y
     public GameObject GetTileAtCoordinates(int x, int y)
     {
@@ -125,14 +111,11 @@ public class TileGrid_Manager : MonoBehaviour
         return null;
     }
 
-    //------------------------------------------------------------
     // RESET COMPLET : détruit les GameObjects de tuiles et vide les dictionnaires
     public void ClearGrid(bool destroyTilesGameObjects = true)
     {
-        // 1) Libère toutes les entités (aucun occupant sur aucune tuile)
         UnregisterAllEntities();
 
-        // 2) Détruit les tuiles si demandé
         if (destroyTilesGameObjects)
         {
             foreach (var tile in allTiles)
@@ -147,7 +130,6 @@ public class TileGrid_Manager : MonoBehaviour
             }
         }
 
-        // 3) Vide les structures
         allTiles.Clear();
         tileToEntity.Clear();
         entityToTile.Clear();
@@ -155,9 +137,29 @@ public class TileGrid_Manager : MonoBehaviour
         Debug.Log("[TileGrid] Grille nettoyée (tuiles " + (destroyTilesGameObjects ? "détruites" : "préservées") + ").");
     }
 
-    //==================================================================
-    //=====================   DEBUG INSPECTOR   =========================
-    //==================================================================
+    // ==================================================================
+    // ===============  UTILITAIRES MOUVEMENT EN X/Z  ===================
+    // ==================================================================
+
+    // Construit une cible centrée sur la tuile en conservant le Y actuel de l'entité
+    public Vector3 GetTileXZTargetForEntity(GameObject entity, GameObject tile)
+    {
+        if (!entity || !tile) return Vector3.zero;
+        Vector3 tilePos = tile.transform.position;     // on exploite X/Z de la tuile
+        float y = entity.transform.position.y;         // on garde l'altitude courante de l'entité
+        return new Vector3(tilePos.x, y, tilePos.z);   // cible en XZ, Y figé
+    }
+
+    // Variante par coordonnées de tuile
+    public Vector3 GetTileXZTargetForEntity(GameObject entity, int x, int y)
+    {
+        GameObject tile = GetTileAtCoordinates(x, y);
+        return GetTileXZTargetForEntity(entity, tile);
+    }
+
+    // ==================================================================
+    // ====================   DEBUG INSPECTOR   =========================
+    // ==================================================================
 
     [Header("DEBUG: État des cases (lecture seule)")]
     [SerializeField] private List<string> entityToTileDebug = new();
@@ -184,8 +186,7 @@ public class TileGrid_Manager : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // AJOUT — utilitaire: ré-injecter aux tuiles déjà enregistrées (facultatif)
+    // Utilitaire: ré-injecter aux tuiles déjà enregistrées (facultatif)
     [ContextMenu("Reinject Shared Refs To All Tiles")]
     private void ReinjectSharedToAllTiles()
     {
@@ -197,5 +198,4 @@ public class TileGrid_Manager : MonoBehaviour
                 visual.SetShared(this, infoPanelForTiles);
         }
     }
-    // ─────────────────────────────────────────────────────────────────
 }

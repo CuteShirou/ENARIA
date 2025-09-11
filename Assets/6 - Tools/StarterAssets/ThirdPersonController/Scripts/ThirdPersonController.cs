@@ -1,110 +1,131 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization; // Pour FormerlySerializedAs
 
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonController : MonoBehaviour
 {
     [Header("Click To Move")]
-    public float ClickMoveSpeed = 5f;
-    public LayerMask ClickableLayers;
-    public GameObject CinemachineCameraTarget;
+    [FormerlySerializedAs("ClickMoveSpeed")]
+    public float walkSpeed = 5f;                      // Vitesse de marche
+    public float runSpeed = 8f;                       // Vitesse de course
+    public LayerMask ClickableLayers;                 // Couches cliquables pour le raycast
+    public GameObject CinemachineCameraTarget;        // Cible caméra (inchangé)
 
-    private CharacterController _controller;
-    private Animator _animator;
-    private GameObject _mainCamera;
+    [Header("Animation Settings")]
+    public float runDistanceThreshold = 5f;           // Seuil de distance initiale pour basculer en course
+    public float runAnimSpeedMultiplier = 1.5f;       // Multiplicateur de vitesse Animator quand on court
 
-    private Vector3 _clickTarget;
-    private bool _isClickMoving = false;
-    private bool _hasAnimator;
-    private int _animIDSpeed;
-    private int _animIDMotionSpeed;
+    private CharacterController _controller;          // Référence CharacterController
+    private Animator _animator;                       // Référence Animator
+    private GameObject _mainCamera;                   // Cache caméra active
 
-    private bool _clickDetected = false;
-    public GameObject uiPrefab;
-    private GameObject _uiInstance;
+    private Entity_Animations _playerAnimations;      // Proxy d’animations
+    private bool _hasAnimProxy;                       // True si proxy présent
+
+    private Vector3 _clickTarget;                     // Cible click-to-move
+    private bool _isClickMoving = false;              // Déplacement en cours
+    private bool _isRunningThisPath = false;          // Verrou marche/course pour ce trajet
+
+    private bool _hasAnimator;                        // True si Animator trouvé
+    private int _animIDSpeed;                         // Fallback param Speed
+    private int _animIDMotionSpeed;                   // Fallback param MotionSpeed
+
+    private bool _clickDetected = false;              // Clic détecté cette frame
+    public GameObject uiPrefab;                       // Prefab UI joueur (inchangé)
+    private GameObject _uiInstance;                   // Instance UI
 
     // Accesseurs publics
-    public bool IsInCombat { get; set; } = false;
-    public bool IsClickMoving => _isClickMoving;
-    public Vector3 ClickTarget => _clickTarget;
-    public bool HasAnimator => _hasAnimator;
-    public Animator Animator => _animator;
-    public int AnimIDSpeed => _animIDSpeed;
-    public int AnimIDMotionSpeed => _animIDMotionSpeed;
+    public bool IsInCombat { get; set; } = false;     // Indique si en combat
+    public bool IsClickMoving => _isClickMoving;      // État déplacement
+    public Vector3 ClickTarget => _clickTarget;       // Cible actuelle
+    public bool HasAnimator => _hasAnimator;          // Présence Animator
+    public Animator Animator => _animator;            // Expose Animator
+    public int AnimIDSpeed => _animIDSpeed;           // ID Speed (fallback)
+    public int AnimIDMotionSpeed => _animIDMotionSpeed; // ID MotionSpeed (fallback)
 
+    // Initialisation des références
     private void Awake()
     {
-        // Composants de base
-        _controller = GetComponent<CharacterController>();
-        _animator = GetComponent<Animator>();
-        _hasAnimator = _animator != null;
-        AssignAnimationIDs();
+        _controller = GetComponent<CharacterController>();     // Récupère CharacterController
+        _animator = GetComponent<Animator>();                  // Récupère Animator
+        _playerAnimations = GetComponent<Entity_Animations>(); // Récupère proxy anim
+        _hasAnimProxy = _playerAnimations != null;             // Proxy présent ?
+        _hasAnimator = _animator != null;                      // Animator présent ?
 
-        // Sécurise une caméra active pour le raycast
-        EnsureMainCamera();
-    }
+        AssignAnimationIDs();                                   // Enregistre IDs fallback
+        EnsureMainCamera();                                     // Sécurise la caméra
 
-    private void Start()
-    {
-        // Si une autre caméra devient MainCamera au Start (ex: Cinemachine),
-        // on la récupère ici également.
-        if (_mainCamera == null || Camera.main != null && _mainCamera != Camera.main.gameObject)
+        if (_hasAnimator)
         {
-            EnsureMainCamera();
+            _animator.SetFloat(_animIDSpeed, 0f);              // Fallback: Speed à 0
+            _animator.SetFloat(_animIDMotionSpeed, 0f);        // Fallback: MotionSpeed à 0
+            _animator.speed = 1f;                              // Vitesse lecture par défaut
         }
     }
 
-    /// <summary>
-    /// Appelé par un contexte réseau. On garde pour compatibilité,
-    /// mais on sécurise aussi hors réseau via Awake/Start.
-    /// </summary>
+    // Post-init (ordre d’exécution garanti après Awake() des autres composants)
+    private void Start()
+    {
+        if (_mainCamera == null || (Camera.main != null && _mainCamera != Camera.main.gameObject))
+        {
+            EnsureMainCamera();                                // Revalide caméra active
+        }
+
+        // Important: on remet Walk à false ici (et plus dans Awake) pour éviter le null
+        if (_hasAnimProxy) _playerAnimations.SetWalk(false);   // State Walk au repos
+
+        if (runAnimSpeedMultiplier < 1f) runAnimSpeedMultiplier = 1f; // Clamp valeurs
+        if (runDistanceThreshold < 0f) runDistanceThreshold = 0f;
+        if (runSpeed < walkSpeed) runSpeed = walkSpeed;               // Cohérence
+    }
+
+    // Contexte réseau éventuel (inchangé)
     public void OnStartLocalPlayer()
     {
-        // Recherche d'une caméra enfant éventuelle
-        Transform camTransform = transform.Find("PlayerCamera");
+        Transform camTransform = transform.Find("PlayerCamera");      // Cherche caméra enfant
         if (camTransform != null)
         {
-            Camera cam = camTransform.GetComponent<Camera>();
+            Camera cam = camTransform.GetComponent<Camera>();         // Récupère caméra
             if (cam != null)
             {
-                cam.enabled = true;
-                cam.tag = "MainCamera";
-                _mainCamera = cam.gameObject;
-                Debug.Log("📸 Caméra locale activée (OnStartLocalPlayer) pour : " + gameObject.name);
+                cam.enabled = true;                                   // Active caméra
+                cam.tag = "MainCamera";                               // Tag MainCamera
+                _mainCamera = cam.gameObject;                         // Mémorise
+                Debug.Log("Camera locale activée (OnStartLocalPlayer) pour : " + gameObject.name);
             }
         }
 
-        // UI (inchangé)
-        Transform uiTransform = transform.Find("UI");
+        Transform uiTransform = transform.Find("UI");                 // Cherche UI existante
         if (_uiInstance == null)
         {
-            GameObject prefab = Resources.Load<GameObject>("UI/PlayerUI");
+            GameObject prefab = Resources.Load<GameObject>("UI/PlayerUI"); // Charge UI
             if (prefab != null)
             {
-                _uiInstance = Instantiate(prefab);
-                _uiInstance.name = "UI_" + gameObject.name;
-                Canvas canvas = _uiInstance.GetComponent<Canvas>();
+                _uiInstance = Instantiate(prefab);                     // Instancie UI
+                _uiInstance.name = "UI_" + gameObject.name;            // Nom lisible
+                Canvas canvas = _uiInstance.GetComponent<Canvas>();    // Récupère Canvas
                 if (canvas != null)
                 {
-                    canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                    canvas.enabled = true;
+                    canvas.renderMode = RenderMode.ScreenSpaceOverlay; // Mode affichage
+                    canvas.enabled = true;                             // Active
                 }
-                DontDestroyOnLoad(_uiInstance);
+                DontDestroyOnLoad(_uiInstance);                        // Persiste
             }
             else
             {
-                Debug.LogWarning("❌ UI prefab introuvable dans Resources/UI/PlayerUI");
+                Debug.LogWarning("UI prefab introuvable dans Resources/UI/PlayerUI");
             }
         }
 
-        // On s'assure à nouveau d'avoir une caméra.
-        EnsureMainCamera();
+        EnsureMainCamera();                                           // Sécurise caméra
     }
 
+    // Boucle principale
     private void Update()
     {
-        // Garde-fous UI / états
+        // Bloque si une UI prioritaire est ouverte
         if (typeof(UIToggle).GetProperty("IsInventoryOpen") != null)
         {
             if (UIToggle.IsInventoryOpen) return;
@@ -114,46 +135,53 @@ public class ThirdPersonController : MonoBehaviour
             if (OnClick3D.cerealesIsActive) return;
         }
 
-        // Si EventSystem est manquant, on ne bloque pas le clic
+        // Ignore les clics au-dessus de l’UI
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             return;
 
-        // Nouveau Input System : Mouse.current peut être null selon le device.
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame ||
-            Mouse.current == null && Input.GetMouseButtonDown(0))
+        // Détection du clic gauche (InputSystem ou InputLegacy)
+        if ((Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) ||
+            (Mouse.current == null && Input.GetMouseButtonDown(0)))
         {
-            _clickDetected = true;
-            Debug.Log("🖱 Clic détecté sur : " + gameObject.name);
+            _clickDetected = true;                                    // Note le clic
+            Debug.Log("Clic détecté sur : " + gameObject.name);
         }
 
+        // Maintient Grounded à true pour l’Animator si utilisé
         if (_hasAnimator) _animator.SetBool("Grounded", true);
 
-        ClickToMove();
+        ClickToMove();                                                // Gère le déplacement
     }
 
+    // Déplacement click-to-move + verrou marche/course pour tout le trajet
     private void ClickToMove()
     {
         if (_clickDetected)
         {
-            _clickDetected = false;
-
-            EnsureMainCamera();
+            _clickDetected = false;                                   // Consomme l’événement
+            EnsureMainCamera();                                       // S’assure d’une caméra
             if (_mainCamera == null)
             {
-                Debug.LogWarning("❌ Caméra non définie (aucune MainCamera trouvée).");
+                Debug.LogWarning("Camera non définie (aucune MainCamera trouvée).");
                 return;
             }
 
-            Vector2 screenPos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
-            Ray ray = _mainCamera.GetComponent<Camera>().ScreenPointToRay(screenPos);
+            Vector2 screenPos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition; // Position écran
+            Ray ray = _mainCamera.GetComponent<Camera>().ScreenPointToRay(screenPos); // Raycast
 
-            // Si ClickableLayers vaut 0 (par défaut), on tape tout (~0)
-            int mask = ClickableLayers.value == 0 ? ~0 : ClickableLayers.value;
+            int mask = ClickableLayers.value == 0 ? ~0 : ClickableLayers.value; // Si aucun layer, tape tout
             if (Physics.Raycast(ray, out RaycastHit hit, 100f, mask))
             {
-                Debug.Log("🎯 Raycast hit: " + hit.point);
-                _clickTarget = hit.point;
-                _isClickMoving = true;
+                _clickTarget = hit.point;                              // Enregistre la cible
+                _isClickMoving = true;                                 // Lance le déplacement
+
+                // Calcule distance horizontale initiale et verrouille le mode
+                Vector3 flatTarget = new Vector3(_clickTarget.x, transform.position.y, _clickTarget.z);
+                float initialDistance = (flatTarget - transform.position).magnitude;
+                _isRunningThisPath = initialDistance > runDistanceThreshold;
+
+                // Met à jour la vitesse de lecture Animator selon le mode
+                ApplyWalkAnimatorSpeed(_isRunningThisPath);
             }
         }
 
@@ -162,79 +190,104 @@ public class ThirdPersonController : MonoBehaviour
             Vector3 flatTarget = new Vector3(_clickTarget.x, transform.position.y, _clickTarget.z);
             Vector3 direction = (flatTarget - transform.position);
             float distance = direction.magnitude;
+
             if (distance > 0.1f)
             {
                 direction.Normalize();
-                _controller.Move(direction * ClickMoveSpeed * Time.deltaTime);
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
 
-                if (_hasAnimator)
+                // Utilise la vitesse verrouillée pour tout le trajet
+                float currentMoveSpeed = _isRunningThisPath ? runSpeed : walkSpeed;
+                _controller.Move(direction * currentMoveSpeed * Time.deltaTime);                     // Déplace
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f); // Oriente
+
+                // Active Walk pendant le déplacement
+                if (_hasAnimProxy) _playerAnimations.SetWalk(true);
+                else if (_hasAnimator)
                 {
-                    _animator.SetFloat(_animIDSpeed, ClickMoveSpeed);
+                    _animator.SetFloat(_animIDSpeed, currentMoveSpeed);                              // Fallback
                     _animator.SetFloat(_animIDMotionSpeed, 1f);
                 }
+
+                // Assure vitesse de lecture conforme
+                ApplyWalkAnimatorSpeed(_isRunningThisPath);
             }
             else
             {
+                // Arrêt au point cible
                 _clickTarget = Vector3.zero;
                 _isClickMoving = false;
-                if (_hasAnimator)
+                _isRunningThisPath = false;
+
+                if (_hasAnimProxy) _playerAnimations.SetWalk(false);
+                else if (_hasAnimator)
                 {
-                    _animator.SetFloat(_animIDSpeed, 0f);
+                    _animator.SetFloat(_animIDSpeed, 0f);                                            // Fallback
                     _animator.SetFloat(_animIDMotionSpeed, 0f);
                 }
+
+                if (_hasAnimator) _animator.speed = 1f;                                              // Restaure vitesse
             }
+        }
+        else
+        {
+            // Hors déplacement, garantit un état propre
+            if (_hasAnimProxy) _playerAnimations.SetWalk(false);
+            if (_hasAnimator) _animator.speed = 1f;
+            _isRunningThisPath = false;
         }
     }
 
-    private void AssignAnimationIDs()
+    // Ajuste la vitesse de lecture Animator selon marche/course
+    private void ApplyWalkAnimatorSpeed(bool isRunning)
     {
-        _animIDSpeed = Animator.StringToHash("Speed");
-        _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+        if (!_hasAnimator) return;                                    // Nécessite un Animator
+        float targetSpeed = isRunning ? runAnimSpeedMultiplier : 1f;  // Vitesse visuelle
+        _animator.speed = targetSpeed;                                // Applique
     }
 
+    // Enregistre les IDs d’Animator (fallback)
+    private void AssignAnimationIDs()
+    {
+        _animIDSpeed = Animator.StringToHash("Speed");                // ID param Speed
+        _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");    // ID param MotionSpeed
+    }
+
+    // Stoppe immédiatement le mouvement en cours (ex: entrée en combat)
     public void ForceStopMovement()
     {
-        _clickTarget = Vector3.zero;
-        _isClickMoving = false;
+        _clickTarget = Vector3.zero;                                  // Efface la cible
+        _isClickMoving = false;                                       // Stop le déplacement
+        _isRunningThisPath = false;                                   // Déverrouille
 
-        if (_hasAnimator)
+        if (_hasAnimProxy) _playerAnimations.SetWalk(false);          // Coupe Walk
+        else if (_hasAnimator)
         {
-            _animator.SetFloat(_animIDSpeed, 0f);
+            _animator.SetFloat(_animIDSpeed, 0f);                     // Fallback
             _animator.SetFloat(_animIDMotionSpeed, 0f);
         }
 
-        Debug.Log("🛑 Mouvement stoppé manuellement.");
+        if (_hasAnimator) _animator.speed = 1f;                       // Restaure vitesse
+        Debug.Log("Mouvement stoppé manuellement.");
     }
 
-    /// <summary>
-    /// Tente de trouver une caméra utilisable :
-    /// 1) Camera.main
-    /// 2) Une caméra enfant du joueur (active ou inactive)
-    /// 3) La première caméra active dans la scène
-    /// </summary>
+    // Sécurise la présence d’une caméra pour les raycasts
     private void EnsureMainCamera()
     {
-        if (_mainCamera != null) return;
+        if (_mainCamera != null) return;                              // Déjà définie
 
-        Camera cam = Camera.main;
+        Camera cam = Camera.main;                                     // Cherche Camera.main
+        if (cam == null) cam = GetComponentInChildren<Camera>(true);  // Cherche caméra enfant
         if (cam == null)
         {
-            cam = GetComponentInChildren<Camera>(true);
-        }
-        if (cam == null)
-        {
-            var cams = FindObjectsOfType<Camera>();
+            var cams = FindObjectsOfType<Camera>();                   // Prend n’importe quelle caméra
             if (cams.Length > 0) cam = cams[0];
         }
 
         if (cam != null)
         {
-            _mainCamera = cam.gameObject;
-            // On s'assure que la caméra a bien le tag pour d'autres systèmes
-            if (cam.tag != "MainCamera")
-                cam.tag = "MainCamera";
-            Debug.Log($"📸 Caméra assignée: {_mainCamera.name}");
+            _mainCamera = cam.gameObject;                             // Mémorise la caméra
+            if (cam.tag != "MainCamera") cam.tag = "MainCamera";      // Assure le tag
+            Debug.Log("Camera assignée: " + _mainCamera.name);
         }
     }
 }

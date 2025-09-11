@@ -12,13 +12,14 @@ public class Player_ScriptManager : MonoBehaviour
     }
 
     [Header("Mode courant")]
-    [SerializeField] private Mode startupMode = Mode.Exploration;
-    [SerializeField] private bool applyModeOnAwake = true;
+    [SerializeField] private Mode startupMode = Mode.Exploration;   // Mode au démarrage
+    [SerializeField] private bool applyModeOnAwake = true;          // Appliquer dès Awake
+    [SerializeField] private bool reapplyOnStart = true;            // Ré-appliquer en Start (assure l'état après tous les Awake)
 
     [Header("Scripts à activer par mode")]
-    [SerializeField] private List<Behaviour> explorationScripts = new();
-    [SerializeField] private List<Behaviour> preparationScripts = new();
-    [SerializeField] private List<Behaviour> combatScripts = new();
+    [SerializeField] private List<Behaviour> explorationScripts = new();   // Ex: ThirdPersonController, OnClick3D
+    [SerializeField] private List<Behaviour> preparationScripts = new();   // Ex: Player_Controller Phase Preparation
+    [SerializeField] private List<Behaviour> combatScripts = new();        // Ex: Player_Combat Controller
 
     [Header("GameObjects à activer par mode (optionnel)")]
     [SerializeField] private List<GameObject> explorationObjects = new();
@@ -27,9 +28,9 @@ public class Player_ScriptManager : MonoBehaviour
 
     public Mode CurrentMode { get; private set; }
 
-    private void Awake()
+    void Awake()
     {
-        // Tout OFF
+        // Tout OFF au tout début pour éviter les chevauchements d'inputs
         SetAllEnabled(explorationScripts, false);
         SetAllEnabled(preparationScripts, false);
         SetAllEnabled(combatScripts, false);
@@ -37,12 +38,22 @@ public class Player_ScriptManager : MonoBehaviour
         SetAllActive(preparationObjects, false);
         SetAllActive(combatObjects, false);
 
+        // Choix du mode de départ
         CurrentMode = startupMode;
+
+        // Application immédiate si souhaité
         if (applyModeOnAwake) ApplyMode(CurrentMode);
+    }
+
+    void Start()
+    {
+        // Ré-applique après tous les Awake (fiabilise l'état effectif au lancement)
+        if (reapplyOnStart) ApplyMode(CurrentMode);
     }
 
     public void SetMode(Mode newMode)
     {
+        // Change le mode courant et applique
         if (CurrentMode != newMode) CurrentMode = newMode;
         ApplyMode(CurrentMode);
     }
@@ -51,9 +62,9 @@ public class Player_ScriptManager : MonoBehaviour
     public void SetPreparationCombat() => SetMode(Mode.PreparationCombat);
     public void SetTurnByTurnCombat() => SetMode(Mode.TurnByTurnCombat);
 
-    private void ApplyMode(Mode mode)
+    void ApplyMode(Mode mode)
     {
-        // OFF partout
+        // Tout OFF
         SetAllEnabled(explorationScripts, false);
         SetAllEnabled(preparationScripts, false);
         SetAllEnabled(combatScripts, false);
@@ -68,10 +79,12 @@ public class Player_ScriptManager : MonoBehaviour
                 SetAllEnabled(explorationScripts, true);
                 SetAllActive(explorationObjects, true);
                 break;
+
             case Mode.PreparationCombat:
                 SetAllEnabled(preparationScripts, true);
                 SetAllActive(preparationObjects, true);
                 break;
+
             case Mode.TurnByTurnCombat:
                 SetAllEnabled(combatScripts, true);
                 SetAllActive(combatObjects, true);
@@ -79,23 +92,25 @@ public class Player_ScriptManager : MonoBehaviour
         }
     }
 
-    private static void SetAllEnabled(List<Behaviour> list, bool enabled)
+    static void SetAllEnabled(List<Behaviour> list, bool enabled)
     {
+        // Active/désactive tous les scripts référencés
         if (list == null) return;
         for (int i = 0; i < list.Count; i++)
             if (list[i]) list[i].enabled = enabled;
     }
 
-    private static void SetAllActive(List<GameObject> list, bool active)
+    static void SetAllActive(List<GameObject> list, bool active)
     {
+        // Active/désactive tous les GameObjects référencés
         if (list == null) return;
         for (int i = 0; i < list.Count; i++)
             if (list[i]) list[i].SetActive(active);
     }
 
 #if UNITY_EDITOR
-    [ContextMenu("Mode -> Exploration")] private void Ctx_Exploration() => SetExploration();
-    [ContextMenu("Mode -> PreparationCombat")] private void Ctx_Preparation() => SetPreparationCombat();
-    [ContextMenu("Mode -> TurnByTurnCombat")] private void Ctx_Combat() => SetTurnByTurnCombat();
+    [ContextMenu("Mode -> Exploration")] void Ctx_Exploration() => SetExploration();
+    [ContextMenu("Mode -> PreparationCombat")] void Ctx_Preparation() => SetPreparationCombat();
+    [ContextMenu("Mode -> TurnByTurnCombat")] void Ctx_Combat() => SetTurnByTurnCombat();
 #endif
 }

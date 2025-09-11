@@ -1,0 +1,316 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1270261295381188283
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.809
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.501
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.625
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1223573361800811497, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f8c0a9cc54ca11f4ea9aad1b338a8947, type: 2}
+    - target: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_Name
+      value: Monstre_Scribble_ForCombat
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      propertyPath: m_TagString
+      value: Monster
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3772402839968161}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1399795386918047024}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 48022352355375478}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5651651764299969829}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4635952386470254640}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8851314567762205649}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4465655380711874564}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2309039835149019080}
+  m_SourcePrefab: {fileID: 100100000, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+--- !u!1 &2117173663941964778 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 494853229a18d5d45908e845fd3d17ab, type: 3}
+  m_PrefabInstance: {fileID: 1270261295381188283}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3772402839968161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117173663941964778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9f0fda7733430e4a886912e23abc0ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entity_Name: Scribble Combattant
+  entity_Level: 5
+  entity_Icon: {fileID: 21300000, guid: 087cb1cf5a189b844a69aa7f5e3bed05, type: 3}
+  listDropRessources:
+  - ressourcePrefab: {fileID: 7322513746942802617, guid: 8c3dcbf0353b03746b6cdb4fca2fed7a, type: 3}
+    dropChance: 10
+  - ressourcePrefab: {fileID: 7322513746942802617, guid: 08ee3e397a5204448a428548d9ea5d5e, type: 3}
+    dropChance: 80
+  gainXp: 150
+  savePosEntity: {x: 0, y: 0, z: 0}
+  saveCamEntity: 
+  specie: 0
+  experience: 0
+  remainingPoints: 0
+  baseXPToLevelUp: 100
+  xpGrowthFactor: 1.5
+  gold: 0
+  currencyLabel: 
+  OnGoldChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1399795386918047024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117173663941964778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 123f2cd14a735c54b90a3684e829c25d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFight: 0
+  anim: {fileID: 2309039835149019080}
+  _isDead: 0
+  _team: 0
+  _isReady: 0
+  skillBook:
+  - skill: {fileID: 11400000, guid: a44936334b9a6614bb27489fed9cd8d1, type: 2}
+    fxData: {fileID: 0}
+    fxPrefabOverride: {fileID: 2508534576828202260, guid: f4a8808f03601a94ba74290847bba2eb, type: 3}
+    fxYOffset: 1
+  - skill: {fileID: 11400000, guid: ca0a5bbc81314de4ab7349fbde97e9cc, type: 2}
+    fxData: {fileID: 0}
+    fxPrefabOverride: {fileID: 7622290928582153062, guid: 84609a41e7abc69469ce6e7dcb44d5a3, type: 3}
+    fxYOffset: 1
+  baseHP: 120
+  basePA: 6
+  basePM: 3
+  basePO: 0
+  baseCritChance: 0
+  baseInitiative: 150
+  baseForce: 50
+  baseDexterite: 25
+  baseMagie: 5
+  baseFoi: 5
+  baseResistanceForce: 0
+  baseResistanceDexterite: 0
+  baseResistanceMagie: 0
+  baseResistanceFoi: 0
+  _currentHP: 0
+  _currentPA: 0
+  _currentPM: 0
+  _currentPO: 0
+  _currentCritChance: 0
+  _currentInitiative: 0
+  _currentForce: 0
+  _currentDexterite: 0
+  _currentMagie: 0
+  _currentFoi: 0
+  _currentResistanceForce: 0
+  _currentResistanceDexterite: 0
+  _currentResistanceMagie: 0
+  _currentResistanceFoi: 0
+  activeEffects: []
+--- !u!114 &48022352355375478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117173663941964778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46d305fcedffb5a4d8f3a33420039bc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phaseManager: {fileID: 0}
+  tileGrid: {fileID: 0}
+  stats: {fileID: 1399795386918047024}
+  caster: {fileID: 5651651764299969829}
+  behaviorComponent: {fileID: -4635952386470254640}
+  typeIA: 0
+  startDelaySec: 1
+  afterMoveDelaySec: 0
+  stepDuration: 0.2
+  verboseLog: 0
+--- !u!114 &5651651764299969829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117173663941964778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c6f4a02754a024448c24565487d3e43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phaseManager: {fileID: 0}
+  tileGrid: {fileID: 0}
+  equippedSkill: {fileID: 0}
+  waitFxBeforeApply: 1
+  fxParent: {fileID: 0}
+  acceptHumanInput: 0
+  critMultiplier: 1.5
+  clampResist: 1
+  resistClamp: {x: -100, y: 100}
+  anim: {fileID: 2309039835149019080}
+--- !u!114 &-4635952386470254640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117173663941964778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b0f2b62dece1246bcf1435df8c3320, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8851314567762205649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117173663941964778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4e3e07cfb3d944e8bbbc8e05ec7c8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiCanvas: {fileID: 0}
+  panelDisplayNumber: {fileID: 0}
+  worldOffset: {x: 0, y: 3, z: 0}
+  displayDuration: 1.5
+  colorPA: {r: 0.25, g: 0.6, b: 1, a: 1}
+  colorPM: {r: 0.2, g: 0.85, b: 0.4, a: 1}
+  colorPV: {r: 1, g: 0.25, b: 0.25, a: 1}
+--- !u!95 &4465655380711874564
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117173663941964778}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8e557e0745704a54d87f11ba15f4dce6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2309039835149019080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117173663941964778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66b9bbd5b00766b43b96d6c37a9f9e36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  castMagicParamName: CastMagicSpell
+  castPhysicParamName: CastPhysicSpell
+  deathParamName: Death
+  walkParamName: Walk
+  hitParamName: Hit
+  castMagicDuration: 0.8
+  castPhysicDuration: 0.7
+  hitDuration: 0.4
+  deathDuration: 1.2
+  blockWalkDuringOneShot: 1
+  enableDebugInput: 0

@@ -14,6 +14,14 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
     [SerializeField] private Vector3 rotationGreenTeamEuler;
     [SerializeField] private Vector3 rotationRedTeamEuler;
 
+    [Header("Hauteur Y par équipe (placement + déplacements Préparation)")]
+    [SerializeField] private float greenTeamY = 2f;   // Hauteur imposée aux joueurs (équipe Verte)
+    [SerializeField] private float redTeamY = 0.5f;   // Hauteur imposée aux monstres (équipe Rouge)
+
+    // Exposition en lecture seule pour la phase TourParTour
+    public float GreenTeamY => greenTeamY; // Permet de relire la même valeur en TurnByTurn
+    public float RedTeamY => redTeamY;   // Permet de relire la même valeur en TurnByTurn
+
     // Références injectées par le manager
     private Combat_PhaseManager manager;
     private Data_FightMap mapData;
@@ -22,20 +30,20 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
     // Appelée par Combat_PhaseManager.StartPhase(Preparation)
     public void InitPhase(Combat_PhaseManager phaseManager)
     {
-        // Références nécessaires
+        // Récupère les références nécessaires à la phase
         manager = phaseManager;
         mapData = manager != null ? manager.phaseEnter?.combatMap : null;
         tileGrid = manager != null ? manager.tileGrid : null;
 
         Debug.Log($"[Prépa] Lancement (Arena {manager?.arenaIndex})");
 
-        // Validation minimale et arrêt immédiat si manquant
+        // Valide les champs indispensables et stoppe si manquants
         if (tilePrefab == null) { Debug.LogError("[Prépa] tilePrefab manquant."); return; }
         if (gridCenter == null) { Debug.LogError("[Prépa] gridCenter manquant."); return; }
         if (mapData == null) { Debug.LogError("[Prépa] Data_FightMap manquant."); return; }
         if (tileGrid == null) { Debug.LogError("[Prépa] TileGrid_Manager manquant."); return; }
 
-        // Passage en mode Préparation pour l'équipe verte (UI/contrôles côté joueur)
+        // Bascule le joueur en mode Préparation
         if (manager.phaseEnter != null)
         {
             foreach (var player in manager.phaseEnter.greenTeam)
@@ -46,21 +54,19 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
             }
         }
 
-        GenerateGrid();        // Génère la grille et enregistre chaque tuile dans tileGrid
-        PlaceAllEntities();    // Place joueurs et monstres sur des cases libres de leur couleur
-        Debug_ShowEntityTileLinks(); // Aide au debug
+        GenerateGrid();             // Génère la grille et enregistre chaque tuile dans tileGrid
+        PlaceAllEntities();         // Place joueurs et monstres sur des cases libres de leur couleur
+        Debug_ShowEntityTileLinks();// Affichage debug des liens tuile ↔ entité
 
         // Démarre la vérification périodique du "tout le monde prêt"
         StartCoroutine(CheckAllFightersReady());
     }
 
-    // Génération complète de la grille à partir de mapData
+    // Génère toutes les tuiles à partir des données de map
     private void GenerateGrid()
     {
-        // Applique la rotation globale au conteneur de la grille
         gridCenter.rotation = Quaternion.Euler(gridRotation);
 
-        // Calcule l'offset pour centrer la grille autour de gridCenter
         Vector3 offset = new Vector3(
             (mapData.width - 1) * tileSpacing.x / 2f,
             0f,
@@ -73,17 +79,14 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
             {
                 Vector2Int pos = new Vector2Int(x, y);
 
-                // Instancie la tuile
                 GameObject tile = Instantiate(tilePrefab);
                 tile.name = $"Case_{x}_{y}";
                 tile.transform.SetParent(gridCenter, false);
 
-                // Position/rotation locale
                 Vector3 localPos = new Vector3(x * tileSpacing.x, 0f, y * tileSpacing.y) - offset;
                 tile.transform.localPosition = localPos;
                 tile.transform.localRotation = Quaternion.identity;
 
-                // Le prefab doit déjà avoir SetupTile (pas d'ajout automatique)
                 if (!tile.TryGetComponent(out SetupTile setup))
                 {
                     Debug.LogError($"[Prépa] Le prefab de tuile ne contient pas SetupTile → {tile.name}. Ignorée.");
@@ -91,12 +94,10 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
                     continue;
                 }
 
-                // Remplit les infos de la tuile
                 setup.tileX = x;
                 setup.tileY = y;
                 setup.syncedName = tile.name;
 
-                // État initial en fonction des zones de la map
                 if (mapData.greenTeamPositions.Contains(pos))
                     setup.currentState = Tile_State.TeamGreen;
                 else if (mapData.redTeamPositions.Contains(pos))
@@ -106,12 +107,10 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
                 else
                     setup.currentState = Tile_State.None;
 
-                // Enregistrement dans la grille
                 tileGrid.RegisterTile(tile);
             }
         }
 
-        // Log récapitulatif des zones
         int greens = 0, reds = 0;
         foreach (var t in tileGrid.GetAllTiles())
         {
@@ -132,6 +131,14 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
             PlaceEntity(fighters[i]);
     }
 
+    // Calcule la position monde à utiliser pour une équipe donnée sur une tuile
+    private Vector3 GetWorldPosForTeamOnTile(int team, Transform tileTransform)
+    {
+        Vector3 p = tileTransform.position; // base monde = position de la tuile
+        p.y = (team == 0) ? greenTeamY : redTeamY; // hauteur absolue contrôlée par l'Inspector
+        return p;
+    }
+
     // Place une entité sur une case libre correspondant à sa team
     public void PlaceEntity(GameObject entityObj)
     {
@@ -143,14 +150,12 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
             return;
         }
 
-        // Normalise l'équipe si besoin (0=Vert, 1=Rouge)
         if (stats.team != 0 && stats.team != 1)
         {
             Debug.LogWarning($"[Prépa] {entityObj.name} a une team invalide ({stats.team}). Forçage Rouge.");
             stats.team = 1;
         }
 
-        // Récupère une case libre pour l'équipe
         GameObject tile = GetFreeTileForTeam(stats.team);
         if (tile == null)
         {
@@ -158,8 +163,7 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
             return;
         }
 
-        // Positionne et enregistre le lien entité ↔ tuile
-        Vector3 newPosition = tile.transform.position + Vector3.up * 0.5f;
+        Vector3 newPosition = GetWorldPosForTeamOnTile(stats.team, tile.transform);
         Quaternion newRotation = (stats.team == 0)
             ? Quaternion.Euler(rotationGreenTeamEuler)
             : Quaternion.Euler(rotationRedTeamEuler);
@@ -167,7 +171,6 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
         entityObj.transform.SetPositionAndRotation(newPosition, newRotation);
         tileGrid.RegisterEntity(entityObj, tile);
 
-        // Les monstres sont automatiquement "prêts" en phase de préparation
         if (stats.team == 1 && !stats.isReady)
         {
             stats.isReady = true;
@@ -175,7 +178,6 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
         }
     }
 
-    // Retourne une case libre correspondant à l'équipe demandée (0=Vert, 1=Rouge)
     private GameObject GetFreeTileForTeam(int team)
     {
         var tiles = tileGrid.GetAllTiles();
@@ -192,11 +194,9 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
         return null;
     }
 
-    // Accès utiles pour d'autres scripts
     public GameObject GetTileAtCoordinates(int x, int y) => tileGrid.GetTileAtCoordinates(x, y);
     public bool IsTileFree(GameObject tile) => tileGrid.IsTileFree(tile);
 
-    // Déplacement libre d’un joueur VERT vers une case verte libre (pendant la Préparation)
     public void TryMoveEntityToTile(GameObject playerObj, int x, int y)
     {
         if (!isActiveAndEnabled) return;
@@ -206,14 +206,12 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
         if (tile == null) return;
         if (!tile.TryGetComponent(out SetupTile setup)) return;
 
-        // Uniquement sur zone verte, case libre, et entité de l'équipe verte
         if (setup.currentState != Tile_State.TeamGreen) return;
         if (!tileGrid.IsTileFree(tile)) return;
         if (!playerObj.TryGetComponent(out Entity_StatistiqueCombat stats)) return;
         if (stats.team != 0) return;
 
-        // Déplace et enregistre
-        Vector3 newPosition = tile.transform.position + Vector3.up * 0.5f;
+        Vector3 newPosition = GetWorldPosForTeamOnTile(0, tile.transform);
         Quaternion newRotation = Quaternion.Euler(rotationGreenTeamEuler);
 
         playerObj.transform.SetPositionAndRotation(newPosition, newRotation);
@@ -222,7 +220,6 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
         Debug.Log($"[Prépa] {playerObj.name} → {tile.name}");
     }
 
-    // Vérifie régulièrement si toutes les entités sont prêtes, puis passe à la phase TourParTour
     private IEnumerator CheckAllFightersReady()
     {
         Debug.Log("[Prépa] Vérification readiness…");
@@ -262,7 +259,6 @@ public class Phase_PreparationPlacementCombat : MonoBehaviour
         }
     }
 
-    // Affichage debug : contenu de chaque case (utile pour vérifier les liens)
     public void Debug_ShowEntityTileLinks()
     {
         Debug.Log("-------------------------------------------------------------------");
