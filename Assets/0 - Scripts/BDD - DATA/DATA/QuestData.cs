@@ -11,18 +11,19 @@ public class QuestData : ScriptableObject
         Journalière
     }
 
+    [Header("Identification")]
     public string questId;
 
-    [Header("General informations")]
+    [Header("Informations générales")]
     public QuestType questType;
     public string questName;
     [TextArea(3, 5)]
     public string description;
 
-    [Header("Quest steps")]
+    [Header("Étapes de la quête")]
     public List<QuestStep> steps = new();
 
-    [Header("Rewards")]
+    [Header("Récompenses")]
     public int experienceReward;
     public int coinReward;
     public List<ItemReward> itemRewards = new();

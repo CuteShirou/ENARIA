@@ -137,6 +137,7 @@
     <Compile Include="Assets\6 - Tools\StarterAssets\InputSystem\StarterAssetsInputs.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Quest\QuestTestButton.cs" />
     <Compile Include="Assets\0 - Scripts\System\Equipments\EquipmentManager.cs" />
+    <Compile Include="Assets\0 - Scripts\System\Quest\QuestDataTest.cs" />
     <Compile Include="Assets\0 - Scripts\System\SkillTree\SkillTreeManager.cs" />
     <Compile Include="Assets\0 - Scripts\System\Jobs\bois\bois progress.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\CraftUIManager.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Assets\0 - Scripts\Tools\UI\StatsUIManager.cs" />
     <Compile Include="Assets\0 - Scripts\Scrips_Arene\UI\CombatUI_ExitButton.cs" />
     <Compile Include="Assets\0 - Scripts\Scrips_Arene\UI\UI_InfoPrincipal.cs" />
+    <Compile Include="Assets\0 - Scripts\System\Quest\QuestDTOs.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Chat\ChatUI_Solo.cs" />
     <Compile Include="Assets\0 - Scripts\Scripts_Player_Monster\Entity_Info.cs" />
     <Compile Include="Assets\0 - Scripts\System\Quest\QuestManager.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Assets\0 - Scripts\System\Jobs\minage\minage gameplay.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Chat\ChatUI_PrivateCommand.cs" />
     <Compile Include="Assets\0 - Scripts\System\SkillTree\SkillNode.cs" />
+    <Compile Include="Assets\0 - Scripts\System\Quest\QuestStepTester.cs" />
     <Compile Include="Assets\0 - Scripts\Network\DebugNetworkSpawn.cs" />
     <Compile Include="Assets\6 - Tools\StarterAssets\Mobile\Scripts\Utilities\MobileDisableAutoSwitchControls.cs" />
     <Compile Include="Assets\0 - Scripts\Scrips_Arene\UI\InfoEntityPanelUI.cs" />
@@ -220,6 +223,7 @@
     <Compile Include="Assets\0 - Scripts\Tools\Menu\MainMenu.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\UI\BlockedUserItemUI.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Market\New Folder\MarketListingManager.cs" />
+    <Compile Include="Assets\0 - Scripts\System\Quest\QuestAcceptButton.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Craft\CraftingPropertyDrawer.cs" />
     <Compile Include="Assets\0 - Scripts\Tools\Market\GoldDisplay.cs" />
     <Compile Include="Assets\0 - Scripts\System\dialogues\Dialogue.cs" />

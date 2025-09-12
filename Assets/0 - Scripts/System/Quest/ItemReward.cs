@@ -3,6 +3,6 @@ using UnityEngine;
 [System.Serializable]
 public class ItemReward
 {
-    public CollectibleData collectible;
+    public Item item;
     public int quantity = 1;
 }

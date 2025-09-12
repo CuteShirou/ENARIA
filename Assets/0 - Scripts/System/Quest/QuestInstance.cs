@@ -1,3 +1,4 @@
+// QuestInstance.cs
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,47 +11,55 @@ public class QuestInstance
     public bool isCompleted = false;
     public int currentStepIndex = 0;
 
+    // progress par step (index -> valeur)
     public Dictionary<int, int> stepProgress = new();
 
     public QuestInstanceDTO ToDTO()
     {
-        return new QuestInstanceDTO
+        var dto = new QuestInstanceDTO
         {
-            questId = questData.questId,
+            questId = questData != null ? questData.questId : string.Empty,
             isAccepted = isAccepted,
             isCompleted = isCompleted,
             currentStepIndex = currentStepIndex,
-            stepProgress = new Dictionary<int, int>(stepProgress)
+            stepProgressList = new List<IntPair>()
         };
+
+        if (stepProgress != null)
+        {
+            foreach (var kv in stepProgress)
+                dto.stepProgressList.Add(new IntPair { key = kv.Key, value = kv.Value });
+        }
+
+        return dto;
     }
 
     public static QuestInstance FromDTO(QuestInstanceDTO dto, Dictionary<string, QuestData> questLookup)
     {
+        if (dto == null)
+            return null;
+
         if (!questLookup.TryGetValue(dto.questId, out QuestData questData))
         {
             Debug.LogWarning($"QuestData introuvable pour questId {dto.questId}");
             return null;
         }
 
-        return new QuestInstance
+        var inst = new QuestInstance
         {
             questData = questData,
             isAccepted = dto.isAccepted,
             isCompleted = dto.isCompleted,
             currentStepIndex = dto.currentStepIndex,
-            stepProgress = dto.stepProgress != null
-            ? new Dictionary<int, int>(dto.stepProgress)
-            : new Dictionary<int, int>()
+            stepProgress = new Dictionary<int, int>()
         };
-    }
-}
 
-[System.Serializable]
-public class QuestInstanceDTO
-{
-    public string questId;
-    public bool isAccepted;
-    public bool isCompleted;
-    public int currentStepIndex;
-    public Dictionary<int, int> stepProgress;
+        if (dto.stepProgressList != null)
+        {
+            foreach (var p in dto.stepProgressList)
+                inst.stepProgress[p.key] = p.value;
+        }
+
+        return inst;
+    }
 }
