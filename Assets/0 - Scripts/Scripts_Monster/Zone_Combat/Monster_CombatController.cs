@@ -4,7 +4,7 @@ using UnityEngine;
 
 // Monster_CombatController
 //  Contrôle le tour du monstre, les déplacements pas-à-pas, le déclenchement des compétences,
-//  et expose des helpers pour l'IA. Ajout ici : orientation vers la case ciblée pendant le déplacement.
+//  et expose des helpers pour l'IA.
 public class Monster_CombatController : MonoBehaviour
 {
     [Header("Références (assignées au spawn / prefab)")]

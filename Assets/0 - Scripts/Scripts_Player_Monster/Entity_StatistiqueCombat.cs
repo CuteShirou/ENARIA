@@ -127,7 +127,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         SetResMagie(baseResistanceMagie);
         SetResFoi(baseResistanceFoi);
 
-        Debug.Log($"[Stats] Init depuis bases pour {name}");
+        //Debug.Log($"[Stats] Init depuis bases pour {name}");
     }
 
     /// <summary>
@@ -143,7 +143,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
     public void ToggleReady()
     {
         isReady = !isReady;
-        Debug.Log($"[Local] {name} → isReady = {isReady}");
+        //Debug.Log($"[Local] {name} → isReady = {isReady}");
     }
 
     // ─────────────────────────────────────────────────────────────────────
@@ -292,7 +292,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
             case EffectType.MalusResFoi: SetResFoi(currentResistanceFoi - v); break;
 
             default:
-                Debug.Log($"[Stats] Instant effect not handled: {eff.effectType}");
+                //Debug.Log($"[Stats] Instant effect not handled: {eff.effectType}");
                 break;
         }
     }
@@ -382,7 +382,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         else
             SetHP(Mathf.Min(currentHP, baseHP)); // clamp si besoin
 
-        Debug.Log($"[Stats] BaseHP {oldBase} → {baseHP} (+{v})");
+        //Debug.Log($"[Stats] BaseHP {oldBase} → {baseHP} (+{v})");
     }
 
     //   Augmente Force de base et ajuste l'actuel
@@ -395,7 +395,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         baseForce = oldBase + v;
         SetForce(currentForce + v);
 
-        Debug.Log($"[Stats] BaseForce {oldBase} → {baseForce} (+{v})");
+        //Debug.Log($"[Stats] BaseForce {oldBase} → {baseForce} (+{v})");
     }
 
     //   Augmente Dextérité de base et ajuste l'actuel
@@ -408,7 +408,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         baseDexterite = oldBase + v;
         SetDex(currentDexterite + v);
 
-        Debug.Log($"[Stats] BaseDex {oldBase} → {baseDexterite} (+{v})");
+        //Debug.Log($"[Stats] BaseDex {oldBase} → {baseDexterite} (+{v})");
     }
 
     //   Augmente Magie de base et ajuste l'actuel
@@ -421,7 +421,7 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         baseMagie = oldBase + v;
         SetMagie(currentMagie + v);
 
-        Debug.Log($"[Stats] BaseMagie {oldBase} → {baseMagie} (+{v})");
+        //Debug.Log($"[Stats] BaseMagie {oldBase} → {baseMagie} (+{v})");
     }
 
     //   Augmente Foi de base et ajuste l'actuel
@@ -434,6 +434,6 @@ public class Entity_StatistiqueCombat : MonoBehaviour
         baseFoi = oldBase + v;
         SetFoi(currentFoi + v);
 
-        Debug.Log($"[Stats] BaseFoi {oldBase} → {baseFoi} (+{v})");
+        //Debug.Log($"[Stats] BaseFoi {oldBase} → {baseFoi} (+{v})");
     }
 }

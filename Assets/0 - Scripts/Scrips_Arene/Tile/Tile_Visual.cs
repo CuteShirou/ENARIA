@@ -17,13 +17,13 @@ public class Tile_Visual : MonoBehaviour
     [SerializeField] private Material matZoneImpact;      // Matériau pour l’aperçu de zone d’impact
     [SerializeField] private Material matCursorIndicator;
 
-    // Injecté par la grille (pas sérialisé)
+    // Injecté par la grille
     private TileGrid_Manager tileGrid;     // Référence vers la grille
     private InfoEntityPanelUI infoPanel;   // Référence vers la bulle d’info
 
     private bool isMouseOver = false;
 
-    // AJOUT : état local pour savoir si la tuile fait partie de l’aperçu d’impact
+    // état local pour savoir si la tuile fait partie de l’aperçu d’impact
     private bool isImpactPreview = false;
 
     // --- SetShared ---------------------------------------------------------
@@ -66,7 +66,7 @@ public class Tile_Visual : MonoBehaviour
     {
         isMouseOver = true;
 
-        // IMPORTANT : si la tuile est en aperçu d’impact, on NE remplace pas le matériau.
+        // si la tuile est en aperçu d’impact, on NE remplace pas le matériau.
         if (!isImpactPreview)
         {
             if (setup != null && !setup.isFighterActif && matCursorIndicator && tileRenderer)

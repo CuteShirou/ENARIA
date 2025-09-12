@@ -42,7 +42,6 @@ public class Popup_DisplayNumber : MonoBehaviour
         }
     }
 
-    // Composant vide servant uniquement d'hôte aux coroutines
     private sealed class PopupRunner : MonoBehaviour { }
 
     // ---------------------------------------------------------
@@ -194,7 +193,7 @@ public class Popup_DisplayNumber : MonoBehaviour
     }
 
     // ---------------------------------------------------------
-    // WaitAllPopupsToFinish : (optionnel) attend la fin de toutes les popups globales
+    // WaitAllPopupsToFinish : attend la fin de toutes les popups globales
     public static IEnumerator WaitAllPopupsToFinish()
     {
         // Nettoie global de temps en temps
@@ -210,7 +209,6 @@ public class Popup_DisplayNumber : MonoBehaviour
     }
 
     // ---------------------------------------------------------
-    // RunDisableAfterPopups : utilitaire prêt-à-l'emploi
     // Désactive 'toDisable' après la fin de toutes les popups du 'owner' (utilise le runner global)
     public static void RunDisableAfterPopups(Popup_DisplayNumber owner, GameObject toDisable)
     {

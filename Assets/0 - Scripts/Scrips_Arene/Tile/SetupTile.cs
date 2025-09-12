@@ -67,17 +67,15 @@ public class SetupTile : MonoBehaviour
     }
 
     //------------------------------------------------------------
-    // "Hooks" locaux (équivalents des hooks réseau Mirror)
+    // "Hooks" locaux
     private void OnTileStateChanged(Tile_State oldState, Tile_State newState)
     {
         Debug.Log($"[Tile][LOCAL] État changé : {oldState} → {newState}");
-        // Le script visuel client s’occupera de la couleur/matériau
     }
 
     private void OnFighterActifChanged(bool oldValue, bool newValue)
     {
         Debug.Log($"[Tile][LOCAL] isFighterActif modifié : {newValue}");
-        // Le script visuel client s’occupera de l’indication
     }
 
     private void OnTileNameChanged(string newName)

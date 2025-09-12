@@ -86,7 +86,7 @@ public class IA_Aggressif : MonoBehaviour, IMonsterAI
             if (!et || !et.TryGetComponent(out SetupTile esu)) continue;
 
             int d = Mathf.Abs(my.x - esu.tileX) + Mathf.Abs(my.y - esu.tileY);
-            if (d == 1) return e; //   Adjacent (4-dir)
+            if (d == 1) return e;
         }
         return null;
     }

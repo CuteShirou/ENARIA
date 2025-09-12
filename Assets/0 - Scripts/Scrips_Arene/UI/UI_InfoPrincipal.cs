@@ -6,7 +6,6 @@ using TMPro;
 /// UI_Principal_HUD
 ///   Met à jour en temps réel l'UI principale : PA / PM / PO et la barre de PV (Image_CurrentHP).
 ///      Lit directement les valeurs sur Entity_StatistiqueCombat du joueur.
-///      Aucune modification des autres systèmes.
 /// </summary>
 public class UI_InfoPrincipal : MonoBehaviour
 {
@@ -97,7 +96,7 @@ public class UI_InfoPrincipal : MonoBehaviour
 
     /// <summary>
     /// ForceRefresh
-    ///   Force la mise à jour immédiate (utile après assignation des références dans l'Inspector).
+    ///   Force la mise à jour immédiate
     /// </summary>
     public void ForceRefresh()
     {
@@ -123,7 +122,7 @@ public class UI_InfoPrincipal : MonoBehaviour
 
         float ratio = Mathf.Clamp01(hp / (float)hpMax);
 
-        //   Méthode 1 : pilotage du fillAmount (recommandé)
+        //   Méthode 1 : pilotage du fillAmount
         if (useImageFillAmount && imageCurrentHP.type == Image.Type.Filled)
         {
             imageCurrentHP.fillAmount = ratio;

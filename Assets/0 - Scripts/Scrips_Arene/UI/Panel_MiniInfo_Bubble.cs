@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Panel_MiniInfo_Bubble : MonoBehaviour
 {
     [Header("Root")]
-    public Canvas rootCanvas;                // Canvas racine (auto si laissé vide)
+    public Canvas rootCanvas;                // Canvas racine
     public RectTransform panel;              // RectTransform du panneau
 
     [Header("Texts")]

@@ -9,7 +9,7 @@ public enum CombatPhase
     End
 }
 
-// Identité logique d'équipe (pour la pop-up à venir)
+// Identité logique d'équipe
 public enum CombatTeamId
 {
     None = 0,
@@ -24,7 +24,7 @@ public class Combat_PhaseManager : MonoBehaviour
     public int arenaIndex = 0;
 
     [Header("Résultat du combat (dernier)")]
-    public bool lastCombatWinning = false;  // Flag simple conservé pour compatibilité
+    public bool lastCombatWinning = false;
 
     [Header("Références des scripts de phase (Drag & Drop)")]
     public Phase_EnterSetupCombat phaseEnter;

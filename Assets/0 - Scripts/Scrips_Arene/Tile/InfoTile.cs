@@ -29,15 +29,14 @@ public class InfoTile : MonoBehaviour
     }
 
     //------------------------------------------------------------
-    // Hooks locaux (remplacent les hooks SyncVar Mirror)
+    // Hooks locaux
     private void OnOccupationChanged(TileOccupation oldValue, TileOccupation newValue)
     {
         Debug.Log($"[InfoTile][LOCAL] Occupation changée : {oldValue} → {newValue}");
-        // Ici tu pourras déclencher des effets visuels (matériaux, highlight, etc.)
     }
 
     //------------------------------------------------------------
-    // Méthodes de mise à jour (équivalent anciennement côté serveur)
+    // Méthodes de mise à jour
     public void SetOccupied() => occupationState = TileOccupation.Occupied;
     public void SetFree() => occupationState = TileOccupation.Free;
     public void SetBlocked() => occupationState = TileOccupation.Blocked;

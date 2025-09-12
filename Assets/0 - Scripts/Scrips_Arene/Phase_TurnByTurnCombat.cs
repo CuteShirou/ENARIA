@@ -403,9 +403,6 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
         // Désactive les colliders immédiatement (laisse le visuel actif pour l'animation de mort)
         foreach (var c in entity.GetComponentsInChildren<Collider>(true)) c.enabled = false;
 
-        // NE PAS désactiver ici l'Animator ni les renderers : on veut voir l'animation de mort
-        // Ancien code (désactivé) : foreach (var r in ...) r.enabled = false; an.enabled = false;  (on ne fait plus ça ici)
-
         // Lance la séquence de mort : animation → hide visuel → désactivation racine après popups
         StartCoroutine(Co_PlayDeathThenHideVisual(entity));
 
@@ -443,8 +440,8 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             RemoveFromInitiative(entity);
     }
 
-    // Attend la fin de l'animation de mort sur l'Animator (state "Death" recommandé, tag "Death" si possible)
-    // Attend précisément la fin du state "Death" (par tag ou nom), sans délai superflu.
+    // Attend la fin de l'animation de mort sur l'Animator
+    // Attend précisément la fin du state "Death"
     // - On attend d'abord que l'Animator ENTRE dans le state Death (timeout court).
     // - Puis on sort dès que ce MÊME state est terminé (normalizedTime >= 1f - epsilon et hors transition).
     private IEnumerator WaitForDeathAnimation(GameObject entity, float fallbackTimeoutSeconds)
@@ -490,7 +487,6 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             yield break;
         }
 
-        // 2) Attendre la fin de CE state précis (pas celui d’après)
         while (true)
         {
             if (!animator.isActiveAndEnabled) break;
@@ -501,7 +497,6 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
             if (st.fullPathHash != deathStateHash)
                 break;
 
-            // Fin propre : hors transition et lecture terminée
             if (!animator.IsInTransition(0) && st.normalizedTime >= (1f - deathEndEpsilon))
                 break;
 
@@ -510,7 +505,7 @@ public class Phase_TurnByTurnCombat : MonoBehaviour
     }
 
 
-    // NEW : attend la fin des pop-ups de l'entité puis désactive la racine et retire de l'initiative
+    // attend la fin des pop-ups de l'entité puis désactive la racine et retire de l'initiative
     private System.Collections.IEnumerator Co_FinalizeDeathAfterPopups(GameObject entity)
     {
         Popup_DisplayNumber pop = entity ? entity.GetComponent<Popup_DisplayNumber>() : null;

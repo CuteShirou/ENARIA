@@ -10,7 +10,7 @@ public class TileGrid_Manager : MonoBehaviour
     [Header("Liste des tuiles de la grille")]
     [SerializeField] private List<GameObject> allTiles = new();
 
-    // AJOUT — refs de scène à propager automatiquement aux tuiles
+    // Refs de scène à propager automatiquement aux tuiles
     [Header("Injection vers Tile_Visual")]
     public InfoEntityPanelUI infoPanelForTiles; // Assigne ici ton Panel_Info_Bubble (InfoEntityPanelUI)
 

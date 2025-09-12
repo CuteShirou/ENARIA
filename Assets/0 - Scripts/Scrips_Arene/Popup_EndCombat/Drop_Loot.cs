@@ -14,7 +14,6 @@ public class Drop_Loot : MonoBehaviour, IPointerEnterHandler
     [Header("UI References (Prefab_DropRessource)")]
     [SerializeField] private Image imageRessource; // Image_Ressource
 
-    // Cache local de l'item (non sérialisé)
     private Item currentItem;
 
     private void Start()
@@ -54,7 +53,6 @@ public class Drop_Loot : MonoBehaviour, IPointerEnterHandler
     // Affiche la popup avec le nom de l'item
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Sécurité: si l'item a changé ailleurs, on resynchronise
         RefreshItemFromInventory();
     }
 

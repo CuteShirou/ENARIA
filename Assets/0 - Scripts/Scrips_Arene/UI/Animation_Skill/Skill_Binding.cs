@@ -1,6 +1,5 @@
 ﻿// Skill_Binding.cs
 // Élément du SkillBook: associe une compétence (Data_Skill) et son FX d'animation.
-// On ne modifie pas Data_Skill : la liaison se fait ici.
 
 using UnityEngine;
 

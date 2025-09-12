@@ -56,7 +56,7 @@ public class Player_CombatController : MonoBehaviour
 
         Vector3 target = movementQueue.Peek();
 
-        // Sécurité : impose le Y courant du joueur à la cible, pour ne bouger qu'en X/Z
+        // impose le Y courant du joueur à la cible, pour ne bouger qu'en X/Z
         target = new Vector3(target.x, transform.position.y, target.z);
 
         float step = moveSpeed * Time.deltaTime;
@@ -249,7 +249,7 @@ public class Player_CombatController : MonoBehaviour
         phaseManager.phaseTurn.EndTurn();
     }
 
-    // Oriente le GameObject vers une position monde cible (Y ignoré), avec option instantanée
+    // Oriente le GameObject vers une position monde cible (Y ignoré)
     // - Calcul du yaw sur le plan XZ
     // - Ajout d'un offset Y pour corriger l'orientation de base du prefab
     void RotateTowards(Vector3 worldTarget, bool instant)

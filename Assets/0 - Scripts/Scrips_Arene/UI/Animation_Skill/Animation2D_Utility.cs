@@ -1,7 +1,6 @@
 // Animation2D_Utility.cs
 // Petit helper pour instancier et jouer une animation à partir d'un Data_SkillAnimation,
 // ou pour appliquer une fiche sur un Sprite_AnimationRunner existant.
-// Ne change pas tes systèmes : c'est juste un raccourci gameplay.
 
 using System;
 using UnityEngine;
@@ -17,7 +16,7 @@ public static class Animation2D_Utility
         // Vérifie la fiche
         if (data == null) return null;
 
-        // Si un Prefab est renseigné dans la fiche, on l'utilise (plus rapide et éditable)
+        // Si un Prefab est renseigné dans la fiche, on l'utilise
         if (data.prefab != null)
         {
             var inst = UnityEngine.Object.Instantiate(data.prefab, position, Quaternion.identity, parent);
@@ -30,7 +29,7 @@ public static class Animation2D_Utility
             return inst;
         }
 
-        // Sinon, on construit un GameObject minimal à la volée (pas de Prefab)
+        // Sinon, on construit un GameObject minimal à la volée
         var go = new GameObject(string.IsNullOrEmpty(data.displayName) ? data.name : data.displayName);
         go.transform.SetPositionAndRotation(position, Quaternion.identity);
         go.transform.localScale = new Vector3(data.prefabScale.x, data.prefabScale.y, 1f);
@@ -66,10 +65,6 @@ public static class Animation2D_Utility
         if (inst != null) inst.transform.rotation = rotation;
         return inst;
     }
-
-    // =======================================================================
-    // Appliquer une fiche sur un runner existant (ex: déjà présent dans la scène)
-    // =======================================================================
 
     public static void ApplyDataToRunner(Sprite_AnimationRunner runner, Data_SkillAnimation data)
     {

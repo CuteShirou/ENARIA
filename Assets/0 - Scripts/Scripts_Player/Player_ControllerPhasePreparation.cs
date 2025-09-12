@@ -46,12 +46,11 @@ public class Player_ControllerPhasePreparation : MonoBehaviour
             TryGetComponent(out stats);
     }
 
-    // Option: API directe si tu veux appeler depuis un autre script.
     public void RequestTileClick(int x, int y)
     {
         if (!TryGetPreparationPhase(out var prepa))
         {
-            Debug.LogWarning("[PREPA] Impossible de trouver la phase de préparation.");
+            //Debug.LogWarning("[PREPA] Impossible de trouver la phase de préparation.");
             return;
         }
 
@@ -82,13 +81,12 @@ public class Player_ControllerPhasePreparation : MonoBehaviour
         TryCacheStats();
         if (stats == null)
         {
-            Debug.LogWarning("[PREPA] Pas de Entity_StatistiqueCombat sur le joueur.");
+            //Debug.LogWarning("[PREPA] Pas de Entity_StatistiqueCombat sur le joueur.");
             return;
         }
 
         stats.isReady = true;
         Debug.Log($"[PREPA] {gameObject.name} est PRÊT (isReady = true)");
-        // La coroutine de Phase_PreparationPlacementCombat avancera toute seule quand tout le monde est prêt.
     }
 
     private bool TryGetPreparationPhase(out Phase_PreparationPlacementCombat phase)

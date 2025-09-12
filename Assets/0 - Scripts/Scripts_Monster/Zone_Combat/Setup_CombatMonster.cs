@@ -6,7 +6,7 @@ public class Setup_CombatMonster : MonoBehaviour
 
     [Header("Réglages")]
     [SerializeField] Team team = Team.TeamRed;
-    [SerializeField] Transform teamRootOverride; // optionnel : si tu veux forcer un parent précis
+    [SerializeField] Transform teamRootOverride;
     [SerializeField] bool keepWorldPosition = true;
 
     void Awake()
@@ -24,7 +24,6 @@ public class Setup_CombatMonster : MonoBehaviour
 
     Transform FindTeamRoot(Team t)
     {
-        // Ex: root trouvés via tags posés dans la scène
         switch (t)
         {
             case Team.TeamRed: return FindByTagOrNull("TeamRed");
