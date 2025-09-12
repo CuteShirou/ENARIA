@@ -119,14 +119,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity_Name: Scribble Combattant
-  entity_Level: 5
+  entity_Level: 2
   entity_Icon: {fileID: 21300000, guid: 087cb1cf5a189b844a69aa7f5e3bed05, type: 3}
   listDropRessources:
   - ressourcePrefab: {fileID: 7322513746942802617, guid: 8c3dcbf0353b03746b6cdb4fca2fed7a, type: 3}
     dropChance: 10
   - ressourcePrefab: {fileID: 7322513746942802617, guid: 08ee3e397a5204448a428548d9ea5d5e, type: 3}
     dropChance: 80
-  gainXp: 300
+  gainXp: 100
   savePosEntity: {x: 0, y: 0, z: 0}
   saveCamEntity: 
   specie: 2
@@ -165,7 +165,7 @@ MonoBehaviour:
     fxData: {fileID: 0}
     fxPrefabOverride: {fileID: 7622290928582153062, guid: 84609a41e7abc69469ce6e7dcb44d5a3, type: 3}
     fxYOffset: 1
-  baseHP: 120
+  baseHP: 50
   basePA: 6
   basePM: 3
   basePO: 0
@@ -175,10 +175,10 @@ MonoBehaviour:
   baseDexterite: 25
   baseMagie: 5
   baseFoi: 5
-  baseResistanceForce: 0
-  baseResistanceDexterite: 0
-  baseResistanceMagie: 0
-  baseResistanceFoi: 0
+  baseResistanceForce: -5
+  baseResistanceDexterite: 5
+  baseResistanceMagie: 10
+  baseResistanceFoi: 10
   _currentHP: 0
   _currentPA: 0
   _currentPM: 0
@@ -216,6 +216,10 @@ MonoBehaviour:
   startDelaySec: 1
   afterMoveDelaySec: 0
   stepDuration: 0.2
+  rotateTowardsTarget: 1
+  instantTurnAtStepStart: 1
+  rotateSpeedDeg: 540
+  rotationOffsetY: 0
   verboseLog: 0
 --- !u!114 &5651651764299969829
 MonoBehaviour:
@@ -239,6 +243,10 @@ MonoBehaviour:
   critMultiplier: 1.5
   clampResist: 1
   resistClamp: {x: -100, y: 100}
+  rotateTowardsTarget: 1
+  instantTurnOnCast: 1
+  rotateSpeedDeg: 540
+  rotationOffsetY: 0
 --- !u!114 &-4635952386470254640
 MonoBehaviour:
   m_ObjectHideFlags: 0
