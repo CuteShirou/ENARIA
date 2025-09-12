@@ -147,9 +147,6 @@ public class ThirdPersonController : MonoBehaviour
             Debug.Log("Clic détecté sur : " + gameObject.name);
         }
 
-        // Maintient Grounded à true pour l’Animator si utilisé
-        if (_hasAnimator) _animator.SetBool("Grounded", true);
-
         ClickToMove();                                                // Gère le déplacement
     }
 
