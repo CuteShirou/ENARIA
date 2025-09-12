@@ -9,8 +9,14 @@ public class QuestDataTest : MonoBehaviour
     public QuestData questData;         // drag QuestData asset
     public Button testButton;
 
-    [Header("Player pour récompenses (glisser-déposer ici)")]
+    [Header("Player pour récompenses")]
     public Entity_Info player;          // <-- glisser-déposer le GameObject player ici
+
+    [Header("GO à activer quand la quête est complétée")]
+    public GameObject[] goToActivate;
+
+    [Header("GO à désactiver quand la quête est complétée")]
+    public GameObject[] goToDeactivate;
 
     private const int REWARD_MARK_KEY = -1;
 
@@ -124,6 +130,26 @@ public class QuestDataTest : MonoBehaviour
             if (questInstance.stepProgress == null)
                 questInstance.stepProgress = new System.Collections.Generic.Dictionary<int, int>();
             questInstance.stepProgress[REWARD_MARK_KEY] = 1;
+
+            // --- Activation des GO ---
+            if (goToActivate != null)
+            {
+                foreach (var go in goToActivate)
+                {
+                    if (go != null)
+                        go.SetActive(true);
+                }
+            }
+
+            // --- Désactivation des GO ---
+            if (goToDeactivate != null)
+            {
+                foreach (var go in goToDeactivate)
+                {
+                    if (go != null)
+                        go.SetActive(false);
+                }
+            }
 
             try { questManager.SaveQuests(); } catch { }
 
