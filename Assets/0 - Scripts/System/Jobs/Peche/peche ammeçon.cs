@@ -43,7 +43,7 @@ public class peche : MonoBehaviour
         
         if (RectsOverlap(rt, poissonRect))
         {
-            progressBarScript.AugmenterHauteur(gainParSeconde * Time.deltaTime);
+            progressBarScript.AugmenterHauteur(gainParSeconde * Time.deltaTime ); // Multiplie par 100 pour ajuster la vitesse de progression
         }
     }
 

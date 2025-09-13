@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class boisgameplay : MonoBehaviour
 {
@@ -17,7 +18,18 @@ public class boisgameplay : MonoBehaviour
     public  float speed;
     public  bool goup;
     public  float b;
-    
+    public static int life;
+    public static bool isGameOver = false;
+    public Sprite fullHeart;
+    public Sprite emptyHeart;
+    public GameObject heart2;
+    public GameObject heart3;
+    public GameObject heart4;
+    public GameObject heart5;
+    public Image imgHeart2;
+    public Image imgHeart3;
+    public Image imgHeart4;
+    public Image imgHeart5;
     
     
     public  GameObject top;
@@ -33,6 +45,7 @@ public class boisgameplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        life = 5; 
         gain = 100f; 
         lastIsTop = false;
         a = Random.Range(70f, 150f);
@@ -60,6 +73,11 @@ public class boisgameplay : MonoBehaviour
         bottom.transform.localScale = scalebottom;
         rtTop.anchoredPosition = new Vector2(rtTop.anchoredPosition.x, 300 - heightTB / 2);
         rtBottom.anchoredPosition = new Vector2(rtBottom.anchoredPosition.x, -300 + heightTB / 2);
+        
+        imgHeart2 = heart2.GetComponent<Image>();
+        imgHeart3 = heart3.GetComponent<Image>();
+        imgHeart4 = heart4.GetComponent<Image>();
+        imgHeart5 = heart5.GetComponent<Image>();
         
     }
 
@@ -111,6 +129,57 @@ public class boisgameplay : MonoBehaviour
         {
             progressBarScript.AugmenterHauteur(gain);
             lastIsTop = false;
+        }
+        else if (lastIsTop == false && Input.GetMouseButtonDown(0) && !RectsOverlap(rt, top.GetComponent<RectTransform>()))
+        {
+            life -= 1;
+        }
+        else if (lastIsTop == true && Input.GetMouseButtonDown(0) && !RectsOverlap(rt, bottom.GetComponent<RectTransform>()))
+        {
+            life -= 1;
+        }
+        if (life == 5)
+        {
+            if (imgHeart2 != null && fullHeart != null)
+                imgHeart2.sprite = fullHeart;
+            if (imgHeart3 != null && fullHeart != null)
+                imgHeart3.sprite = fullHeart;
+            if (imgHeart4 != null && fullHeart != null)
+                imgHeart4.sprite = fullHeart;
+            if (imgHeart5 != null && fullHeart != null)
+                imgHeart5.sprite = fullHeart;
+        }
+        else if (life == 4)
+        {
+            if (imgHeart5 != null && emptyHeart != null)
+                imgHeart5.sprite = emptyHeart;
+        }
+        else if (life == 3)
+        {
+            if (imgHeart4 != null && emptyHeart != null)
+                imgHeart4.sprite = emptyHeart;
+        }
+        else if (life == 2)
+        {
+            if (imgHeart3 != null && emptyHeart != null)
+                imgHeart3.sprite = emptyHeart;
+        }
+        else if (life == 1)
+        {
+            if (imgHeart2 != null && emptyHeart != null)
+                imgHeart2.sprite = emptyHeart;
+        }
+        else if (life <= 0 && isGameOver == false)
+        {
+            if (imgHeart5 != null && fullHeart != null)
+                imgHeart5.sprite = fullHeart;
+            if (imgHeart4 != null && fullHeart != null)
+                imgHeart4.sprite = fullHeart;
+            if (imgHeart3 != null && fullHeart != null)
+                imgHeart3.sprite = fullHeart;
+            if (imgHeart2 != null && fullHeart != null)
+                imgHeart2.sprite = fullHeart;
+            isGameOver = true;
         }
         rt.anchoredPosition = new Vector2(x, y);
 

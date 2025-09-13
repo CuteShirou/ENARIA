@@ -14,10 +14,14 @@ public class pechepoisson : MonoBehaviour
     public float height;
     public float speed;
     public int uord;
+    public GameObject timing;
+    public float timingheight;
     
     
    	public float timer = 0f;
+    public static float timerloose = 0f;
     public float updateInterval; 
+    public static bool isGameOver = false;
 
 
     void Start()
@@ -49,13 +53,19 @@ public class pechepoisson : MonoBehaviour
     {
         
         timer += Time.deltaTime;
+        timerloose += Time.deltaTime;
         if (timer >= updateInterval)
         {
             timer = 0f;
             UpdateEveryInterval();
         }
+        if (timerloose >= 10f)
+        {
+            isGameOver = true;
+            timerloose = 0f;
+        }
 
-        
+       
         RectTransform rt = gameObject.GetComponent<RectTransform>();
                 
         speed = b; // Speed of movement*
@@ -74,6 +84,12 @@ public class pechepoisson : MonoBehaviour
         }
         rt.anchoredPosition = new Vector2(x, y);
         
+        
+        RectTransform rtTiming = timing.GetComponent<RectTransform>();
+        timingheight = 600 * (timerloose / 10);
+        if (timingheight>= 600) timingheight = 600; 
+        rtTiming.anchoredPosition = new Vector2(rtTiming.anchoredPosition.x, -300 + timingheight / 2);
+        rtTiming.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, timingheight);
         
         
     }

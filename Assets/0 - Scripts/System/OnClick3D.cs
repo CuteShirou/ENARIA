@@ -52,6 +52,9 @@ public class OnClick3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+       
+        
         var TPC = this.GetComponent<ThirdPersonController>();
         if (cerealesprogress.height >= 599)
         {
@@ -59,17 +62,36 @@ public class OnClick3D : MonoBehaviour
             cerealesIsActive = false;
             Debug.Log("céréales récoltées");
             cerealesprogress.height = 0; 
+            cerealesgameplay.reset = true;
             InventoryUtil.AddItemToFirstEmpty(bletoguive);
         }
-        if (minijeuplantes.height >= 599)
+        
+        
+        if (minijeuplantes.y >= 20)
         {
             plantes.SetActive(false);
             plantesIsActive = false;
             Debug.Log("plantes récoltées");
-            minijeuplantes.height = 0;
+            minijeuplantes.y = -124;
+            minijeuplantes.timerloose = 0;
             TPC.enabled = true;
             InventoryUtil.AddItemToFirstEmpty(tulipetoguive);
         }
+        if (minijeuplantes.isGameOver == true)
+        {
+            plantes.SetActive(false);
+            plantesIsActive = false;
+            Debug.Log("plantes defaite");
+            minijeuplantes.isGameOver = false;
+            minijeuplantes.y = -124;
+            minijeuplantes.timerloose = 0;
+            TPC.enabled = true;
+        }
+        
+        
+        
+        
+        
         if (boisprogress.height >= 599)
         {
             bois.SetActive(false);
@@ -77,28 +99,69 @@ public class OnClick3D : MonoBehaviour
             Debug.Log("bois récolté");
             boisgameplay.isstarting = true; 
             boisprogress.height = 0;
+            boisgameplay.life = 5;
             TPC.enabled = true;
             InventoryUtil.AddItemToFirstEmpty(boistoguive);
         }
+        if (boisgameplay.isGameOver == true)
+        {
+            bois.SetActive(false);
+            boisIsActive = false;
+            Debug.Log("bois defaite");
+            boisgameplay.isGameOver = false;
+            boisprogress.height = 0;
+            boisgameplay.life = 5;
+            TPC.enabled = true;
+        }
 
+        
+        
+        
+        
+        
         if (pecheprogress.height >= 599)
         {
             poisson.SetActive(false);
             poissonIsActive = false;
             Debug.Log("poisson récolté");
             pecheprogress.height = 0;
+            pechepoisson.timerloose = 0;
             TPC.enabled = true;
             InventoryUtil.AddItemToFirstEmpty(saumontoguive);
         }
-
+        if (pechepoisson.isGameOver == true)
+        {
+            poisson.SetActive(false);
+            poissonIsActive = false;
+            Debug.Log("poisson defaite");
+            pechepoisson.isGameOver = false;
+            pecheprogress.height = 0;
+            pechepoisson.timerloose = 0;
+            TPC.enabled = true;
+        }
+        
+        
+        
+        
+        
         if (minagebutton.Win == true)
         {
             minerai.SetActive(false);
             mineraiIsActive = false;
             Debug.Log("minerai récolté");
             minagebutton.Win = false;
+            minagegameplay.timerloose = 0;
             TPC.enabled = true;
             InventoryUtil.AddItemToFirstEmpty(ortoguive);
+        }
+        if (minagegameplay.isGameOver == true)
+        {
+            minerai.SetActive(false);
+            mineraiIsActive = false;
+            Debug.Log("minerai defaite");
+            minagegameplay.isGameOver = false;
+            minagegameplay.timerloose = 0;
+            TPC.enabled = true;
         }
         
         if (ButtonEndDialogue.isclicked == true)

@@ -33,6 +33,7 @@ public class cerealesgameplay : MonoBehaviour
     public int x;
     public float timer = 0f;
     public float updateInterval;
+    public static bool reset = false;
 
     public float height;
 
@@ -258,12 +259,53 @@ public class cerealesgameplay : MonoBehaviour
             E5IsActive = false;
         }
 
+        if (reset == true)
+        {
+            ResetMiniGame();
+            reset = false;
+        }
     }
 
     void UpdateEveryInterval()
     {
         x = Random.Range(0, 9);
 
+    }
+
+    void ResetMiniGame()
+    {
+        RectTransform rtA1 = cerealeA1.GetComponent<RectTransform>();
+        RectTransform rtA2 = cerealeA2.GetComponent<RectTransform>();
+        RectTransform rtA3 = cerealeA3.GetComponent<RectTransform>();
+        RectTransform rtA4 = cerealeA4.GetComponent<RectTransform>();
+        RectTransform rtA5 = cerealeA5.GetComponent<RectTransform>();
+        RectTransform rtE1 = cerealeE1.GetComponent<RectTransform>();
+        RectTransform rtE2 = cerealeE2.GetComponent<RectTransform>();
+        RectTransform rtE3 = cerealeE3.GetComponent<RectTransform>();
+        RectTransform rtE4 = cerealeE4.GetComponent<RectTransform>();
+        RectTransform rtE5 = cerealeE5.GetComponent<RectTransform>();
+        rtA1.anchoredPosition = new Vector2(rtA1.anchoredPosition.x, -2000);
+        rtA2.anchoredPosition = new Vector2(rtA2.anchoredPosition.x, -2000);
+        rtA3.anchoredPosition = new Vector2(rtA3.anchoredPosition.x, -2000);
+        rtA4.anchoredPosition = new Vector2(rtA4.anchoredPosition.x, -2000);
+        rtA5.anchoredPosition = new Vector2(rtA5.anchoredPosition.x, -2000);
+        rtE1.anchoredPosition = new Vector2(rtE1.anchoredPosition.x, -2000);
+        rtE2.anchoredPosition = new Vector2(rtE2.anchoredPosition.x, -2000);
+        rtE3.anchoredPosition = new Vector2(rtE3.anchoredPosition.x, -2000);
+        rtE4.anchoredPosition = new Vector2(rtE4.anchoredPosition.x, -2000);
+        rtE5.anchoredPosition = new Vector2(rtE5.anchoredPosition.x, -2000);
+        A1IsActive = false;
+        A2IsActive = false;
+        A3IsActive = false;
+        A4IsActive = false;
+        A5IsActive = false;
+        E1IsActive = false;
+        E2IsActive = false;
+        E3IsActive = false;
+        E4IsActive = false;
+        E5IsActive = false;
+        
+        
     }
 
     bool RectsOverlap(RectTransform a, RectTransform b)
