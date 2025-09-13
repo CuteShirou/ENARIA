@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58851da1ad42b6b499c4486d6183804e, type: 3}
   m_Name: Demo Quest
   m_EditorClassIdentifier: 
-  questId: 
-  questType: 0
+  questId: 2
+  questType: 1
   questName: Tutorial
   description: "Un nouveau monde vous attend, il faut se pr\xE9par\xE9!"
   steps:
-  - stepName: Folie des Scribbles
-    stepDescription: "Des Scribbles sont dans le village, \xE9liminer les"
+  - stepName: Potion de soin
+    stepDescription: "Cr\xE9e et ramener une potion de soin"
     isOptional: 0
-    objectiveType: 0
-    monsterKillCount: 4
+    objectiveType: 2
+    monsterKillCount: 0
     npcName: 
-    itemToCollect: {fileID: 0}
-    itemQuantity: 0
+    itemToCollect: {fileID: 11400000, guid: b3c34aefc6940384db393ad448881471, type: 2}
+    itemQuantity: 1
     locationName: 
-  experienceReward: 0
-  coinReward: 0
+  experienceReward: 30
+  coinReward: 500
   itemRewards: []

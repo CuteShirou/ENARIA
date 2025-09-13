@@ -130,9 +130,11 @@
 //        return "Objet inconnu";
 //    }
 //}
+// QuestInfoUI.cs
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections.Generic;
 
 public class QuestInfoUI : MonoBehaviour
@@ -158,8 +160,7 @@ public class QuestInfoUI : MonoBehaviour
     {
         questManager = manager;
         questTrackerUI = tracker;
-        // Option A: binder via inspector -> ne pas ajouter de listener ici.
-        // Option B: binder par code -> décommente la ligne suivante et supprime l'affectation dans l'inspector.
+        // binder via inspector ou par code (décommenter si tu veux binder par code)
         // followButton.onClick.RemoveAllListeners();
         // followButton.onClick.AddListener(OnFollowButtonClicked);
     }
@@ -199,36 +200,34 @@ public class QuestInfoUI : MonoBehaviour
         foreach (Transform child in itemRewardsContainer)
             Destroy(child.gameObject);
 
-        foreach (var item in quest.itemRewards)
+        foreach (var reward in quest.itemRewards)
         {
             var go = Instantiate(itemRewardPrefab, itemRewardsContainer);
             var text = go.GetComponentInChildren<TMP_Text>();
 
-            if (text != null && item.collectible != null)
+            if (text != null && reward.item != null)
             {
-                string name = GetCollectibleName(item.collectible);
-                text.text = $"{name} x{item.quantity}";
+                text.text = $"{reward.item.itemName} x{reward.quantity}";
             }
         }
     }
 
-    public void OnFollowButtonClicked()
+    private void OnFollowButtonClicked()
     {
-        Debug.Log("[QuestInfoUI] Follow clicked for currentQuest=" + (currentQuest != null ? currentQuest.questName : "NULL"));
         if (currentQuest == null || questManager == null) return;
 
-        var inst = questManager.GetQuestInstanceByNameAndType(currentQuest.questName, currentQuest.questType);
-        Debug.Log("[QuestInfoUI] Found instance = " + (inst != null ? "YES" : "NULL"));
+        var inst = questManager.GetQuestInstanceByNameAndType(
+            currentQuest.questName,
+            currentQuest.questType
+        );
 
         if (inst != null)
         {
             questManager.FollowQuest(inst);
-            Debug.Log("[QuestInfoUI] calling SetTrackedQuests. questTrackerUI=" + (questTrackerUI != null ? questTrackerUI.gameObject.name : "NULL"));
-            if (questTrackerUI != null)
-                questTrackerUI.SetTrackedQuests(questManager.trackedQuests);
+            questTrackerUI.SetTrackedQuests(questManager.trackedQuests);
+            Debug.Log($"Quête suivie : {currentQuest.questName}");
         }
     }
-
 
     void ClearUI()
     {
@@ -241,19 +240,5 @@ public class QuestInfoUI : MonoBehaviour
             Destroy(child.gameObject);
         foreach (Transform child in itemRewardsContainer)
             Destroy(child.gameObject);
-    }
-
-    private string GetCollectibleName(CollectibleData collectible)
-    {
-        if (collectible == null)
-            return "Objet inconnu";
-
-        if (collectible is EquipmentData equip)
-            return equip.equipmentName;
-
-        if (collectible is ResourceData res)
-            return res.resourceName;
-
-        return "Objet inconnu";
     }
 }

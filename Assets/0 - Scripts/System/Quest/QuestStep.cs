@@ -1,3 +1,4 @@
+// QuestStep.cs
 using UnityEngine;
 
 [System.Serializable]
@@ -10,15 +11,23 @@ public class QuestStep
 
     public QuestObjectiveType objectiveType;
 
+    // Kill
     public int monsterKillCount;
 
+    // Talk
     public string npcName;
 
-    public CollectibleData itemToCollect;
+    // Collect (utilise Item maintenant)
+    public Item itemToCollect;
     public int itemQuantity;
 
+    // Reach
     public string locationName;
 
+    /// <summary>
+    /// Retourne la description complète de l'étape (pour tooltip / UI).
+    /// currentProgress = valeur actuelle (ex: nombre d'items collectés).
+    /// </summary>
     public string GetFullDescription(int currentProgress = 0)
     {
         string optionalText = isOptional ? " (Optionnel)" : "";
@@ -26,15 +35,18 @@ public class QuestStep
         string objectiveText = objectiveType switch
         {
             QuestObjectiveType.TalkToNPC =>
-                $"Dialogu� avec \"{npcName}\"",
+                $"Dialoguer avec \"{npcName}\"",
 
             QuestObjectiveType.CollectItem =>
                 itemToCollect != null
-                    ? $"Apport� \"{GetCollectibleName(itemToCollect)}\": {currentProgress}/{itemQuantity}"
-                    : $"Apport� des objets: {currentProgress}/{itemQuantity}",
+                    ? $"Apporter \"{GetItemName(itemToCollect)}\": {currentProgress}/{itemQuantity}"
+                    : $"Apporter des objets: {currentProgress}/{itemQuantity}",
 
             QuestObjectiveType.ReachLocation =>
-                $"Aller � \"{locationName}\"",
+                $"Aller à \"{locationName}\"",
+
+            QuestObjectiveType.KillMonster =>
+                $"Tuer {monsterKillCount} monstres ({currentProgress}/{monsterKillCount})",
 
             _ => "Objectif inconnu"
         };
@@ -45,19 +57,9 @@ public class QuestStep
             $"{objectiveText}";
     }
 
-    // m�thode priv�e locale pour r�cup�rer le nom exact selon le type
-    private string GetCollectibleName(CollectibleData collectible)
+    private string GetItemName(Item item)
     {
-        if (collectible == null)
-            return "Objet inconnu";
-
-        if (collectible is EquipmentData equip)
-            return equip.equipmentName;
-
-        if (collectible is ResourceData res)
-            return res.resourceName;
-
-        return "Objet inconnu";
+        if (item == null) return "Objet inconnu";
+        return string.IsNullOrEmpty(item.itemName) ? "Objet inconnu" : item.itemName;
     }
-
 }
