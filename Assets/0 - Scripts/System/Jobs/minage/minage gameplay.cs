@@ -150,13 +150,13 @@ public class minagegameplay : MonoBehaviour
     void Update()
     {
         timerloose += Time.deltaTime;
-        if (timerloose >= 30f)
+        if (timerloose >= 15f)
         {
             isGameOver = true;
             timerloose = 0f;
         }
         RectTransform rtTiming = timing.GetComponent<RectTransform>();
-        timingheight = (timerloose / 30)*600;
+        timingheight = (timerloose / 15)*600;
         if (timingheight>= 600) timingheight = 600; 
         rtTiming.anchoredPosition = new Vector2(rtTiming.anchoredPosition.x, -300 + timingheight / 2);
         rtTiming.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, timingheight);
