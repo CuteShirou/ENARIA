@@ -24,8 +24,29 @@ public class SkillTreeManager : MonoBehaviour
     void Awake()
     {
         if (entityInfo == null)
-            entityInfo = FindObjectOfType<Entity_Info>();
+        {
+            // 1) Essaye par tag "Player" (recommande d'ajouter ce tag sur ton joueur)
+            var playerGO = GameObject.FindWithTag("Player");
+            if (playerGO != null)
+                entityInfo = playerGO.GetComponent<Entity_Info>();
+
+            // 2) Si Mirror est utilisé et qu'on est client, récupère l'identité locale si possible
+#if MIRROR
+        if (entityInfo == null && NetworkClient.active && NetworkClient.connection != null && NetworkClient.connection.identity != null)
+        {
+            var localGO = NetworkClient.connection.identity.gameObject;
+            entityInfo = localGO.GetComponent<Entity_Info>() ?? entityInfo;
+        }
+#endif
+
+            // 3) Fallback général (prend la première instance trouvée si rien d'autre)
+            if (entityInfo == null)
+                entityInfo = FindObjectOfType<Entity_Info>();
+
+            Debug.Log($"[SkillTreeManager.Awake] entityInfo assigné -> {(entityInfo != null ? entityInfo.name : "NULL")}");
+        }
     }
+
 
     void Start()
     {
@@ -83,6 +104,12 @@ public class SkillTreeManager : MonoBehaviour
 
         SyncAllUnlockedSkills();
     }
+
+    void Update()
+    {
+        UpdateAllSkillButtons();
+    }
+
 
     private Entity_StatistiqueCombat GetCombatStats()
     {
